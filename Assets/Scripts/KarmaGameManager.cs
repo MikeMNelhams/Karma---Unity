@@ -7,12 +7,28 @@ using Karma.Board;
 using Karma.Players;
 using Karma.Cards;
 using System;
+using DataStructures;
 
-public class KarmaGameManager : MonoBehaviour 
+public class KarmaGameManager : MonoBehaviour
 {
+    private static KarmaGameManager _instance;
+    public static KarmaGameManager Instance { get { return _instance; } }
     Game game;
     public GameObject cardPrefab;
-    public List<GameObject> cardHolders;
+    public List<GameObject> handHolders;
+    public List<GameObject> boardHolders;
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -27,14 +43,23 @@ public class KarmaGameManager : MonoBehaviour
         float endAngle = 20.0f;
         float distanceFromHolder = 0.7f;
         
-        int i = 0;
-        foreach (Player player in board.Players)
+        for (int i = 0; i < board.Players.Count; i++)
         {
-            if (i >= cardHolders.Count) { break; }
-            if (cardHolders[i] is null) { continue; }
-            GameObject cardHolder = cardHolders[i]; 
+            Player player = board.Players[i];
+            if (i >= handHolders.Count) { break; }
+            if (handHolders[i] is null) { continue; }
+            GameObject cardHolder = handHolders[i];
             CreateCardsForHolder(player, cardHolder, startAngle, endAngle, distanceFromHolder);
-            i++;
+        }
+
+        for (int i = 0; i < board.Players.Count; i++)
+        {
+            Player player = board.Players[i];
+            if (i >= boardHolders.Count) { break; }
+            if (boardHolders[i] is null) { continue; }
+            GameObject boardHolder = boardHolders[i];
+            KarmaBoardManager karmaBoardManager = boardHolder.GetComponent<KarmaBoardManager>();
+            karmaBoardManager.CreateKarmaCards(player.KarmaUp, player.KarmaDown);
         }
     }
 
@@ -53,11 +78,16 @@ public class KarmaGameManager : MonoBehaviour
             Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPosition(distanceFromHolder, angle));
             Quaternion cardRotation = Quaternion.LookRotation(holderPosition - cardPosition);
             GameObject cardObject = Instantiate(cardPrefab, cardPosition, cardRotation, cardHolder.transform);
-            cardObject.name = card.ToString();
-            CardFrontBackRenderer cardFrontBackRenderer = cardObject.GetComponent<CardFrontBackRenderer>();
-            cardFrontBackRenderer.UpdateImage(card);
+            SetCardObjectProperties(card, cardObject);
             j++;
         }
+    }
+
+    public static void SetCardObjectProperties(Card card, GameObject cardObject)
+    {
+        cardObject.name = card.ToString();
+        CardFrontBackRenderer cardFrontBackRenderer = cardObject.GetComponent<CardFrontBackRenderer>();
+        cardFrontBackRenderer.UpdateImage(card);
     }
 
     Vector3 RelativeCardPosition(float distanceFromCentre, float angle)
