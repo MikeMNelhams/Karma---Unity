@@ -17,7 +17,7 @@ namespace Karma
             public BoardTurnOrder ChooseStartDirection();
             public BoardPlayerAction SelectAction(IBoard board);
             public CardsList SelectCardsToPlay();
-            public int VoteForWinner();
+            public int VoteForWinner(HashSet<int> excludedPlayerIndices);
         }
     }
 }

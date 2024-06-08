@@ -4,7 +4,7 @@ namespace Karma
 {
     namespace Cards
     {
-        public class Card : IEquatable<Card>
+        public class Card : IEquatable<Card>, IComparable<Card>
         {
             public readonly CardSuit suit;
             public readonly CardValue value;
@@ -35,6 +35,13 @@ namespace Karma
                     return false;
                 }
                 return Equals(obj as Card);
+            }
+
+            public int CompareTo(Card other)
+            {
+                if (this > other) return 1;
+                if (this < other) return -1;
+                return 0;
             }
 
             public override int GetHashCode()

@@ -12,6 +12,7 @@ namespace Karma
         {
             public CardPile() : base(){ }
             public CardPile(List<Card> cards) : base(cards) { }
+            public CardPile(CardsList cards) : base(cards.ToList()) { }
             public CardPile(List<int> cardValues, CardSuit suit) : base(cardValues, suit) { }
             
             public virtual CardsList RemoveFromBottom(int splitIndex)

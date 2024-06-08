@@ -2,9 +2,11 @@ using Karma.BasicBoard;
 using Karma.Board;
 using Karma.Cards;
 using Karma.Controller;
+using Karma.Players;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Karma
@@ -50,6 +52,8 @@ namespace Karma
                     GameRanks[i] = Board.Players[i].Length;
                 }
                 Board.RegisterOnTurnEndEvent(StepOneTurn);
+                Board.RegisterOnTurnEndEvent(PlayAgainIfBurnedThisTurn);
+                Board.RegisterOnTurnEndEvent(CheckIfWinner);
             }
 
             public void Play()
@@ -133,6 +137,52 @@ namespace Karma
                     foreach (int playerIndex in pair)
                     {
                         GameRanks[playerIndex] = rank;
+                    }
+                }
+            }
+
+            void VoteForWinners(IBoard board)
+            {
+                Dictionary<int, int> votes = new();
+                Dictionary<int, int> jokerCounts = new();
+                for (int i = 0; i < board.Players.Count; i++)
+                {
+                    Player player = board.Players[i];
+                    int jokerCount = player.NumberOfJokers;
+                    if (jokerCount > 0)
+                    {
+                        jokerCounts[i] = jokerCount;
+                    }
+                }
+                HashSet<int> playerIndicesToExclude = new ();
+                playerIndicesToExclude.UnionWith(Enumerable.Range(0, board.Players.Count).ToList<int>());
+                playerIndicesToExclude.ExceptWith(board.PotentialWinnerIndices);
+                foreach (int playerIndex in jokerCounts.Keys) 
+                {
+                    int numberOfVotes = jokerCounts[playerIndex];
+                    board.CurrentPlayerIndex = playerIndex;
+                    int voteTargetIndex = Controller.VoteForWinner(playerIndicesToExclude);
+                    if (!votes.ContainsKey(voteTargetIndex)) { votes[voteTargetIndex] = 0; }
+                    votes[voteTargetIndex] += numberOfVotes;
+                }
+
+                if (votes.Count > 0)
+                {
+                    int mostVotes = Enumerable.Max(votes.Values);
+                    List<int> mostVotedPlayerIndices = new();
+                    foreach (int playerIndex in votes.Keys)
+                    {
+                        if (votes[playerIndex] == mostVotes)
+                        {
+                            mostVotedPlayerIndices.Add(playerIndex);
+                        }
+                    }
+                    HashSet<int> loserIndices = new();
+                    loserIndices.UnionWith(Enumerable.Range(0, board.Players.Count));
+                    loserIndices.ExceptWith(mostVotedPlayerIndices);
+                    foreach (int playerIndex in loserIndices)
+                    {
+                        GameRanks[playerIndex]++;
                     }
                 }
             }

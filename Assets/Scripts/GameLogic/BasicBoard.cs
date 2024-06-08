@@ -41,9 +41,17 @@ namespace Karma
             {
                 CardPile drawPile = CardPile.Empty;
                 CardPile burnPile = CardPile.Empty;
-                PlayCardPile PlayCardPile = PlayCardPile.Empty;
+                PlayCardPile playCardPile = PlayCardPile.Empty;
 
-                SetInitParams(players, drawPile, burnPile, PlayCardPile);
+                SetInitParams(players, drawPile, burnPile, playCardPile);
+            }
+
+            public BasicBoard(List<Player> players, CardPile drawPile)
+            {
+                CardPile burnPile = CardPile.Empty;
+                PlayCardPile playCardPile = PlayCardPile.Empty;
+
+                SetInitParams(players, drawPile, burnPile, playCardPile);
             }
 
             public BasicBoard(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
