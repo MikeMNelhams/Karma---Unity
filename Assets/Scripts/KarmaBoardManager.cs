@@ -24,11 +24,9 @@ public class KarmaBoardManager : MonoBehaviour
             Vector3 cardPosition = transform.TransformPoint(new Vector3(x, 0, middleDepth));
             Quaternion cardRotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
             GameObject cardObject = Instantiate(gameManager.cardPrefab, cardPosition, cardRotation);
-            cardObject.name = card.ToString();
+            gameManager.SetCardObjectProperties(card, cardObject);
             cardObject.transform.SetParent(transform);
-            cardObject.transform.position += new Vector3(0, cardObject.transform.localScale.z-transform.localScale.y, 0);
-            CardFrontBackRenderer cardFrontBackRenderer = cardObject.GetComponent<CardFrontBackRenderer>();
-            cardFrontBackRenderer.UpdateImage(card);
+            cardObject.transform.position += new Vector3(0, cardObject.transform.localScale.z - transform.localScale.y, 0);
             Vector3 correctedScale = cardObject.transform.localScale;
             j++;
         }

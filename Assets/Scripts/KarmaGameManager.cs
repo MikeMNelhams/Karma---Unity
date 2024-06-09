@@ -17,6 +17,9 @@ public class KarmaGameManager : MonoBehaviour
     public GameObject cardPrefab;
     public List<GameObject> handHolders;
     public List<GameObject> boardHolders;
+    public GameObject drawPile;
+    public GameObject burnPile;
+    public GameObject playPile;
 
     private void Awake()
     {
@@ -34,10 +37,21 @@ public class KarmaGameManager : MonoBehaviour
     void Start()
     {
         BasicBoard startBoard = BoardFactory.RandomStart(4, 3);
-        CreateCardsFromBoard(startBoard);
+        CreatePlayerCardsFromBoard(startBoard);
+        CreateCardPilesFromBoard(startBoard);
     }
 
-    void CreateCardsFromBoard(IBoard board)
+    private void CreateCardPilesFromBoard(BasicBoard startBoard)
+    {
+        KarmaCardPileManager drawPileManager = drawPile.GetComponent<KarmaCardPileManager>();
+        drawPileManager.CreatePile(startBoard.DrawPile);
+        KarmaCardPileManager burnPileManager = burnPile.GetComponent<KarmaCardPileManager>();
+        burnPileManager.CreatePile(startBoard.BurnPile);
+        KarmaCardPileManager playPileManager = playPile.GetComponent<KarmaCardPileManager>();
+        playPileManager.CreatePile(startBoard.PlayPile);
+    }
+
+    void CreatePlayerCardsFromBoard(IBoard board)
     {
         float startAngle = -20.0f;
         float endAngle = 20.0f;
@@ -60,7 +74,7 @@ public class KarmaGameManager : MonoBehaviour
             GameObject boardHolder = boardHolders[i];
             KarmaBoardManager karmaBoardManager = boardHolder.GetComponent<KarmaBoardManager>();
             karmaBoardManager.CreateKarmaCards(player.KarmaUp, player.KarmaDown);
-        }
+        }   
     }
 
     void CreateCardsForHolder(Player player, GameObject cardHolder, float startAngle=-20.0f, float endAngle=20.0f, 
@@ -83,7 +97,7 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    public static void SetCardObjectProperties(Card card, GameObject cardObject)
+    public void SetCardObjectProperties(Card card, GameObject cardObject)
     {
         cardObject.name = card.ToString();
         CardFrontBackRenderer cardFrontBackRenderer = cardObject.GetComponent<CardFrontBackRenderer>();
