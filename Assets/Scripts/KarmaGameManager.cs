@@ -20,6 +20,7 @@ public class KarmaGameManager : MonoBehaviour
     public GameObject drawPile;
     public GameObject burnPile;
     public GameObject playPile;
+    List<CardSelector> _cardSelectors;
 
     private void Awake()
     {
@@ -37,6 +38,8 @@ public class KarmaGameManager : MonoBehaviour
     void Start()
     {
         BasicBoard startBoard = BoardFactory.RandomStart(4, 3);
+        _cardSelectors = new List<CardSelector>();
+        for (int i = 0; i < startBoard.Players.Count; i++) { _cardSelectors.Add(new CardSelector()); }
         CreatePlayerCardsFromBoard(startBoard);
         CreateCardPilesFromBoard(startBoard);
     }
@@ -93,6 +96,7 @@ public class KarmaGameManager : MonoBehaviour
             Quaternion cardRotation = Quaternion.LookRotation(holderPosition - cardPosition);
             GameObject cardObject = Instantiate(cardPrefab, cardPosition, cardRotation, cardHolder.transform);
             SetCardObjectProperties(card, cardObject);
+            SetCardObjectOnMouseDownEvent(card, cardObject, j);
             j++;
         }
     }
@@ -100,8 +104,14 @@ public class KarmaGameManager : MonoBehaviour
     public void SetCardObjectProperties(Card card, GameObject cardObject)
     {
         cardObject.name = card.ToString();
-        CardFrontBackRenderer cardFrontBackRenderer = cardObject.GetComponent<CardFrontBackRenderer>();
-        cardFrontBackRenderer.UpdateImage(card);
+        CardObject cardRenderer = cardObject.GetComponent<CardObject>();
+        cardRenderer.UpdateImage(card);
+    }
+
+    void SetCardObjectOnMouseDownEvent(Card card, GameObject cardObject, int playerIndex)
+    {
+        CardObject cardRenderer = cardObject.GetComponent<CardObject>();
+        cardRenderer.OnCardClick += _cardSelectors[playerIndex].Toggle;
     }
 
     Vector3 RelativeCardPosition(float distanceFromCentre, float angle)

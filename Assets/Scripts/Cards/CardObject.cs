@@ -4,13 +4,16 @@ using System;
 using Karma.Cards;
 
 
-public class CardFrontBackRenderer : MonoBehaviour
+public class CardObject : MonoBehaviour
 {
     public Material planeMaterial;
     public GameObject quad;
+    public Card CurrentCard { get; protected set; }
+    public event Action<Card> OnCardClick;
 
     public void UpdateImage(Card card)
     {
+        CurrentCard = card;
         // "/Assets/Resources/Cards/Clubs/Jack.png"
         // Only on Windows: https://docs.unity3d.com/ScriptReference/Application-dataPath.html
         string assetsPath = Application.dataPath;
@@ -33,5 +36,10 @@ public class CardFrontBackRenderer : MonoBehaviour
         {
             print("File path: " + resourcePath + " does not exist!");
         }
+    }
+
+    void OnMouseDown()
+    {
+        OnCardClick.Invoke(CurrentCard);
     }
 }
