@@ -10,6 +10,7 @@ public class CardObject : MonoBehaviour
     public GameObject quad;
     public Card CurrentCard { get; protected set; }
     public event Action<Card> OnCardClick;
+    Material frontMaterial;
 
     public void UpdateImage(Card card)
     {
@@ -28,9 +29,9 @@ public class CardObject : MonoBehaviour
             tex.LoadImage(bytes);
             Material materialCopy = new Material(planeMaterial);
             materialCopy.mainTexture = tex;
-            // Apply to Plane
             MeshRenderer mr = quad.GetComponent<MeshRenderer>();
             mr.material = materialCopy;
+            frontMaterial = materialCopy;
         } 
         else
         {
@@ -38,8 +39,17 @@ public class CardObject : MonoBehaviour
         }
     }
 
+    public void ToggleSelectShader()
+    {
+        if (frontMaterial == null) { return; }
+        print(frontMaterial.name);
+        float fresnelIsEnabled = frontMaterial.GetFloat("_isHighlighted");
+        frontMaterial.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
+    }
+
     void OnMouseDown()
     {
+        ToggleSelectShader();
         OnCardClick.Invoke(CurrentCard);
     }
 }
