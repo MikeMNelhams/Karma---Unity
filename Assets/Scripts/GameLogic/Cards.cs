@@ -1,3 +1,4 @@
+using DataStructures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +20,7 @@ namespace Karma
 
             public CardsList(Card card)
             {
-                _cards = new List<Card>();
-                _cards.Add(card);
+                _cards = new List<Card> { card };
             }
 
             public CardsList(List<Card> cards)
@@ -124,6 +124,27 @@ namespace Karma
                     {
                         targetCounts[card]--;
                         removedCards.Add(card);
+                    }
+                    else
+                    {
+                        leftovers.Add(card);
+                    }
+                }
+                this._cards = leftovers._cards;
+                return removedCards;
+            }
+
+            public CardsList Remove(FrozenMultiSet<CardValue> cards)
+            {
+                CardsList removedCards = new();
+                CardsList leftovers = new();
+                
+                for (int i = 0; i < this._cards.Count; i++)
+                {
+                    Card card = this._cards[i];
+                    if (cards.Contains(card.value) && cards[card.value] > 0)
+                    {
+                        cards.Remove(card.value);
                     }
                     else
                     {
@@ -276,7 +297,7 @@ namespace Karma
 
             public CardsList CopyShallow()
             {
-                CardsList newCardsList = new CardsList();
+                CardsList newCardsList = new ();
                 foreach (Card card in _cards)
                 {
                     newCardsList.Add(card);

@@ -1,14 +1,20 @@
+using DataStructures;
 using Karma.Cards;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardSelector
 {
-    HashSet<Card> _selection;
+    protected FrozenMultiSet<Card> _selection;
+    protected FrozenMultiSet<CardValue> _selectionValues;
+    public FrozenMultiSet<Card> Selection { get => _selection; }
+    public FrozenMultiSet<CardValue> SelectionCardValues { get => _selectionValues; }
 
     public CardSelector()
     {
         _selection = new();
+        _selectionValues = new();
     }
 
     public void Add(GameObject cardObject)
@@ -18,7 +24,7 @@ public class CardSelector
         Add(card);
     }
 
-    void Add(Card card) { _selection.Add(card); }
+    void Add(Card card) { _selection.Add(card); _selectionValues.Add(card.value); }
 
     public void Remove(GameObject cardObject)
     {
@@ -27,7 +33,7 @@ public class CardSelector
         Remove(card);
     }
 
-    void Remove(Card card) { _selection.Remove(card); }
+    void Remove(Card card) { _selection.Remove(card); _selectionValues.Remove(card.value);  }
 
     public void Toggle(GameObject cardObject)
     {
@@ -38,7 +44,6 @@ public class CardSelector
 
     public void Toggle(Card card)
     {
-        Debug.Log("Toggling selection of: " + card);
         if (_selection.Contains(card))
         {
             Remove(card);
@@ -47,7 +52,16 @@ public class CardSelector
         {
             Add(card);
         }
-        Debug.Log("Currently selected #: " + _selection.Count);
-        Debug.Log("-------------");
+        PrintSelectedCards();
+    }
+
+    void PrintSelectedCards()
+    {
+        string selected = "Selected: ";
+        foreach (Card selectedCard in _selection)
+        {
+            selected += selectedCard + " ";
+        }
+        Debug.Log(selected);
     }
 }

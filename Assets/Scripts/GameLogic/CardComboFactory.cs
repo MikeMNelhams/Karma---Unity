@@ -45,12 +45,12 @@ namespace Karma
             public CardCombo_FIVE(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                List<CardsList> startHands = new List<CardsList>();
+                List<CardsList> startHands = new ();
                 foreach (Player player in board.Players)
                 {
                     startHands.Add(player.Hand);
                 }
-                Deque<CardsList> hands = new Deque<CardsList>(startHands);
+                Deque<CardsList> hands = new (startHands);
                 int numberOfRepeats = _counts.Count * board.EffectMultiplier;
                 if (numberOfRepeats < board.Players.Count)
                 {
@@ -167,16 +167,16 @@ namespace Karma
 
             public void GiveAwayCard(IBoard board, Player currentPlayer)
             {
-                HashSet<int> jokerIndices = new HashSet<int>();
+                HashSet<int> jokerIndices = new ();
                 for (int i = 0; i < currentPlayer.PlayableCards.Count; i++)
                 {
                     Card card = currentPlayer.PlayableCards[i];
                     if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
                 }
-                int cardIndexSelected = Controller.GiveAwayCardIndex(jokerIndices);
+                int cardIndexSelected = Controller.GiveAwayCardIndex(board, jokerIndices);
                 HashSet<int> excludedPlayerIndices = board.PotentialWinnerIndices;
                 excludedPlayerIndices.UnionWith(new HashSet<int>() { board.CurrentPlayerIndex });
-                int targetPlayerIndex = Controller.GiveAwayPlayerIndex(excludedPlayerIndices);
+                int targetPlayerIndex = Controller.GiveAwayPlayerIndex(board, excludedPlayerIndices);
                 Player targetPlayer = board.Players[targetPlayerIndex];
                 targetPlayer.Hand.Add(currentPlayer.PlayableCards.Pop(cardIndexSelected));
                 if (board.DrawPile.Count > 0 && currentPlayer.Hand.Count < 3)
@@ -242,7 +242,7 @@ namespace Karma
             public override void Apply(IBoard board)
             {
                 board.Burn(Cards.Count);
-                int targetPlayerIndex = Controller.JokerTargetIndex(new HashSet<int>() { board.CurrentPlayerIndex });
+                int targetPlayerIndex = Controller.JokerTargetIndex(board, new HashSet<int>() { board.CurrentPlayerIndex });
                 board.Players[targetPlayerIndex].Pickup(board.PlayPile);
             }
         }
@@ -340,7 +340,7 @@ namespace Karma
                 }
                 if (cardValue == CardValue.JACK)
                 {
-                    bool visibility = !(board.PlayPile.Count > 0 && board.PlayPile[board.PlayPile.Count - 1].value == CardValue.FOUR);
+                    bool visibility = !(board.PlayPile.Count > 0 && board.PlayPile[^1].value == CardValue.FOUR);
                     return Enumerable.Repeat<bool>(visibility, _cards.Count).ToList<bool>();
                 }
                 return Enumerable.Repeat<bool>(true, _counts.Count).ToList<bool>();

@@ -2,14 +2,8 @@ using DataStructures;
 using Karma.Cards;
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Karma.Board;
-
-
-
-
 
 namespace Karma
 {
@@ -37,7 +31,7 @@ namespace Karma
                     output.Add(combo);
                 }
 
-                int fillerCount = count[filler];
+                int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) { return output; }
                 HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
@@ -80,7 +74,7 @@ namespace Karma
                     output.Add(combo);
                 }
 
-                int fillerCount = count[filler];
+                int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) {return output; }
                 HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
@@ -116,7 +110,7 @@ namespace Karma
                     FrozenMultiSet<CardValue> combo = new (comboValues);
                     output.Add(combo);
                 }
-                int fillerCount = count[filler];
+                int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) { return output; }
                 HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
@@ -157,7 +151,7 @@ namespace Karma
                     FrozenMultiSet<CardValue> combo = new (comboValues);
                     output.Add(combo);
                 }
-                int fillerCount = count[filler];
+                int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) { return output; }
                 HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)

@@ -42,7 +42,6 @@ public class CardObject : MonoBehaviour
     public void ToggleSelectShader()
     {
         if (frontMaterial == null) { return; }
-        print(frontMaterial.name);
         float fresnelIsEnabled = frontMaterial.GetFloat("_isHighlighted");
         frontMaterial.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
     }

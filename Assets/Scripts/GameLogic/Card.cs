@@ -71,7 +71,7 @@ namespace Karma
             public static readonly CardSuit Clubs = new(CardColor.BLACK, "Clubs", "\u2663");
             public static readonly CardSuit Spades = new(CardColor.BLACK, "Spades", "\u2660");
 
-            readonly CardColor color;
+            public readonly CardColor color;
             public readonly String name;
             readonly String shorthand;
 

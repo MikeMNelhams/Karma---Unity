@@ -8,6 +8,7 @@ namespace DataStructures
     public class SortedMultiSet<T> : IEnumerable<T>
     {
         protected SortedDictionary<T, int> _dict;
+        public int this[T key] {get => _dict[key]; }
 
         public SortedMultiSet()
         {
@@ -26,31 +27,28 @@ namespace DataStructures
 
         public void Add(T item)
         {
-            if (_dict.ContainsKey(item))
-                _dict[item]++;
-            else
-                _dict[item] = 1;
+            if (_dict.ContainsKey(item)) { _dict[item]++; }
+            else { _dict[item] = 1; }   
         }
 
         public void Add(IEnumerable<T> items)
         {
-            foreach (var item in items)
-                Add(item);
+            foreach (var item in items) { Add(item); }
+
         }
 
         public void Remove(T item)
         {
-            if (!_dict.ContainsKey(item))
-                throw new ArgumentException();
-            if (--_dict[item] == 0)
-                _dict.Remove(item);
+            if (!_dict.ContainsKey(item)) { throw new ArgumentException(); }
+
+            if (--_dict[item] == 0) { _dict.Remove(item); }
         }
 
         // Return the last value in the multiset
         public T Peek()
         {
-            if (!_dict.Any())
-                throw new NullReferenceException();
+            if (!_dict.Any()) { throw new NullReferenceException(); }
+               
             return _dict.Last().Key;
         }
 
@@ -64,9 +62,10 @@ namespace DataStructures
 
         public IEnumerator<T> GetEnumerator()
         {
-            foreach (var kvp in _dict)
-                for (int i = 0; i < kvp.Value; i++)
-                    yield return kvp.Key;
+            foreach (KeyValuePair<T, int> kvp in _dict) 
+            {
+                yield return kvp.Key;
+            }           
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -6,6 +6,7 @@ using Karma.Board;
 using System.Collections.Generic;
 using DataStructures;
 using System.Linq;
+using System;
 
 
 namespace Karma
@@ -84,7 +85,7 @@ namespace Karma
                 CardComboFactory cardComboFactory = new ();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
-                _allActions = new HashSet<BoardPlayerAction>() { };
+                _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
             }
 
             public void FlipTurnOrder()

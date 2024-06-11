@@ -35,44 +35,25 @@ namespace Karma
 
         public class PlayCardsCombo : BoardPlayerAction
         {
-            CardsList _cards = null;
-            protected Func<CardsList> _cardsGetter;
-
-            public PlayCardsCombo(Func<CardsList> cardsGetter)
-            {
-                _cardsGetter = cardsGetter;
-            }
+            public PlayCardsCombo() { }
 
             public override void Apply(IBoard board, IController controller)
             {
-                while (_cards is null || !board.CurrentLegalCombos.Contains(new FrozenMultiSet<CardValue>(_cards.CardValues)))
+                FrozenMultiSet<CardValue> cards = null;
+                Func<IBoard, FrozenMultiSet<CardValue>> cardSelector = controller.SelectCardsToPlay;
+                throw new Exception("good until here!");
+                while (cards is null || !board.CurrentLegalCombos.Contains(cards))
                 {
-                    GetCards();
+                    cards = cardSelector(board);
+                    
                 }
-                CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(_cards);
+                CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(cards);
                 board.PlayCards(cardsToPlay, controller);
             }
 
             public override BoardPlayerAction Copy()
             {
-                return new PlayCardsCombo(_cardsGetter);
-            }
-
-            public CardsList Cards
-            {
-                get
-                {
-                    if (_cards is null)
-                    {
-                        GetCards();
-                    }
-                    return _cards;
-                }
-            }
-
-            void GetCards() 
-            {
-                _cards = _cardsGetter();
+                return new PlayCardsCombo();
             }
 
             public override string Name { get => "play_cards"; }

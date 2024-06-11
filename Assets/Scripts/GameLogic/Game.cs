@@ -36,14 +36,14 @@ namespace Karma
         public class Game
         {
             public IBoard Board { get; set; }
-            public IController Controller { get; set; }
+            public List<IController> Controllers { get; set; }
             public Dictionary<int, int> GameRanks { get; set; }
             protected int _turnLimit;
 
-            public Game(IBoard startBoard, IController controller, int turnLimit = 100)
+            public Game(IBoard startBoard, List<IController> controllers, int turnLimit = 100)
             {
                 Board = startBoard;
-                Controller = controller;
+                Controllers = controllers;
                 _turnLimit = turnLimit;
 
                 GameRanks = new Dictionary<int, int>();
@@ -72,12 +72,16 @@ namespace Karma
                 HashSet<BoardPlayerAction> actions = Board.CurrentLegalActions;
 
                 if (actions.Count == 0) { Board.EndTurn(); return; }
-
-                Dictionary<string, BoardPlayerAction> actionsMap = new();
-                foreach (BoardPlayerAction action in actions) { actionsMap[action.Name] = action; }
-
-                BoardPlayerAction selectedAction = Controller.SelectAction(Board);
-                selectedAction.Apply(Board, Controller);
+                if (actions.Count == 1) 
+                {
+                    BoardPlayerAction action = actions.First();
+                    action.Apply(Board, Controllers[Board.CurrentPlayerIndex]); 
+                }
+                else
+                {
+                    BoardPlayerAction selectedAction = Controllers[Board.CurrentPlayerIndex].SelectAction(Board);
+                    selectedAction.Apply(Board, Controllers[Board.CurrentPlayerIndex]);
+                }
                 Board.EndTurn();
             }
 
@@ -161,7 +165,7 @@ namespace Karma
                 {
                     int numberOfVotes = jokerCounts[playerIndex];
                     board.CurrentPlayerIndex = playerIndex;
-                    int voteTargetIndex = Controller.VoteForWinner(playerIndicesToExclude);
+                    int voteTargetIndex = Controllers[playerIndex].VoteForWinner(board, playerIndicesToExclude);
                     if (!votes.ContainsKey(voteTargetIndex)) { votes[voteTargetIndex] = 0; }
                     votes[voteTargetIndex] += numberOfVotes;
                 }

@@ -4,6 +4,7 @@ using DataStructures;
 using Karma.Cards;
 using Karma.Players;
 using Karma.Controller;
+using System;
 
 namespace Karma
 {
@@ -69,6 +70,17 @@ namespace Karma
 
             public delegate void OnTurnEndEventHandler(IBoard board);
             public void RegisterOnTurnEndEvent(OnTurnEndEventHandler newEventHandler);
+        }
+
+        public class InvalidBoardPlayerActionException : Exception
+        {
+            public InvalidBoardPlayerActionException(string message) : base(message) { }
+
+            public InvalidBoardPlayerActionException(BoardPlayerAction boardPlayerAction)
+            {
+                string message = "The action: \'" + boardPlayerAction.Name + "\' is invalid.";
+                throw new InvalidBoardPlayerActionException(message);
+            }
         }
     }
 }
