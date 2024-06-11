@@ -2,6 +2,7 @@ using DataStructures;
 using Karma.Board;
 using Karma.Cards;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Karma
 {
@@ -22,6 +23,26 @@ namespace Karma
             public BoardPlayerAction SelectAction(IBoard board);
             public FrozenMultiSet<CardValue> SelectCardsToPlay(IBoard board);
             public int VoteForWinner(IBoard board, HashSet<int> excludedPlayerIndices);
+        }
+
+        public abstract class ControllerState
+        {
+            public abstract void OnEnter(IBoard board);
+            public abstract void OnExit(IBoard board);
+            public GameObject CurrentPlayer(IBoard board) { return KarmaGameManager.Instance.Players[board.CurrentPlayerIndex]; }
+        }
+
+        public class WaitForTurnState : ControllerState
+        {
+            public override void OnEnter(IBoard board)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public override void OnExit(IBoard board)
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }

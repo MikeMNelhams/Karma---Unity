@@ -16,12 +16,18 @@ public class KarmaGameManager : MonoBehaviour
     private static KarmaGameManager _instance;
     public static KarmaGameManager Instance { get { return _instance; } }
     public GameObject cardPrefab;
+    public GameObject playerPrefab;
+
+    [SerializeField] List<Vector3> playerPositions;
+
     public List<GameObject> handHolders;
     public List<GameObject> boardHolders;
     public GameObject drawPile;
     public GameObject burnPile;
     public GameObject playPile;
 
+    [SerializeField] List<bool> arePlayableCharacters;
+    public List<GameObject> Players { get; protected set; }
     public List<Button> cardSelectConfirmButtons;
     public List<Button> pickupPlayPileButtons;
     List<CardSelector> _cardSelectors;
@@ -43,18 +49,48 @@ public class KarmaGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        BasicBoard startBoard = BoardFactory.RandomStart(4, 3);
-        _cardSelectors = new List<CardSelector>();
-        for (int i = 0; i < startBoard.Players.Count; i++) { _cardSelectors.Add(new CardSelector()); }
+        int numberOfPlayers = playerPositions.Count;
+        BasicBoard startBoard = BoardFactory.RandomStart(numberOfPlayers, 1);
+        CreatePlayers(playerPositions);
+
+        CreateCardSelectors(startBoard);
         CreatePlayerCardsFromBoard(startBoard);
         CreateCardPilesFromBoard(startBoard);
 
-        List<IController> controllers = new() { new PlayerController(), new PlayerController(), new PlayerController(), new PlayerController() };
-        
+        List<IController> controllers = new();
+        AddControllers(controllers);
+
         game = new Game(startBoard, controllers);
         AssignButtonEvents(game);
-        
+
+        throw new Exception("Stopped KGM");
         game.PlayTurn();
+    }
+
+    void CreatePlayers(List<Vector3> playerStartPositions)
+    {
+        for (int i = 0; i < playerStartPositions.Count; i++)
+        {
+
+        }
+    }
+
+    void CreateCardSelectors(BasicBoard startBoard)
+    {
+        _cardSelectors = new List<CardSelector>();
+        for (int i = 0; i < startBoard.Players.Count; i++) { _cardSelectors.Add(new CardSelector()); }
+    }
+
+    void AddControllers(List<IController> controllers)
+    {
+        int botNameIndex = 0;
+        foreach (bool usePlayerController in arePlayableCharacters)
+        {
+            if (usePlayerController) { controllers.Add(new PlayerController()); continue; }
+            IntegrationTestBot bot = new IntegrationTestBot("Bot" + botNameIndex, 0.0f);
+            controllers.Add(new BotController(bot));
+            botNameIndex++;
+        }
     }
 
     public void SetCardObjectProperties(Card card, GameObject cardObject)

@@ -19,11 +19,6 @@ public class PlayerController : IController
         SelectedCardValues = new ();
     }
 
-    IEnumerator WaitForInput()
-    {
-
-    }
-
     FrozenMultiSet<CardValue> GetCardSelection()
     {
         IsAwaitingInput = true;
