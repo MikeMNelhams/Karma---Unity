@@ -42,7 +42,7 @@ public class KarmaBoardManager : MonoBehaviour
             cardObject.transform.SetParent(transform);
             cardObject.transform.position += new Vector3(0, -transform.localScale.y, 0);
             CardObject cardFrontBackRenderer = cardObject.GetComponent<CardObject>();
-            cardFrontBackRenderer.UpdateImage(card);
+            cardFrontBackRenderer.SetCard(card);
             Vector3 correctedScale = cardObject.transform.localScale;
             j++;
         }

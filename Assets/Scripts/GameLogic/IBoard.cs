@@ -61,7 +61,7 @@ namespace Karma
             public bool HasBurnedThisTurn { get; }
             public int TurnsPlayed { get; }
             public HashSet<FrozenMultiSet<CardValue>> CurrentLegalCombos { get; }
-            public HashSet<BoardPlayerAction> CurrentLegalActions { get; } 
+            public HashSet<BoardPlayerAction> CurrentLegalActions { get; }
             public int TotalJokers { get; }
             public HashSet<int> PotentialWinnerIndices { get; }
             public int NumberOfCombosPlayedThisTurn { get; }

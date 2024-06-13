@@ -63,7 +63,6 @@ namespace Karma
             public static bool operator <=(Card x, Card y) => x.value <= y.value;
         }
 
-
         public class CardSuit
         {
             public static readonly CardSuit Hearts = new(CardColor.RED, "Hearts", "\u2665");

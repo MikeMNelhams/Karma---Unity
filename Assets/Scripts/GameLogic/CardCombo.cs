@@ -10,9 +10,9 @@ namespace Karma
         {
             public CardsList Cards { get; protected set; }
             public IController Controller { get; protected set; }
-            protected Dictionary<Card, int> _counts;
+            protected Dictionary<CardValue, int> _counts;
 
-            public CardCombo(CardsList cards, IController controller, Dictionary<Card, int> counts)
+            public CardCombo(CardsList cards, IController controller, Dictionary<CardValue, int> counts)
             {
                 Cards = cards;
                 Controller = controller;

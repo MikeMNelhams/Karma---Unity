@@ -57,7 +57,7 @@ namespace Karma
 
             public BasicBoard(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
-                bool cardsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 1,
+                bool cardsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
                 bool hasBurnedThisTurn = false, int turnsPlayed = 0)
             {
                 SetInitParams(players, drawPile, burnPile, playPile, turnOrder, playOrder, cardsAreFlipped, 
@@ -66,7 +66,7 @@ namespace Karma
 
             private void SetInitParams(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
-                bool cardsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 1,
+                bool cardsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
                 bool hasBurnedThisTurn = false, int turnsPlayed = 0)
             {
                 Players = players;
@@ -82,6 +82,7 @@ namespace Karma
                 TurnsPlayed = turnsPlayed;
 
                 ComboHistory = new List<CardCombo>();
+                ComboFactory = new CardComboFactory();
                 CardComboFactory cardComboFactory = new ();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
@@ -143,7 +144,7 @@ namespace Karma
 
             void TriggerOnTurnEndEvents()
             {
-                OnTurnEndEvent(this);
+                OnTurnEndEvent?.Invoke(this);
             }
 
             public bool PlayCards(CardsList cards, IController controller)

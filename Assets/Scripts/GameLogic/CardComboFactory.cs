@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DataStructures;
+using UnityEngine.UI;
 
 namespace Karma
 {
@@ -15,7 +16,7 @@ namespace Karma
     {
         public class CardCombo_TWO : CardCombo
         {
-            public CardCombo_TWO(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts){}
+            public CardCombo_TWO(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts){}
             public override void Apply(IBoard board)
             {
                 board.ResetPlayOrder();
@@ -24,7 +25,7 @@ namespace Karma
 
         public class CardCombo_THREE : CardCombo
         {
-            public CardCombo_THREE(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_THREE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 board.EffectMultiplier *= (int)Math.Pow(2, Cards.Count);
@@ -33,7 +34,7 @@ namespace Karma
 
         public class CardCombo_FOUR : CardCombo
         {
-            public CardCombo_FOUR(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_FOUR(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 return;
@@ -42,7 +43,7 @@ namespace Karma
 
         public class CardCombo_FIVE : CardCombo
         {
-            public CardCombo_FIVE(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_FIVE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 List<CardsList> startHands = new ();
@@ -77,7 +78,7 @@ namespace Karma
 
         public class CardCombo_SIX : CardCombo
         {
-            public CardCombo_SIX(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_SIX(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 return;
@@ -86,7 +87,7 @@ namespace Karma
 
         public class CardCombo_SEVEN : CardCombo
         {
-            public CardCombo_SEVEN(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_SEVEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (((uint)(board.EffectMultiplier) & 0b1) == 0b0)
@@ -99,7 +100,7 @@ namespace Karma
 
         public class CardCombo_EIGHT : CardCombo
         {
-            public CardCombo_EIGHT(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_EIGHT(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (((uint)(board.EffectMultiplier) & 0b1) == 0b0)
@@ -111,7 +112,7 @@ namespace Karma
         }
         public class CardCombo_NINE : CardCombo
         {
-            public CardCombo_NINE(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_NINE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (board.PlayPile.ContainsMinLengthRun(4)) { return; }
@@ -122,7 +123,7 @@ namespace Karma
 
         public class CardCombo_TEN : CardCombo
         {
-            public CardCombo_TEN(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_TEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 board.Burn(0);
@@ -131,7 +132,7 @@ namespace Karma
 
         public class CardCombo_JACK : CardCombo
         {
-            public CardCombo_JACK(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_JACK(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (board.PlayPile.Count < Cards.Count * 2) { return; }
@@ -148,7 +149,7 @@ namespace Karma
 
         public class CardCombo_QUEEN : CardCombo
         {
-            public CardCombo_QUEEN(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_QUEEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 Player currentPlayer = board.CurrentPlayer;
@@ -160,35 +161,55 @@ namespace Karma
                 {
                     if (currentPlayer.PlayingFrom != playingIndexAtStartOfCombo) { return; }
                     if (currentPlayer.PlayableCards.IsExclusively(CardValue.JOKER)) { return; }
-                    GiveAwayCard(board, currentPlayer);
+                    GiveAwayCard(board);
                     if (!currentPlayer.HasCards) { return; }
                 }
             }
 
-            public void GiveAwayCard(IBoard board, Player currentPlayer)
+            public void GiveAwayCard(IBoard board)
             {
+                Player currentPlayer = board.CurrentPlayer;
                 HashSet<int> jokerIndices = new ();
                 for (int i = 0; i < currentPlayer.PlayableCards.Count; i++)
                 {
                     Card card = currentPlayer.PlayableCards[i];
                     if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
                 }
-                int cardIndexSelected = Controller.GiveAwayCardIndex(board, jokerIndices);
-                HashSet<int> excludedPlayerIndices = board.PotentialWinnerIndices;
-                excludedPlayerIndices.UnionWith(new HashSet<int>() { board.CurrentPlayerIndex });
-                int targetPlayerIndex = Controller.GiveAwayPlayerIndex(board, excludedPlayerIndices);
-                Player targetPlayer = board.Players[targetPlayerIndex];
-                targetPlayer.Hand.Add(currentPlayer.PlayableCards.Pop(cardIndexSelected));
-                if (board.DrawPile.Count > 0 && currentPlayer.Hand.Count < 3)
-                {
-                    currentPlayer.DrawCard(board.DrawPile);
-                }
+
+                HashSet<int> validIndices = Enumerable.Range(0, currentPlayer.PlayableCards.Count).ToHashSet();
+                validIndices.ExceptWith(jokerIndices);
+
+                PlayerProperties playerProperties = Controller.State._playerProperties;
+                // TODO Use the card selector. Set the onClick event for the button, to check if the card selection is valid, then execute the next block.
+                //foreach (int i in validIndices)
+                //{
+                //    Button 
+                //    playerProperties.GiveAwayCardIndex(board, jokerIndices);
+                //}
+                
+                //playerProperties.SetControllerState(new SelectingCardGiveAwayCardIndex(board, playerProperties));
+
+
+
             }
+
+            //public void CardIndexSelected(IBoard board, int cardIndex)
+            //{
+            //    HashSet<int> excludedPlayerIndices = board.PotentialWinnerIndices;
+            //    excludedPlayerIndices.UnionWith(new HashSet<int>() { board.CurrentPlayerIndex });
+            //    int targetPlayerIndex = Controller.GiveAwayPlayerIndex(board, excludedPlayerIndices);
+            //    Player targetPlayer = board.Players[targetPlayerIndex];
+            //    targetPlayer.Hand.Add(currentPlayer.PlayableCards.Pop(cardIndexSelected));
+            //    if (board.DrawPile.Count > 0 && currentPlayer.Hand.Count < 3)
+            //    {
+            //        currentPlayer.DrawCard(board.DrawPile);
+            //    }
+            //}
         }
 
         public class CardCombo_KING : CardCombo
         {
-            public CardCombo_KING(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_KING(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
@@ -206,7 +227,7 @@ namespace Karma
 
         public class CardCombo_ACE : CardCombo
         {
-            public CardCombo_ACE(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_ACE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
@@ -238,12 +259,13 @@ namespace Karma
 
         public class CardCombo_JOKER : CardCombo
         {
-            public CardCombo_JOKER(CardsList cards, IController controller, Dictionary<Card, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_JOKER(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 board.Burn(Cards.Count);
-                int targetPlayerIndex = Controller.JokerTargetIndex(board, new HashSet<int>() { board.CurrentPlayerIndex });
-                board.Players[targetPlayerIndex].Pickup(board.PlayPile);
+                // Create a button creation system based on the number of valid target players... 
+                //int targetPlayerIndex = Controller.JokerTargetIndex(board, new HashSet<int>() { board.CurrentPlayerIndex });
+                //board.Players[targetPlayerIndex].Pickup(board.PlayPile);
             }
         }
 
@@ -328,7 +350,8 @@ namespace Karma
                 {
                     throw new NotImplementedException("No mapping is defined for: " + cardValue);
                 }
-                return Activator.CreateInstance(_cardComboMap[cardValue]) as CardCombo;
+                Type type = _cardComboMap[cardValue];
+                return Activator.CreateInstance(type, _cards, controller, _counts) as CardCombo;
             }
 
             public List<bool> ComboVisibility(IBoard board)

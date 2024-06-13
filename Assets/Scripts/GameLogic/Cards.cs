@@ -181,9 +181,13 @@ namespace Karma
 
             public override string ToString()
             {
-                string listString = this._cards.ToString();
-                listString = listString[1..];
-                return "[" + listString + "]";
+                string listString = "";
+                foreach (Card card in _cards)
+                {
+                    listString += card.ToString() + ", ";
+                }
+
+                return "Cards[" + listString + "]";
             }
 
             public bool Contains(Card item)

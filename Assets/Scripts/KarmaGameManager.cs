@@ -7,34 +7,35 @@ using Karma.Board;
 using Karma.Players;
 using Karma.Cards;
 using System;
-using DataStructures;
-using UnityEngine.UI;
 using Karma.Controller;
+using System.Linq;
+using DataStructures;
 
 public class KarmaGameManager : MonoBehaviour
 {
     private static KarmaGameManager _instance;
     public static KarmaGameManager Instance { get { return _instance; } }
+
     public GameObject cardPrefab;
     public GameObject playerPrefab;
+    public PlayTableProperties playTable;
+
+    [SerializeField] int _turnLimit = 100;
 
     [SerializeField] List<Vector3> playerPositions;
 
-    public List<GameObject> handHolders;
-    public List<GameObject> boardHolders;
-    public GameObject drawPile;
-    public GameObject burnPile;
-    public GameObject playPile;
-
     [SerializeField] List<bool> arePlayableCharacters;
-    public List<GameObject> Players { get; protected set; }
-    public List<Button> cardSelectConfirmButtons;
-    public List<Button> pickupPlayPileButtons;
-    List<CardSelector> _cardSelectors;
+    public List<PlayerProperties> PlayersProperties { get; protected set; }
 
-    Game game;
+    public IBoard Board { get; protected set; }
+    public PickupPlayPile PickUpAction { get; set; } = new PickupPlayPile();
+    public PlayCardsCombo PlayCardsComboAction { get; set; } = new PlayCardsCombo();
 
-    private void Awake()
+    Dictionary<int, int> GameRanks { get; set; }
+    Dictionary<int, int> VotesForWinners { get; set; }
+    Dictionary<int, int> PlayerJokerCounts { get; set; }
+
+    void Awake()
     {
         if (_instance != null && _instance != this)
         {
@@ -50,46 +51,42 @@ public class KarmaGameManager : MonoBehaviour
     void Start()
     {
         int numberOfPlayers = playerPositions.Count;
-        BasicBoard startBoard = BoardFactory.RandomStart(numberOfPlayers, 1);
+        Board = BoardFactory.RandomStart(numberOfPlayers, 1);
         CreatePlayers(playerPositions);
+        CreatePlayerCardsFromBoard();
+        playTable.CreateCardPilesFromBoard(Board);
 
-        CreateCardSelectors(startBoard);
-        CreatePlayerCardsFromBoard(startBoard);
-        CreateCardPilesFromBoard(startBoard);
-
-        List<IController> controllers = new();
-        AddControllers(controllers);
-
-        game = new Game(startBoard, controllers);
-        AssignButtonEvents(game);
-
-        throw new Exception("Stopped KGM");
-        game.PlayTurn();
+        InitializeGameRanks();
+        AssignButtonEvents();
     }
 
     void CreatePlayers(List<Vector3> playerStartPositions)
     {
+        PlayersProperties = new ();
+        int botNameIndex = 0;
         for (int i = 0; i < playerStartPositions.Count; i++)
         {
+            Vector3 tableDirection = playTable.centre - playerStartPositions[i];
+            tableDirection.y = 0;
+            GameObject player = Instantiate(playerPrefab, playerStartPositions[i], Quaternion.LookRotation(tableDirection));
+            player.name = "Player " + i;
 
-        }
-    }
+            PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
+            PlayersProperties.Add(playerProperties);
+            bool isCurrentPlayer = i == Board.CurrentPlayerIndex;
+            if (isCurrentPlayer) { playerProperties.EnableCamera(); }
+            else { playerProperties.DisableCamera(); }
 
-    void CreateCardSelectors(BasicBoard startBoard)
-    {
-        _cardSelectors = new List<CardSelector>();
-        for (int i = 0; i < startBoard.Players.Count; i++) { _cardSelectors.Add(new CardSelector()); }
-    }
+            if (arePlayableCharacters[i]) { playerProperties.Controller = new PlayerController(); }
+            else 
+            {
+                IntegrationTestBot bot = new ("Bot" + botNameIndex, 0.0f);
+                playerProperties.Controller = new BotController(bot);
+                botNameIndex++;
+            }
 
-    void AddControllers(List<IController> controllers)
-    {
-        int botNameIndex = 0;
-        foreach (bool usePlayerController in arePlayableCharacters)
-        {
-            if (usePlayerController) { controllers.Add(new PlayerController()); continue; }
-            IntegrationTestBot bot = new IntegrationTestBot("Bot" + botNameIndex, 0.0f);
-            controllers.Add(new BotController(bot));
-            botNameIndex++;
+            if (isCurrentPlayer) { playerProperties.SetControllerState(new PickingAction(Board, playerProperties)); }
+            else { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
         }
     }
 
@@ -97,40 +94,30 @@ public class KarmaGameManager : MonoBehaviour
     {
         cardObject.name = card.ToString();
         CardObject cardRenderer = cardObject.GetComponent<CardObject>();
-        cardRenderer.UpdateImage(card);
+        cardRenderer.SetCard(card);
     }
 
-    void CreateCardPilesFromBoard(BasicBoard startBoard)
-    {
-        KarmaCardPileManager drawPileManager = drawPile.GetComponent<KarmaCardPileManager>();
-        drawPileManager.CreatePile(startBoard.DrawPile);
-        KarmaCardPileManager burnPileManager = burnPile.GetComponent<KarmaCardPileManager>();
-        burnPileManager.CreatePile(startBoard.BurnPile);
-        KarmaCardPileManager playPileManager = playPile.GetComponent<KarmaCardPileManager>();
-        playPileManager.CreatePile(startBoard.PlayPile);
-    }
-
-    void CreatePlayerCardsFromBoard(IBoard board)
+    void CreatePlayerCardsFromBoard()
     {
         float startAngle = -20.0f;
         float endAngle = 20.0f;
         float distanceFromHolder = 0.7f;
         
-        for (int i = 0; i < board.Players.Count; i++)
+        for (int i = 0; i < Board.Players.Count; i++)
         {
-            Player player = board.Players[i];
-            if (i >= handHolders.Count) { break; }
-            if (handHolders[i] == null) { continue; }
-            GameObject cardHolder = handHolders[i];
+            Player player = Board.Players[i];
+            PlayerProperties playerProperties = PlayersProperties[i]; 
+            if (playerProperties.cardHolder == null) { continue; }
+            GameObject cardHolder = playerProperties.cardHolder;
             CreateCardsForHolder(player, i, cardHolder, startAngle, endAngle, distanceFromHolder);
         }
 
-        for (int i = 0; i < board.Players.Count; i++)
+        for (int i = 0; i < Board.Players.Count; i++)
         {
-            Player player = board.Players[i];
-            if (i >= boardHolders.Count) { break; }
-            if (boardHolders[i] == null) { continue; }
-            GameObject boardHolder = boardHolders[i];
+            Player player = Board.Players[i];
+            if (i >= playTable.boardHolders.Count) { break; }
+            if (playTable.boardHolders[i] == null) { continue; }
+            GameObject boardHolder = playTable.boardHolders[i];
             KarmaBoardManager karmaBoardManager = boardHolder.GetComponent<KarmaBoardManager>();
             karmaBoardManager.CreateKarmaCards(player.KarmaUp, player.KarmaDown);
         }   
@@ -160,49 +147,206 @@ public class KarmaGameManager : MonoBehaviour
     void SetCardObjectOnMouseDownEvent(Card card, GameObject cardObject, int playerIndex)
     {
         CardObject cardRenderer = cardObject.GetComponent<CardObject>();
-        cardRenderer.OnCardClick += _cardSelectors[playerIndex].Toggle;
+        cardRenderer.OnCardClick += PlayersProperties[playerIndex].CardSelector.Toggle;
     }
 
-    void AssignButtonEvents(Game game)
+    void MoveCardsFromHandToPlayPile(List<CardObject> cardObjects, int playerIndex)
     {
-        int j = 0;
-        for (int i = 0; i < game.Board.Players.Count; i++) 
+        foreach (CardObject cardObject in cardObjects)
         {
-            if (game.Controllers[i].GetType() == typeof(PlayerController))
-            {
-                if (j >= cardSelectConfirmButtons.Count) { break; }
-                if (cardSelectConfirmButtons[j] == null) { continue; }
-                cardSelectConfirmButtons[j].onClick.AddListener(delegate { TriggerCardsSelected(i); });
-                j++;
-            }
+            cardObject.OnCardClick -= PlayersProperties[playerIndex].CardSelector.Toggle;
+        }
+        playTable.MoveCardsToTopOfPlayPile(cardObjects);
+    }
+
+    void InitializeGameRanks()
+    {
+        GameRanks = new Dictionary<int, int>();
+        for (int i = 0; i < Board.Players.Count; i++)
+        {
+            GameRanks[i] = Board.Players[i].Length;
+        }
+        VotesForWinners = new ();
+    }
+
+    public void EndTurn()
+    {
+        Board.EndTurn();
+        CheckIfWinner();
+        NextTurn();
+    }
+
+    void CheckIfWinner()
+    {
+        UpdateGameRanks();
+        int numberOfPotentialWinners = Board.PotentialWinnerIndices.Count;
+        if (numberOfPotentialWinners == 1 && Board.NumberOfJokersInPlay == 0)
+        {
+            throw new GameWonException(GameRanks);
+        }
+        if (numberOfPotentialWinners >= 2 && Board.NumberOfJokersInPlay == 0)
+        {
+            throw new GameWonException(GameRanks);
+        }
+        if (numberOfPotentialWinners >= 2)
+        {
+            VoteForWinners();
+            throw new GameWonException(GameRanks);
         }
 
-        j = 0;
-        for (int i = 0; i < game.Board.Players.Count; i++)
+        if (Board.TurnsPlayed >= _turnLimit)
         {
-            if (game.Controllers[i].GetType() == typeof(PlayerController))
+            throw new GameTurnLimitExceededException(GameRanks, _turnLimit);
+        }
+    }
+
+    void VoteForWinners()
+    {
+        Dictionary<int, int> jokerCounts = new();
+        for (int i = 0; i < Board.Players.Count; i++)
+        {
+            Player player = Board.Players[i];
+            int jokerCount = player.NumberOfJokers;
+            if (jokerCount > 0)
             {
-                if (j >= pickupPlayPileButtons.Count) { break; }
-                if (pickupPlayPileButtons[j] == null) { continue; }
-                pickupPlayPileButtons[j].onClick.AddListener(delegate { TriggerPickupActionSelected(i); });
-                j++;
+                jokerCounts[i] = jokerCount;
             }
+        }
+        PlayerJokerCounts = jokerCounts;
+        HashSet<int> playerIndicesToExclude = new();
+        playerIndicesToExclude.UnionWith(Enumerable.Range(0, Board.Players.Count).ToList<int>());
+        playerIndicesToExclude.ExceptWith(Board.PotentialWinnerIndices);
+        foreach (int playerIndex in jokerCounts.Keys)
+        {
+            int numberOfVotes = jokerCounts[playerIndex];
+            Board.CurrentPlayerIndex = playerIndex;
+            PlayersProperties[playerIndex].SetControllerState(new VotingForWinner(Board, PlayersProperties[playerIndex]));
+        }
+    }
+
+    void UpdateGameRanks()
+    {
+        Dictionary<int, HashSet<int>> cardCounts = new();
+        for (int i = 0; i < Board.Players.Count; i++)
+        {
+            if (!cardCounts.ContainsKey(Board.Players[i].Length)) { cardCounts[Board.Players[i].Length] = new HashSet<int>(); }
+            cardCounts[Board.Players[i].Length].Add(i);
+        }
+
+        List<Tuple<int, HashSet<int>>> ranks = new();
+        foreach (int key in cardCounts.Keys)
+        {
+            HashSet<int> playerIndices = cardCounts[key];
+            ranks.Add(Tuple.Create(key, playerIndices));
+        }
+        ranks.Sort((x, y) => x.Item1.CompareTo(y.Item1));
+        GameRanks = new();
+        foreach ((int rank, HashSet<int> pair) in ranks)
+        {
+            foreach (int playerIndex in pair)
+            {
+                GameRanks[playerIndex] = rank;
+            }
+        }
+    }
+
+    void NextTurn()
+    {
+        if (Board.HasBurnedThisTurn && Board.Players[Board.PlayerIndexWhoStartedTurn].HasCards) 
+        { 
+            PlayTurnAgain();
+            return;
+        }
+
+        StepToNextPlayer();
+    }
+
+    void StepToNextPlayer()
+    {
+        PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.CurrentPlayerIndex]));
+        Board.StepPlayerIndex(1);
+        PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new PickingAction(Board, PlayersProperties[Board.CurrentPlayerIndex]));
+    }
+
+    void PlayTurnAgain()
+    {
+        Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+        PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new PickingAction(Board, PlayersProperties[Board.CurrentPlayerIndex]));
+    }
+
+    void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
+    {
+        if (!VotesForWinners.ContainsKey(voteTargetIndex)) { VotesForWinners[voteTargetIndex] = 0; }
+        VotesForWinners[voteTargetIndex] += PlayerJokerCounts[votingPlayerIndex];
+        int totalAvailableVotes = Enumerable.Sum(PlayerJokerCounts.Values);
+        int totalVotes = Enumerable.Sum(VotesForWinners.Values);
+        if (totalVotes == totalAvailableVotes) { DecideWinners(); }
+        PlayersProperties[votingPlayerIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[votingPlayerIndex]));
+    }    
+    
+    void DecideWinners()
+    {
+        if (VotesForWinners.Count > 0)
+        {
+            int mostVotes = Enumerable.Max(VotesForWinners.Values);
+            List<int> mostVotedPlayerIndices = new();
+            foreach (int playerIndex in VotesForWinners.Keys)
+            {
+                if (VotesForWinners[playerIndex] == mostVotes)
+                {
+                    mostVotedPlayerIndices.Add(playerIndex);
+                }
+            }
+            HashSet<int> loserIndices = new();
+            loserIndices.UnionWith(Enumerable.Range(0, Board.Players.Count));
+            loserIndices.ExceptWith(mostVotedPlayerIndices);
+            foreach (int playerIndex in loserIndices)
+            {
+                GameRanks[playerIndex]++;
+            }
+        }
+    }
+
+    void AssignButtonEvents()
+    {
+        for (int i = 0; i < PlayersProperties.Count; i++)
+        {
+            int index = i;
+            PlayersProperties[index].confirmSelectionButton.onClick.AddListener(delegate { TriggerCardsSelected(index); });
+            PlayersProperties[index].pickupPlayPileButton.onClick.AddListener(delegate { TriggerPickupActionSelected(index); });
         }
     }
 
     void TriggerCardsSelected(int playerIndex)
     {
-        CardSelector cardSelector = _cardSelectors[playerIndex];
-        IController controller = game.Controllers[playerIndex];
-        controller.SelectedCardValues = cardSelector.SelectionCardValues;
-        controller.IsAwaitingInput = false;
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        CardSelector cardSelector = playerProperties.CardSelector;
+        print("Attempting to play cards: " + cardSelector.Selection);
+        print("Attempting to play cardValues: " + cardSelector.SelectionCardValues);
+        print("Attempting to play combo with hash: " + cardSelector.SelectionCardValues.GetHashCode());
+        string currentLegalCombos = "Currently legal: HashSet[";
+        string currentHashes = "Current legal combo hashes: "; 
+        foreach (FrozenMultiSet<CardValue> combo in Board.CurrentLegalCombos)
+        {
+            currentLegalCombos += combo + ", ";
+            currentHashes += combo.GetHashCode() + ", ";
+        }
+        print(currentLegalCombos + "]");
+        print(currentHashes);
+
+        if (Board.CurrentLegalCombos.Contains(cardSelector.SelectionCardValues))
+        {
+            print("Card combo is LEGAL!! Proceeding to play it...");
+            PlayCardsCombo playCardsCombo = new ();
+            MoveCardsFromHandToPlayPile(cardSelector.CardObjects.ToList(), playerIndex);
+            playCardsCombo.Apply(Board, playerProperties.Controller);
+            EndTurn();
+        }
     }
 
     void TriggerPickupActionSelected(int playerIndex)
     {
-        IController controller = game.Controllers[playerIndex];
-        controller.SelectedAction = new PickupPlayPile();
-        controller.IsAwaitingInput = false;
+        EndTurn();
     }
 
     Vector3 RelativeCardPosition(float distanceFromCentre, float angle)

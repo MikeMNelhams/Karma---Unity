@@ -2,44 +2,100 @@ using DataStructures;
 using Karma.Board;
 using Karma.Cards;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Karma
 {
     namespace Controller
     {
-        public interface IController
+        public class IController
         {
-            public bool IsAwaitingInput { get; set; }
-            public FrozenMultiSet<CardValue> SelectedCardValues { get; set; }
-            public BoardPlayerAction SelectedAction { get; set; }
-            public int GiveAwayCardIndex(IBoard board, HashSet<int> excludedCardsIndices);
-            public int GiveAwayPlayerIndex(IBoard board, HashSet<int> excludedPlayerIndices);
-            public int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices);
-            public bool WantsToMulligan(IBoard board);
-            public int MulliganHandIndex(IBoard board);
-            public int MulliganKarmaUpIndex(IBoard board);
-            public BoardTurnOrder ChooseStartDirection(IBoard board);
-            public BoardPlayerAction SelectAction(IBoard board);
-            public FrozenMultiSet<CardValue> SelectCardsToPlay(IBoard board);
-            public int VoteForWinner(IBoard board, HashSet<int> excludedPlayerIndices);
+            public ControllerState State { get; protected set; }
+            public virtual void SetState(ControllerState newState)
+            {
+                State?.OnExit();
+                newState.OnEnter();
+                State = newState;
+            } 
         }
 
         public abstract class ControllerState
         {
-            public abstract void OnEnter(IBoard board);
-            public abstract void OnExit(IBoard board);
-            public GameObject CurrentPlayer(IBoard board) { return KarmaGameManager.Instance.Players[board.CurrentPlayerIndex]; }
+            protected IBoard _board;
+            public PlayerProperties _playerProperties;
+            protected ControllerState(IBoard board, PlayerProperties playerProperties)
+            {
+                _board = board;
+                _playerProperties = playerProperties;
+            }
+
+            public abstract void OnEnter();
+            public abstract void OnExit();
         }
 
-        public class WaitForTurnState : ControllerState
+        public class WaitForTurn : ControllerState
         {
-            public override void OnEnter(IBoard board)
+            public WaitForTurn(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) {}
+            public override void OnEnter()
+            {
+                _playerProperties.DisableCamera();
+                _playerProperties.HideUI();
+            }
+
+            public override void OnExit()
+            {
+                _playerProperties.EnableCamera();  
+            }
+        }
+
+        public class PickingAction : ControllerState
+        {
+            public PickingAction(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+
+            public override void OnEnter()
+            {
+                _board.StartTurn();
+                string currentLegalCombos = "Currently legal: HashSet[";
+                foreach (FrozenMultiSet<CardValue> combo in _board.CurrentLegalCombos)
+                {
+                    currentLegalCombos += combo + ", ";
+                }
+                Debug.Log(currentLegalCombos + "]");
+                _playerProperties.EnterPickingActionMode();
+            }
+
+            public override void OnExit()
+            {
+                _playerProperties.ExitPickingActionMode();
+            }
+        }
+
+        public class VotingForWinner : ControllerState
+        {
+            public VotingForWinner(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+
+            public override void OnEnter()
+            {
+                _playerProperties.EnterVotingForWinnerMode();
+            }
+
+            public override void OnExit()
+            {
+                _playerProperties.ExitVotingForWinnerMode();
+            }
+        }
+
+        public class SelectingCardGiveAwayCardIndex : ControllerState
+        {
+            public SelectingCardGiveAwayCardIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+
+            public override void OnEnter()
             {
                 throw new System.NotImplementedException();
             }
 
-            public override void OnExit(IBoard board)
+            public override void OnExit()
             {
                 throw new System.NotImplementedException();
             }

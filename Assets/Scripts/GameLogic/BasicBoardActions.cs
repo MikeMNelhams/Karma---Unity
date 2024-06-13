@@ -39,14 +39,8 @@ namespace Karma
 
             public override void Apply(IBoard board, IController controller)
             {
-                FrozenMultiSet<CardValue> cards = null;
-                Func<IBoard, FrozenMultiSet<CardValue>> cardSelector = controller.SelectCardsToPlay;
-                throw new Exception("good until here!");
-                while (cards is null || !board.CurrentLegalCombos.Contains(cards))
-                {
-                    cards = cardSelector(board);
-                    
-                }
+                // TODO this is AWFUL exposure, I can't think of another way around it though...
+                CardsList cards = controller.State._playerProperties.CardSelector.Selection;
                 CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(cards);
                 board.PlayCards(cardsToPlay, controller);
             }
