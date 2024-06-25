@@ -1,10 +1,13 @@
 using Karma.Cards;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class KarmaCardPileHandler : MonoBehaviour
 {
+    [SerializeField] Transform _pileDebugCube;
     [SerializeField] bool _isFaceUp = false;
     public List<CardObject> CardObjects { get; protected set; }
 
@@ -17,21 +20,17 @@ public class KarmaCardPileHandler : MonoBehaviour
     {
         if (pile.Count == 0) { return; }
         KarmaGameManager gameManager = KarmaGameManager.Instance;
-        float yStep = CardDepth;
-        float halfHeight = transform.localScale.y;
+        float yStep = gameManager.CardTransform.localScale.z;
+        float halfHeight = BottomY;
 
         Quaternion cardRotation = CardRotation();
-        Vector3 cardPosition = transform.TransformPoint(new Vector3(0, 0, 0));
 
         int j = 0;
         foreach (Card card in pile)
         {
             float h = (j+1) * yStep;
-            GameObject cardObject = Instantiate(gameManager.cardPrefab, cardPosition, cardRotation);
-            cardObject.transform.SetParent(transform);
-            cardObject.transform.position += new Vector3(0, -halfHeight+h, 0);
-            gameManager.SetCardObjectProperties(card, cardObject);
-            Vector3 correctedScale = cardObject.transform.localScale;
+            Vector3 cardPosition = transform.TransformPoint(new(0, -halfHeight + h, 0));
+            GameObject cardObject = gameManager.InstantiateCard(card, cardPosition, cardRotation, gameObject);
 
             CardObjects.Add(cardObject.GetComponent<CardObject>());
             j++;
@@ -42,22 +41,43 @@ public class KarmaCardPileHandler : MonoBehaviour
     {
         KarmaGameManager gameManager = KarmaGameManager.Instance;
         GameObject cardPrefab = gameManager.cardPrefab;
-        float cardDepth = CardDepth;
-        float halfHeight = transform.localScale.y;
+        float cardDepth = gameManager.CardTransform.localScale.z;
+        float halfHeight = BottomY;
         float cardIndex = CardObjects.Count;
 
-        Vector3 cardStartPosition = transform.TransformPoint(new Vector3(0, 0, 0));
         Quaternion cardRotation = CardRotation();
 
         foreach (CardObject cardObject in cardObjects)
         {
             cardObject.DisableSelectShader();
+            cardObject.transform.SetParent(transform);
+            
             CardObjects.Add(cardObject);
             float h = cardIndex * cardDepth;
-            
             cardObject.transform.SetPositionAndRotation(transform.position + new Vector3(0, -halfHeight + h, 0), cardRotation);
             cardIndex++;
         }
+    }
+
+    public List<CardObject> PopCardsFromTop(int numberOfCards)
+    {
+        List<CardObject> removedCardObjects = new();
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            removedCardObjects.Add(CardObjects[^1]);
+        }
+        return removedCardObjects;
+    }
+
+    public List<CardObject> PopAllCards()
+    {
+        List<CardObject> removedCardObjects = new();
+        foreach (CardObject cardObject in CardObjects)
+        {
+            removedCardObjects.Add(cardObject);
+        }
+        CardObjects.Clear();
+        return removedCardObjects;
     }
 
     Quaternion CardRotation()
@@ -66,11 +86,11 @@ public class KarmaCardPileHandler : MonoBehaviour
         return transform.rotation * faceRotation;
     }
 
-    float CardDepth
-    {
-        get
-        {
-            return KarmaGameManager.Instance.cardPrefab.transform.localScale.z;
-        }
+    float BottomY 
+    { 
+        get 
+        { 
+            return _pileDebugCube.localScale.y / 2;
+        } 
     }
 }

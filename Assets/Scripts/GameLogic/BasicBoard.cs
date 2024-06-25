@@ -28,6 +28,7 @@ namespace Karma
             public int NumberOfJokersInPlay { get; set; }
             public bool HasBurnedThisTurn { get; protected set; }
             public int TurnsPlayed { get; protected set; }
+            public int NumberOfCardsDrawnThisTurn { get; protected set; } 
             
             public int TotalJokers { get; protected set; }
             public int NumberOfCombosPlayedThisTurn { get; protected set; }
@@ -80,6 +81,7 @@ namespace Karma
                 CurrentPlayerIndex = whoStarts;
                 HasBurnedThisTurn = hasBurnedThisTurn;
                 TurnsPlayed = turnsPlayed;
+                NumberOfCardsDrawnThisTurn = 0;
 
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
@@ -126,6 +128,7 @@ namespace Karma
             {
                 PlayerIndexWhoStartedTurn = CurrentPlayerIndex;
                 NumberOfCombosPlayedThisTurn = 0;
+                NumberOfCardsDrawnThisTurn = 0;
                 HasBurnedThisTurn = false;
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
@@ -160,7 +163,7 @@ namespace Karma
                 if (addToPile) { PlayPile.Add(cards); }
                 bool willBurnDueToMinimumRunFour = PlayPile.ContainsMinLengthRun(4);
 
-                DrawUntilFull();
+                NumberOfCardsDrawnThisTurn += DrawUntilFull().Count;
 
                 if (NumberOfCombosPlayedThisTurn > 52) { return false; }
                 cardCombo.Apply(this);
@@ -172,7 +175,7 @@ namespace Karma
                 {
                     Burn(PlayPile.CountValue(CardValue.JOKER));
                 }
-                return true;
+                return false;
             }
 
             public void Burn(int jokerCount)
@@ -205,20 +208,22 @@ namespace Karma
 
             public void StepPlayerIndex(int numberOfRepeats)
             {
-                CurrentPlayerIndex += numberOfRepeats;
+                CurrentPlayerIndex += (int)TurnOrder * numberOfRepeats;
                 CurrentPlayerIndex %= Players.Count;
             }
 
-            void DrawUntilFull()
+            CardsList DrawUntilFull()
             {
-                if (DrawPile.Count == 0) { return; }
-                if (CurrentPlayer.Hand.Count >= 3) { return; }
+                if (DrawPile.Count == 0) { return new CardsList(); }
+                if (CurrentPlayer.Hand.Count >= 3) { return new CardsList(); }
                 int handStartSize = CurrentPlayer.Hand.Count;
+                CardsList cardsDrawn = new ();
                 for (int i = 0; i < 3 - handStartSize; i++) 
                 {
-                    if (DrawPile.Count == 0) { return; }
-                    CurrentPlayer.DrawCard(DrawPile);
+                    if (DrawPile.Count == 0) { return cardsDrawn; }
+                    cardsDrawn.Add(CurrentPlayer.DrawCard(DrawPile));
                 }
+                return cardsDrawn;
             }
 
             void ResetEffectMultiplierIfNecessary(CardValue cardValue)

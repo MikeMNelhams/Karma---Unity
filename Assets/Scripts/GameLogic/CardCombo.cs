@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Karma.Board;
 using Karma.Controller;
@@ -6,7 +7,7 @@ namespace Karma
 {
     namespace Cards
     {
-        public abstract class CardCombo
+        public abstract class CardCombo : IEquatable<CardCombo>
         {
             public CardsList Cards { get; protected set; }
             public IController Controller { get; protected set; }
@@ -26,6 +27,16 @@ namespace Karma
             public override string ToString()
             {
                 return GetType().Name + "(" + Cards.ToString() + ")";
+            }
+
+            public override int GetHashCode()
+            {
+                return Cards.GetHashCode();
+            }
+
+            public bool Equals(CardCombo other)
+            {
+                return Cards.Equals(other.Cards);
             }
         }
     }

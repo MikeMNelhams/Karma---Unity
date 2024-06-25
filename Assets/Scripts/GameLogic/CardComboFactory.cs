@@ -46,12 +46,12 @@ namespace Karma
             public CardCombo_FIVE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                List<CardsList> startHands = new ();
+                List<Hand> startHands = new ();
                 foreach (Player player in board.Players)
                 {
                     startHands.Add(player.Hand);
                 }
-                Deque<CardsList> hands = new (startHands);
+                Deque<Hand> hands = new (startHands);
                 int numberOfRepeats = _counts.Count * board.EffectMultiplier;
                 if (numberOfRepeats < board.Players.Count)
                 {
@@ -63,7 +63,7 @@ namespace Karma
                 return;
             }
 
-            protected void RotateHands(IBoard board, Deque<CardsList> hands, int numberOfRotations)
+            protected void RotateHands(IBoard board, Deque<Hand> hands, int numberOfRotations)
             {
                 for (int i = 0; i < numberOfRotations; i++) 
                 {
@@ -136,7 +136,7 @@ namespace Karma
             public override void Apply(IBoard board)
             {
                 if (board.PlayPile.Count < Cards.Count * 2) { return; }
-                Card cardBelowCombo = board.PlayPile[-1 - Cards.Count];
+                Card cardBelowCombo = board.PlayPile[^(1 + Cards.Count)];
                 if (cardBelowCombo.value == CardValue.JACK) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }

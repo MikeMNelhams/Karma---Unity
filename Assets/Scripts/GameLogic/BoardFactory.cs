@@ -14,15 +14,17 @@ namespace Karma
         {
             public static BasicBoard RandomStart(int numberOfPlayers, int numberOfJokers = 1, int whoStarts = 0)
             {
-                List<CardSuit> cardSuits = new List<CardSuit>();
-                cardSuits.Add(CardSuit.Hearts);
-                cardSuits.Add(CardSuit.Diamonds);
-                cardSuits.Add(CardSuit.Clubs);
-                cardSuits.Add(CardSuit.Spades);
+                List<CardSuit> cardSuits = new()
+                {
+                    CardSuit.Hearts,
+                    CardSuit.Diamonds,
+                    CardSuit.Clubs,
+                    CardSuit.Spades
+                };
 
-                CardsList jokers = new CardsList();
+                CardsList jokers = new ();
                 foreach (CardSuit suit in cardSuits) { jokers.Add(new Card(suit, CardValue.JOKER)); }
-                CardsList deck = new CardsList();
+                CardsList deck = new ();
                 foreach (CardSuit suit in cardSuits)
                 {
                     for (int i = 2; i < 16; i++)
@@ -49,15 +51,15 @@ namespace Karma
                     playerKarmaUps.Add(deck.PopMultiple(indicesToPop));
                 }
 
-                List<CardsList> playerHands = new ();
+                List<Hand> playerHands = new ();
                 for (int i = 0; i < numberOfPlayers; i++)
                 {
                     int[] indicesToPop = new int[3] { i * 3, i * 3 + 1, i * 3 + 2 };
-                    CardsList hand = deck.PopMultiple(indicesToPop);
+                    Hand hand = new (deck.PopMultiple(indicesToPop));
                     hand.Sort();
                     playerHands.Add(hand);;
                 }
-                List<Player> players = new List<Player>();
+                List<Player> players = new ();
                 for (int i = 0; i < numberOfPlayers; i++)
                 {
                     players.Add(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]));

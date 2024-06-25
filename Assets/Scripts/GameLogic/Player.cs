@@ -9,11 +9,11 @@ namespace Karma
     {
         public class Player
         {
-            public CardsList Hand { get; set; }
+            public Hand Hand { get; set; }
             public CardsList KarmaDown { get; set; }
             public CardsList KarmaUp { get; set; }
 
-            public Player(CardsList hand, CardsList karmaDown, CardsList karmaUp)
+            public Player(Hand hand, CardsList karmaDown, CardsList karmaUp)
             {
                 Hand = hand;
                 this.KarmaDown = karmaDown;
@@ -23,7 +23,7 @@ namespace Karma
             public Player(List<List<int>> playerMatrix)
             {
                 CardSuit suit = CardSuit.Hearts;
-                Hand = new CardsList(playerMatrix[0], suit);
+                Hand = new Hand(playerMatrix[0], suit);
                 KarmaUp = new CardsList(playerMatrix[1], suit);
                 KarmaDown = new CardsList(playerMatrix[2], suit);
             }
@@ -93,9 +93,11 @@ namespace Karma
                 Hand.Sort();
             }
 
-            public void DrawCard(CardsList cards)
+            public Card DrawCard(CardsList cards)
             {
-                Hand.Add(cards.Pop());
+                Card cardDrawn = cards.Pop();
+                Hand.Add(cardDrawn);
+                return cardDrawn;
             }
 
             public void ShuffleHand()

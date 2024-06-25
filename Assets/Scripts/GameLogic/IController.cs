@@ -62,6 +62,7 @@ namespace Karma
                     currentLegalCombos += combo + ", ";
                 }
                 Debug.Log(currentLegalCombos + "]");
+                Debug.Log("Starting picking actions for player: " + _board.CurrentPlayerIndex);
                 _playerProperties.EnterPickingActionMode();
             }
 

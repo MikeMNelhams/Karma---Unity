@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayTableProperties : MonoBehaviour
 {
-    [SerializeField] public Vector3 centre;
+    public Vector3 centre;
 
     public List<GameObject> boardHolders;
     public GameObject drawPile;
@@ -33,5 +33,15 @@ public class PlayTableProperties : MonoBehaviour
     public void MoveCardsToTopOfPlayPile(List<CardObject> cardObjects)
     {
         playPileHandler.MoveCardsToTopOfPile(cardObjects);
+    }
+
+    public List<CardObject> DrawCards(int numberOfCards)
+    {
+        return drawPileHandler.PopCardsFromTop(numberOfCards);
+    }
+
+    public List<CardObject> PopAllFromPlayPile()
+    {
+        return playPileHandler.PopAllCards();
     }
 }

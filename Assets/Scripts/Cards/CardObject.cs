@@ -7,8 +7,8 @@ using Karma.Cards;
 public class CardObject : MonoBehaviour
 {
     public Material planeMaterial;
-    public GameObject quad;
-    public Card CurrentCard { get; protected set; }
+    public GameObject frontQuad;
+    public Card CurrentCard { get; set; }
     public event Action<CardObject> OnCardClick;
     Material frontMaterial;
 
@@ -28,9 +28,10 @@ public class CardObject : MonoBehaviour
             var tex = new Texture2D(1, 1);
             tex.LoadImage(bytes);
             Material materialCopy = new(planeMaterial) {  mainTexture = tex };
-            MeshRenderer mr = quad.GetComponent<MeshRenderer>();
+            MeshRenderer mr = frontQuad.GetComponent<MeshRenderer>();
             mr.material = materialCopy;
             frontMaterial = materialCopy;
+            SetCardName(card.ToString());
         } 
         else
         {
@@ -56,5 +57,10 @@ public class CardObject : MonoBehaviour
         if (OnCardClick == null) { return; }
         ToggleSelectShader();
         OnCardClick.Invoke(this);
+    }
+
+    public void SetCardName(string name)
+    {
+        gameObject.name = name;
     }
 }

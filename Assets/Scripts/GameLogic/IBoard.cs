@@ -22,14 +22,20 @@ namespace Karma
             RIGHT = 1
         }
 
-        public abstract class BoardPlayerAction{
+        public abstract class BoardPlayerAction : IEquatable<BoardPlayerAction>
+        {
             public abstract bool IsValid(IBoard board);
             public abstract void Apply(IBoard board, IController controller);
             public abstract BoardPlayerAction Copy();
             public abstract string Name { get; }
             public override int GetHashCode() 
-            {
+            { 
                 return Name.GetHashCode();
+            }
+
+            public bool Equals(BoardPlayerAction other)
+            {
+                return Name == other.Name;
             }
         }
 
@@ -60,6 +66,7 @@ namespace Karma
             public int NumberOfJokersInPlay { get; set; }
             public bool HasBurnedThisTurn { get; }
             public int TurnsPlayed { get; }
+            public int NumberOfCardsDrawnThisTurn { get; }
             public HashSet<FrozenMultiSet<CardValue>> CurrentLegalCombos { get; }
             public HashSet<BoardPlayerAction> CurrentLegalActions { get; }
             public int TotalJokers { get; }

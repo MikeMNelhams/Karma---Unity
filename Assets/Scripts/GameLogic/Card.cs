@@ -27,15 +27,12 @@ namespace Karma
                 return suit == other.suit && value == other.value;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object other)
             {
-                if (obj is null) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType())
-                {
-                    return false;
-                }
-                return Equals(obj as Card);
+                if (other is null) return false;
+                if (ReferenceEquals(this, other)) { return true; }
+                if (GetType() != other.GetType()) { return false; }
+                return Equals(other as Card);
             }
 
             public int CompareTo(Card other)

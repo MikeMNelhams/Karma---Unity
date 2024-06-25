@@ -35,6 +35,8 @@ public class KarmaGameManager : MonoBehaviour
     Dictionary<int, int> VotesForWinners { get; set; }
     Dictionary<int, int> PlayerJokerCounts { get; set; }
 
+    public Transform CardTransform { get { return cardPrefab.transform; } }
+
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -99,9 +101,6 @@ public class KarmaGameManager : MonoBehaviour
 
     void CreatePlayerCardsFromBoard()
     {
-        float startAngle = -20.0f;
-        float endAngle = 20.0f;
-        float distanceFromHolder = 0.7f;
         
         for (int i = 0; i < Board.Players.Count; i++)
         {
@@ -109,7 +108,7 @@ public class KarmaGameManager : MonoBehaviour
             PlayerProperties playerProperties = PlayersProperties[i]; 
             if (playerProperties.cardHolder == null) { continue; }
             GameObject cardHolder = playerProperties.cardHolder;
-            CreateCardsForHolder(player, i, cardHolder, startAngle, endAngle, distanceFromHolder);
+            CreateCardsForHolder(i, cardHolder);
         }
 
         for (int i = 0; i < Board.Players.Count; i++)
@@ -123,31 +122,18 @@ public class KarmaGameManager : MonoBehaviour
         }   
     }
 
-    void CreateCardsForHolder(Player player, int playerIndex, GameObject cardHolder, float startAngle=-20.0f, float endAngle=20.0f, 
+    void CreateCardsForHolder(int playerIndex, GameObject cardHolder, float startAngle=-20.0f, float endAngle=20.0f, 
         float distanceFromHolder=0.75f)
     {
-        Transform holderTransform = cardHolder.transform;
-        Vector3 holderPosition = holderTransform.position;
-
-        float angleStepSize = (endAngle - startAngle) / (player.Hand.Count - 1);
-
-        int j = 0;
-        foreach (Card card in player.Hand)
+        List<CardObject> cardObjects = new ();
+        foreach (Card card in Board.Players[playerIndex].Hand)
         {
-            float angle = startAngle + j * angleStepSize;
-            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPosition(distanceFromHolder, angle));
-            Quaternion cardRotation = Quaternion.LookRotation(holderPosition - cardPosition);
-            GameObject cardObject = Instantiate(cardPrefab, cardPosition, cardRotation, cardHolder.transform);
-            SetCardObjectProperties(card, cardObject);
-            SetCardObjectOnMouseDownEvent(card, cardObject, playerIndex);
-            j++;
+            CardObject cardObject = Instantiate(cardPrefab, cardHolder.transform).GetComponent<CardObject>();
+            cardObject.SetCard(card);
+            cardObjects.Add(cardObject);
         }
-    }
 
-    void SetCardObjectOnMouseDownEvent(Card card, GameObject cardObject, int playerIndex)
-    {
-        CardObject cardRenderer = cardObject.GetComponent<CardObject>();
-        cardRenderer.OnCardClick += PlayersProperties[playerIndex].CardSelector.Toggle;
+        PlayersProperties[playerIndex].PopulateHand(cardObjects, startAngle, endAngle, distanceFromHolder);
     }
 
     void MoveCardsFromHandToPlayPile(List<CardObject> cardObjects, int playerIndex)
@@ -155,8 +141,58 @@ public class KarmaGameManager : MonoBehaviour
         foreach (CardObject cardObject in cardObjects)
         {
             cardObject.OnCardClick -= PlayersProperties[playerIndex].CardSelector.Toggle;
+            PlayersProperties[playerIndex].CardsInHand.Remove(cardObject);
         }
         playTable.MoveCardsToTopOfPlayPile(cardObjects);
+    }
+
+    void DrawCards(int numberOfCards, int playerIndex)
+    {
+        List<CardObject> cardsDrawn = playTable.DrawCards(numberOfCards);
+        MoveCardObjectsIntoHand(playerIndex, cardsDrawn);
+    }
+
+    void MoveCardObjectsIntoHand(int playerIndex, List<CardObject> cardObjectsToAdd)
+    {
+        List<CardObject> currentHandCardObjects = PlayersProperties[playerIndex].CardsInHand;
+        currentHandCardObjects.AddRange(cardObjectsToAdd);
+
+        Dictionary<Card, List<int>> cardPositions = new();
+        int n = Board.Players[playerIndex].Hand.Count;
+        for (int i = 0; i < n; i++)
+        {
+            Card card = Board.Players[playerIndex].Hand[i];
+            if (!cardPositions.ContainsKey(card)) { cardPositions[card] = new List<int>(); }
+            cardPositions[card].Add(i);
+        }
+        print(Board.Players[playerIndex].Hand);
+        CardObject[] handCorrectOrder = new CardObject[n];
+        foreach (CardObject cardObject in currentHandCardObjects)
+        {
+            int position = cardPositions[cardObject.CurrentCard].Last();
+            handCorrectOrder[position] = cardObject;
+            Debug.Log("Moving card: " + cardObject.CurrentCard + cardObject + " to position: " + position);
+            List<int> positions = cardPositions[cardObject.CurrentCard];
+            positions.RemoveAt(positions.Count - 1);
+            cardObject.transform.SetParent(PlayersProperties[playerIndex].cardHolder.transform);
+        }
+
+        List<CardObject> finalHandCardObjects = new();
+        for (int i = 0; i < handCorrectOrder.Length; i++)
+        {
+            if (handCorrectOrder[i] != null)
+            {
+                finalHandCardObjects.Add(handCorrectOrder[i]);
+            }
+        }
+        Debug.Log("Hand (Board): " + Board.CurrentPlayer.Hand);
+        string handCardObjectsString = "Hand (CardObjects):";
+        foreach (CardObject cardObject in finalHandCardObjects)
+        {
+            handCardObjectsString += " " + cardObject;
+        }
+        Debug.Log(handCardObjectsString);
+        PlayersProperties[playerIndex].PopulateHand(finalHandCardObjects);
     }
 
     void InitializeGameRanks()
@@ -265,12 +301,18 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.CurrentPlayerIndex]));
         Board.StepPlayerIndex(1);
-        PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new PickingAction(Board, PlayersProperties[Board.CurrentPlayerIndex]));
+        StartTurn();
     }
 
     void PlayTurnAgain()
     {
         Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+        StartTurn();
+    }
+
+    void StartTurn()
+    {
+        Board.StartTurn();
         PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new PickingAction(Board, PlayersProperties[Board.CurrentPlayerIndex]));
     }
 
@@ -312,50 +354,56 @@ public class KarmaGameManager : MonoBehaviour
         for (int i = 0; i < PlayersProperties.Count; i++)
         {
             int index = i;
-            PlayersProperties[index].confirmSelectionButton.onClick.AddListener(delegate { TriggerCardsSelected(index); });
+            PlayersProperties[index].confirmSelectionButton.onClick.AddListener(delegate { TriggerCardSelectionConfirmed(index); });
             PlayersProperties[index].pickupPlayPileButton.onClick.AddListener(delegate { TriggerPickupActionSelected(index); });
         }
     }
 
-    void TriggerCardsSelected(int playerIndex)
+    void TriggerCardSelectionConfirmed(int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         CardSelector cardSelector = playerProperties.CardSelector;
         print("Attempting to play cards: " + cardSelector.Selection);
         print("Attempting to play cardValues: " + cardSelector.SelectionCardValues);
-        print("Attempting to play combo with hash: " + cardSelector.SelectionCardValues.GetHashCode());
-        string currentLegalCombos = "Currently legal: HashSet[";
-        string currentHashes = "Current legal combo hashes: "; 
+        string currentLegalCombos = "Currently legal: ";
         foreach (FrozenMultiSet<CardValue> combo in Board.CurrentLegalCombos)
         {
             currentLegalCombos += combo + ", ";
-            currentHashes += combo.GetHashCode() + ", ";
         }
         print(currentLegalCombos + "]");
-        print(currentHashes);
 
+        // TODO Currently being given card via Joker and Via Queen WON'T add the physical cards to hand. Do this with events (Don't ask me how T.T)
         if (Board.CurrentLegalCombos.Contains(cardSelector.SelectionCardValues))
         {
             print("Card combo is LEGAL!! Proceeding to play it...");
-            PlayCardsCombo playCardsCombo = new ();
-            MoveCardsFromHandToPlayPile(cardSelector.CardObjects.ToList(), playerIndex);
-            playCardsCombo.Apply(Board, playerProperties.Controller);
+            
+            List<CardObject> cardObjects = cardSelector.CardObjects.ToList();
+            PlayCardsComboAction.Apply(Board, playerProperties.Controller);
+            MoveCardsFromHandToPlayPile(cardObjects, playerIndex);
+            foreach (CardObject cardObject in cardObjects)
+            {
+                cardObject.DisableSelectShader();
+                cardSelector.Remove(cardObject);
+            }
+            if (Board.CurrentPlayer.Hand.Count > 0) { DrawCards(Board.NumberOfCardsDrawnThisTurn, playerIndex); }
             EndTurn();
         }
     }
 
     void TriggerPickupActionSelected(int playerIndex)
     {
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        PickUpAction.Apply(Board, playerProperties.Controller);
+        List<CardObject> playPileCards = playTable.PopAllFromPlayPile();
+        MoveCardObjectsIntoHand(playerIndex, playPileCards);
         EndTurn();
     }
 
-    Vector3 RelativeCardPosition(float distanceFromCentre, float angle)
+    public GameObject InstantiateCard(Card card, Vector3 cardPosition, Quaternion cardRotation, GameObject parent)
     {
-        if (angle > 90) { throw new ArithmeticException("Angle: " + angle + " should not exceed 90"); }
-        if (angle == 0) { return new Vector3(0, 0, 1) * distanceFromCentre; }
-        double angleRad = (double)angle * (Math.PI / 180.0f);
-        float x = (float)(distanceFromCentre * Math.Sin(angleRad));
-        float z = (float)(distanceFromCentre * Math.Cos(angleRad));
-        return new Vector3(x, 0, z);
+        GameObject cardObject = Instantiate(KarmaGameManager.Instance.cardPrefab, cardPosition, cardRotation, parent.transform);
+        CardObject cardFrontBackRenderer = cardObject.GetComponent<CardObject>();
+        cardFrontBackRenderer.SetCard(card);
+        return cardObject;
     }
 }
