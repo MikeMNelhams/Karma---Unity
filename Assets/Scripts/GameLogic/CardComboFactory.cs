@@ -142,6 +142,7 @@ namespace Karma
                 if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
                 for (int i = 0; i < numberOfRepeats; i++)
                 {
+                    Debug.Log("Jack is playing card combo: " + cardBelowCombo);
                     board.PlayCards(new CardsList(cardBelowCombo), Controller, false);
                 }
             }
