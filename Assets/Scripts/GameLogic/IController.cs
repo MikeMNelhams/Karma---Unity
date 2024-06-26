@@ -56,7 +56,6 @@ namespace Karma
 
             public override void OnEnter()
             {
-                _board.StartTurn();
                 string currentLegalCombos = "Currently legal combos ON \'"; ;
 
                 Card topCard = _board.PlayPile.VisibleTopCard;

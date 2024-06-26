@@ -91,6 +91,22 @@ public class PlayerProperties : MonoBehaviour
 
         Transform holderTransform = cardHolder.transform;
         Vector3 holderPosition = holderTransform.position;
+
+        if (cardObjects.Count == 0) { return; }
+        if (cardObjects.Count == 1)
+        {
+            CardObject cardObject = cardObjects[0];
+            float middleAngle = (startAngle + endAngle) / 2;
+            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, middleAngle));
+            Vector3 lookVector = holderPosition - cardPosition;
+
+            Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
+            if (handIsFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
+
+            cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
+            return;
+        }
+
         float angleStepSize = (endAngle - startAngle) / (cardObjects.Count - 1);
 
         int j = 0;
@@ -98,12 +114,10 @@ public class PlayerProperties : MonoBehaviour
         {
             float angle = startAngle + j * angleStepSize;
             Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, angle));
-            Quaternion cardRotation = Quaternion.LookRotation(holderPosition - cardPosition);
+            Vector3 lookVector = holderPosition - cardPosition;
 
-            if (handIsFlipped )
-            {
-                cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0));
-            }
+            Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
+            if (handIsFlipped ) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
 
             cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
             j++;

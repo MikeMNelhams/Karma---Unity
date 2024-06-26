@@ -44,4 +44,17 @@ public class PlayTableProperties : MonoBehaviour
     {
         return playPileHandler.PopAllCards();
     }
+
+    public void MoveEntirePlayPileToBurnPile()
+    {
+        List<CardObject> cardObjects = playPileHandler.PopAllCards();
+        Debug.Log("Burning " + cardObjects.Count + " many cards");
+        burnPileHandler.MoveCardsToTopOfPile(cardObjects);
+    }
+
+    public void MoveTopCardsFromPlayPileToBurnPile(int numberOfCards)
+    {
+        List<CardObject> cardObjects = playPileHandler.PopCardsFromTop(numberOfCards);
+        burnPileHandler.MoveCardsToTopOfPile(cardObjects);
+    }
 }

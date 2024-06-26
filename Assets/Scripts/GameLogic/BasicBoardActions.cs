@@ -26,7 +26,7 @@ namespace Karma
                 return new PickupPlayPile();
             }
 
-            public override void Apply(IBoard board, IController controller)
+            public override void Apply(IBoard board, IController controller, CardsList selectedCards)
             {
                 board.CurrentPlayer.Pickup(board.PlayPile);
                 board.EffectMultiplier = 1;
@@ -37,11 +37,9 @@ namespace Karma
         {
             public PlayCardsCombo() { }
 
-            public override void Apply(IBoard board, IController controller)
+            public override void Apply(IBoard board, IController controller, CardsList selectedCards)
             {
-                // TODO this is AWFUL exposure, I can't think of another way around it though...
-                CardsList cards = controller.State._playerProperties.CardSelector.Selection;
-                CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(cards);
+                CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(selectedCards);
                 board.PlayCards(cardsToPlay, controller);
             }
 

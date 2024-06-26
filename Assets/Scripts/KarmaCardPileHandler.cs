@@ -64,7 +64,7 @@ public class KarmaCardPileHandler : MonoBehaviour
         List<CardObject> removedCardObjects = new();
         for (int i = 0; i < numberOfCards; i++)
         {
-            removedCardObjects.Add(CardObjects[^1]);
+            removedCardObjects.Add(CardObjects[^(i+1)]);
         }
         CardObjects.RemoveRange(CardObjects.Count - numberOfCards, numberOfCards);
 
@@ -74,11 +74,13 @@ public class KarmaCardPileHandler : MonoBehaviour
     public List<CardObject> PopAllCards()
     {
         List<CardObject> removedCardObjects = new();
+        print("During Popping all there are: " + CardObjects.Count + " many cards");
         foreach (CardObject cardObject in CardObjects)
         {
+            print("Copying cardObject: " + cardObject);
             removedCardObjects.Add(cardObject);
         }
-        CardObjects.Clear();
+        CardObjects = new List<CardObject>();
         return removedCardObjects;
     }
 

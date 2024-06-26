@@ -69,10 +69,11 @@ namespace Karma
                 {
                     players.Add(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]));
                 }
-                return new BasicBoard(players, new CardPile(deck));
+                return new BasicBoard(players, new CardPile(deck), new CardPile(), new PlayCardPile(), whoStarts: whoStarts);
             }
 
-            public static BasicBoard MatrixStart(List<List<List<int>>> playerCardValues, List<int> drawPileValues, List<int> playPileValues, List<int> burnPileValues)
+            public static BasicBoard MatrixStart(List<List<List<int>>> playerCardValues, List<int> drawPileValues, List<int> playPileValues, List<int> burnPileValues, 
+                int whoStarts=0)
             {
                 List<Player> players = new();
 
@@ -85,7 +86,7 @@ namespace Karma
                 PlayCardPile playPile = new(playPileValues, CardSuit.Hearts);
                 CardPile burnPile = new(burnPileValues, CardSuit.Hearts);
 
-                return new BasicBoard(players, drawPile, burnPile, playPile);
+                return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts);
             }
         }
     }

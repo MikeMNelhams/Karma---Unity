@@ -2,7 +2,9 @@ using DataStructures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using UnityEngine;
 
 namespace Karma
 {
@@ -11,7 +13,7 @@ namespace Karma
         public class CardsList : IList<Card>
         {
             protected List<Card> _cards;
-            protected static Random rng = new();
+            protected static System.Random rng = new();
 
             public CardsList()
             {
@@ -30,10 +32,12 @@ namespace Karma
 
             public CardsList(List<int> cardValues, CardSuit suit)
             {
+
                 _cards = new List<Card>();
                 for (int i=0; i < cardValues.Count; i++)
                 {
-                    _cards.Add(new Card(suit, (CardValue)i));
+                    Card card = new (suit, (CardValue)cardValues[i]);
+                    _cards.Add(card);
                 }
             }
 

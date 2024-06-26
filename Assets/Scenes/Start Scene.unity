@@ -756,7 +756,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 838419043}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.90416, y: 0.009903908, z: 11.4415865}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -779,12 +779,12 @@ MonoBehaviour:
   playerPrefab: {fileID: 2410296296573889902, guid: 75e9c81ac68b69545bddd1eab9beb352, type: 3}
   playTable: {fileID: 1598284356}
   _turnLimit: 100
-  playerPositions:
+  _playerPositions:
   - {x: 0, y: 5.1, z: 0}
   - {x: 2.5, y: 5.1, z: 2.5}
   - {x: 0, y: 5.1, z: 5}
   - {x: -2.5, y: 5.1, z: 2.5}
-  arePlayableCharacters: 01010101
+  _arePlayableCharacters: 01010101
 --- !u!1 &876613492
 GameObject:
   m_ObjectHideFlags: 0

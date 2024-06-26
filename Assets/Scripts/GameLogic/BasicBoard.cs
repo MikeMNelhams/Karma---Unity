@@ -36,7 +36,8 @@ namespace Karma
             public List<CardCombo> ComboHistory { get; protected set; }
             public CardComboFactory ComboFactory { get; protected set; }
             public int PlayerIndexWhoStartedTurn { get; protected set; }
-            public event IBoard.OnTurnEndEventHandler OnTurnEndEvent;
+            public event IBoard.BoardEventHandler OnTurnEndEvent;
+            public event IBoard.BoardBurnEventHandler OnBurnEvent;
             HashSet<BoardPlayerAction> _allActions;
 
             public BasicBoard(List<Player> players)
@@ -134,7 +135,7 @@ namespace Karma
                 TriggerOnTurnEndEvents();
             }
 
-            public void RegisterOnTurnEndEvent(IBoard.OnTurnEndEventHandler newEventHandler)
+            public void RegisterOnTurnEndEvent(IBoard.BoardEventHandler newEventHandler)
             {
                 OnTurnEndEvent += newEventHandler;
             }
@@ -142,6 +143,16 @@ namespace Karma
             void TriggerOnTurnEndEvents()
             {
                 OnTurnEndEvent?.Invoke(this);
+            }
+
+            public void RegisterOnBurnEvent(IBoard.BoardBurnEventHandler newEventHandler)
+            {
+                OnBurnEvent += newEventHandler;
+            }
+
+            void TriggerBurnEvents(int jokerCount)
+            {
+                OnBurnEvent?.Invoke(jokerCount);
             }
 
             public bool PlayCards(CardsList cards, IController controller)
@@ -192,11 +203,13 @@ namespace Karma
                         CardsList cardsToBurn = PlayPile.PopMultiple(indicesToBurn.ToArray());
                         NumberOfJokersInPlay -= cardsToBurn.CountValue(CardValue.JOKER);
                         BurnPile.Add(cardsToBurn);
+                        TriggerBurnEvents(jokerCount);
                         return;
                     }
                 }
                 BurnPile.Add(PlayPile);
                 PlayPile.Clear();
+                TriggerBurnEvents(jokerCount);
                 return;
             }
 
@@ -292,15 +305,15 @@ namespace Karma
                 {
                     if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.value))
                     {
-                        return CardComboCalculator.FillerNotExclusiveCombos(cards, CardValue.SIX, 3);
+                        return CardComboCalculator.FillerNotExclusiveCombos(validCards, CardValue.SIX, 3);
                     }
-                    return CardComboCalculator.FillerCombos(cards, CardValue.SIX, 3);
+                    return CardComboCalculator.FillerCombos(validCards, CardValue.SIX, 3);
                 }
                 if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.value))
                 {
-                    return CardComboCalculator.FillerFilterNotExclusiveCombos(cards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
+                    return CardComboCalculator.FillerFilterNotExclusiveCombos(validCards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
                 }
-                return CardComboCalculator.FillerAndFilterCombos(cards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
+                return CardComboCalculator.FillerAndFilterCombos(validCards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
             }
         }
     }

@@ -21,10 +21,10 @@ public class KarmaGameManager : MonoBehaviour
     public PlayTableProperties playTable;
 
     [SerializeField] int _turnLimit = 100;
+    [SerializeField] List<Vector3> _playerPositions;
+    [SerializeField] List<bool> _arePlayableCharacters;
+    [Range(0f, 5f)][SerializeField] int _whichPlayerStarts = 0;
 
-    [SerializeField] List<Vector3> playerPositions;
-
-    [SerializeField] List<bool> arePlayableCharacters;
     public List<PlayerProperties> PlayersProperties { get; protected set; }
 
     public IBoard Board { get; protected set; }
@@ -52,14 +52,30 @@ public class KarmaGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int numberOfPlayers = playerPositions.Count;
-        Board = BoardFactory.RandomStart(numberOfPlayers, 1);
-        CreatePlayers(playerPositions);
+        int numberOfPlayers = _playerPositions.Count;
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { 2 }, new() { 3 }, new() { 4 } },
+            new() { new() { 10 }, new() { 3 }, new() { 4 } },
+            new() { new() { 2 }, new() { 3 }, new() { 4 } },
+            new() { new() { 2 }, new() { 3 }, new() { 4 } }
+        };
+
+        List<int> drawCardValues = new() { 3, 4, 5, 6, 7};
+        List<int> playCardValues = new() { };
+        List<int> burnCardValues = new() { 15};
+
+        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        Board.RegisterOnBurnEvent(new IBoard.BoardBurnEventHandler(BurnCards));
+        //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
+        CreatePlayers(_playerPositions);
         CreatePlayerCardsFromBoard();
         playTable.CreateCardPilesFromBoard(Board);
 
         InitializeGameRanks();
         AssignButtonEvents();
+        StartTurn();
     }
 
     void CreatePlayers(List<Vector3> playerStartPositions)
@@ -79,7 +95,7 @@ public class KarmaGameManager : MonoBehaviour
             if (isCurrentPlayer) { playerProperties.EnableCamera(); }
             else { playerProperties.DisableCamera(); }
 
-            if (arePlayableCharacters[i]) { playerProperties.Controller = new PlayerController(); }
+            if (_arePlayableCharacters[i]) { playerProperties.Controller = new PlayerController(); }
             else 
             {
                 IntegrationTestBot bot = new ("Bot" + botNameIndex, 0.0f);
@@ -152,6 +168,18 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
+    public void BurnCards(int jokerCount)
+    {
+        print("BURN BABY BURN!!! (Joker Count: " + jokerCount + " )");
+        if (jokerCount == 0)
+        {
+            playTable.MoveEntirePlayPileToBurnPile();
+            return;
+        }
+        
+        playTable.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
+    }
+
     void MoveCardsFromHandToPlayPile(int playerIndex)
     {
         List<CardObject> cardObjects = PlayersProperties[playerIndex].PopSelectedCardsFromHand();
@@ -168,6 +196,8 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<CardObject> currentHandCardObjects = PlayersProperties[playerIndex].CardsInHand;
         currentHandCardObjects.AddRange(cardObjectsToAdd);
+
+        if (currentHandCardObjects.Count == 0) { return; }
 
         foreach (CardObject cardObject in cardObjectsToAdd)
         {
@@ -314,7 +344,13 @@ public class KarmaGameManager : MonoBehaviour
 
     void NextTurn()
     {
-        if (Board.HasBurnedThisTurn && Board.Players[Board.PlayerIndexWhoStartedTurn].HasCards) 
+        if (!Board.HasBurnedThisTurn)
+        {
+            StepToNextPlayer();
+            return;
+        }
+
+        if (Board.Players[Board.PlayerIndexWhoStartedTurn].HasCards) 
         { 
             PlayTurnAgain();
             return;
@@ -412,9 +448,11 @@ public class KarmaGameManager : MonoBehaviour
         if (Board.CurrentLegalCombos.Contains(cardSelector.SelectionCardValues))
         {
             print("Card combo is LEGAL!! Proceeding to play " + cardSelector.SelectionCardValues);
-            
-            PlayCardsComboAction.Apply(Board, playerProperties.Controller);
+
+            CardsList cardSelection = playerProperties.CardSelector.Selection;
             MoveCardsFromHandToPlayPile(playerIndex);
+            PlayCardsComboAction.Apply(Board, playerProperties.Controller, cardSelection);
+            
             if (Board.CurrentPlayer.Hand.Count > 0) { DrawCards(Board.NumberOfCardsDrawnThisTurn, playerIndex); }
             EndTurn();
         }
@@ -423,7 +461,7 @@ public class KarmaGameManager : MonoBehaviour
     void TriggerPickupActionSelected(int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
-        PickUpAction.Apply(Board, playerProperties.Controller);
+        PickUpAction.Apply(Board, playerProperties.Controller, playerProperties.CardSelector.Selection);
         List<CardObject> playPileCards = playTable.PopAllFromPlayPile();
         MoveCardObjectsIntoHand(playerIndex, playPileCards);
         EndTurn();

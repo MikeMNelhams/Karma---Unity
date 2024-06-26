@@ -348,6 +348,7 @@ namespace Karma
                     }
                     return majorValue;
                 }
+                UnityEngine.Debug.Log("Card value counts are invalid: " + _counts.Count);
                 throw new NotImplementedException();
             }
 

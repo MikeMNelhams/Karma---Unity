@@ -26,7 +26,6 @@ namespace Karma
                 int left = 0;
                 int right = _cards.Count;
                 int middle;
-                middle = (right - left) / 2 + left;
                 CardValue targetValue = item.value;
                 CardValue middleValue;
                 while (left < right)

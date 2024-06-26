@@ -25,7 +25,7 @@ namespace Karma
         public abstract class BoardPlayerAction : IEquatable<BoardPlayerAction>
         {
             public abstract bool IsValid(IBoard board);
-            public abstract void Apply(IBoard board, IController controller);
+            public abstract void Apply(IBoard board, IController controller, CardsList selectedCards);
             public abstract BoardPlayerAction Copy();
             public abstract string Name { get; }
             public override int GetHashCode() 
@@ -75,8 +75,10 @@ namespace Karma
             public int PlayerIndexWhoStartedTurn { get; }
             public List<CardCombo> ComboHistory { get; }
 
-            public delegate void OnTurnEndEventHandler(IBoard board);
-            public void RegisterOnTurnEndEvent(OnTurnEndEventHandler newEventHandler);
+            public delegate void BoardEventHandler(IBoard board);
+            public delegate void BoardBurnEventHandler(int jokerCount);
+            public void RegisterOnTurnEndEvent(BoardEventHandler newEventHandler);
+            public void RegisterOnBurnEvent(BoardBurnEventHandler newEventHandler);
         }
 
         public class InvalidBoardPlayerActionException : Exception
