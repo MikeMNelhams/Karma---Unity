@@ -2,10 +2,10 @@ using Karma.Board;
 using Karma.Controller;
 using Karma.Cards;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PlayerProperties : MonoBehaviour
 {
@@ -20,6 +20,8 @@ public class PlayerProperties : MonoBehaviour
 
     public IController Controller {  get; set; }
     public CardSelector CardSelector { get; protected set; }
+
+    protected static System.Random rng = new();
 
     // Start is called before the first frame update
     void Awake()
@@ -83,6 +85,10 @@ public class PlayerProperties : MonoBehaviour
     public void PopulateHand(List<CardObject> cardObjects, float startAngle=-20.0f, float endAngle=20.0f, float distanceFromHolder=0.75f)
     {
         CardsInHand = cardObjects;
+
+        bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
+        if (handIsFlipped) { ShuffleHand(); }
+
         Transform holderTransform = cardHolder.transform;
         Vector3 holderPosition = holderTransform.position;
         float angleStepSize = (endAngle - startAngle) / (cardObjects.Count - 1);
@@ -93,20 +99,61 @@ public class PlayerProperties : MonoBehaviour
             float angle = startAngle + j * angleStepSize;
             Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, angle));
             Quaternion cardRotation = Quaternion.LookRotation(holderPosition - cardPosition);
+
+            if (handIsFlipped )
+            {
+                cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0));
+            }
+
             cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
-            SetCardObjectOnMouseDownEvent(cardObject);
             j++;
         }
     }
+    
+    public void FlipHand()
+    {
+        bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
+        if (handIsFlipped ) { ShuffleHand(); }
 
-    void SetCardObjectOnMouseDownEvent(CardObject cardObject)
+        foreach (CardObject cardObject in CardsInHand)
+        {
+            cardObject.transform.Rotate(new Vector3(0, 180, 0));
+        }
+    }
+
+    public List<CardObject> PopSelectedCardsFromHand()
+    {
+        List<CardObject> cardObjects = CardSelector.CardObjects.ToList<CardObject>();
+        foreach (CardObject cardObject in cardObjects)
+        {
+            cardObject.DisableSelectShader();
+            RemoveCardObjectOnMouseDownEvent(cardObject);
+            CardsInHand.Remove(cardObject);
+        }
+        return cardObjects;
+    }
+
+    public void SetCardObjectOnMouseDownEvent(CardObject cardObject)
     {
         cardObject.OnCardClick += CardSelector.Toggle;
     }
 
-    void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)
+    public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)
     {
+        CardSelector.Remove(cardObject);
         cardObject.OnCardClick -= CardSelector.Toggle;
+    }
+
+    public void ShuffleHand()
+    {
+        // Fisher-Yates Shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+        int n = CardsInHand.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            (CardsInHand[n], CardsInHand[k]) = (CardsInHand[k], CardsInHand[n]);
+        }
     }
 
     Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle)

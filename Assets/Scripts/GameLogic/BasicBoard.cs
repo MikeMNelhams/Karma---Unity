@@ -102,12 +102,6 @@ namespace Karma
                 TurnOrder = turnOrder;
             }
 
-            public void StepPlayerIndex()
-            {
-                CurrentPlayerIndex += (int)TurnOrder;
-                CurrentPlayerIndex %= Players.Count;
-            }
-
             public void FlipPlayOrder()
             {
                 if (PlayOrder == BoardPlayOrder.UP) { PlayOrder = BoardPlayOrder.DOWN; }
@@ -208,8 +202,9 @@ namespace Karma
 
             public void StepPlayerIndex(int numberOfRepeats)
             {
-                CurrentPlayerIndex += (int)TurnOrder * numberOfRepeats;
+                CurrentPlayerIndex += ((int)TurnOrder) * numberOfRepeats;
                 CurrentPlayerIndex %= Players.Count;
+                CurrentPlayerIndex = CurrentPlayerIndex < 0 ? CurrentPlayerIndex + Players.Count : CurrentPlayerIndex;
             }
 
             CardsList DrawUntilFull()

@@ -73,7 +73,7 @@ namespace Karma
                         board.Players[i].Hand = hands[i];
                     }
                 }
-        } 
+            } 
         }
 
         public class CardCombo_SIX : CardCombo
@@ -230,30 +230,38 @@ namespace Karma
             public CardCombo_ACE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
+                KarmaGameManager gameManager = KarmaGameManager.Instance;
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-                if (((uint)(numberOfRepeats) & 0b1) == 0b1)
+                if (((uint)(numberOfRepeats) & 0b1) == 0b0)
                 {
-                    board.FlipHands();
-                    if (board.HandsAreFlipped)
-                    {
-                        foreach (Player player in board.Players)
-                        {
-                            if (player.Hand.Count == 0) { continue; }
-                            player.Hand.Shuffle();
-                        }
-                    }
-                    else
-                    {
-                        foreach (Player player in board.Players)
-                        {
-                            if (player.Hand.Count == 0) { continue; }
-                            player.Hand.Sort();
-                        }
-                    }
+                    FlipHands(board, gameManager);
+                    FlipHands(board, gameManager);
                     return;
                 }
+
+                FlipHands(board, gameManager);
+                if (board.HandsAreFlipped)
+                {
+                    foreach (Player player in board.Players)
+                    {
+                        if (player.Hand.Count == 0) { continue; }
+                        player.Hand.Shuffle();
+                    }
+                }
+                else
+                {
+                    foreach (Player player in board.Players)
+                    {
+                        if (player.Hand.Count == 0) { continue; }
+                        player.Hand.Sort();
+                    }
+                }
+            }
+
+            void FlipHands(IBoard board, KarmaGameManager gameManager)
+            {
                 board.FlipHands();
-                board.FlipHands();
+                gameManager.FlipHandsAnimation();
             }
         }
 

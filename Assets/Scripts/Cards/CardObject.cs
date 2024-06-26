@@ -4,7 +4,7 @@ using System;
 using Karma.Cards;
 
 
-public class CardObject : MonoBehaviour
+public class CardObject : MonoBehaviour, IEquatable<CardObject>
 {
     public Material planeMaterial;
     public GameObject frontQuad;
@@ -62,5 +62,11 @@ public class CardObject : MonoBehaviour
     public void SetCardName(string name)
     {
         gameObject.name = name;
+    }
+
+    public bool Equals(CardObject other)
+    {
+        if (ReferenceEquals(this, other)) return true;
+        return false;
     }
 }

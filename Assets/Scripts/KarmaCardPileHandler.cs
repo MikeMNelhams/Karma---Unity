@@ -66,6 +66,8 @@ public class KarmaCardPileHandler : MonoBehaviour
         {
             removedCardObjects.Add(CardObjects[^1]);
         }
+        CardObjects.RemoveRange(CardObjects.Count - numberOfCards, numberOfCards);
+
         return removedCardObjects;
     }
 

@@ -3,6 +3,7 @@ using Karma.Board;
 using Karma.Cards;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace Karma
@@ -56,13 +57,28 @@ namespace Karma
             public override void OnEnter()
             {
                 _board.StartTurn();
-                string currentLegalCombos = "Currently legal: HashSet[";
+                string currentLegalCombos = "Currently legal combos ON \'"; ;
+
+                Card topCard = _board.PlayPile.VisibleTopCard;
+                if (topCard is not null)
+                {
+                    currentLegalCombos += _board.PlayPile.VisibleTopCard + "\' ";
+                }
+                else
+                {
+                    currentLegalCombos += "Nothing! ";
+                }
+
                 foreach (FrozenMultiSet<CardValue> combo in _board.CurrentLegalCombos)
                 {
                     currentLegalCombos += combo + ", ";
                 }
+
+                currentLegalCombos += ": HashSet[";
+
                 Debug.Log(currentLegalCombos + "]");
                 Debug.Log("Starting picking actions for player: " + _board.CurrentPlayerIndex);
+                Debug.Log("Current playable cards: " + _board.CurrentPlayer.PlayableCards);
                 _playerProperties.EnterPickingActionMode();
             }
 

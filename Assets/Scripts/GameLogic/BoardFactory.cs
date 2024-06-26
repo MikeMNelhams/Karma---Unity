@@ -23,11 +23,16 @@ namespace Karma
                 };
 
                 CardsList jokers = new ();
-                foreach (CardSuit suit in cardSuits) { jokers.Add(new Card(suit, CardValue.JOKER)); }
+                for (int i = 0; i < numberOfJokers; i++)
+                {
+                    CardSuit suit = cardSuits[i % cardSuits.Count];
+                    jokers.Add(new Card(suit, CardValue.JOKER));
+                }
+
                 CardsList deck = new ();
                 foreach (CardSuit suit in cardSuits)
                 {
-                    for (int i = 2; i < 16; i++)
+                    for (int i = 2; i < 15; i++)
                     {
                         deck.Add(new Card(suit, (CardValue)i));
                     }
@@ -65,6 +70,22 @@ namespace Karma
                     players.Add(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]));
                 }
                 return new BasicBoard(players, new CardPile(deck));
+            }
+
+            public static BasicBoard MatrixStart(List<List<List<int>>> playerCardValues, List<int> drawPileValues, List<int> playPileValues, List<int> burnPileValues)
+            {
+                List<Player> players = new();
+
+                for (int i = 0; i < playerCardValues.Count; i++)
+                {
+                    players.Add(new Player(playerCardValues[i]));
+                }
+
+                CardPile drawPile = new(drawPileValues, CardSuit.Hearts);
+                PlayCardPile playPile = new(playPileValues, CardSuit.Hearts);
+                CardPile burnPile = new(burnPileValues, CardSuit.Hearts);
+
+                return new BasicBoard(players, drawPile, burnPile, playPile);
             }
         }
     }

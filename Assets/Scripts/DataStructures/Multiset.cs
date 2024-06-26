@@ -34,7 +34,6 @@ namespace DataStructures
         public void Add(IEnumerable<T> items)
         {
             foreach (var item in items) { Add(item); }
-
         }
 
         public void Remove(T item)
@@ -52,7 +51,6 @@ namespace DataStructures
             return _dict.Last().Key;
         }
 
-        // Return the last value in the multiset and remove it.
         public T Pop()
         {
             T item = Peek();
@@ -148,8 +146,7 @@ namespace DataStructures
                 // value to widen the distribution.
                 // 37 is an arbitrary low prime number that helps the
                 // algorithm to smooth out the distribution.
-                hash = unchecked(hash + ((curHash << 0) |
-                    (curHash >> (32 - 0))) * 37);
+                hash = unchecked(hash + ((curHash << 0) | (curHash >> (32 - 0))) * 37);
             }
 
             return hash;

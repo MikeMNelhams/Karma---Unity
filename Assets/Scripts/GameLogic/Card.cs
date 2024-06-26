@@ -60,7 +60,7 @@ namespace Karma
             public static bool operator <=(Card x, Card y) => x.value <= y.value;
         }
 
-        public class CardSuit
+        public class CardSuit : IEquatable<CardSuit>
         {
             public static readonly CardSuit Hearts = new(CardColor.RED, "Hearts", "\u2665");
             public static readonly CardSuit Diamonds = new(CardColor.RED, "Diamonds", "\u2666");
@@ -81,6 +81,13 @@ namespace Karma
             public override string ToString()
             {
                 return shorthand;
+            }
+
+            public bool Equals(CardSuit other)
+            {
+                if (other is null) return false;
+                if (ReferenceEquals(this, other)) { return true; }
+                return shorthand == other.shorthand;
             }
         }
 

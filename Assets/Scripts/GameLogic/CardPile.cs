@@ -39,6 +39,8 @@ namespace Karma
         {
             public List<bool> Visibles { get; protected set; }
             public PlayCardPile() : base() { Visibles = CheckVisibles(); }
+            public PlayCardPile(List<int> cardValues, CardSuit suit) : base(cardValues, suit) { Visibles = CheckVisibles(); }
+
 #nullable enable
             public Card? VisibleTopCard
 #nullable disable

@@ -28,7 +28,7 @@ public class CardSelector
 
     public CardSelector()
     {
-        CardObjects = new();
+        CardObjects = new HashSet<CardObject>();
         _selection = new();
         _selectionValues = new();
     }
@@ -52,7 +52,7 @@ public class CardSelector
     public void Toggle(CardObject cardObject)
     {
         Card card = cardObject.CurrentCard;
-        if (_selectionValues.Contains(card.value))
+        if (CardObjects.Contains(cardObject))
         {
             Remove(cardObject);
         }
@@ -65,11 +65,6 @@ public class CardSelector
 
     void PrintSelectedCards()
     {
-        string selected = "Selected: ";
-        foreach (Card selectedCard in _selection)
-        {
-            selected += selectedCard + " ";
-        }
-        Debug.Log(selected);
+        Debug.Log("Selected: " + _selection);
     }
 }
