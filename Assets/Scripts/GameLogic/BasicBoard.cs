@@ -129,6 +129,8 @@ namespace Karma
                 HasBurnedThisTurn = false;
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
+
+                BoardEventSystem.TriggerOnTurnStartEvents(this);
             }
 
             public void EndTurn()

@@ -69,7 +69,7 @@ public class KarmaGameManager : MonoBehaviour
         List<int> burnCardValues = new() {15};
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        Board.BoardEventSystem.RegisterOnBurnEvent(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
+        RegisterBoardEvents();
         //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
         CreatePlayers(_playerPositions);
         CreatePlayerCardsFromBoard();
@@ -78,7 +78,17 @@ public class KarmaGameManager : MonoBehaviour
         InitializeGameRanks();
         AssignButtonEvents();
         _currentPlayerArrow.SetActive(true);
-        StartTurn();
+        Board.StartTurn();
+    }
+
+    void RegisterBoardEvents()
+    {
+        Board.BoardEventSystem.RegisterOnTurnStartEvent(new BoardEventSystem.BoardEventHandler(StartTurn));
+
+        Board.BoardEventSystem.RegisterOnBurnEvent(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
+
+        Board.BoardEventSystem.RegisterOnTurnEndEvent(new BoardEventSystem.BoardEventHandler(CheckIfWinner));
+        Board.BoardEventSystem.RegisterOnTurnEndEvent(new BoardEventSystem.BoardEventHandler(NextTurn));
     }
 
     void CreatePlayers(List<Vector3> playerStartPositions)
@@ -270,22 +280,15 @@ public class KarmaGameManager : MonoBehaviour
         VotesForWinners = new ();
     }
 
-    void EndTurn()
-    {
-        Board.EndTurn();
-        CheckIfWinner();
-        NextTurn();
-    }
-
-    void CheckIfWinner()
+    void CheckIfWinner(IBoard board)
     {
         UpdateGameRanks();
-        int numberOfPotentialWinners = Board.PotentialWinnerIndices.Count;
-        if (numberOfPotentialWinners == 1 && Board.NumberOfJokersInPlay == 0)
+        int numberOfPotentialWinners = board.PotentialWinnerIndices.Count;
+        if (numberOfPotentialWinners == 1 && board.NumberOfJokersInPlay == 0)
         {
             throw new GameWonException(GameRanks);
         }
-        if (numberOfPotentialWinners >= 2 && Board.NumberOfJokersInPlay == 0)
+        if (numberOfPotentialWinners >= 2 && board.NumberOfJokersInPlay == 0)
         {
             throw new GameWonException(GameRanks);
         }
@@ -295,7 +298,7 @@ public class KarmaGameManager : MonoBehaviour
             throw new GameWonException(GameRanks);
         }
 
-        if (Board.TurnsPlayed >= _turnLimit)
+        if (board.TurnsPlayed >= _turnLimit)
         {
             throw new GameTurnLimitExceededException(GameRanks, _turnLimit);
         }
@@ -351,15 +354,15 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    void NextTurn()
+    void NextTurn(IBoard board)
     {
-        if (!Board.HasBurnedThisTurn)
+        if (!board.HasBurnedThisTurn)
         {
             StepToNextPlayer();
             return;
         }
 
-        if (Board.Players[Board.PlayerIndexWhoStartedTurn].HasCards) 
+        if (board.Players[board.PlayerIndexWhoStartedTurn].HasCards) 
         { 
             PlayTurnAgain();
             return;
@@ -372,19 +375,18 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.CurrentPlayerIndex]));
         Board.StepPlayerIndex(1);
-        StartTurn();
+        Board.StartTurn();
     }
 
     void PlayTurnAgain()
     {
         Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
-        StartTurn();
+        Board.StartTurn();
     }
 
-    void StartTurn()
+    void StartTurn(IBoard board)
     {
-        Board.StartTurn();
-        PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new PickingAction(Board, PlayersProperties[Board.CurrentPlayerIndex]));
+        PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));
         MoveCurrentPlayerArrow();
     }
 
@@ -464,7 +466,7 @@ public class KarmaGameManager : MonoBehaviour
             PlayCardsComboAction.Apply(Board, playerProperties.Controller, cardSelection);
             
             if (Board.CurrentPlayer.Hand.Count > 0) { DrawCards(Board.NumberOfCardsDrawnThisTurn, playerIndex); }
-            EndTurn();
+            Board.EndTurn();
         }
     }
 
@@ -474,6 +476,6 @@ public class KarmaGameManager : MonoBehaviour
         PickUpAction.Apply(Board, playerProperties.Controller, playerProperties.CardSelector.Selection);
         List<CardObject> playPileCards = _playTable.PopAllFromPlayPile();
         MoveCardObjectsIntoHand(playerIndex, playPileCards);
-        EndTurn();
+        Board.EndTurn();
     }
 }

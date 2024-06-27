@@ -13,8 +13,19 @@ namespace Karma
                 public delegate void BoardEventHandler(IBoard board);
                 public delegate void BoardBurnEventHandler(int jokerCount);
 
+                public event BoardEventHandler OnTurnStartEvent;
                 public event BoardEventHandler OnTurnEndEvent;
                 public event BoardBurnEventHandler OnBurnEvent;
+
+                public void RegisterOnTurnStartEvent(BoardEventHandler newEventHandler)
+                {
+                    OnTurnEndEvent += newEventHandler;
+                }
+
+                public void TriggerOnTurnStartEvents(IBoard board)
+                {
+                    OnTurnStartEvent?.Invoke(board);
+                }
 
                 public void RegisterOnTurnEndEvent(BoardEventHandler newEventHandler)
                 {
