@@ -58,13 +58,13 @@ public class KarmaGameManager : MonoBehaviour
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 2, 9 }, new() { 3 }, new() { 4 } },
-            new() { new() { 2, 2 }, new() { 3 }, new() { 4 } },
-            new() { new() { 2, 11, 11 }, new() { 3 }, new() { 4 } },
-            new() { new() { 2 }, new() { 3 }, new() { 4 } }
+            new() { new() { 5, 5, 9, 14}, new() { 3 }, new() { 4 } },
+            new() { new() { 3, 4, 14 }, new() { 3 }, new() { 4 } },
+            new() { new() { 2, 11, 11, 11}, new() { 3 }, new() { 4 } },
+            new() { new() { 6 }, new() { 3 }, new() { 4 } }
         };
 
-        List<int> drawCardValues = new() { 3, 4, 5, 6, 7};
+        List<int> drawCardValues = new() {5, 6, 7};
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() {15};
 
@@ -86,6 +86,8 @@ public class KarmaGameManager : MonoBehaviour
         Board.BoardEventSystem.RegisterOnTurnStartEventHandler(new BoardEventSystem.BoardEventHandler(StartTurn));
 
         Board.BoardEventSystem.RegisterPlayerDrawEventHandler(new BoardEventSystem.PlayerDrawEventHandler(DrawCards));
+        Board.BoardEventSystem.RegisterHandsFlippedEventHandler(new BoardEventSystem.BoardEventHandler(FlipHandsAnimation));
+        Board.BoardEventSystem.RegisterHandsRotatedEventHandler(new BoardEventSystem.BoardHandsRotationEventHandler(RotateHandsInTurnOrderAnimation));
 
         Board.BoardEventSystem.RegisterOnBurnEventHanlder(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
 
@@ -175,17 +177,37 @@ public class KarmaGameManager : MonoBehaviour
         return cardObject;
     }
 
-    public void FlipHandsAnimation()
+    public void FlipHandsAnimation(IBoard board)
     {
-        for (int i = 0; i < Board.Players.Count; i++)
+        for (int i = 0; i < board.Players.Count; i++)
         {
             PlayersProperties[i].FlipHand();
         }
     }
 
-    public void RotateHandsAnimation()
+    public void RotateHandsInTurnOrderAnimation(int numberOfRotations, IBoard board) 
     {
+        int k = numberOfRotations % board.Players.Count;
+        RotateHandsRightAnimation(k * ((int) board.TurnOrder), board);
+        return;
+    }
 
+    void RotateHandsRightAnimation(int numberOfRotations, IBoard board)
+    {
+        List<List<CardObject>> beginHands = new();
+        for (int i = 0; i < board.Players.Count; i++)
+        {
+            beginHands.Add(PlayersProperties[i].CardsInHand);
+        }
+
+        Deque<List<CardObject>> hands = new (beginHands);
+
+        hands.Rotate(numberOfRotations);
+        
+        for (int i = 0; i < board.Players.Count; i++)
+        {
+            PlayersProperties[i].PopulateHand(hands[i]);
+        }
     }
 
     public void BurnCards(int jokerCount)

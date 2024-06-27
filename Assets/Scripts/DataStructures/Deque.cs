@@ -48,7 +48,8 @@ namespace DataStructures
 
         public void Rotate(int numberOfRotations)
         {
-            int adjustedRotations = (int)(numberOfRotations % _items.Count);
+            int adjustedRotations = numberOfRotations % _items.Count;
+            adjustedRotations = adjustedRotations < 0 ? adjustedRotations + _items.Count : adjustedRotations;
             for (int i = 0; i < adjustedRotations; i++)
             {
                 AddLeft(PopRight());

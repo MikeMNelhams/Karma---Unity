@@ -49,6 +49,7 @@ namespace Karma
             public void FlipPlayOrder();
             public void ResetPlayOrder();
             public void FlipHands();
+            public void RotateHands(int numberOfRotations, Deque<Hand> hands);
             public void StartTurn();
             public void EndTurn();
             public bool PlayCards(CardsList cards, IController controller);

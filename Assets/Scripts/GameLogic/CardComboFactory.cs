@@ -52,28 +52,16 @@ namespace Karma
                     startHands.Add(player.Hand);
                 }
                 Deque<Hand> hands = new (startHands);
-                int numberOfRepeats = _counts.Count * board.EffectMultiplier;
+                int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (numberOfRepeats < board.Players.Count)
                 {
-                    RotateHands(board, hands, numberOfRepeats);
+                    board.RotateHands(numberOfRepeats, hands);
                     return;
                 }
-                RotateHands(board, hands, board.Players.Count);
-                RotateHands(board, hands, numberOfRepeats % board.Players.Count);
+                board.RotateHands(board.Players.Count, hands);
+                board.RotateHands(numberOfRepeats % board.Players.Count, hands);
                 return;
             }
-
-            protected void RotateHands(IBoard board, Deque<Hand> hands, int numberOfRotations)
-            {
-                for (int i = 0; i < numberOfRotations; i++) 
-                {
-                    hands.Rotate(1 * (int)board.TurnOrder);
-                    for (int j = 0; j < board.Players.Count; j++)
-                    {
-                        board.Players[i].Hand = hands[i];
-                    }
-                }
-            } 
         }
 
         public class CardCombo_SIX : CardCombo
@@ -235,12 +223,12 @@ namespace Karma
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (((uint)(numberOfRepeats) & 0b1) == 0b0)
                 {
-                    FlipHands(board, gameManager);
-                    FlipHands(board, gameManager);
+                    board.FlipHands();
+                    board.FlipHands();
                     return;
                 }
 
-                FlipHands(board, gameManager);
+                board.FlipHands();
                 if (board.HandsAreFlipped)
                 {
                     foreach (Player player in board.Players)
@@ -257,12 +245,6 @@ namespace Karma
                         player.Hand.Sort();
                     }
                 }
-            }
-
-            void FlipHands(IBoard board, KarmaGameManager gameManager)
-            {
-                board.FlipHands();
-                gameManager.FlipHandsAnimation();
             }
         }
 

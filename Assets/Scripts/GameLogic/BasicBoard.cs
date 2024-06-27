@@ -8,6 +8,7 @@ using DataStructures;
 using System.Linq;
 using System;
 using Karma.Board.BoardEvents;
+using System.Diagnostics;
 
 
 namespace Karma
@@ -119,6 +120,23 @@ namespace Karma
             public void FlipHands()
             {
                 HandsAreFlipped = !HandsAreFlipped;
+                BoardEventSystem.TriggerHandsFlippedEvent(this);
+            }
+
+            public void RotateHands(int numberOfRotations, Deque<Hand> hands)
+            {
+                if (numberOfRotations == 0) { return; }
+                UnityEngine.Debug.Log("Rotating hands " + numberOfRotations + " times");
+                for (int i = 0; i < numberOfRotations; i++)
+                {
+                    hands.Rotate(1 * (int)TurnOrder);
+                    for (int j = 0; j < Players.Count; j++)
+                    {
+                        Players[i].Hand = hands[i];
+                    }
+                }
+
+                BoardEventSystem.TriggerHandsRotatedEventHandler(numberOfRotations, this);
             }
 
             public void StartTurn()

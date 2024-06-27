@@ -13,11 +13,34 @@ namespace Karma
                 public delegate void BoardEventHandler(IBoard board);
                 public delegate void BoardBurnEventHandler(int jokerCount);
                 public delegate void PlayerDrawEventHandler(int numberOfCards, int playerIndex);
+                public delegate void BoardHandsRotationEventHandler(int numberOfRotations, IBoard board);
 
+                public event BoardEventHandler HandsFlippedEvent;
+                public event BoardHandsRotationEventHandler HandsRotatedEvent;
                 public event PlayerDrawEventHandler PlayerDrawEvent;
                 public event BoardEventHandler OnTurnStartEvent;
                 public event BoardEventHandler OnTurnEndEvent;
                 public event BoardBurnEventHandler OnBurnEvent;
+
+                public void RegisterHandsRotatedEventHandler(BoardHandsRotationEventHandler handsRotatedEventHandler)
+                {
+                    HandsRotatedEvent += handsRotatedEventHandler;
+                }
+
+                public void TriggerHandsRotatedEventHandler(int numberOfRotations, IBoard board)
+                {
+                    HandsRotatedEvent?.Invoke(numberOfRotations, board);
+                }
+
+                public void RegisterHandsFlippedEventHandler(BoardEventHandler handsFlippedEventHandler)
+                {
+                    HandsFlippedEvent += handsFlippedEventHandler;
+                }
+
+                public void TriggerHandsFlippedEvent(IBoard board)
+                {
+                    HandsFlippedEvent?.Invoke(board);
+                }
 
                 public void RegisterPlayerDrawEventHandler(PlayerDrawEventHandler playerDrawEventHandler)
                 {
