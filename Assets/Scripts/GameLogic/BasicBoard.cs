@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using DataStructures;
 using System.Linq;
 using System;
+using Karma.Board.BoardEvents;
 
 
 namespace Karma
@@ -19,6 +20,7 @@ namespace Karma
             public CardPile DrawPile { get; protected set; }
             public CardPile BurnPile { get; protected set; }
             public PlayCardPile PlayPile { get; protected set; }
+            public BoardEventSystem BoardEventSystem { get; protected set; }
             public BoardPlayOrder PlayOrder { get; protected set; }
             public BoardTurnOrder TurnOrder { get; protected set; }
             public bool HandsAreFlipped { get; set; } 
@@ -36,8 +38,7 @@ namespace Karma
             public List<CardCombo> ComboHistory { get; protected set; }
             public CardComboFactory ComboFactory { get; protected set; }
             public int PlayerIndexWhoStartedTurn { get; protected set; }
-            public event IBoard.BoardEventHandler OnTurnEndEvent;
-            public event IBoard.BoardBurnEventHandler OnBurnEvent;
+
             HashSet<BoardPlayerAction> _allActions;
 
             public BasicBoard(List<Player> players)
@@ -87,6 +88,7 @@ namespace Karma
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
                 CardComboFactory cardComboFactory = new ();
+                BoardEventSystem = new BoardEventSystem();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
@@ -132,27 +134,7 @@ namespace Karma
             public void EndTurn()
             {
                 TurnsPlayed++;
-                TriggerOnTurnEndEvents();
-            }
-
-            public void RegisterOnTurnEndEvent(IBoard.BoardEventHandler newEventHandler)
-            {
-                OnTurnEndEvent += newEventHandler;
-            }
-
-            void TriggerOnTurnEndEvents()
-            {
-                OnTurnEndEvent?.Invoke(this);
-            }
-
-            public void RegisterOnBurnEvent(IBoard.BoardBurnEventHandler newEventHandler)
-            {
-                OnBurnEvent += newEventHandler;
-            }
-
-            void TriggerBurnEvents(int jokerCount)
-            {
-                OnBurnEvent?.Invoke(jokerCount);
+                BoardEventSystem.TriggerOnTurnEndEvents(this);
             }
 
             public bool PlayCards(CardsList cards, IController controller)
@@ -203,13 +185,13 @@ namespace Karma
                         CardsList cardsToBurn = PlayPile.PopMultiple(indicesToBurn.ToArray());
                         NumberOfJokersInPlay -= cardsToBurn.CountValue(CardValue.JOKER);
                         BurnPile.Add(cardsToBurn);
-                        TriggerBurnEvents(jokerCount);
+                        BoardEventSystem.TriggerBurnEvents(jokerCount);
                         return;
                     }
                 }
                 BurnPile.Add(PlayPile);
                 PlayPile.Clear();
-                TriggerBurnEvents(jokerCount);
+                BoardEventSystem.TriggerBurnEvents(jokerCount);
                 return;
             }
 

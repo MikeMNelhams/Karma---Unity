@@ -4,6 +4,7 @@ using UnityEngine;
 using Karma.Game;
 using Karma.BasicBoard;
 using Karma.Board;
+using Karma.Board.BoardEvents;
 using Karma.Players;
 using Karma.Cards;
 using System;
@@ -68,7 +69,7 @@ public class KarmaGameManager : MonoBehaviour
         List<int> burnCardValues = new() {15};
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        Board.RegisterOnBurnEvent(new IBoard.BoardBurnEventHandler(BurnCards));
+        Board.BoardEventSystem.RegisterOnBurnEvent(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
         //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
         CreatePlayers(_playerPositions);
         CreatePlayerCardsFromBoard();

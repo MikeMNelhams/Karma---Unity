@@ -5,6 +5,7 @@ using Karma.Cards;
 using Karma.Players;
 using Karma.Controller;
 using System;
+using Karma.Board.BoardEvents;
 
 namespace Karma
 {
@@ -55,9 +56,10 @@ namespace Karma
             public void Burn(int jokerCount);
 
             public List<Player> Players { get; }
-            public CardPile DrawPile { get;}
+            public CardPile DrawPile { get; }
             public CardPile BurnPile { get; }
             public PlayCardPile PlayPile { get; }
+            public BoardEventSystem BoardEventSystem {get; }
             public BoardPlayOrder PlayOrder { get; }
             public BoardTurnOrder TurnOrder { get; }
             public bool HandsAreFlipped { get; set; }
@@ -74,11 +76,6 @@ namespace Karma
             public int NumberOfCombosPlayedThisTurn { get; }
             public int PlayerIndexWhoStartedTurn { get; }
             public List<CardCombo> ComboHistory { get; }
-
-            public delegate void BoardEventHandler(IBoard board);
-            public delegate void BoardBurnEventHandler(int jokerCount);
-            public void RegisterOnTurnEndEvent(BoardEventHandler newEventHandler);
-            public void RegisterOnBurnEvent(BoardBurnEventHandler newEventHandler);
         }
 
         public class InvalidBoardPlayerActionException : Exception
