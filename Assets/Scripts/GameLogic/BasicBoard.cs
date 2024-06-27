@@ -215,6 +215,9 @@ namespace Karma
                     if (DrawPile.Count == 0) { return cardsDrawn; }
                     cardsDrawn.Add(CurrentPlayer.DrawCard(DrawPile));
                 }
+
+                BoardEventSystem.TriggerPlayerDrawEvents(cardsDrawn.Count, CurrentPlayerIndex);
+
                 return cardsDrawn;
             }
 

@@ -83,12 +83,14 @@ public class KarmaGameManager : MonoBehaviour
 
     void RegisterBoardEvents()
     {
-        Board.BoardEventSystem.RegisterOnTurnStartEvent(new BoardEventSystem.BoardEventHandler(StartTurn));
+        Board.BoardEventSystem.RegisterOnTurnStartEventHandler(new BoardEventSystem.BoardEventHandler(StartTurn));
 
-        Board.BoardEventSystem.RegisterOnBurnEvent(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
+        Board.BoardEventSystem.RegisterPlayerDrawEventHandler(new BoardEventSystem.PlayerDrawEventHandler(DrawCards));
 
-        Board.BoardEventSystem.RegisterOnTurnEndEvent(new BoardEventSystem.BoardEventHandler(CheckIfWinner));
-        Board.BoardEventSystem.RegisterOnTurnEndEvent(new BoardEventSystem.BoardEventHandler(NextTurn));
+        Board.BoardEventSystem.RegisterOnBurnEventHanlder(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
+
+        Board.BoardEventSystem.RegisterOnTurnEndEventHandler(new BoardEventSystem.BoardEventHandler(CheckIfWinner));
+        Board.BoardEventSystem.RegisterOnTurnEndEventHandler(new BoardEventSystem.BoardEventHandler(NextTurn));
     }
 
     void CreatePlayers(List<Vector3> playerStartPositions)
@@ -193,7 +195,7 @@ public class KarmaGameManager : MonoBehaviour
         _playTable.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
     }
 
-    public void MoveCurrentPlayerArrow()
+    void MoveCurrentPlayerArrow()
     {
         PlayerProperties playerProperties = PlayersProperties[Board.CurrentPlayerIndex];
         _currentPlayerArrow.transform.position = playerProperties.gameObject.transform.position + new Vector3(0, -1.5f, 0);
@@ -372,8 +374,9 @@ public class KarmaGameManager : MonoBehaviour
     }
 
     void StepToNextPlayer()
+
     {
-        PlayersProperties[Board.CurrentPlayerIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.CurrentPlayerIndex]));
+        PlayersProperties[Board.PlayerIndexWhoStartedTurn].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.PlayerIndexWhoStartedTurn]));
         Board.StepPlayerIndex(1);
         Board.StartTurn();
     }
@@ -386,8 +389,8 @@ public class KarmaGameManager : MonoBehaviour
 
     void StartTurn(IBoard board)
     {
-        PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));
         MoveCurrentPlayerArrow();
+        PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));  
     }
 
     void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
@@ -464,8 +467,6 @@ public class KarmaGameManager : MonoBehaviour
             CardsList cardSelection = playerProperties.CardSelector.Selection;
             MoveCardsFromHandToPlayPile(playerIndex);
             PlayCardsComboAction.Apply(Board, playerProperties.Controller, cardSelection);
-            
-            if (Board.CurrentPlayer.Hand.Count > 0) { DrawCards(Board.NumberOfCardsDrawnThisTurn, playerIndex); }
             Board.EndTurn();
         }
     }

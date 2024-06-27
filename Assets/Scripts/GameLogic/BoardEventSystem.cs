@@ -12,14 +12,26 @@ namespace Karma
             {
                 public delegate void BoardEventHandler(IBoard board);
                 public delegate void BoardBurnEventHandler(int jokerCount);
+                public delegate void PlayerDrawEventHandler(int numberOfCards, int playerIndex);
 
+                public event PlayerDrawEventHandler PlayerDrawEvent;
                 public event BoardEventHandler OnTurnStartEvent;
                 public event BoardEventHandler OnTurnEndEvent;
                 public event BoardBurnEventHandler OnBurnEvent;
 
-                public void RegisterOnTurnStartEvent(BoardEventHandler newEventHandler)
+                public void RegisterPlayerDrawEventHandler(PlayerDrawEventHandler playerDrawEventHandler)
                 {
-                    OnTurnEndEvent += newEventHandler;
+                    PlayerDrawEvent += playerDrawEventHandler;
+                }
+
+                public void TriggerPlayerDrawEvents(int numberOfCards, int playerIndex)
+                {
+                    PlayerDrawEvent?.Invoke(numberOfCards, playerIndex);
+                }
+
+                public void RegisterOnTurnStartEventHandler(BoardEventHandler newEventHandler)
+                {
+                    OnTurnStartEvent += newEventHandler;
                 }
 
                 public void TriggerOnTurnStartEvents(IBoard board)
@@ -27,7 +39,7 @@ namespace Karma
                     OnTurnStartEvent?.Invoke(board);
                 }
 
-                public void RegisterOnTurnEndEvent(BoardEventHandler newEventHandler)
+                public void RegisterOnTurnEndEventHandler(BoardEventHandler newEventHandler)
                 {
                     OnTurnEndEvent += newEventHandler;
                 }
@@ -37,7 +49,7 @@ namespace Karma
                     OnTurnEndEvent?.Invoke(board);
                 }
 
-                public void RegisterOnBurnEvent(BoardBurnEventHandler newEventHandler)
+                public void RegisterOnBurnEventHanlder(BoardBurnEventHandler newEventHandler)
                 {
                     OnBurnEvent += newEventHandler;
                 }
