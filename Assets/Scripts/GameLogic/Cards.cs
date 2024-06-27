@@ -41,6 +41,12 @@ namespace Karma
                 }
             }
 
+            public static CardsList Repeat(Card card, int numberOfCopies)
+            {
+                List<Card> cardsList = Enumerable.Repeat(card, numberOfCopies).ToList<Card>();
+                return new CardsList(cardsList);
+            }
+
             public Card this[int index] { get => _cards[index]; set => _cards[index] = value; }
             public CardsList this[List<int> indices] { get => Get(indices); }
 

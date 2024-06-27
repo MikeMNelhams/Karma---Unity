@@ -135,16 +135,16 @@ namespace Karma
             public CardCombo_JACK(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                if (board.PlayPile.Count < Cards.Count * 2) { return; }
+                if (board.PlayPile.Count <= Cards.Count) { return; }
+                
                 Card cardBelowCombo = board.PlayPile[^(1 + Cards.Count)];
+                Debug.Log("FOUND CARD BELOW COMBO: " + cardBelowCombo);
                 if (cardBelowCombo.value == CardValue.JACK) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
-                for (int i = 0; i < numberOfRepeats; i++)
-                {
-                    Debug.Log("Jack is playing card combo: " + cardBelowCombo);
-                    board.PlayCards(new CardsList(cardBelowCombo), Controller, false);
-                }
+                Debug.Log("Card to replay:" + cardBelowCombo  + " " + numberOfRepeats + " many times");
+                CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
+                board.PlayCards(cardsToReplay, Controller, false);
             }
         }
 

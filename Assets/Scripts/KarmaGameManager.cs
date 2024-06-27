@@ -58,9 +58,9 @@ public class KarmaGameManager : MonoBehaviour
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 9 }, new() { 3 }, new() { 4 } },
+            new() { new() { 2, 9 }, new() { 3 }, new() { 4 } },
             new() { new() { 2, 2 }, new() { 3 }, new() { 4 } },
-            new() { new() { 11, 11 }, new() { 3 }, new() { 4 } },
+            new() { new() { 2, 11, 11 }, new() { 3 }, new() { 4 } },
             new() { new() { 2 }, new() { 3 }, new() { 4 } }
         };
 
@@ -181,6 +181,11 @@ public class KarmaGameManager : MonoBehaviour
         {
             PlayersProperties[i].FlipHand();
         }
+    }
+
+    public void RotateHandsAnimation()
+    {
+
     }
 
     public void BurnCards(int jokerCount)
