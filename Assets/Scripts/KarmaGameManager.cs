@@ -25,7 +25,9 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] int _turnLimit = 100;
     [SerializeField] List<Vector3> _playerPositions;
     [SerializeField] List<bool> _arePlayableCharacters;
+
     [Range(0f, 5f)][SerializeField] int _whichPlayerStarts = 0;
+    [SerializeField] bool _isDebuggingMode = false;
 
     public List<PlayerProperties> PlayersProperties { get; protected set; }
 
@@ -58,7 +60,7 @@ public class KarmaGameManager : MonoBehaviour
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 5, 5, 9, 14}, new() { 3 }, new() { 4 } },
+            new() { new() { 2, 3, 12, 15}, new() { 3 }, new() { 4 } },
             new() { new() { 3, 4, 14 }, new() { 3 }, new() { 4 } },
             new() { new() { 2, 11, 11, 11}, new() { 3 }, new() { 4 } },
             new() { new() { 6 }, new() { 3 }, new() { 4 } }
@@ -122,6 +124,28 @@ public class KarmaGameManager : MonoBehaviour
 
             if (isCurrentPlayer) { playerProperties.SetControllerState(new PickingAction(Board, playerProperties)); }
             else { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
+        }
+
+        SetupPlayerMovementControllers(playerStartPositions);
+    }
+
+    void SetupPlayerMovementControllers(List<Vector3> playerStartPositions)
+    {
+        for (int i = 0; i < playerStartPositions.Count; i++)
+        {
+            PlayerProperties playerProperties = PlayersProperties[i];
+            if (!_arePlayableCharacters[i]) { continue; }
+
+            if (!_isDebuggingMode) 
+            {
+                playerProperties.IsRotationEnabled = true;
+                continue;
+            }
+        }
+
+        if (_isDebuggingMode)
+        {
+            EnablePlayerMovement(Board.CurrentPlayerIndex);
         }
     }
 
@@ -188,11 +212,11 @@ public class KarmaGameManager : MonoBehaviour
     public void RotateHandsInTurnOrderAnimation(int numberOfRotations, IBoard board) 
     {
         int k = numberOfRotations % board.Players.Count;
-        RotateHandsRightAnimation(k * ((int) board.TurnOrder), board);
+        RotateHandsAnimation(k * ((int) board.TurnOrder), board);
         return;
     }
 
-    void RotateHandsRightAnimation(int numberOfRotations, IBoard board)
+    void RotateHandsAnimation(int numberOfRotations, IBoard board)
     {
         List<List<CardObject>> beginHands = new();
         for (int i = 0; i < board.Players.Count; i++)
@@ -385,6 +409,13 @@ public class KarmaGameManager : MonoBehaviour
 
     void NextTurn(IBoard board)
     {
+        if (PlayersProperties[board.PlayerIndexWhoStartedTurn].Controller.State is SelectingCardGiveAwaySelectionIndex)
+        {
+            print("CARD GIVEAWAY SELECTION MODE! TURN AIN'T OVER YET BUDDY");
+            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+            return;
+        }
+
         if (!board.HasBurnedThisTurn)
         {
             StepToNextPlayer();
@@ -401,11 +432,12 @@ public class KarmaGameManager : MonoBehaviour
     }
 
     void StepToNextPlayer()
-
     {
         PlayersProperties[Board.PlayerIndexWhoStartedTurn].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.PlayerIndexWhoStartedTurn]));
+        IfDebugModeDisableStartingPlayerMovement();
         Board.StepPlayerIndex(1);
         Board.StartTurn();
+        IfDebugModeEnableCurrentPlayerMovement();
     }
 
     void PlayTurnAgain()
@@ -418,6 +450,22 @@ public class KarmaGameManager : MonoBehaviour
     {
         MoveCurrentPlayerArrow();
         PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));  
+    }
+
+    void IfDebugModeDisableStartingPlayerMovement()
+    {
+        if (_isDebuggingMode && _arePlayableCharacters[Board.PlayerIndexWhoStartedTurn])
+        {
+            DisablePlayerMovement(Board.PlayerIndexWhoStartedTurn);
+        }
+    }
+
+    void IfDebugModeEnableCurrentPlayerMovement()
+    {
+        if (_isDebuggingMode && _arePlayableCharacters[Board.PlayerIndexWhoStartedTurn])
+        {
+            EnablePlayerMovement(Board.CurrentPlayerIndex);
+        }
     }
 
     void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
@@ -465,6 +513,24 @@ public class KarmaGameManager : MonoBehaviour
 
     void TriggerCardSelectionConfirmed(int playerIndex)
     {
+
+        if (PlayersProperties[playerIndex].Controller.State is PickingAction) { AttemptToPlayCardSelection(playerIndex); return; }
+        if (PlayersProperties[playerIndex].Controller.State is SelectingCardGiveAwaySelectionIndex) { AttemptToGiveAwayCardSelection(playerIndex); return; }
+        
+        throw new NotImplementedException();
+    }
+
+    void TriggerPickupActionSelected(int playerIndex)
+    {
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        PickUpAction.Apply(Board, playerProperties.Controller, playerProperties.CardSelector.Selection);
+        List<CardObject> playPileCards = _playTable.PopAllFromPlayPile();
+        MoveCardObjectsIntoHand(playerIndex, playPileCards);
+        Board.EndTurn();
+    }
+
+    void AttemptToPlayCardSelection(int playerIndex)
+    {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         CardSelector cardSelector = playerProperties.CardSelector;
         print("Attempting to play cards: " + cardSelector.Selection + " values: " + cardSelector.SelectionCardValues);
@@ -474,7 +540,7 @@ public class KarmaGameManager : MonoBehaviour
         if (topCard is not null)
         {
             currentLegalCombos += Board.PlayPile.VisibleTopCard + " ";
-        } 
+        }
         else
         {
             currentLegalCombos += "Nothing! ";
@@ -486,7 +552,7 @@ public class KarmaGameManager : MonoBehaviour
         }
         print(currentLegalCombos + "]");
 
-        // TODO Currently being given card via Joker and Via Queen WON'T add the physical cards to hand. Do this with events (Don't ask me how T.T)
+        // TODO Currently being given card via Joker and Via Queen WON'T add the physical cards to hand. Do this with events
         if (Board.CurrentLegalCombos.Contains(cardSelector.SelectionCardValues))
         {
             print("Card combo is LEGAL!! Proceeding to play " + cardSelector.SelectionCardValues);
@@ -498,12 +564,30 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    void TriggerPickupActionSelected(int playerIndex)
+    void AttemptToGiveAwayCardSelection(int playerIndex)
     {
-        PlayerProperties playerProperties = PlayersProperties[playerIndex];
-        PickUpAction.Apply(Board, playerProperties.Controller, playerProperties.CardSelector.Selection);
-        List<CardObject> playPileCards = _playTable.PopAllFromPlayPile();
-        MoveCardObjectsIntoHand(playerIndex, playPileCards);
-        Board.EndTurn();
+        Player player = Board.Players[playerIndex];
+        HashSet<int> jokerIndices = new();
+        for (int i = 0; i < player.PlayableCards.Count; i++)
+        {
+            Card card = player.PlayableCards[i];
+            if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
+        }
+
+        HashSet<int> validIndices = Enumerable.Range(0, player.PlayableCards.Count).ToHashSet();
+        validIndices.ExceptWith(jokerIndices);
+
+        if (validIndices.Count == 0) { return; }
+        PlayersProperties[playerIndex].SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
+    }
+
+    void EnablePlayerMovement(int playerIndex)
+    {
+        PlayersProperties[playerIndex].IsRotationEnabled = true;
+    }
+
+    void DisablePlayerMovement(int playerIndex)
+    {
+        PlayersProperties[playerIndex].IsRotationEnabled = false;
     }
 }

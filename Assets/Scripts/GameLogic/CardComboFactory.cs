@@ -126,7 +126,6 @@ namespace Karma
                 if (board.PlayPile.Count <= Cards.Count) { return; }
                 
                 Card cardBelowCombo = board.PlayPile[^(1 + Cards.Count)];
-                Debug.Log("FOUND CARD BELOW COMBO: " + cardBelowCombo);
                 if (cardBelowCombo.value == CardValue.JACK) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
@@ -146,54 +145,21 @@ namespace Karma
                 if (currentPlayer.PlayingFrom == 1 && currentPlayer.KarmaUp.Count == 0) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 int playingIndexAtStartOfCombo = currentPlayer.PlayingFrom;
-                for (int i = 0; i <= numberOfRepeats; i++)
+                for (int i = 0; i < numberOfRepeats; i++)
                 {
                     if (currentPlayer.PlayingFrom != playingIndexAtStartOfCombo) { return; }
                     if (currentPlayer.PlayableCards.IsExclusively(CardValue.JOKER)) { return; }
-                    GiveAwayCard(board);
+                    GiveAwayCard(board); // Breaks when numberOfRepeats > 1
                     if (!currentPlayer.HasCards) { return; }
                 }
             }
 
             public void GiveAwayCard(IBoard board)
             {
-                Player currentPlayer = board.CurrentPlayer;
-                HashSet<int> jokerIndices = new ();
-                for (int i = 0; i < currentPlayer.PlayableCards.Count; i++)
-                {
-                    Card card = currentPlayer.PlayableCards[i];
-                    if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
-                }
-
-                HashSet<int> validIndices = Enumerable.Range(0, currentPlayer.PlayableCards.Count).ToHashSet();
-                validIndices.ExceptWith(jokerIndices);
-
+                // TODO Get rid of this AWFUL access!
                 PlayerProperties playerProperties = Controller.State._playerProperties;
-                // TODO Use the card selector. Set the onClick event for the button, to check if the card selection is valid, then execute the next block.
-                //foreach (int i in validIndices)
-                //{
-                //    Button 
-                //    playerProperties.GiveAwayCardIndex(board, jokerIndices);
-                //}
-                
-                //playerProperties.SetControllerState(new SelectingCardGiveAwayCardIndex(board, playerProperties));
-
-
-
+                playerProperties.SetControllerState(new SelectingCardGiveAwaySelectionIndex(board, playerProperties));
             }
-
-            //public void CardIndexSelected(IBoard board, int cardIndex)
-            //{
-            //    HashSet<int> excludedPlayerIndices = board.PotentialWinnerIndices;
-            //    excludedPlayerIndices.UnionWith(new HashSet<int>() { board.CurrentPlayerIndex });
-            //    int targetPlayerIndex = Controller.GiveAwayPlayerIndex(board, excludedPlayerIndices);
-            //    Player targetPlayer = board.Players[targetPlayerIndex];
-            //    targetPlayer.Hand.Add(currentPlayer.PlayableCards.Pop(cardIndexSelected));
-            //    if (board.DrawPile.Count > 0 && currentPlayer.Hand.Count < 3)
-            //    {
-            //        currentPlayer.DrawCard(board.DrawPile);
-            //    }
-            //}
         }
 
         public class CardCombo_KING : CardCombo

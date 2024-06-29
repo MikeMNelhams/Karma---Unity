@@ -1,6 +1,7 @@
 using DataStructures;
 using Karma.Board;
 using Karma.Cards;
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.FullSerializer;
@@ -21,7 +22,7 @@ namespace Karma
             } 
         }
 
-        public abstract class ControllerState
+        public abstract class ControllerState : IEquatable<ControllerState>
         {
             protected IBoard _board;
             public PlayerProperties _playerProperties;
@@ -33,6 +34,14 @@ namespace Karma
 
             public abstract void OnEnter();
             public abstract void OnExit();
+            public abstract override int GetHashCode();
+
+            public bool Equals(ControllerState other)
+            {
+                if (ReferenceEquals(this, other)) { return true; }
+                if (GetType() == other.GetType()) { return true; }
+                return false;
+            }
         }
 
         public class WaitForTurn : ControllerState
@@ -47,6 +56,11 @@ namespace Karma
             public override void OnExit()
             {
                 _playerProperties.EnableCamera();  
+            }
+
+            public override int GetHashCode()
+            {
+                return 0;
             }
         }
 
@@ -85,6 +99,11 @@ namespace Karma
             {
                 _playerProperties.ExitPickingActionMode();
             }
+
+            public override int GetHashCode()
+            {
+                return 1;
+            }
         }
 
         public class VotingForWinner : ControllerState
@@ -100,20 +119,50 @@ namespace Karma
             {
                 _playerProperties.ExitVotingForWinnerMode();
             }
+
+            public override int GetHashCode()
+            {
+                return 2;
+            }
         }
 
-        public class SelectingCardGiveAwayCardIndex : ControllerState
+        public class SelectingCardGiveAwaySelectionIndex : ControllerState
         {
-            public SelectingCardGiveAwayCardIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwaySelectionIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
-                throw new System.NotImplementedException();
+                _playerProperties.EnterCardGiveAwaySelectionMode();
             }
 
             public override void OnExit()
             {
-                throw new System.NotImplementedException();
+                _playerProperties.ExitCardGiveAwaySelectionMode();
+            }
+
+            public override int GetHashCode()
+            {
+                return 3;
+            }
+        }
+
+        public class SelectingCardGiveAwayPlayerIndex : ControllerState
+        {
+            public SelectingCardGiveAwayPlayerIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+
+            public override void OnEnter()
+            {
+                _playerProperties.EnterCardGiveAwayPlayerSelectionMode();
+            }
+
+            public override void OnExit()
+            {
+                _playerProperties.ExitCardGiveAwayPlayerSelectionMode();
+            }
+
+            public override int GetHashCode()
+            {
+                return 4;
             }
         }
     }

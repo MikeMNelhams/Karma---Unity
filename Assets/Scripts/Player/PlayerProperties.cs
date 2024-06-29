@@ -6,15 +6,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerProperties : MonoBehaviour
 {
+    [SerializeField] PlayerMovementController _playerMovementController;
+
     public Camera playerCamera;
-    public GameObject head;
     public GameObject cardHolder;
 
     public Button confirmSelectionButton;
     public Button pickupPlayPileButton;
+
+    public bool IsRotationEnabled {  get; set; }
 
     public List<CardObject> CardsInHand { get; set; }
 
@@ -23,10 +27,18 @@ public class PlayerProperties : MonoBehaviour
 
     protected static System.Random rng = new();
 
-    // Start is called before the first frame update
     void Awake()
     {
         CardSelector = new();
+    }
+
+    private void Update()
+    {
+        if (IsRotationEnabled && Input.GetMouseButtonDown(1))
+        {
+            _playerMovementController.ToggleRotation();
+            return;
+        }
     }
 
     public void EnableCamera()
@@ -69,20 +81,41 @@ public class PlayerProperties : MonoBehaviour
 
     public void EnterVotingForWinnerMode()
     {
-
+        throw new NotImplementedException();
     }
 
     public void ExitVotingForWinnerMode()
     {
+        throw new NotImplementedException();
+    }
+
+    public void EnterCardGiveAwaySelectionMode()
+    {
+        
+    }
+
+    public void ExitCardGiveAwaySelectionMode()
+    {
+        
+    }
+
+    public void EnterCardGiveAwayPlayerSelectionMode()
+    {
+        confirmSelectionButton.gameObject.SetActive(false);
+    }
+
+    public void ExitCardGiveAwayPlayerSelectionMode()
+    {
 
     }
+
 
     public void SetControllerState(ControllerState newState)
     {
         Controller.SetState(newState);
     }
 
-    public void PopulateHand(List<CardObject> cardObjects, float startAngle=-20.0f, float endAngle=20.0f, float distanceFromHolder=0.75f)
+    public void PopulateHand(List<CardObject> cardObjects, float startAngle=-20.0f, float endAngle=20.0f, float distanceFromHolder=0.75f, float yOffset=-0.25f)
     {
         CardsInHand = cardObjects;
 
@@ -90,6 +123,7 @@ public class PlayerProperties : MonoBehaviour
         if (handIsFlipped) { ShuffleHand(); }
 
         Transform holderTransform = cardHolder.transform;
+        
         Vector3 holderPosition = holderTransform.position;
 
         if (cardObjects.Count == 0) { return; }
@@ -97,7 +131,7 @@ public class PlayerProperties : MonoBehaviour
         {
             CardObject cardObject = cardObjects[0];
             float middleAngle = (startAngle + endAngle) / 2;
-            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, middleAngle));
+            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, middleAngle, yOffset));
             Vector3 lookVector = holderPosition - cardPosition;
 
             Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
@@ -113,7 +147,7 @@ public class PlayerProperties : MonoBehaviour
         foreach (CardObject cardObject in cardObjects)
         {
             float angle = startAngle + j * angleStepSize;
-            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, angle));
+            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, angle, yOffset));
             Vector3 lookVector = holderPosition - cardPosition;
 
             Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
@@ -144,6 +178,8 @@ public class PlayerProperties : MonoBehaviour
             RemoveCardObjectOnMouseDownEvent(cardObject);
             CardsInHand.Remove(cardObject);
         }
+
+        PopulateHand(CardsInHand);
         return cardObjects;
     }
 
@@ -170,13 +206,13 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
-    Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle)
+    Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle, float yOffset)
     {
         if (angle > 90) { throw new ArithmeticException("Angle: " + angle + " should not exceed 90"); }
-        if (angle == 0) { return new Vector3(0, 0, 1) * distanceFromCentre; }
+        if (angle == 0) { return new Vector3(0, yOffset, distanceFromCentre); }
         double angleRad = (double)angle * (Math.PI / 180.0f);
         float x = (float)(distanceFromCentre * Math.Sin(angleRad));
         float z = (float)(distanceFromCentre * Math.Cos(angleRad));
-        return new Vector3(x, 0, z);
+        return new Vector3(x, yOffset, z);
     }
 }

@@ -787,6 +787,7 @@ MonoBehaviour:
   - {x: -2.5, y: 5.1, z: 2.5}
   _arePlayableCharacters: 01010101
   _whichPlayerStarts: 0
+  _isDebuggingMode: 1
 --- !u!1 &876613492
 GameObject:
   m_ObjectHideFlags: 0
