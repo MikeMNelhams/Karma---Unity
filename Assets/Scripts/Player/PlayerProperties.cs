@@ -18,12 +18,13 @@ public class PlayerProperties : MonoBehaviour
     public Button confirmSelectionButton;
     public Button pickupPlayPileButton;
 
+    public IController Controller { get; set; }
+    public CardSelector CardSelector { get; protected set; }
+
     public bool IsRotationEnabled {  get; set; }
 
     public List<CardObject> CardsInHand { get; set; }
-
-    public IController Controller {  get; set; }
-    public CardSelector CardSelector { get; protected set; }
+    public CardObject PickedUpCard { get; set; } 
 
     protected static System.Random rng = new();
 
@@ -37,7 +38,19 @@ public class PlayerProperties : MonoBehaviour
         if (IsRotationEnabled && Input.GetMouseButtonDown(1))
         {
             _playerMovementController.ToggleRotation();
-            return;
+            if (_playerMovementController.IsRotating) 
+            { 
+                _playerMovementController.PlayerRotationEvent += MovePickedUpCard;
+            }
+            else 
+            { 
+                _playerMovementController.PlayerRotationEvent -= MovePickedUpCard;
+            }
+        }
+
+        if (IsRotationEnabled && PickedUpCard != null)
+        {
+            MovePickedUpCard();
         }
     }
 
@@ -108,7 +121,6 @@ public class PlayerProperties : MonoBehaviour
     {
 
     }
-
 
     public void SetControllerState(ControllerState newState)
     {
@@ -208,11 +220,54 @@ public class PlayerProperties : MonoBehaviour
 
     Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle, float yOffset)
     {
-        if (angle > 90) { throw new ArithmeticException("Angle: " + angle + " should not exceed 90"); }
+        if (angle > 90) { throw new ArithmeticException("Angle for cards in hand: " + angle + " should not exceed 90"); }
         if (angle == 0) { return new Vector3(0, yOffset, distanceFromCentre); }
         double angleRad = (double)angle * (Math.PI / 180.0f);
         float x = (float)(distanceFromCentre * Math.Sin(angleRad));
         float z = (float)(distanceFromCentre * Math.Cos(angleRad));
         return new Vector3(x, yOffset, z);
+    }
+
+    void MovePickedUpCard()
+    {
+        float distanceFromHolder = 0.75f;
+        Vector3 cardPosition = cardHolder.transform.TransformPoint(playerCamera.transform.forward * distanceFromHolder);
+        Quaternion cardRotation = Quaternion.LookRotation(playerCamera.transform.position - cardPosition);
+
+        PickedUpCard.transform.SetPositionAndRotation(cardPosition, cardRotation);
+        IsInFrontOnLeftClick();
+    }
+
+    void IsInFrontOnLeftClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            PlayerProperties playerProperties = PlayerInFrontOfPickedUpCard;
+            if (playerProperties != null)
+            {
+                print("Player has been HIT by raycast!!");
+            }
+        }
+    }
+
+    public PlayerProperties PlayerInFrontOfPickedUpCard
+    {
+        get
+        {
+            print("Performing raycast from: " + PickedUpCard.transform.position + " along " + playerCamera.transform.forward);
+            RaycastHit[] hits = Physics.RaycastAll(PickedUpCard.transform.position, playerCamera.transform.forward);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                RaycastHit hit = hits[i];
+                if (hit.transform.parent == null) { continue; }
+                print("Hit SOMETHING: " + hit.transform.parent.name);
+                PlayerProperties playerProperties = hit.transform.parent.gameObject.GetComponent<PlayerProperties>();
+                if (playerProperties)
+                {
+                    return playerProperties;
+                }
+            }
+            return null;
+        }
     }
 }

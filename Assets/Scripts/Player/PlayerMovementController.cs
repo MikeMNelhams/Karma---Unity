@@ -6,9 +6,14 @@ using UnityEngine;
 public class PlayerMovementController : MonoBehaviour
 {
     [SerializeField] Transform _playerHead; 
+    [SerializeField] GameObject _playerHand;
+
     [SerializeField] float _lookSensitivity = 1f;
 
-    bool _isRotating = false;
+    public delegate void PlayerRotationEventListener();
+    public event PlayerRotationEventListener PlayerRotationEvent;
+
+    public bool IsRotating { get; protected set; } = false;
 
     float mouseY;
     float mouseX;
@@ -17,12 +22,13 @@ public class PlayerMovementController : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;
+        _playerHand.SetActive(false);
     }
 
     public void SetRotating(bool isRotating)
     {
-        _isRotating = isRotating;
-        if (_isRotating) 
+        IsRotating = isRotating;
+        if (IsRotating) 
         { 
             Cursor.visible = false;
             RotateHead();  // Otherwise it will incorrect by 1 frame.
@@ -32,14 +38,15 @@ public class PlayerMovementController : MonoBehaviour
 
     public void ToggleRotation()
     {
-        SetRotating(!_isRotating);
+        SetRotating(!IsRotating);
     }
 
     void Update()
     {
-        if (_isRotating)
+        if (IsRotating)
         {
             RotateHead();
+            PlayerRotationEvent?.Invoke();
         }
     }
 

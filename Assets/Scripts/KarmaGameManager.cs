@@ -22,6 +22,7 @@ public class KarmaGameManager : MonoBehaviour
 
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] PlayTableProperties _playTable;
+
     [SerializeField] int _turnLimit = 100;
     [SerializeField] List<Vector3> _playerPositions;
     [SerializeField] List<bool> _arePlayableCharacters;
@@ -574,11 +575,20 @@ public class KarmaGameManager : MonoBehaviour
             if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
         }
 
-        HashSet<int> validIndices = Enumerable.Range(0, player.PlayableCards.Count).ToHashSet();
-        validIndices.ExceptWith(jokerIndices);
+        HashSet<CardValue> validCardValues = player.PlayableCards.CardValues.ToHashSet();
+        validCardValues.Remove(CardValue.JOKER);
+        if (validCardValues.Count == 0) { return; }
 
-        if (validIndices.Count == 0) { return; }
-        PlayersProperties[playerIndex].SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        HashSet<CardObject> selectedCards = playerProperties.CardSelector.CardObjects;
+        if (selectedCards.Count != 1) { return; }
+
+        CardObject selectedCard = selectedCards.First();
+        if (!validCardValues.Contains(selectedCard.CurrentCard.value)) { return; }
+        print("CARD IS VALID FOR GIVEAWAY!!");
+
+        playerProperties.SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
+        playerProperties.PickedUpCard = selectedCard;
     }
 
     void EnablePlayerMovement(int playerIndex)

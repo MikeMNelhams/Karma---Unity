@@ -779,6 +779,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 2410296296573889902, guid: 75e9c81ac68b69545bddd1eab9beb352, type: 3}
   _currentPlayerArrow: {fileID: 1984063095}
   _playTable: {fileID: 1598284356}
+  _playerHandPrefab: {fileID: 6226953744157081038, guid: 77287468df05b024d8bf3311f21c80ae, type: 3}
   _turnLimit: 100
   _playerPositions:
   - {x: 0, y: 5.1, z: 0}
