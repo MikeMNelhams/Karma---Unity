@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 803874030631202914}
   - component: {fileID: 2988090399248004198}
   - component: {fileID: 6076736553985531391}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 5985106667981563335}
   - component: {fileID: 8343568616250651093}
   - component: {fileID: 3514090609769126189}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,6 +428,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5937291019153486569}
   - {fileID: 869398184848920925}
   - {fileID: 6233061848426548449}
   - {fileID: 8924351226102654765}
@@ -448,6 +449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerMovementController: {fileID: 3514090609769126189}
+  _rayCastDistanceCutoff: 30
   playerCamera: {fileID: 591302855537407287}
   cardHolder: {fileID: 7220275289808238900}
   confirmSelectionButton: {fileID: 5297352977011485884}
@@ -645,7 +647,7 @@ GameObject:
   - component: {fileID: 3220727273508952415}
   - component: {fileID: 4339142142743731813}
   - component: {fileID: 5921718218166563206}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -665,7 +667,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 683489189756708771}
-  - {fileID: 5937291019153486569}
   m_Father: {fileID: 5985106667981563335}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -895,7 +896,7 @@ RectTransform:
   m_Children:
   - {fileID: 3154321977634224310}
   - {fileID: 219428121710296698}
-  m_Father: {fileID: 869398184848920925}
+  m_Father: {fileID: 5985106667981563335}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

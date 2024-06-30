@@ -11,6 +11,7 @@ using static UnityEngine.GraphicsBuffer;
 public class PlayerProperties : MonoBehaviour
 {
     [SerializeField] PlayerMovementController _playerMovementController;
+    [SerializeField] float _rayCastDistanceCutoff = 30f;
 
     public Camera playerCamera;
     public GameObject cardHolder;
@@ -28,9 +29,12 @@ public class PlayerProperties : MonoBehaviour
 
     protected static System.Random rng = new();
 
+    int _layerAsLayerMask;
+
     void Awake()
     {
         CardSelector = new();
+        _layerAsLayerMask = 1 << LayerMask.NameToLayer("Player");
     }
 
     private void Update()
@@ -230,24 +234,29 @@ public class PlayerProperties : MonoBehaviour
 
     void MovePickedUpCard()
     {
+        if (PickedUpCard == null) { return; }
+
         float distanceFromHolder = 0.75f;
         Vector3 cardPosition = cardHolder.transform.TransformPoint(playerCamera.transform.forward * distanceFromHolder);
-        Quaternion cardRotation = Quaternion.LookRotation(playerCamera.transform.position - cardPosition);
+        
+        PickedUpCard.transform.position = cardPosition;
 
-        PickedUpCard.transform.SetPositionAndRotation(cardPosition, cardRotation);
-        IsInFrontOnLeftClick();
-    }
-
-    void IsInFrontOnLeftClick()
-    {
-        if (Input.GetMouseButtonDown(0))
+        PlayerProperties targetPlayerProperties = PlayerInFrontOfPickedUpCard;
+        Quaternion cardRotation; 
+        if (targetPlayerProperties != null)
         {
-            PlayerProperties playerProperties = PlayerInFrontOfPickedUpCard;
-            if (playerProperties != null)
-            {
-                print("Player has been HIT by raycast!!");
-            }
+            print("Player " + targetPlayerProperties.name + " has been HIT by raycast!!");
+            Quaternion lookDirection = Quaternion.LookRotation(cardPosition - playerCamera.transform.position);
+            cardRotation = lookDirection; // Quaternion.Euler(90, 180, 0) *
+            cardRotation *= Quaternion.Euler(75, 180, 0);
         }
+        else
+        {
+            cardRotation = Quaternion.LookRotation(playerCamera.transform.position - cardPosition);
+        }
+        
+        print("Card rotation: " + cardRotation.eulerAngles);
+        PickedUpCard.transform.rotation = cardRotation;
     }
 
     public PlayerProperties PlayerInFrontOfPickedUpCard
@@ -255,12 +264,13 @@ public class PlayerProperties : MonoBehaviour
         get
         {
             print("Performing raycast from: " + PickedUpCard.transform.position + " along " + playerCamera.transform.forward);
-            RaycastHit[] hits = Physics.RaycastAll(PickedUpCard.transform.position, playerCamera.transform.forward);
+            RaycastHit[] hits = new RaycastHit[20];
+            Physics.RaycastNonAlloc(PickedUpCard.transform.position, playerCamera.transform.forward, hits, _rayCastDistanceCutoff, _layerAsLayerMask);
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit hit = hits[i];
+                if (hit.transform == null) { continue; }
                 if (hit.transform.parent == null) { continue; }
-                print("Hit SOMETHING: " + hit.transform.parent.name);
                 PlayerProperties playerProperties = hit.transform.parent.gameObject.GetComponent<PlayerProperties>();
                 if (playerProperties)
                 {
