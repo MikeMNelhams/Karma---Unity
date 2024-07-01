@@ -71,6 +71,6 @@ public class PlayerMovementController : MonoBehaviour
         mouseY = Input.GetAxis("Mouse X");
         mouseX = Input.GetAxis("Mouse Y");
         rotate = new Vector3(-mouseX, mouseY * _lookSensitivity, 0);
-        _playerHead.eulerAngles = _playerHead.eulerAngles + rotate;
+        _playerHead.eulerAngles += rotate;
     }
 }

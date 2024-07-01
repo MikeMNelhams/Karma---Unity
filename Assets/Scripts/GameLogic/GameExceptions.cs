@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Karma
 {
-    namespace Game
+    namespace GameExceptions
     {
         class GameWonException : Exception
         {

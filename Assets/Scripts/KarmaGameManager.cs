@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Karma.Game;
+using Karma.GameExceptions;
 using Karma.BasicBoard;
 using Karma.Board;
 using Karma.Board.BoardEvents;
@@ -11,6 +11,7 @@ using System;
 using Karma.Controller;
 using System.Linq;
 using DataStructures;
+
 
 public class KarmaGameManager : MonoBehaviour
 {
@@ -86,16 +87,17 @@ public class KarmaGameManager : MonoBehaviour
 
     void RegisterBoardEvents()
     {
-        Board.BoardEventSystem.RegisterOnTurnStartEventHandler(new BoardEventSystem.BoardEventHandler(StartTurn));
+        Board.BoardEventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(StartTurn));
 
-        Board.BoardEventSystem.RegisterPlayerDrawEventHandler(new BoardEventSystem.PlayerDrawEventHandler(DrawCards));
-        Board.BoardEventSystem.RegisterHandsFlippedEventHandler(new BoardEventSystem.BoardEventHandler(FlipHandsAnimation));
-        Board.BoardEventSystem.RegisterHandsRotatedEventHandler(new BoardEventSystem.BoardHandsRotationEventHandler(RotateHandsInTurnOrderAnimation));
+        Board.BoardEventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
+        Board.BoardEventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHandsAnimation));
+        Board.BoardEventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrderAnimation));
+        Board.BoardEventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
 
-        Board.BoardEventSystem.RegisterOnBurnEventHanlder(new BoardEventSystem.BoardBurnEventHandler(BurnCards));
+        Board.BoardEventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
 
-        Board.BoardEventSystem.RegisterOnTurnEndEventHandler(new BoardEventSystem.BoardEventHandler(CheckIfWinner));
-        Board.BoardEventSystem.RegisterOnTurnEndEventHandler(new BoardEventSystem.BoardEventHandler(NextTurn));
+        Board.BoardEventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
+        Board.BoardEventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
 
     void CreatePlayers(List<Vector3> playerStartPositions)
@@ -163,7 +165,6 @@ public class KarmaGameManager : MonoBehaviour
         
         for (int i = 0; i < Board.Players.Count; i++)
         {
-            Player player = Board.Players[i];
             PlayerProperties playerProperties = PlayersProperties[i]; 
             if (playerProperties.cardHolder == null) { continue; }
             GameObject cardHolder = playerProperties.cardHolder;
@@ -264,6 +265,19 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<CardObject> cardsDrawn = _playTable.DrawCards(numberOfCards);
         MoveCardObjectsIntoHand(playerIndex, cardsDrawn);
+    }
+
+    void StartGiveAwayCards(int numberOfCards, int playerIndex)
+    {
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        Board.Players[playerIndex].CardGiveAwayHandler.RegisterOnCardGiveAwayListener(new CardGiveAwayHandler.OnCardGiveAwayListener(GiveAwayCard));
+
+        playerProperties.SetControllerState(new SelectingCardGiveAwaySelectionIndex(Board, playerProperties));
+    }
+
+    void GiveAwayCard(Card card, int giverIndex, int receiverIndex)
+    {
+        PlayersProperties[receiverIndex].ReceivePickedUpCard(PlayersProperties[giverIndex]);
     }
 
     void MoveCardObjectsIntoHand(int playerIndex, List<CardObject> cardObjectsToAdd)
@@ -599,17 +613,17 @@ public class KarmaGameManager : MonoBehaviour
         excludedTargetIndices.Add(Board.CurrentPlayerIndex);
         if (excludedTargetIndices.Count == Board.Players.Count) { throw new Exception("An error occurred, there is NO valid card giveaway player target"); }
         if (excludedTargetIndices.Contains(targetIndex)) { print("The target player: " + targetIndex + " is invalid as they are either YOU or have no cards"); return; }
- 
-        Board.Players[targetIndex].ReceiveCard(PlayersProperties[giverIndex].PickedUpCard.CurrentCard, Board.Players[giverIndex]);
 
-        PlayersProperties[targetIndex].ReceivePickedUpCard(PlayersProperties[giverIndex]);
+        Player giver = Board.Players[giverIndex];
+        giver.CardGiveAwayHandler.GiveAway(PlayersProperties[giverIndex].PickedUpCard.CurrentCard, targetIndex);
 
-        if (PlayersProperties[giverIndex].NumberOfCardsToGiveAway == 0)
+        if (giver.CardGiveAwayHandler.IsFinished)
         {
             PlayersProperties[giverIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[giverIndex]));
             Board.EndTurn();
             return;
         }
+
         PlayersProperties[giverIndex].SetControllerState(new SelectingCardGiveAwaySelectionIndex(Board, PlayersProperties[giverIndex]));
     }
 

@@ -12,6 +12,7 @@ namespace Karma
             public Hand Hand { get; set; }
             public CardsList KarmaDown { get; set; }
             public CardsList KarmaUp { get; set; }
+            public CardGiveAwayHandler CardGiveAwayHandler { get; set; }
 
             public Player(Hand hand, CardsList karmaDown, CardsList karmaUp)
             {
@@ -33,8 +34,7 @@ namespace Karma
                 return "Player(H" + Hand + ", UK" + KarmaUp + ", DK" + KarmaDown;
             }
 
-            public int Length {get { return Hand.Count + KarmaUp.Count + KarmaDown.Count; }
-            }
+            public int Length {get { return Hand.Count + KarmaUp.Count + KarmaDown.Count; } }
 
             public bool HasCards { get { return Length > 0; } }
             public CardsList PlayableCards 
@@ -82,10 +82,10 @@ namespace Karma
                 cards.Clear();
             }
 
-            public void ReceiveCard(Card card, Player player)
+            public void ReceiveCard(Card card, Player giver)
             {
                 Hand.Add(card);
-                player.PlayableCards.Remove(card);
+                giver.PlayableCards.Remove(card);
             }
 
             public CardsList PopFromPlayable(int[] indices)

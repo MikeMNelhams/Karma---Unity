@@ -145,21 +145,7 @@ namespace Karma
                 if (!currentPlayer.HasCards) { return; }
                 if (currentPlayer.PlayingFrom == 1 && currentPlayer.KarmaUp.Count == 0) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-                int playingIndexAtStartOfCombo = currentPlayer.PlayingFrom;
-                for (int i = 0; i < numberOfRepeats; i++)
-                {
-                    if (currentPlayer.PlayingFrom != playingIndexAtStartOfCombo) { return; }
-                    if (currentPlayer.PlayableCards.IsExclusively(CardValue.JOKER)) { return; }
-                    Controller.State._playerProperties.NumberOfCardsToGiveAway += 1;
-                    GiveAwayCard(board); // Breaks currently, when numberOfRepeats > 1
-                    if (!currentPlayer.HasCards) { return; }
-                }
-            }
-
-            public void GiveAwayCard(IBoard board)
-            {
-                PlayerProperties playerProperties = Controller.State._playerProperties;
-                playerProperties.SetControllerState(new SelectingCardGiveAwaySelectionIndex(board, playerProperties));
+                board.StartGivingAwayCards(numberOfRepeats);  
             }
         }
 
@@ -186,7 +172,6 @@ namespace Karma
             public CardCombo_ACE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                KarmaGameManager gameManager = KarmaGameManager.Instance;
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (((uint)(numberOfRepeats) & 0b1) == 0b0)
                 {

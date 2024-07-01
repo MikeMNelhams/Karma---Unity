@@ -10,31 +10,33 @@ namespace Karma
         {
             public class BoardEventSystem
             {
-                public delegate void BoardEventHandler(IBoard board);
-                public delegate void BoardBurnEventHandler(int jokerCount);
-                public delegate void PlayerDrawEventHandler(int numberOfCards, int playerIndex);
-                public delegate void BoardHandsRotationEventHandler(int numberOfRotations, IBoard board);
+                public delegate void BoardEventListener(IBoard board);
+                public delegate void BoardBurnEventListener(int jokerCount);
+                public delegate void PlayerDrawEventListener(int numberOfCards, int playerIndex);
+                public delegate void BoardHandsRotationEventListener(int numberOfRotations, IBoard board);
+                public delegate void BoardOnStartCardGiveAwayListener(int numberOfCards, int playerIndex);
 
-                public event BoardEventHandler HandsFlippedEvent;
-                public event BoardHandsRotationEventHandler HandsRotatedEvent;
-                public event PlayerDrawEventHandler PlayerDrawEvent;
-                public event BoardEventHandler OnTurnStartEvent;
-                public event BoardEventHandler OnTurnEndEvent;
-                public event BoardBurnEventHandler OnBurnEvent;
+                public event BoardEventListener HandsFlippedEvent;
+                public event BoardHandsRotationEventListener HandsRotatedEvent;
+                public event PlayerDrawEventListener PlayerDrawEvent;
+                public event BoardEventListener OnTurnStartEvent;
+                public event BoardEventListener OnTurnEndEvent;
+                public event BoardBurnEventListener OnBurnEvent;
+                public event BoardOnStartCardGiveAwayListener StartedCardGiveAway;
 
-                public void RegisterHandsRotatedEventHandler(BoardHandsRotationEventHandler handsRotatedEventHandler)
+                public void RegisterHandsRotatedListener(BoardHandsRotationEventListener listener)
                 {
-                    HandsRotatedEvent += handsRotatedEventHandler;
+                    HandsRotatedEvent += listener;
                 }
 
-                public void TriggerHandsRotatedEventHandler(int numberOfRotations, IBoard board)
+                public void TriggerHandsRotatedEventListener(int numberOfRotations, IBoard board)
                 {
                     HandsRotatedEvent?.Invoke(numberOfRotations, board);
                 }
 
-                public void RegisterHandsFlippedEventHandler(BoardEventHandler handsFlippedEventHandler)
+                public void RegisterHandsFlippedEventListener(BoardEventListener listener)
                 {
-                    HandsFlippedEvent += handsFlippedEventHandler;
+                    HandsFlippedEvent += listener;
                 }
 
                 public void TriggerHandsFlippedEvent(IBoard board)
@@ -42,9 +44,9 @@ namespace Karma
                     HandsFlippedEvent?.Invoke(board);
                 }
 
-                public void RegisterPlayerDrawEventHandler(PlayerDrawEventHandler playerDrawEventHandler)
+                public void RegisterPlayerDrawEventListener(PlayerDrawEventListener listener)
                 {
-                    PlayerDrawEvent += playerDrawEventHandler;
+                    PlayerDrawEvent += listener;
                 }
 
                 public void TriggerPlayerDrawEvents(int numberOfCards, int playerIndex)
@@ -52,9 +54,19 @@ namespace Karma
                     PlayerDrawEvent?.Invoke(numberOfCards, playerIndex);
                 }
 
-                public void RegisterOnTurnStartEventHandler(BoardEventHandler newEventHandler)
+                public void RegisterStartCardGiveAwayListener(BoardOnStartCardGiveAwayListener listener)
                 {
-                    OnTurnStartEvent += newEventHandler;
+                    StartedCardGiveAway += listener;
+                }
+
+                public void TriggerStartedCardGiveAway(int numberOfCards, int playerIndex)
+                {
+                    StartedCardGiveAway?.Invoke(numberOfCards, playerIndex);
+                }
+
+                public void RegisterOnTurnStartEventListener(BoardEventListener listener)
+                {
+                    OnTurnStartEvent += listener;
                 }
 
                 public void TriggerOnTurnStartEvents(IBoard board)
@@ -62,9 +74,9 @@ namespace Karma
                     OnTurnStartEvent?.Invoke(board);
                 }
 
-                public void RegisterOnTurnEndEventHandler(BoardEventHandler newEventHandler)
+                public void RegisterOnTurnEndEventListener(BoardEventListener listener)
                 {
-                    OnTurnEndEvent += newEventHandler;
+                    OnTurnEndEvent += listener;
                 }
 
                 public void TriggerOnTurnEndEvents(IBoard board)
@@ -72,9 +84,9 @@ namespace Karma
                     OnTurnEndEvent?.Invoke(board);
                 }
 
-                public void RegisterOnBurnEventHanlder(BoardBurnEventHandler newEventHandler)
+                public void RegisterOnBurnEventListener(BoardBurnEventListener listener)
                 {
-                    OnBurnEvent += newEventHandler;
+                    OnBurnEvent += listener;
                 }
 
                 public void TriggerBurnEvents(int jokerCount)

@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using Karma.Board.BoardEvents;
 using System.Diagnostics;
+using UnityEngine;
 
 
 namespace Karma
@@ -88,7 +89,6 @@ namespace Karma
 
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
-                CardComboFactory cardComboFactory = new ();
                 BoardEventSystem = new BoardEventSystem();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
@@ -136,7 +136,21 @@ namespace Karma
                     }
                 }
 
-                BoardEventSystem.TriggerHandsRotatedEventHandler(numberOfRotations, this);
+                BoardEventSystem.TriggerHandsRotatedEventListener(numberOfRotations, this);
+            }
+
+            public void StartGivingAwayCards(int numberOfCards)
+            {
+                CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex);
+                CurrentPlayer.CardGiveAwayHandler.RegisterOnCardGiveAwayListener(ReceiveCard);
+                BoardEventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
+            }
+
+            void ReceiveCard(Card card, int giverIndex, int receiverIndex)
+            {
+                Player giver = Players[giverIndex];
+                Player receiver = Players[receiverIndex];
+                receiver.ReceiveCard(card, giver);
             }
 
             public void StartTurn()
