@@ -46,6 +46,7 @@ public class CardSelector
     {
         Card card = cardObject.CurrentCard;
         CardObjects.Remove(cardObject);
+        cardObject.DisableSelectShader();
         _selection.Remove(card); 
         _selectionValues.Remove(card.value);
     }

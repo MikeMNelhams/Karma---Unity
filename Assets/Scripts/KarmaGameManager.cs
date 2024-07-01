@@ -62,7 +62,7 @@ public class KarmaGameManager : MonoBehaviour
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 2, 3, 12, 15}, new() { 3 }, new() { 4 } },
+            new() { new() { 2, 3, 4, 12, 12, 15}, new() { 3 }, new() { 4 } },
             new() { new() { 3, 4, 14 }, new() { 3 }, new() { 4 } },
             new() { new() { 2, 11, 11, 11}, new() { 3 }, new() { 4 } },
             new() { new() { 6 }, new() { 3 }, new() { 4 } }
@@ -113,6 +113,7 @@ public class KarmaGameManager : MonoBehaviour
 
             PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
             playerProperties.Index = i;
+            playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
             PlayersProperties.Add(playerProperties);
             bool isCurrentPlayer = i == Board.CurrentPlayerIndex;
             if (isCurrentPlayer) { playerProperties.EnableCamera(); }
@@ -428,7 +429,8 @@ public class KarmaGameManager : MonoBehaviour
         if (PlayersProperties[board.PlayerIndexWhoStartedTurn].Controller.State is SelectingCardGiveAwaySelectionIndex)
         {
             print("CARD GIVEAWAY SELECTION MODE! TURN AIN'T OVER YET BUDDY");
-            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+            print("You need to giveaway: " + Board.Players[Board.PlayerIndexWhoStartedTurn].CardGiveAwayHandler.NumberOfCardsRemainingToGiveAway + " cards");
+            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn; // This only can occur PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this check. 
             return;
         }
 
@@ -532,7 +534,7 @@ public class KarmaGameManager : MonoBehaviour
 
         if (PlayersProperties[playerIndex].Controller.State is PickingAction) { AttemptToPlayCardSelection(playerIndex); return; }
         if (PlayersProperties[playerIndex].Controller.State is SelectingCardGiveAwaySelectionIndex) { AttemptToGiveAwayCardSelection(playerIndex); return; }
-        
+
         throw new NotImplementedException();
     }
 
@@ -589,22 +591,30 @@ public class KarmaGameManager : MonoBehaviour
             Card card = player.PlayableCards[i];
             if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
         }
-
+        
         HashSet<CardValue> validCardValues = player.PlayableCards.CardValues.ToHashSet();
         validCardValues.Remove(CardValue.JOKER);
+
+        print("Attempting card giveaway. Valid cardValues: " + validCardValues);
         if (validCardValues.Count == 0) { return; }
 
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         HashSet<CardObject> selectedCards = playerProperties.CardSelector.CardObjects;
+        string selectedCardsMessage = "Attempting card giveaway. Selected Cards: ";
+
+        foreach (CardObject card in selectedCards)
+        {
+            selectedCardsMessage += card + " ";
+        }
+        print(selectedCardsMessage);
         if (selectedCards.Count != 1) { return; }
 
         CardObject selectedCard = selectedCards.First();
         if (!validCardValues.Contains(selectedCard.CurrentCard.value)) { return; }
         print("CARD " + selectedCard + " IS VALID FOR GIVEAWAY!!");
-
+        
         playerProperties.SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
         playerProperties.PickedUpCard = selectedCard;
-        playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
     }
 
     void AttemptGiveAwayPickedUpCard(int giverIndex, int targetIndex)
@@ -612,9 +622,10 @@ public class KarmaGameManager : MonoBehaviour
         HashSet<int> excludedTargetIndices = Board.PotentialWinnerIndices;
         excludedTargetIndices.Add(Board.CurrentPlayerIndex);
         if (excludedTargetIndices.Count == Board.Players.Count) { throw new Exception("An error occurred, there is NO valid card giveaway player target"); }
-        if (excludedTargetIndices.Contains(targetIndex)) { print("The target player: " + targetIndex + " is invalid as they are either YOU or have no cards"); return; }
+        if (excludedTargetIndices.Contains(targetIndex)) { print("The target player: " + targetIndex + " is invalid as they are either YOU or they have no cards"); return; }
 
         Player giver = Board.Players[giverIndex];
+        print("Giving away picked up card: " + PlayersProperties[giverIndex].PickedUpCard + " to player " + targetIndex);
         giver.CardGiveAwayHandler.GiveAway(PlayersProperties[giverIndex].PickedUpCard.CurrentCard, targetIndex);
 
         if (giver.CardGiveAwayHandler.IsFinished)

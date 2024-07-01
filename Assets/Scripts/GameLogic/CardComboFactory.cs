@@ -140,7 +140,6 @@ namespace Karma
             public CardCombo_QUEEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                // TODO Most of this logic needs moving into KGM. Here it should only set the # of cards to give away.
                 Player currentPlayer = board.CurrentPlayer;
                 if (!currentPlayer.HasCards) { return; }
                 if (currentPlayer.PlayingFrom == 1 && currentPlayer.KarmaUp.Count == 0) { return; }

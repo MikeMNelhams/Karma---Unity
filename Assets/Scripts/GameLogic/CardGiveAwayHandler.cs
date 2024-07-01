@@ -20,6 +20,7 @@ namespace Karma
             readonly List<OnCardGiveAwayListener> _registeredListeners;
 
             public bool IsFinished { get => _numberOfCardsToGiveAway == 0; }
+            public int NumberOfCardsRemainingToGiveAway { get => _numberOfCardsToGiveAway; }
 
             public CardGiveAwayHandler(int NumberOfCardsToGiveAway, IBoard board, int giverIndex)
             {

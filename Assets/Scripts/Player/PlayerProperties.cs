@@ -109,12 +109,12 @@ public class PlayerProperties : MonoBehaviour
 
     public void EnterCardGiveAwaySelectionMode()
     {
-        
+        confirmSelectionButton.gameObject.SetActive(true);
     }
 
     public void ExitCardGiveAwaySelectionMode()
     {
-        
+        confirmSelectionButton.gameObject.SetActive(false);
     }
 
     public void EnterCardGiveAwayPlayerSelectionMode()
@@ -125,11 +125,6 @@ public class PlayerProperties : MonoBehaviour
     public void ExitCardGiveAwayPlayerSelectionMode()
     {
 
-    }
-
-    public void RegisterPickedUpCardOnClickEventListener(PickedUpCardOnClickEventListener eventListener)
-    {
-        PickedUpCardOnClick += eventListener;
     }
 
     public void SetControllerState(ControllerState newState)
@@ -237,10 +232,11 @@ public class PlayerProperties : MonoBehaviour
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         CardsInHand.Add(giverPlayerProperties.PickedUpCard);
-        giverPlayerProperties.CardsInHand.Remove(giverPlayerProperties.PickedUpCard); // TODO this should be PlayableCards.Remove(), but KU and KD aren't implemented yet
+        giverPlayerProperties.CardSelector.Remove(giverPlayerProperties.PickedUpCard);
+        giverPlayerProperties.CardsInHand.Remove(giverPlayerProperties.PickedUpCard); // TODO this should be PlayableCards.Remove(), but KU and KD aren't physically interactable yet
+        giverPlayerProperties.PickedUpCard = null;
         PopulateHand();
         giverPlayerProperties.PopulateHand();
-        giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.NumberOfCardsToGiveAway -= 1;
     }
 
@@ -289,6 +285,11 @@ public class PlayerProperties : MonoBehaviour
         }
         
         PickedUpCard.transform.rotation = cardRotation;
+    }
+
+    public void RegisterPickedUpCardOnClickEventListener(PickedUpCardOnClickEventListener eventListener)
+    {
+        PickedUpCardOnClick += eventListener;
     }
 
     void TriggerPickedUpCardOnLeftClick()
