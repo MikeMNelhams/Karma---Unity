@@ -140,6 +140,7 @@ namespace Karma
             public CardCombo_QUEEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
+                // TODO Most of this logic needs moving into KGM. Here it should only set the # of cards to give away.
                 Player currentPlayer = board.CurrentPlayer;
                 if (!currentPlayer.HasCards) { return; }
                 if (currentPlayer.PlayingFrom == 1 && currentPlayer.KarmaUp.Count == 0) { return; }
@@ -149,14 +150,14 @@ namespace Karma
                 {
                     if (currentPlayer.PlayingFrom != playingIndexAtStartOfCombo) { return; }
                     if (currentPlayer.PlayableCards.IsExclusively(CardValue.JOKER)) { return; }
-                    GiveAwayCard(board); // Breaks when numberOfRepeats > 1
+                    Controller.State._playerProperties.NumberOfCardsToGiveAway += 1;
+                    GiveAwayCard(board); // Breaks currently, when numberOfRepeats > 1
                     if (!currentPlayer.HasCards) { return; }
                 }
             }
 
             public void GiveAwayCard(IBoard board)
             {
-                // TODO Get rid of this AWFUL access!
                 PlayerProperties playerProperties = Controller.State._playerProperties;
                 playerProperties.SetControllerState(new SelectingCardGiveAwaySelectionIndex(board, playerProperties));
             }

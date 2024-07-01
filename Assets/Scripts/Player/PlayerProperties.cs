@@ -23,13 +23,19 @@ public class PlayerProperties : MonoBehaviour
     public CardSelector CardSelector { get; protected set; }
 
     public bool IsRotationEnabled {  get; set; }
-
+    public int Index { get; set; } = -1;
     public List<CardObject> CardsInHand { get; set; }
-    public CardObject PickedUpCard { get; set; } 
+    public CardObject PickedUpCard { get; set; }
+    
+    public int NumberOfCardsToGiveAway { get; set; } = 0;
+
+    public delegate void PickedUpCardOnClickEventListener(int giverIndex, int targetIndex);
+    event PickedUpCardOnClickEventListener PickedUpCardOnClick;
 
     protected static System.Random rng = new();
 
     int _layerAsLayerMask;
+    PlayerProperties _targetPlayerProperties;
 
     void Awake()
     {
@@ -43,18 +49,13 @@ public class PlayerProperties : MonoBehaviour
         {
             _playerMovementController.ToggleRotation();
             if (_playerMovementController.IsRotating) 
-            { 
-                _playerMovementController.PlayerRotationEvent += MovePickedUpCard;
+            {
+                _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
             else 
-            { 
-                _playerMovementController.PlayerRotationEvent -= MovePickedUpCard;
+            {
+                _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
-        }
-
-        if (IsRotationEnabled && PickedUpCard != null)
-        {
-            MovePickedUpCard();
         }
     }
 
@@ -126,6 +127,11 @@ public class PlayerProperties : MonoBehaviour
 
     }
 
+    public void RegisterPickedUpCardOnClickEventListener(PickedUpCardOnClickEventListener eventListener)
+    {
+        PickedUpCardOnClick += eventListener;
+    }
+
     public void SetControllerState(ControllerState newState)
     {
         Controller.SetState(newState);
@@ -135,17 +141,22 @@ public class PlayerProperties : MonoBehaviour
     {
         CardsInHand = cardObjects;
 
+        PopulateHand(startAngle: startAngle, endAngle: endAngle, distanceFromHolder: distanceFromHolder, yOffset: yOffset);
+    }
+    
+    public void PopulateHand(float startAngle = -20.0f, float endAngle = 20.0f, float distanceFromHolder = 0.75f, float yOffset = -0.25f)
+    {
         bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
         if (handIsFlipped) { ShuffleHand(); }
 
         Transform holderTransform = cardHolder.transform;
-        
+
         Vector3 holderPosition = holderTransform.position;
 
-        if (cardObjects.Count == 0) { return; }
-        if (cardObjects.Count == 1)
+        if (CardsInHand.Count == 0) { return; }
+        if (CardsInHand.Count == 1)
         {
-            CardObject cardObject = cardObjects[0];
+            CardObject cardObject = CardsInHand[0];
             float middleAngle = (startAngle + endAngle) / 2;
             Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, middleAngle, yOffset));
             Vector3 lookVector = holderPosition - cardPosition;
@@ -157,23 +168,23 @@ public class PlayerProperties : MonoBehaviour
             return;
         }
 
-        float angleStepSize = (endAngle - startAngle) / (cardObjects.Count - 1);
+        float angleStepSize = (endAngle - startAngle) / (CardsInHand.Count - 1);
 
         int j = 0;
-        foreach (CardObject cardObject in cardObjects)
+        foreach (CardObject cardObject in CardsInHand)
         {
             float angle = startAngle + j * angleStepSize;
             Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, angle, yOffset));
             Vector3 lookVector = holderPosition - cardPosition;
 
             Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
-            if (handIsFlipped ) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
+            if (handIsFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
 
             cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
             j++;
         }
     }
-    
+
     public void FlipHand()
     {
         bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
@@ -195,7 +206,7 @@ public class PlayerProperties : MonoBehaviour
             CardsInHand.Remove(cardObject);
         }
 
-        PopulateHand(CardsInHand);
+        PopulateHand();
         return cardObjects;
     }
 
@@ -222,6 +233,17 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
+    public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
+    {
+        if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
+        CardsInHand.Add(giverPlayerProperties.PickedUpCard);
+        giverPlayerProperties.CardsInHand.Remove(giverPlayerProperties.PickedUpCard); // TODO this should be PlayableCards.Remove(), but KU and KD aren't implemented yet
+        PopulateHand();
+        giverPlayerProperties.PopulateHand();
+        giverPlayerProperties.PickedUpCard = null;
+        giverPlayerProperties.NumberOfCardsToGiveAway -= 1;
+    }
+
     Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle, float yOffset)
     {
         if (angle > 90) { throw new ArithmeticException("Angle for cards in hand: " + angle + " should not exceed 90"); }
@@ -230,6 +252,19 @@ public class PlayerProperties : MonoBehaviour
         float x = (float)(distanceFromCentre * Math.Sin(angleRad));
         float z = (float)(distanceFromCentre * Math.Cos(angleRad));
         return new Vector3(x, yOffset, z);
+    }
+
+    void MovePickedUpCardIfValid()
+    {
+        if (IsRotationEnabled && PickedUpCard != null)
+        {
+            _targetPlayerProperties = PlayerInFrontOfPickedUpCard;
+            MovePickedUpCard();
+            if (Input.GetMouseButtonDown(0))
+            {
+                TriggerPickedUpCardOnLeftClick();
+            }
+        }
     }
 
     void MovePickedUpCard()
@@ -241,11 +276,9 @@ public class PlayerProperties : MonoBehaviour
         
         PickedUpCard.transform.position = cardPosition;
 
-        PlayerProperties targetPlayerProperties = PlayerInFrontOfPickedUpCard;
         Quaternion cardRotation; 
-        if (targetPlayerProperties != null)
+        if (_targetPlayerProperties != null)
         {
-            print("Player " + targetPlayerProperties.name + " has been HIT by raycast!!");
             Quaternion lookDirection = Quaternion.LookRotation(cardPosition - playerCamera.transform.position);
             cardRotation = lookDirection; // Quaternion.Euler(90, 180, 0) *
             cardRotation *= Quaternion.Euler(75, 180, 0);
@@ -255,15 +288,21 @@ public class PlayerProperties : MonoBehaviour
             cardRotation = Quaternion.LookRotation(playerCamera.transform.position - cardPosition);
         }
         
-        print("Card rotation: " + cardRotation.eulerAngles);
         PickedUpCard.transform.rotation = cardRotation;
+    }
+
+    void TriggerPickedUpCardOnLeftClick()
+    {
+        if (_targetPlayerProperties != null)
+        {
+            PickedUpCardOnClick?.Invoke(Index, _targetPlayerProperties.Index);
+        }
     }
 
     public PlayerProperties PlayerInFrontOfPickedUpCard
     {
         get
         {
-            print("Performing raycast from: " + PickedUpCard.transform.position + " along " + playerCamera.transform.forward);
             RaycastHit[] hits = new RaycastHit[20];
             Physics.RaycastNonAlloc(PickedUpCard.transform.position, playerCamera.transform.forward, hits, _rayCastDistanceCutoff, _layerAsLayerMask);
             for (int i = 0; i < hits.Length; i++)

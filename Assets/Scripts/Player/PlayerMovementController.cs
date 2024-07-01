@@ -46,6 +46,16 @@ public class PlayerMovementController : MonoBehaviour
         SetRotating(!IsRotating);
     }
 
+    public void RegisterPlayerRotationEventListener(PlayerRotationEventListener eventListener)
+    {
+        PlayerRotationEvent += eventListener;
+    }
+
+    public void UnRegisterPlayerRotationEventListener(PlayerRotationEventListener eventListener)
+    {
+        PlayerRotationEvent -= eventListener;
+    }
+
     void Update()
     {
         if (IsRotating)

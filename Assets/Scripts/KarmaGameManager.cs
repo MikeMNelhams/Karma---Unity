@@ -110,6 +110,7 @@ public class KarmaGameManager : MonoBehaviour
             player.name = "Player " + i;
 
             PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
+            playerProperties.Index = i;
             PlayersProperties.Add(playerProperties);
             bool isCurrentPlayer = i == Board.CurrentPlayerIndex;
             if (isCurrentPlayer) { playerProperties.EnableCamera(); }
@@ -585,10 +586,31 @@ public class KarmaGameManager : MonoBehaviour
 
         CardObject selectedCard = selectedCards.First();
         if (!validCardValues.Contains(selectedCard.CurrentCard.value)) { return; }
-        print("CARD IS VALID FOR GIVEAWAY!!");
+        print("CARD " + selectedCard + " IS VALID FOR GIVEAWAY!!");
 
         playerProperties.SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
         playerProperties.PickedUpCard = selectedCard;
+        playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
+    }
+
+    void AttemptGiveAwayPickedUpCard(int giverIndex, int targetIndex)
+    {
+        HashSet<int> excludedTargetIndices = Board.PotentialWinnerIndices;
+        excludedTargetIndices.Add(Board.CurrentPlayerIndex);
+        if (excludedTargetIndices.Count == Board.Players.Count) { throw new Exception("An error occurred, there is NO valid card giveaway player target"); }
+        if (excludedTargetIndices.Contains(targetIndex)) { print("The target player: " + targetIndex + " is invalid as they are either YOU or have no cards"); return; }
+ 
+        Board.Players[targetIndex].ReceiveCard(PlayersProperties[giverIndex].PickedUpCard.CurrentCard, Board.Players[giverIndex]);
+
+        PlayersProperties[targetIndex].ReceivePickedUpCard(PlayersProperties[giverIndex]);
+
+        if (PlayersProperties[giverIndex].NumberOfCardsToGiveAway == 0)
+        {
+            PlayersProperties[giverIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[giverIndex]));
+            Board.EndTurn();
+            return;
+        }
+        PlayersProperties[giverIndex].SetControllerState(new SelectingCardGiveAwaySelectionIndex(Board, PlayersProperties[giverIndex]));
     }
 
     void EnablePlayerMovement(int playerIndex)

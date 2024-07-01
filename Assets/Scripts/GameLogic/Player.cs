@@ -82,6 +82,12 @@ namespace Karma
                 cards.Clear();
             }
 
+            public void ReceiveCard(Card card, Player player)
+            {
+                Hand.Add(card);
+                player.PlayableCards.Remove(card);
+            }
+
             public CardsList PopFromPlayable(int[] indices)
             {
                 return PlayableCards.PopMultiple(indices);

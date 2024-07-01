@@ -26,6 +26,7 @@ namespace Karma
         {
             protected IBoard _board;
             public PlayerProperties _playerProperties;
+
             protected ControllerState(IBoard board, PlayerProperties playerProperties)
             {
                 _board = board;

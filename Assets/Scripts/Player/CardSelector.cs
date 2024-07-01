@@ -24,6 +24,7 @@ public class CardSelector
             return selection;
         }
     }
+
     public FrozenMultiSet<CardValue> SelectionCardValues { get => _selectionValues; }
 
     public CardSelector()
