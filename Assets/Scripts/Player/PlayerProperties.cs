@@ -32,6 +32,9 @@ public class PlayerProperties : MonoBehaviour
     public delegate void PickedUpCardOnClickEventListener(int giverIndex, int targetIndex);
     event PickedUpCardOnClickEventListener PickedUpCardOnClick;
 
+    public delegate Dictionary<Card, List<int>> CardSorter(int playerIndex);
+    CardSorter _handSorter;
+
     protected static System.Random rng = new();
 
     int _layerAsLayerMask;
@@ -132,10 +135,54 @@ public class PlayerProperties : MonoBehaviour
         Controller.SetState(newState);
     }
 
+    public void SetHandSorter(CardSorter handSorter)
+    {
+        _handSorter = handSorter;
+    }
+
+    public void AddCardObjectsToHand(List<CardObject> cardsToAdd)
+    {
+        if (cardsToAdd.Count == 0) { return; }
+        int n = cardsToAdd.Count + CardsInHand.Count;
+        if (n == 1) { PopulateHand(cardsToAdd); return; }
+
+        List<CardObject> combinedHandCardObjects = CardsInHand;
+        combinedHandCardObjects.AddRange(cardsToAdd);
+
+        Dictionary<Card, List<int>> cardPositions = _handSorter(Index);
+
+        CardObject[] handCorrectOrder = new CardObject[n];
+        foreach (CardObject cardObject in combinedHandCardObjects)
+        {
+            int position = cardPositions[cardObject.CurrentCard].Last();
+            handCorrectOrder[position] = cardObject;
+            Debug.Log("Moving card: " + cardObject.CurrentCard + cardObject + " to position: " + position);
+            List<int> positions = cardPositions[cardObject.CurrentCard];
+            positions.RemoveAt(positions.Count - 1);
+            cardObject.transform.SetParent(cardHolder.transform);
+        }
+
+        List<CardObject> finalHandCardObjects = new();
+        for (int i = 0; i < handCorrectOrder.Length; i++)
+        {
+            if (handCorrectOrder[i] != null)
+            {
+                finalHandCardObjects.Add(handCorrectOrder[i]);
+            }
+        }
+
+        string handCardObjectsMessage = "Hand (CardObjects):";
+        foreach (CardObject cardObject in finalHandCardObjects)
+        {
+            handCardObjectsMessage += " " + cardObject.name;
+        }
+        Debug.Log(handCardObjectsMessage);
+        PopulateHand(finalHandCardObjects);
+    }
+
     public void PopulateHand(List<CardObject> cardObjects, float startAngle=-20.0f, float endAngle=20.0f, float distanceFromHolder=0.75f, float yOffset=-0.25f)
     {
         CardsInHand = cardObjects;
-
         PopulateHand(startAngle: startAngle, endAngle: endAngle, distanceFromHolder: distanceFromHolder, yOffset: yOffset);
     }
     
@@ -231,7 +278,7 @@ public class PlayerProperties : MonoBehaviour
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
-        CardsInHand.Add(giverPlayerProperties.PickedUpCard);
+        AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.CardSelector.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.CardsInHand.Remove(giverPlayerProperties.PickedUpCard); // TODO this should be PlayableCards.Remove(), but KU and KD aren't physically interactable yet
         giverPlayerProperties.PickedUpCard = null;

@@ -114,6 +114,7 @@ public class KarmaGameManager : MonoBehaviour
             PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
             playerProperties.Index = i;
             playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
+            playerProperties.SetHandSorter(BoardPlayerHandSorter);
             PlayersProperties.Add(playerProperties);
             bool isCurrentPlayer = i == Board.CurrentPlayerIndex;
             if (isCurrentPlayer) { playerProperties.EnableCamera(); }
@@ -163,7 +164,6 @@ public class KarmaGameManager : MonoBehaviour
 
     void CreatePlayerCardsFromBoard()
     {
-        
         for (int i = 0; i < Board.Players.Count; i++)
         {
             PlayerProperties playerProperties = PlayersProperties[i]; 
@@ -265,7 +265,7 @@ public class KarmaGameManager : MonoBehaviour
     void DrawCards(int numberOfCards, int playerIndex)
     {
         List<CardObject> cardsDrawn = _playTable.DrawCards(numberOfCards);
-        MoveCardObjectsIntoHand(playerIndex, cardsDrawn);
+        PlayersProperties[playerIndex].AddCardObjectsToHand(cardsDrawn);
     }
 
     void StartGiveAwayCards(int numberOfCards, int playerIndex)
@@ -281,27 +281,8 @@ public class KarmaGameManager : MonoBehaviour
         PlayersProperties[receiverIndex].ReceivePickedUpCard(PlayersProperties[giverIndex]);
     }
 
-    void MoveCardObjectsIntoHand(int playerIndex, List<CardObject> cardObjectsToAdd)
+    Dictionary<Card, List<int>> BoardPlayerHandSorter(int playerIndex)
     {
-        List<CardObject> currentHandCardObjects = PlayersProperties[playerIndex].CardsInHand;
-        currentHandCardObjects.AddRange(cardObjectsToAdd);
-
-        if (currentHandCardObjects.Count == 0) { return; }
-
-        foreach (CardObject cardObject in cardObjectsToAdd)
-        {
-            PlayersProperties[playerIndex].SetCardObjectOnMouseDownEvent(cardObject);
-        }
-
-        string cardsInHand = "Cards in hand for player " + playerIndex + " AFTER (physical): ";
-        
-        foreach (CardObject cardObject in currentHandCardObjects)
-        {
-            cardsInHand += cardObject.CurrentCard;
-        }
-
-        print(cardsInHand);
-
         Dictionary<Card, List<int>> cardPositions = new();
         int n = Board.Players[playerIndex].Hand.Count;
         for (int i = 0; i < n; i++)
@@ -310,34 +291,7 @@ public class KarmaGameManager : MonoBehaviour
             if (!cardPositions.ContainsKey(card)) { cardPositions[card] = new List<int>(); }
             cardPositions[card].Add(i);
         }
-        print("Player hand in BOARD: " + Board.Players[playerIndex].Hand);
-        CardObject[] handCorrectOrder = new CardObject[n];
-        foreach (CardObject cardObject in currentHandCardObjects)
-        {
-            int position = cardPositions[cardObject.CurrentCard].Last();
-            handCorrectOrder[position] = cardObject;
-            Debug.Log("Moving card: " + cardObject.CurrentCard + cardObject + " to position: " + position);
-            List<int> positions = cardPositions[cardObject.CurrentCard];
-            positions.RemoveAt(positions.Count - 1);
-            cardObject.transform.SetParent(PlayersProperties[playerIndex].cardHolder.transform);
-        }
-
-        List<CardObject> finalHandCardObjects = new();
-        for (int i = 0; i < handCorrectOrder.Length; i++)
-        {
-            if (handCorrectOrder[i] != null)
-            {
-                finalHandCardObjects.Add(handCorrectOrder[i]);
-            }
-        }
-        Debug.Log("Hand (Board): " + Board.CurrentPlayer.Hand);
-        string handCardObjectsString = "Hand (CardObjects):";
-        foreach (CardObject cardObject in finalHandCardObjects)
-        {
-            handCardObjectsString += " " + cardObject.name;
-        }
-        Debug.Log(handCardObjectsString);
-        PlayersProperties[playerIndex].PopulateHand(finalHandCardObjects);
+        return cardPositions;
     }
 
     void InitializeGameRanks()
@@ -543,7 +497,7 @@ public class KarmaGameManager : MonoBehaviour
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         PickUpAction.Apply(Board, playerProperties.Controller, playerProperties.CardSelector.Selection);
         List<CardObject> playPileCards = _playTable.PopAllFromPlayPile();
-        MoveCardObjectsIntoHand(playerIndex, playPileCards);
+        PlayersProperties[playerIndex].AddCardObjectsToHand(playPileCards);
         Board.EndTurn();
     }
 
