@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.EventSystems;
 using static UnityEngine.GraphicsBuffer;
 
 public class PlayerProperties : MonoBehaviour
@@ -305,6 +306,7 @@ public class PlayerProperties : MonoBehaviour
             MovePickedUpCard();
             if (Input.GetMouseButtonDown(0))
             {
+                if (EventSystem.current.IsPointerOverGameObject()) { return; }
                 TriggerPickedUpCardOnLeftClick();
             }
         }

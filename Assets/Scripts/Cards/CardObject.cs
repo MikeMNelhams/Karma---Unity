@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System.IO;
 using System;
 using Karma.Cards;
@@ -55,6 +56,7 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>
     void OnMouseDown()
     {
         if (OnCardClick == null) { return; }
+        if (EventSystem.current.IsPointerOverGameObject()) { return; }
         ToggleSelectShader();
         OnCardClick.Invoke(this);
     }
