@@ -257,7 +257,9 @@ public class KarmaGameManager : MonoBehaviour
     void MoveCurrentPlayerArrow()
     {
         PlayerProperties playerProperties = PlayersProperties[Board.CurrentPlayerIndex];
+        Quaternion towardsTable = Quaternion.LookRotation(_playTable.transform.position - playerProperties.transform.position);
         _currentPlayerArrow.transform.position = playerProperties.gameObject.transform.position + new Vector3(0, -1.5f, 0);
+        _currentPlayerArrow.transform.rotation = Quaternion.Euler(0, towardsTable.eulerAngles.y, 90);
     }
 
     void MoveCardsFromHandToPlayPile(int playerIndex)
