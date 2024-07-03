@@ -139,6 +139,12 @@ namespace Karma
                 BoardEventSystem.TriggerHandsRotatedEventListener(numberOfRotations, this);
             }
 
+            public void StartGivingAwayPlayPile(int giverIndex)
+            {
+                BoardEventSystem.TriggerStartedPlayPileGiveAway(giverIndex);
+                UnityEngine.Debug.Log("Giving away play pile time!!");
+            }
+
             public void StartGivingAwayCards(int numberOfCards)
             {
                 CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex);
@@ -220,8 +226,8 @@ namespace Karma
                         NumberOfJokersInPlay -= cardsToBurn.CountValue(CardValue.JOKER);
                         BurnPile.Add(cardsToBurn);
                         BoardEventSystem.TriggerBurnEvents(jokerCount);
-                        return;
                     }
+                    return;
                 }
                 BurnPile.Add(PlayPile);
                 PlayPile.Clear();

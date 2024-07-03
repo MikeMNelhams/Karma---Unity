@@ -7,22 +7,42 @@ public class PlayerMovementController : MonoBehaviour
 {
     [SerializeField] Transform _playerHead; 
     [SerializeField] GameObject _playerHand;
+    [SerializeField] Animator _playerHandAnimator;
 
     [SerializeField] float _lookSensitivity = 1f;
 
     public delegate void PlayerRotationEventListener();
     public event PlayerRotationEventListener PlayerRotationEvent;
 
-    public bool IsRotating { get; protected set; } = false;
+    public delegate void PlayerPointingEventListener();
+    public event PlayerPointingEventListener PlayerPointingEvent;
 
-    float mouseY;
-    float mouseX;
-    Vector3 rotate;
+    public bool IsRotating { get; protected set; } = false;
+    public bool IsPointing { get; protected set; } = false;
+
+    float _mouseY;
+    float _mouseX;
+    Vector3 _rotate;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;
         _playerHand.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (IsRotating)
+        {
+            RotateHead();
+            PlayerRotationEvent?.Invoke();
+        }
+
+        if (IsPointing)
+        {
+            MoveHand();
+            PlayerPointingEvent?.Invoke();
+        }
     }
 
     public void SetRotating(bool isRotating)
@@ -46,6 +66,23 @@ public class PlayerMovementController : MonoBehaviour
         SetRotating(!IsRotating);
     }
 
+    public void SetPointing(bool isPointing)
+    {
+        IsPointing = isPointing;
+        _playerHand.SetActive(isPointing);
+        SetRotating(isPointing);
+
+        if (IsPointing)
+        {
+            _playerHandAnimator.Play("PalmToPoint");
+        }
+    }
+    
+    public void TogglePointing()
+    {
+        SetPointing(!IsPointing);
+    }
+
     public void RegisterPlayerRotationEventListener(PlayerRotationEventListener eventListener)
     {
         PlayerRotationEvent += eventListener;
@@ -56,21 +93,30 @@ public class PlayerMovementController : MonoBehaviour
         PlayerRotationEvent -= eventListener;
     }
 
-    void Update()
+    public void RegisterPlayerPointingEventListener(PlayerPointingEventListener eventListener)
     {
-        if (IsRotating)
-        {
-            RotateHead();
-            PlayerRotationEvent?.Invoke();
-        }
+        PlayerPointingEvent += eventListener;
+    }
+
+    public void UnRegisterPlayerPointingEventListener(PlayerPointingEventListener eventListener)
+    {
+        PlayerPointingEvent -= eventListener;
+    }
+
+    void MoveHand(float distanceFromHead=0.75f)
+    {
+        // Assumes hand is active
+        RotateHead();
+        Vector3 forward = _playerHead.transform.forward;
+        _playerHand.transform.SetPositionAndRotation(_playerHead.transform.position + forward * distanceFromHead, Quaternion.LookRotation(forward) * Quaternion.Euler(0, -90, -90));
     }
 
     void RotateHead()
     {
         // Assumes is rotating
-        mouseY = Input.GetAxis("Mouse X");
-        mouseX = Input.GetAxis("Mouse Y");
-        rotate = new Vector3(-mouseX, mouseY * _lookSensitivity, 0);
-        _playerHead.eulerAngles += rotate;
+        _mouseY = Input.GetAxis("Mouse X");
+        _mouseX = Input.GetAxis("Mouse Y");
+        _rotate = new Vector3(-_mouseX, _mouseY * _lookSensitivity, 0);
+        _playerHead.eulerAngles += _rotate;
     }
 }

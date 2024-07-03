@@ -56,23 +56,23 @@ namespace Karma
                 } 
             }
 
-            public int PlayingFrom
+            public PlayingFrom PlayingFrom
             {
                 get
                 {
                     if (Hand.Count > 0)
                     {
-                        return 0;
+                        return PlayingFrom.Hand;
                     }
                     if (KarmaUp.Count > 0)
                     {
-                        return 1;
+                        return PlayingFrom.KarmaUp;
                     }
                     if (KarmaDown.Count > 0)
                     {
-                        return 2;
+                        return PlayingFrom.KarmaDown;
                     }
-                    return -1;
+                    return PlayingFrom.Empty;
                 }
             }
 
@@ -131,6 +131,14 @@ namespace Karma
                     return total;
                 } 
             }
+        }
+
+        public enum PlayingFrom: sbyte
+        {
+            Empty = -1,
+            Hand = 0,
+            KarmaUp = 1,
+            KarmaDown = 2,
         }
     }
 }

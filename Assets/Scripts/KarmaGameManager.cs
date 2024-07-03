@@ -58,22 +58,23 @@ public class KarmaGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int numberOfPlayers = _playerPositions.Count;
+        
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 2, 3, 4, 12, 12, 15}, new() { 3 }, new() { 4 } },
-            new() { new() { 3, 4, 14 }, new() { 3 }, new() { 4 } },
-            new() { new() { 2, 11, 11, 11}, new() { 3 }, new() { 4 } },
-            new() { new() { 6 }, new() { 3 }, new() { 4 } }
+            new() { new() { 12, 12, 14, 15}, new() { 3 }, new() { 4 } },
+            new() { new() { 15 }, new() { 3 }, new() { 4 } },
+            new() { new() { 7, 11, 11, 11}, new() { 3 }, new() { 4 } },
+            new() { new() { 10 }, new() { 3 }, new() { 4 } }
         };
 
         List<int> drawCardValues = new() {5, 6, 7};
-        List<int> playCardValues = new() { };
+        List<int> playCardValues = new() {2, 3, 4, 5, 6 };
         List<int> burnCardValues = new() {15};
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
         RegisterBoardEvents();
+        // int numberOfPlayers = _playerPositions.Count;
         //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
         CreatePlayers(_playerPositions);
         CreatePlayerCardsFromBoard();
@@ -93,6 +94,7 @@ public class KarmaGameManager : MonoBehaviour
         Board.BoardEventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHandsAnimation));
         Board.BoardEventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrderAnimation));
         Board.BoardEventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
+        Board.BoardEventSystem.RegisterPlayPileGiveAwayListener(new BoardEventSystem.BoardOnStartPlayPileGiveAwayListener(StartGiveAwayPlayPile));
 
         Board.BoardEventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
 
@@ -114,6 +116,7 @@ public class KarmaGameManager : MonoBehaviour
             PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
             playerProperties.Index = i;
             playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
+            playerProperties.RegisterTargetPickUpPlayPileEventListener(AttemptGiveAwayPlayPile);
             playerProperties.SetHandSorter(BoardPlayerHandSorter);
             PlayersProperties.Add(playerProperties);
             bool isCurrentPlayer = i == Board.CurrentPlayerIndex;
@@ -145,6 +148,7 @@ public class KarmaGameManager : MonoBehaviour
             if (!_isDebuggingMode) 
             {
                 playerProperties.IsRotationEnabled = true;
+                playerProperties.IsPointingEnabled = true;
                 continue;
             }
         }
@@ -271,9 +275,17 @@ public class KarmaGameManager : MonoBehaviour
     void StartGiveAwayCards(int numberOfCards, int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
-        Board.Players[playerIndex].CardGiveAwayHandler.RegisterOnCardGiveAwayListener(new CardGiveAwayHandler.OnCardGiveAwayListener(GiveAwayCard));
+        // Each giveaway is a separate CardGiveAwayHandler, which also automatically removes its listeners on completion, so no memory leaks.
 
+        Board.Players[playerIndex].CardGiveAwayHandler.RegisterOnCardGiveAwayListener(new CardGiveAwayHandler.OnCardGiveAwayListener(GiveAwayCard)); 
         playerProperties.SetControllerState(new SelectingCardGiveAwaySelectionIndex(Board, playerProperties));
+    }
+
+    void StartGiveAwayPlayPile(int giverIndex)
+    {
+        PlayerProperties playerProperties = PlayersProperties[giverIndex];
+
+        playerProperties.SetControllerState(new SelectingPlayPileGiveAwayPlayerIndex(Board, playerProperties));
     }
 
     void GiveAwayCard(Card card, int giverIndex, int receiverIndex)
@@ -285,12 +297,16 @@ public class KarmaGameManager : MonoBehaviour
     {
         Dictionary<Card, List<int>> cardPositions = new();
         int n = Board.Players[playerIndex].Hand.Count;
+        string handBoardMessage = "Hand (Board): ";
         for (int i = 0; i < n; i++)
         {
             Card card = Board.Players[playerIndex].Hand[i];
             if (!cardPositions.ContainsKey(card)) { cardPositions[card] = new List<int>(); }
             cardPositions[card].Add(i);
+            handBoardMessage += card + " ";
         }
+
+        print(handBoardMessage);
         return cardPositions;
     }
 
@@ -384,6 +400,13 @@ public class KarmaGameManager : MonoBehaviour
         {
             print("CARD GIVEAWAY SELECTION MODE! TURN AIN'T OVER YET BUDDY");
             print("You need to giveaway: " + Board.Players[Board.PlayerIndexWhoStartedTurn].CardGiveAwayHandler.NumberOfCardsRemainingToGiveAway + " cards");
+            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn; // This only can occur PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this check. 
+            return;
+        }
+
+        if (PlayersProperties[board.PlayerIndexWhoStartedTurn].Controller.State is SelectingPlayPileGiveAwayPlayerIndex)
+        {
+            print("WOW WOW WOW, JOKER PLAYED by player: " + board.PlayerIndexWhoStartedTurn);
             Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn; // This only can occur PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this check. 
             return;
         }
@@ -485,7 +508,6 @@ public class KarmaGameManager : MonoBehaviour
 
     void TriggerCardSelectionConfirmed(int playerIndex)
     {
-
         if (PlayersProperties[playerIndex].Controller.State is PickingAction) { AttemptToPlayCardSelection(playerIndex); return; }
         if (PlayersProperties[playerIndex].Controller.State is SelectingCardGiveAwaySelectionIndex) { AttemptToGiveAwayCardSelection(playerIndex); return; }
 
@@ -505,7 +527,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         CardSelector cardSelector = playerProperties.CardSelector;
-        print("Attempting to play cards: " + cardSelector.Selection + " values: " + cardSelector.SelectionCardValues);
+        print("Attempting to play cards for player: " + playerIndex + " " + cardSelector.Selection + " values: " + cardSelector.SelectionCardValues);
         string currentLegalCombos = "Currently legal on top of: ";
 
         Card topCard = Board.PlayPile.VisibleTopCard;
@@ -592,9 +614,24 @@ public class KarmaGameManager : MonoBehaviour
         PlayersProperties[giverIndex].SetControllerState(new SelectingCardGiveAwaySelectionIndex(Board, PlayersProperties[giverIndex]));
     }
 
+    void AttemptGiveAwayPlayPile(int giverIndex, int targetIndex)
+    {
+        if (targetIndex == giverIndex) { return; }
+
+        print("Giving away PLAY PILE (board) to player: " + targetIndex);
+        Board.Players[targetIndex].Pickup(Board.PlayPile);
+
+        PlayersProperties[targetIndex].AddCardObjectsToHand(_playTable.PopAllFromPlayPile());
+
+        PlayersProperties[giverIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[giverIndex]));
+        Board.EndTurn();
+        return;
+    }
+
     void EnablePlayerMovement(int playerIndex)
     {
         PlayersProperties[playerIndex].IsRotationEnabled = true;
+        PlayersProperties[playerIndex].IsPointingEnabled = true;
     }
 
     void DisablePlayerMovement(int playerIndex)

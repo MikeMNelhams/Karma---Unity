@@ -24,14 +24,15 @@ public class PlayerProperties : MonoBehaviour
     public CardSelector CardSelector { get; protected set; }
 
     public bool IsRotationEnabled {  get; set; }
+    public bool IsPointingEnabled { get; set; }
+
     public int Index { get; set; } = -1;
     public List<CardObject> CardsInHand { get; set; }
     public CardObject PickedUpCard { get; set; }
-    
-    public int NumberOfCardsToGiveAway { get; set; } = 0;
 
-    public delegate void PickedUpCardOnClickEventListener(int giverIndex, int targetIndex);
-    event PickedUpCardOnClickEventListener PickedUpCardOnClick;
+    public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
+    event OnLeftClickRayCastListener PickedUpCardOnClick;
+    event OnLeftClickRayCastListener OnPointingAtPlayer;
 
     public delegate Dictionary<Card, List<int>> CardSorter(int playerIndex);
     CardSorter _handSorter;
@@ -49,7 +50,21 @@ public class PlayerProperties : MonoBehaviour
 
     private void Update()
     {
-        if (IsRotationEnabled && Input.GetMouseButtonDown(1))
+        if (!Input.GetMouseButtonDown(1)) { return; }
+
+        if (Controller.State is SelectingPlayPileGiveAwayPlayerIndex && IsPointingEnabled)
+        {
+            _playerMovementController.TogglePointing();
+            if (_playerMovementController.IsPointing)
+            {
+                _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
+            }
+            else
+            {
+                _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
+            }
+        }
+        else if (IsRotationEnabled)
         {
             _playerMovementController.ToggleRotation();
             if (_playerMovementController.IsRotating) 
@@ -130,6 +145,16 @@ public class PlayerProperties : MonoBehaviour
     {
 
     }
+    
+    public void EnterPlayPileGiveAwaySelectionMode()
+    {
+        confirmSelectionButton.gameObject.SetActive(false);
+    }
+
+    public void ExitPlayPileGiveAwaySelectionMode()
+    {
+        _playerMovementController.SetPointing(false);
+    }
 
     public void SetControllerState(ControllerState newState)
     {
@@ -149,6 +174,11 @@ public class PlayerProperties : MonoBehaviour
 
         List<CardObject> combinedHandCardObjects = CardsInHand;
         combinedHandCardObjects.AddRange(cardsToAdd);
+
+        foreach (CardObject cardObject in cardsToAdd)
+        {
+            SetCardObjectOnMouseDownEvent(cardObject);
+        }
 
         Dictionary<Card, List<int>> cardPositions = _handSorter(Index);
 
@@ -280,12 +310,10 @@ public class PlayerProperties : MonoBehaviour
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
-        giverPlayerProperties.CardSelector.Remove(giverPlayerProperties.PickedUpCard);
+        giverPlayerProperties.RemoveCardObjectOnMouseDownEvent(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.CardsInHand.Remove(giverPlayerProperties.PickedUpCard); // TODO this should be PlayableCards.Remove(), but KU and KD aren't physically interactable yet
         giverPlayerProperties.PickedUpCard = null;
-        PopulateHand();
         giverPlayerProperties.PopulateHand();
-        giverPlayerProperties.NumberOfCardsToGiveAway -= 1;
     }
 
     Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle, float yOffset)
@@ -300,15 +328,13 @@ public class PlayerProperties : MonoBehaviour
 
     void MovePickedUpCardIfValid()
     {
-        if (IsRotationEnabled && PickedUpCard != null)
+        if (!IsRotationEnabled || PickedUpCard == null) { return; }
+
+        _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
+        MovePickedUpCard();
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            _targetPlayerProperties = PlayerInFrontOfPickedUpCard;
-            MovePickedUpCard();
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (EventSystem.current.IsPointerOverGameObject()) { return; }
-                TriggerPickedUpCardOnLeftClick();
-            }
+            TriggerPickedUpCardOnLeftClick();
         }
     }
 
@@ -336,7 +362,15 @@ public class PlayerProperties : MonoBehaviour
         PickedUpCard.transform.rotation = cardRotation;
     }
 
-    public void RegisterPickedUpCardOnClickEventListener(PickedUpCardOnClickEventListener eventListener)
+    void ChoosePointedPlayerIfValid()
+    {
+        if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
+ 
+        _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
+        TriggerTargetPickUpPlayPile();
+    }
+
+    public void RegisterPickedUpCardOnClickEventListener(OnLeftClickRayCastListener eventListener)
     {
         PickedUpCardOnClick += eventListener;
     }
@@ -349,24 +383,30 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
-    public PlayerProperties PlayerInFrontOfPickedUpCard
+    public void RegisterTargetPickUpPlayPileEventListener(OnLeftClickRayCastListener eventListener)
+    {
+        OnPointingAtPlayer += eventListener;
+    }
+
+    void TriggerTargetPickUpPlayPile()
+    {
+        if (_targetPlayerProperties != null)
+        {
+            OnPointingAtPlayer?.Invoke(Index, _targetPlayerProperties.Index);
+        }
+    }
+
+    public PlayerProperties TargetPlayerInFrontOfPlayer
     {
         get
         {
-            RaycastHit[] hits = new RaycastHit[20];
-            Physics.RaycastNonAlloc(PickedUpCard.transform.position, playerCamera.transform.forward, hits, _rayCastDistanceCutoff, _layerAsLayerMask);
-            for (int i = 0; i < hits.Length; i++)
-            {
-                RaycastHit hit = hits[i];
-                if (hit.transform == null) { continue; }
-                if (hit.transform.parent == null) { continue; }
-                PlayerProperties playerProperties = hit.transform.parent.gameObject.GetComponent<PlayerProperties>();
-                if (playerProperties)
-                {
-                    return playerProperties;
-                }
-            }
-            return null;
+            RaycastHit firstHit;
+            Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out firstHit, _rayCastDistanceCutoff, _layerAsLayerMask);
+
+            if (firstHit.transform == null) { return null; }
+            if (firstHit.transform.parent == null) { return null; }
+            PlayerProperties playerProperties = firstHit.transform.parent.gameObject.GetComponent<PlayerProperties>();
+            return playerProperties;
         }
     }
 }

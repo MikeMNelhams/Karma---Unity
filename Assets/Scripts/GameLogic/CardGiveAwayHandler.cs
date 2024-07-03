@@ -13,7 +13,7 @@ namespace Karma
             protected int _giverIndex;
             readonly Player _giver;
             
-            protected int _playingIndexAtStart;
+            protected PlayingFrom _playingFromAtStart;
 
             public delegate void OnCardGiveAwayListener(Card card, int giverIndex, int receiverIndex);
             event OnCardGiveAwayListener CardGiveAway;
@@ -27,7 +27,7 @@ namespace Karma
                 _numberOfCardsToGiveAway = NumberOfCardsToGiveAway;
                 _giverIndex = giverIndex;
                 _giver = board.Players[giverIndex];
-                _playingIndexAtStart = _giver.PlayingFrom;
+                _playingFromAtStart = _giver.PlayingFrom;
 
                 _registeredListeners = new();
             }
@@ -36,7 +36,7 @@ namespace Karma
             {
                 if (_numberOfCardsToGiveAway <= 0) { throw new AlreadyCompletedGiveAwayException(); }
 
-                if (_giver.PlayingFrom != _playingIndexAtStart) { EndGiveAway(); return; }
+                if (_giver.PlayingFrom != _playingFromAtStart) { EndGiveAway(); return; }
                 if (_giver.PlayableCards.IsExclusively(CardValue.JOKER)) { EndGiveAway(); return; }
 
                 _numberOfCardsToGiveAway -= 1;

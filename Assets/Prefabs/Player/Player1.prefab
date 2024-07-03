@@ -468,6 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerHead: {fileID: 869398184848920925}
   _playerHand: {fileID: 6642407487075978037}
+  _playerHandAnimator: {fileID: 5155868391232753820}
   _lookSensitivity: 1
 --- !u!1 &4204881841636937566
 GameObject:
@@ -1099,7 +1100,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6226953744157081038, guid: 77287468df05b024d8bf3311f21c80ae, type: 3}
       propertyPath: m_Name
-      value: hand prefab
+      value: hand
       objectReference: {fileID: 0}
     - target: {fileID: 6226953744157081038, guid: 77287468df05b024d8bf3311f21c80ae, type: 3}
       propertyPath: m_IsActive
@@ -1154,6 +1155,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77287468df05b024d8bf3311f21c80ae, type: 3}
+--- !u!95 &5155868391232753820 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5605105660822660711, guid: 77287468df05b024d8bf3311f21c80ae, type: 3}
+  m_PrefabInstance: {fileID: 739724050834290427}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6297513073095692687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6710721734644148084, guid: 77287468df05b024d8bf3311f21c80ae, type: 3}

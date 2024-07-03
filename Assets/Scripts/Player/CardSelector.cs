@@ -53,7 +53,6 @@ public class CardSelector
 
     public void Toggle(CardObject cardObject)
     {
-        Card card = cardObject.CurrentCard;
         if (CardObjects.Contains(cardObject))
         {
             Remove(cardObject);

@@ -142,7 +142,7 @@ namespace Karma
             {
                 Player currentPlayer = board.CurrentPlayer;
                 if (!currentPlayer.HasCards) { return; }
-                if (currentPlayer.PlayingFrom == 1 && currentPlayer.KarmaUp.Count == 0) { return; }
+                if (currentPlayer.PlayingFrom == PlayingFrom.KarmaUp && currentPlayer.KarmaUp.Count == 0) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 board.StartGivingAwayCards(numberOfRepeats);  
             }
@@ -205,9 +205,9 @@ namespace Karma
             public override void Apply(IBoard board)
             {
                 board.Burn(Cards.Count);
-                // Create a button creation system based on the number of valid target players... 
-                //int targetPlayerIndex = Controller.JokerTargetIndex(board, new HashSet<int>() { board.CurrentPlayerIndex });
-                //board.Players[targetPlayerIndex].Pickup(board.PlayPile);
+                if (board.PlayPile.Count == 0) { return; }
+                
+                board.StartGivingAwayPlayPile(board.PlayerIndexWhoStartedTurn);
             }
         }
 

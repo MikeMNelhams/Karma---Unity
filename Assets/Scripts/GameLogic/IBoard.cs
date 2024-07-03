@@ -51,6 +51,7 @@ namespace Karma
             public void FlipHands();
             public void RotateHands(int numberOfRotations, Deque<Hand> hands);
             public void StartGivingAwayCards(int numberOfCards);
+            public void StartGivingAwayPlayPile(int giverIndex);
             public void StartTurn();
             public void EndTurn();
             public bool PlayCards(CardsList cards, IController controller);

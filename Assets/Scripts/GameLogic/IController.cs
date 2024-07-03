@@ -166,5 +166,25 @@ namespace Karma
                 return 4;
             }
         }
+
+        public class SelectingPlayPileGiveAwayPlayerIndex : ControllerState
+        {
+            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+
+            public override void OnEnter()
+            {
+                _playerProperties.EnterPlayPileGiveAwaySelectionMode();
+            }
+
+            public override void OnExit()
+            {
+                _playerProperties.ExitPlayPileGiveAwaySelectionMode();
+            }
+
+            public override int GetHashCode()
+            {
+                return 5;
+            }
+        }
     }
 }
