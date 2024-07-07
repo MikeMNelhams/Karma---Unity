@@ -450,6 +450,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerMovementController: {fileID: 3514090609769126189}
   _rayCastDistanceCutoff: 30
+  _handPhysicsInfo:
+    startAngle: -20
+    endAngle: 20
+    distanceFromHolder: 0.75
+    yOffset: -0.25
   playerCamera: {fileID: 591302855537407287}
   cardHolder: {fileID: 7220275289808238900}
   confirmSelectionButton: {fileID: 5297352977011485884}

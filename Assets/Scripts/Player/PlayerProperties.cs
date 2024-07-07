@@ -13,6 +13,7 @@ public class PlayerProperties : MonoBehaviour
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] float _rayCastDistanceCutoff = 30f;
+    [SerializeField] CardHandPhysicsInfo _handPhysicsInfo = CardHandPhysicsInfo.Default;
 
     public Camera playerCamera;
     public GameObject cardHolder;
@@ -44,6 +45,7 @@ public class PlayerProperties : MonoBehaviour
 
     void Awake()
     {
+        CardsInHand = new();
         CardSelector = new();
         _layerAsLayerMask = 1 << LayerMask.NameToLayer("Player");
     }
@@ -139,6 +141,8 @@ public class PlayerProperties : MonoBehaviour
     public void EnterCardGiveAwayPlayerSelectionMode()
     {
         confirmSelectionButton.gameObject.SetActive(false);
+        _playerMovementController.SetRotating(true);
+        _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
 
     public void ExitCardGiveAwayPlayerSelectionMode()
@@ -149,6 +153,8 @@ public class PlayerProperties : MonoBehaviour
     public void EnterPlayPileGiveAwaySelectionMode()
     {
         confirmSelectionButton.gameObject.SetActive(false);
+        _playerMovementController.SetPointing(true);
+        _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
     }
 
     public void ExitPlayPileGiveAwaySelectionMode()
@@ -211,14 +217,16 @@ public class PlayerProperties : MonoBehaviour
         PopulateHand(finalHandCardObjects);
     }
 
-    public void PopulateHand(List<CardObject> cardObjects, float startAngle=-20.0f, float endAngle=20.0f, float distanceFromHolder=0.75f, float yOffset=-0.25f)
+    public void PopulateHand(List<CardObject> cardObjects, CardHandPhysicsInfo cardHandPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
-        PopulateHand(startAngle: startAngle, endAngle: endAngle, distanceFromHolder: distanceFromHolder, yOffset: yOffset);
+        PopulateHand(cardHandPhysicsInfo);
     }
     
-    public void PopulateHand(float startAngle = -20.0f, float endAngle = 20.0f, float distanceFromHolder = 0.75f, float yOffset = -0.25f)
+    public void PopulateHand(CardHandPhysicsInfo cardHandPhysicsInfo = null)
     {
+        if (cardHandPhysicsInfo != null) { _handPhysicsInfo = cardHandPhysicsInfo; }
+
         bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
         if (handIsFlipped) { ShuffleHand(); }
 
@@ -227,6 +235,11 @@ public class PlayerProperties : MonoBehaviour
         Vector3 holderPosition = holderTransform.position;
 
         if (CardsInHand.Count == 0) { return; }
+        float startAngle = _handPhysicsInfo.startAngle;
+        float endAngle = _handPhysicsInfo.endAngle;
+        float distanceFromHolder = _handPhysicsInfo.distanceFromHolder;
+        float yOffset = _handPhysicsInfo.yOffset;
+
         if (CardsInHand.Count == 1)
         {
             CardObject cardObject = CardsInHand[0];
@@ -409,4 +422,23 @@ public class PlayerProperties : MonoBehaviour
             return playerProperties;
         }
     }
+}
+
+[System.Serializable]
+public class CardHandPhysicsInfo
+{
+    public float startAngle;
+    public float endAngle;
+    public float distanceFromHolder;
+    public float yOffset;
+
+    public CardHandPhysicsInfo(float startAngle = -20.0f, float endAngle = 20.0f, float distanceFromHolder = 0.75f, float yOffset = -0.25f)
+    {
+        this.startAngle = startAngle;
+        this.endAngle = endAngle;
+        this.distanceFromHolder = distanceFromHolder;
+        this.yOffset = yOffset;
+    }
+
+    public static CardHandPhysicsInfo Default { get => new (); }
 }
