@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using DataStructures;
 using UnityEngine.EventSystems;
 using static UnityEngine.GraphicsBuffer;
+using Karma.Players;
 
 public class PlayerProperties : MonoBehaviour
 {
@@ -24,11 +26,17 @@ public class PlayerProperties : MonoBehaviour
     public IController Controller { get; set; }
     public CardSelector CardSelector { get; protected set; }
 
-    public bool IsRotationEnabled {  get; set; }
+    public bool IsRotationEnabled { get; set; }
     public bool IsPointingEnabled { get; set; }
 
     public int Index { get; set; } = -1;
-    public List<CardObject> CardsInHand { get; set; }
+
+    public ListWithConstantContainsCheck<CardObject> CardsInHand { get; set; }
+    
+    public ListWithConstantContainsCheck<CardObject> CardsInKarmaUp { get; set; }
+
+    public ListWithConstantContainsCheck<CardObject> CardsInKarmaDown { get; set; }
+
     public CardObject PickedUpCard { get; set; }
 
     public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
@@ -42,6 +50,8 @@ public class PlayerProperties : MonoBehaviour
 
     int _layerAsLayerMask;
     PlayerProperties _targetPlayerProperties;
+
+    bool karmaDownFlippedUp = false;
 
     void Awake()
     {
@@ -69,11 +79,11 @@ public class PlayerProperties : MonoBehaviour
         else if (IsRotationEnabled)
         {
             _playerMovementController.ToggleRotation();
-            if (_playerMovementController.IsRotating) 
+            if (_playerMovementController.IsRotating)
             {
                 _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
-            else 
+            else
             {
                 _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
@@ -96,6 +106,37 @@ public class PlayerProperties : MonoBehaviour
     {
         confirmSelectionButton.gameObject.SetActive(false);
         pickupPlayPileButton.gameObject.SetActive(false);
+    }
+
+    public PlayingFrom SelectingFrom { 
+        get 
+        { 
+            if (CardsInHand.Count > 0) { return PlayingFrom.Hand; }
+            if (CardsInKarmaUp.Count > 0) { return PlayingFrom.KarmaUp; }
+            if (CardsInKarmaDown.Count > 0) { return PlayingFrom.KarmaDown; }
+            return PlayingFrom.Empty;
+        }
+    }
+
+    public ListWithConstantContainsCheck<CardObject> SelectableCardObjects
+    {
+        get
+        {
+            return SelectingFrom switch
+            {
+                PlayingFrom.Hand => CardsInHand,
+                PlayingFrom.KarmaUp => CardsInKarmaUp,
+                PlayingFrom.KarmaDown => CardsInKarmaDown,
+                _ => new ListWithConstantContainsCheck<CardObject>(),
+            };
+        }
+    }
+
+    public bool CardIsSelectable(CardObject card)
+    {
+        if (card == null) { throw new NullReferenceException(); }
+        print("Selectables: " + SelectableCardObjects);
+        return SelectableCardObjects.Contains(card);
     }
 
     public void EnterPickingActionMode()
@@ -176,9 +217,9 @@ public class PlayerProperties : MonoBehaviour
     {
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
-        if (n == 1) { PopulateHand(cardsToAdd); return; }
+        if (n == 1) { PopulateHand(new ListWithConstantContainsCheck<CardObject>(cardsToAdd)); return; }
 
-        List<CardObject> combinedHandCardObjects = CardsInHand;
+        ListWithConstantContainsCheck<CardObject> combinedHandCardObjects = CardsInHand;
         combinedHandCardObjects.AddRange(cardsToAdd);
 
         foreach (CardObject cardObject in cardsToAdd)
@@ -199,7 +240,7 @@ public class PlayerProperties : MonoBehaviour
             cardObject.transform.SetParent(cardHolder.transform);
         }
 
-        List<CardObject> finalHandCardObjects = new();
+        ListWithConstantContainsCheck<CardObject> finalHandCardObjects = new();
         for (int i = 0; i < handCorrectOrder.Length; i++)
         {
             if (handCorrectOrder[i] != null)
@@ -217,7 +258,7 @@ public class PlayerProperties : MonoBehaviour
         PopulateHand(finalHandCardObjects);
     }
 
-    public void PopulateHand(List<CardObject> cardObjects, CardHandPhysicsInfo cardHandPhysicsInfo = null)
+    public void PopulateHand(ListWithConstantContainsCheck<CardObject> cardObjects, CardHandPhysicsInfo cardHandPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
         PopulateHand(cardHandPhysicsInfo);
@@ -282,23 +323,39 @@ public class PlayerProperties : MonoBehaviour
         }
     }
 
-    public List<CardObject> PopSelectedCardsFromHand()
+    public void FlipKarmaDownCardsUp()
+    {
+        karmaDownFlippedUp = true;
+        foreach (CardObject cardObject in CardsInKarmaDown)
+        {
+            cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
+        }
+    }
+
+    public List<CardObject> PopSelectedCardsFromSelection()
     {
         List<CardObject> cardObjects = CardSelector.CardObjects.ToList<CardObject>();
         foreach (CardObject cardObject in cardObjects)
         {
             cardObject.DisableSelectShader();
             RemoveCardObjectOnMouseDownEvent(cardObject);
-            CardsInHand.Remove(cardObject);
+            SelectableCardObjects.Remove(cardObject);
         }
 
-        PopulateHand();
+        if (SelectingFrom == PlayingFrom.Hand) { PopulateHand(); }
+        if (!karmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
         return cardObjects;
+    }
+
+    public void CardObjectOnMouseDownEvent(CardObject cardObject)
+    {
+        if (!CardIsSelectable(cardObject)) { return; }
+        CardSelector.Toggle(cardObject);
     }
 
     public void SetCardObjectOnMouseDownEvent(CardObject cardObject)
     {
-        cardObject.OnCardClick += CardSelector.Toggle;
+        cardObject.OnCardClick += CardObjectOnMouseDownEvent;
     }
 
     public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)

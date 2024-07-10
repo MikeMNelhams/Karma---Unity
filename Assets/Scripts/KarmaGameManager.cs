@@ -27,7 +27,7 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] int _turnLimit = 100;
     [SerializeField] KarmaPlayerStartInfo[] _playersStartInfo;
 
-    [Range(0f, 4f)][SerializeField] int _whichPlayerStarts = 0;
+    [Range(0f, 3f)][SerializeField] int _whichPlayerStarts = 0;
     [SerializeField] bool _isDebuggingMode = false;
 
     public List<PlayerProperties> PlayersProperties { get; protected set; }
@@ -59,13 +59,13 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 12, 12, 14, 15}, new() { 3 }, new() { 4 } },
+            new() { new() { 10 }, new() { 3 }, new() { 4 } },
             new() { new() { 15 }, new() { 3 }, new() { 4 } },
-            new() { new() { 7, 11, 11, 11}, new() { 3 }, new() { 4 } },
+            new() { new() { 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
             new() { new() { 10 }, new() { 3 }, new() { 4 } }
         };
 
-        List<int> drawCardValues = new() {5, 6, 7};
+        List<int> drawCardValues = new() { };
         List<int> playCardValues = new() {2, 3, 4, 5, 6 };
         List<int> burnCardValues = new() {15};
 
@@ -75,6 +75,7 @@ public class KarmaGameManager : MonoBehaviour
         //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
         CreatePlayers(_playersStartInfo);
         CreatePlayerCardsFromBoard();
+        
         _playTable.CreateCardPilesFromBoard(Board);
 
         InitializeGameRanks();
@@ -156,13 +157,6 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    public void SetCardObjectProperties(Card card, GameObject cardObject)
-    {
-        cardObject.name = card.ToString();
-        CardObject cardRenderer = cardObject.GetComponent<CardObject>();
-        cardRenderer.SetCard(card);
-    }
-
     void CreatePlayerCardsFromBoard()
     {
         for (int i = 0; i < Board.Players.Count; i++)
@@ -175,18 +169,33 @@ public class KarmaGameManager : MonoBehaviour
 
         for (int i = 0; i < Board.Players.Count; i++)
         {
+            PlayerProperties playerProperties = PlayersProperties[i];
             Player player = Board.Players[i];
             if (i >= _playTable.boardHolders.Count) { break; }
             if (_playTable.boardHolders[i] == null) { continue; }
             GameObject boardHolder = _playTable.boardHolders[i];
-            KarmaBoardManager karmaBoardManager = boardHolder.GetComponent<KarmaBoardManager>();
-            karmaBoardManager.CreateKarmaCards(player.KarmaUp, player.KarmaDown);
+            KarmaBoardHandler karmaBoardManager = boardHolder.GetComponent<KarmaBoardHandler>();
+            
+            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<CardObject>(karmaBoardManager.CreateKarmaUpCards(player.KarmaUp));
+
+            foreach (CardObject card in playerProperties.CardsInKarmaUp)
+            {
+                playerProperties.SetCardObjectOnMouseDownEvent(card);
+                print("Setting card OnMouseDown for player " + i + " for card: " + card);
+            }
+
+            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<CardObject>(karmaBoardManager.CreateKarmaDownCards(player.KarmaDown));
+
+            foreach (CardObject card in playerProperties.CardsInKarmaDown)
+            {
+                playerProperties.SetCardObjectOnMouseDownEvent(card);
+            }
         }   
     }
 
     void CreatePlayerHandCards(int playerIndex, GameObject cardHolder)
     {
-        List<CardObject> cardObjects = new ();
+        ListWithConstantContainsCheck<CardObject> cardObjects = new ();
         foreach (Card card in Board.Players[playerIndex].Hand)
         {
             CardObject cardObject = InstantiateCard(card, Vector3.zero, Quaternion.identity, cardHolder).GetComponent<CardObject>();
@@ -222,13 +231,13 @@ public class KarmaGameManager : MonoBehaviour
 
     void RotateHandsAnimation(int numberOfRotations, IBoard board)
     {
-        List<List<CardObject>> beginHands = new();
+        List<ListWithConstantContainsCheck<CardObject>> beginHands = new();
         for (int i = 0; i < board.Players.Count; i++)
         {
             beginHands.Add(PlayersProperties[i].CardsInHand);
         }
 
-        Deque<List<CardObject>> hands = new (beginHands);
+        Deque<ListWithConstantContainsCheck<CardObject>> hands = new (beginHands);
 
         hands.Rotate(numberOfRotations);
         
@@ -257,9 +266,9 @@ public class KarmaGameManager : MonoBehaviour
         _currentPlayerArrow.transform.SetPositionAndRotation(playerProperties.gameObject.transform.position + new Vector3(0, -1.5f, 0), Quaternion.Euler(0, towardsTable.eulerAngles.y, 90));
     }
 
-    void MoveCardsFromHandToPlayPile(int playerIndex)
+    void MoveCardsFromSelectionToPlayPile(int playerIndex)
     {
-        List<CardObject> cardObjects = PlayersProperties[playerIndex].PopSelectedCardsFromHand();
+        List<CardObject> cardObjects = PlayersProperties[playerIndex].PopSelectedCardsFromSelection();
         _playTable.MoveCardsToTopOfPlayPile(cardObjects);
     }
 
@@ -549,7 +558,7 @@ public class KarmaGameManager : MonoBehaviour
             print("Card combo is LEGAL!! Proceeding to play " + cardSelector.SelectionCardValues);
 
             CardsList cardSelection = playerProperties.CardSelector.Selection;
-            MoveCardsFromHandToPlayPile(playerIndex);
+            MoveCardsFromSelectionToPlayPile(playerIndex);
             PlayCardsComboAction.Apply(Board, playerProperties.Controller, cardSelection);
             Board.EndTurn();
         }
