@@ -2,9 +2,6 @@ using DataStructures;
 using Karma.Board;
 using Karma.Cards;
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 namespace Karma
@@ -25,9 +22,9 @@ namespace Karma
         public abstract class ControllerState : IEquatable<ControllerState>
         {
             protected IBoard _board;
-            public PlayerProperties _playerProperties;
+            public BasePlayerProperties _playerProperties;
 
-            protected ControllerState(IBoard board, PlayerProperties playerProperties)
+            protected ControllerState(IBoard board, BasePlayerProperties playerProperties)
             {
                 _board = board;
                 _playerProperties = playerProperties;
@@ -47,16 +44,15 @@ namespace Karma
 
         public class WaitForTurn : ControllerState
         {
-            public WaitForTurn(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) {}
+            public WaitForTurn(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) {}
             public override void OnEnter()
             {
-                _playerProperties.DisableCamera();
-                _playerProperties.HideUI();
+                _playerProperties.EnterWaitingForTurn();
             }
 
             public override void OnExit()
             {
-                _playerProperties.EnableCamera();  
+                _playerProperties.ExitWaitingForTurn();
             }
 
             public override int GetHashCode()
@@ -67,7 +63,7 @@ namespace Karma
 
         public class PickingAction : ControllerState
         {
-            public PickingAction(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+            public PickingAction(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
@@ -93,12 +89,12 @@ namespace Karma
                 Debug.Log(currentLegalCombos + "]");
                 Debug.Log("Starting picking actions for player: " + _board.CurrentPlayerIndex);
                 Debug.Log("Current playable cards: " + _board.CurrentPlayer.PlayableCards);
-                _playerProperties.EnterPickingActionMode();
+                _playerProperties.EnterPickingAction();
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitPickingActionMode();
+                _playerProperties.ExitPickingAction();
             }
 
             public override int GetHashCode()
@@ -109,16 +105,16 @@ namespace Karma
 
         public class VotingForWinner : ControllerState
         {
-            public VotingForWinner(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+            public VotingForWinner(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterVotingForWinnerMode();
+                _playerProperties.EnterVotingForWinner();
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitVotingForWinnerMode();
+                _playerProperties.ExitVotingForWinner();
             }
 
             public override int GetHashCode()
@@ -129,16 +125,16 @@ namespace Karma
 
         public class SelectingCardGiveAwaySelectionIndex : ControllerState
         {
-            public SelectingCardGiveAwaySelectionIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwaySelectionIndex(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterCardGiveAwaySelectionMode();
+                _playerProperties.EnterCardGiveAwaySelection();
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitCardGiveAwaySelectionMode();
+                _playerProperties.ExitCardGiveAwaySelection();
             }
 
             public override int GetHashCode()
@@ -149,16 +145,16 @@ namespace Karma
 
         public class SelectingCardGiveAwayPlayerIndex : ControllerState
         {
-            public SelectingCardGiveAwayPlayerIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwayPlayerIndex(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterCardGiveAwayPlayerSelectionMode();
+                _playerProperties.EnterCardGiveAwayPlayerIndexSelection();
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitCardGiveAwayPlayerSelectionMode();
+                _playerProperties.ExitCardGiveAwayPlayerIndexSelection();
             }
 
             public override int GetHashCode()
@@ -169,16 +165,16 @@ namespace Karma
 
         public class SelectingPlayPileGiveAwayPlayerIndex : ControllerState
         {
-            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, PlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterPlayPileGiveAwaySelectionMode();
+                _playerProperties.EnterPlayPileGiveAwayPlayerIndexSelection();
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitPlayPileGiveAwaySelectionMode();
+                _playerProperties.ExitPlayPileGiveAwayPlayerIndexSelection();
             }
 
             public override int GetHashCode()

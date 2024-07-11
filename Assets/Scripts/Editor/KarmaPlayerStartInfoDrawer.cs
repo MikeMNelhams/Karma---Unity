@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(KarmaPlayerStartInfo))]
 public class KarmaPlayerStartInfoDrawer : PropertyDrawer
 {
@@ -40,3 +41,4 @@ public class KarmaPlayerStartInfoDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 }
+#endif

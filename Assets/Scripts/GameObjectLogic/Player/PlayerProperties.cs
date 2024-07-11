@@ -8,10 +8,9 @@ using UnityEngine.UI;
 using System.Linq;
 using DataStructures;
 using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
 using Karma.Players;
 
-public class PlayerProperties : MonoBehaviour
+public class PlayerProperties : BasePlayerProperties
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] float _rayCastDistanceCutoff = 30f;
@@ -135,11 +134,21 @@ public class PlayerProperties : MonoBehaviour
     public bool CardIsSelectable(CardObject card)
     {
         if (card == null) { throw new NullReferenceException(); }
-        print("Selectables: " + SelectableCardObjects);
         return SelectableCardObjects.Contains(card);
     }
 
-    public void EnterPickingActionMode()
+    public override void EnterWaitingForTurn()
+    {
+        DisableCamera();
+        HideUI();
+    }
+
+    public override void ExitWaitingForTurn()
+    {
+        EnableCamera();
+    }
+
+    public override void EnterPickingAction()
     {
         KarmaGameManager gameManager = KarmaGameManager.Instance;
         HashSet<BoardPlayerAction> legalActions = gameManager.Board.CurrentLegalActions;
@@ -152,53 +161,55 @@ public class PlayerProperties : MonoBehaviour
         { 
             confirmSelectionButton.gameObject.SetActive(true); 
         }
+
+
     }
 
-    public void ExitPickingActionMode()
+    public override void ExitPickingAction()
     {
         pickupPlayPileButton.gameObject.SetActive(false);
     }
 
-    public void EnterVotingForWinnerMode()
+    public override void EnterVotingForWinner()
     {
         throw new NotImplementedException();
     }
 
-    public void ExitVotingForWinnerMode()
+    public override void ExitVotingForWinner()
     {
         throw new NotImplementedException();
     }
 
-    public void EnterCardGiveAwaySelectionMode()
+    public override void EnterCardGiveAwaySelection()
     {
         confirmSelectionButton.gameObject.SetActive(true);
     }
 
-    public void ExitCardGiveAwaySelectionMode()
+    public override void ExitCardGiveAwaySelection()
     {
         confirmSelectionButton.gameObject.SetActive(false);
     }
 
-    public void EnterCardGiveAwayPlayerSelectionMode()
+    public override void EnterCardGiveAwayPlayerIndexSelection()
     {
         confirmSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetRotating(true);
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
 
-    public void ExitCardGiveAwayPlayerSelectionMode()
+    public override void ExitCardGiveAwayPlayerIndexSelection()
     {
 
     }
     
-    public void EnterPlayPileGiveAwaySelectionMode()
+    public override void EnterPlayPileGiveAwayPlayerIndexSelection()
     {
         confirmSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
     }
 
-    public void ExitPlayPileGiveAwaySelectionMode()
+    public override void ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.SetPointing(false);
     }
@@ -479,23 +490,4 @@ public class PlayerProperties : MonoBehaviour
             return playerProperties;
         }
     }
-}
-
-[System.Serializable]
-public class CardHandPhysicsInfo
-{
-    public float startAngle;
-    public float endAngle;
-    public float distanceFromHolder;
-    public float yOffset;
-
-    public CardHandPhysicsInfo(float startAngle = -20.0f, float endAngle = 20.0f, float distanceFromHolder = 0.75f, float yOffset = -0.25f)
-    {
-        this.startAngle = startAngle;
-        this.endAngle = endAngle;
-        this.distanceFromHolder = distanceFromHolder;
-        this.yOffset = yOffset;
-    }
-
-    public static CardHandPhysicsInfo Default { get => new (); }
 }

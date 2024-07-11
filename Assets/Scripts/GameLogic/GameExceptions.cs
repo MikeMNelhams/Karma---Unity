@@ -7,17 +7,22 @@ namespace Karma
 {
     namespace GameExceptions
     {
-        class GameWonException : Exception
+        public class GameWonException : Exception
         {
             public GameWonException(string message) : base(message) { }
             public GameWonException(Dictionary<int, int> gameRanks)
             {
-                string message = "Overall Rankings: " + gameRanks;
+                string message = "Overall Rankings: ";
+
+                foreach (KeyValuePair<int, int> kvp in gameRanks)
+                {
+                    message += kvp.ToString() + ", ";
+                }
                 throw new GameWonException(message);
             }
         }
 
-        class GameTurnLimitExceededException : Exception
+        public class GameTurnLimitExceededException : Exception
         {
             public GameTurnLimitExceededException(string message) : base(message) { }
             public GameTurnLimitExceededException(Dictionary<int, int> gameRanks, int turnLimit)
