@@ -191,7 +191,7 @@ namespace Karma
             private List<bool> CheckVisibles()
             {
                 if (_cards.Count == 0) { return new List<bool>(); }
-                if (_cards.Count == 1) { return new List<bool> { _cards[0].value == CardValue.FOUR }; }
+                if (_cards.Count == 1) { return new List<bool> { _cards[0].value != CardValue.FOUR }; }
 
                 bool[] foundVisibles = Enumerable.Repeat(true, Count).ToArray();
                 List<CardValue> cardValues = base.CardValues;

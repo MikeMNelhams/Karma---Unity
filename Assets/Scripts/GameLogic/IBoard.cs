@@ -34,10 +34,22 @@ namespace Karma
                 return Name.GetHashCode();
             }
 
+            public override bool Equals(object obj)
+            {
+                if (obj == null) { return false; }
+                if (ReferenceEquals(this, obj)) { return true; }
+                if (!(obj is BoardPlayerAction)) { return false; }
+                return Equals((BoardPlayerAction)obj);
+            }
+
             public bool Equals(BoardPlayerAction other)
             {
                 return Name == other.Name;
             }
+
+            public static bool operator ==(BoardPlayerAction x, BoardPlayerAction y) => x.Equals(y);
+            public static bool operator !=(BoardPlayerAction x, BoardPlayerAction y) => !x.Equals(y);
+
         }
 
         public interface IBoard

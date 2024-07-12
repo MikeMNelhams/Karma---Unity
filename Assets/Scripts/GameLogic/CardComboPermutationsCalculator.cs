@@ -37,9 +37,9 @@ namespace Karma
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
-                    for (int i = 0; i < fillerCount + 1; i++)
+                    for (int i = 1; i < fillerCount + 1; i++)
                     {
-                        List<CardValue> fillerComboValues = outputComboValues[i];
+                        List<CardValue> fillerComboValues = Enumerable.Repeat(combo.First(), combo.TotalCount).ToList<CardValue>();
                         fillerComboValues.AddRange(Enumerable.Repeat(filler, i).ToList<CardValue>());
                         outputsIncludingFiller.Add(new FrozenMultiSet<CardValue>(fillerComboValues));
                     }
@@ -80,9 +80,9 @@ namespace Karma
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
-                    for (int i = 0; i < fillerCount + 1; i++) 
+                    for (int i = 1; i < fillerCount + 1; i++) 
                     {
-                        List<CardValue> fillerComboValues = outputComboValues[i];
+                        List<CardValue> fillerComboValues = Enumerable.Repeat(combo.First(), combo.TotalCount).ToList<CardValue>();
                         fillerComboValues.AddRange(Enumerable.Repeat(filler, i).ToList<CardValue>());
                         outputsIncludingFiller.Add(new FrozenMultiSet<CardValue>(fillerComboValues));
                     }
@@ -116,9 +116,9 @@ namespace Karma
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
-                    for (int i = 0; i < fillerCount + 1; i++)
+                    for (int i = 1; i < fillerCount + 1; i++)
                     {
-                        List<CardValue> fillerComboValues = outputComboValues[i];
+                        List<CardValue> fillerComboValues = Enumerable.Repeat(combo.First(), combo.TotalCount).ToList<CardValue>();
                         fillerComboValues.AddRange(Enumerable.Repeat(filler, i).ToList<CardValue>());
                         outputsIncludingFiller.Add(new FrozenMultiSet<CardValue>(fillerComboValues));
                     }
@@ -157,13 +157,14 @@ namespace Karma
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
-                    for (int i = 0; i < fillerCount + 1; i++)
+                    for (int i = 1; i < fillerCount + 1; i++)
                     {
-                        List<CardValue> fillerComboValues = outputComboValues[i];
+                        List<CardValue> fillerComboValues = Enumerable.Repeat(combo.First(), combo.TotalCount).ToList<CardValue>();
                         fillerComboValues.AddRange(Enumerable.Repeat(filler, i).ToList<CardValue>());
                         outputsIncludingFiller.Add(new FrozenMultiSet<CardValue>(fillerComboValues));
                     }
                 }
+
                 output.UnionWith(outputsIncludingFiller);
                 output.ExceptWith(FillerCombosNotExclusivelyFiller(filler, fillerCount));
                 return output;
@@ -219,7 +220,7 @@ namespace Karma
                 CardsList playableCards = new();
                 foreach (Card card in cards)
                 {
-                    if (IsPotentiallyPlayable(playOrder, card.value, topValue)) {  playableCards.Add(card); }
+                    if (card.value == CardValue.JOKER || IsPotentiallyPlayable(playOrder, card.value, topValue)) {  playableCards.Add(card); }
                 }
                 return playableCards;
             }
@@ -238,11 +239,11 @@ namespace Karma
                 return comparison;
             }
 
-            public static bool ContainsUnplayableFiller(BoardPlayOrder playOrder, CardsList cards, CardValue topValue)
+            public static bool ContainsUnplayableFiller(BoardPlayOrder playOrder, CardsList cards, CardValue topValue, CardValue filler = CardValue.SIX)
             {
-                bool containsFiller = cards.CardValues.ToHashSet<CardValue>().Contains(topValue);
+                bool containsFiller = cards.CardValues.ToHashSet<CardValue>().Contains(filler);
                 Func<CardValue, CardValue, bool> comparison = Comparison(playOrder);
-                bool fillerIsUnplayable = !comparison(CardValue.SIX, topValue);
+                bool fillerIsUnplayable = !comparison(filler, topValue);
                 return containsFiller && fillerIsUnplayable;
             }
         }

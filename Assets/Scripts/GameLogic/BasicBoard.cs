@@ -334,10 +334,12 @@ namespace Karma
                     }
                     return CardComboCalculator.FillerCombos(validCards, CardValue.SIX, 3);
                 }
+
                 if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.value))
                 {
                     return CardComboCalculator.FillerFilterNotExclusiveCombos(validCards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
                 }
+
                 return CardComboCalculator.FillerAndFilterCombos(validCards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
             }
         }

@@ -16,12 +16,6 @@ namespace Karma
                 this.value = value;
             }
 
-            public Card(CardSuit suit, CardValue value, bool isFlipped)
-            {
-                this.suit = suit;
-                this.value = value;
-            }
-
             public bool Equals(Card other)
             {
                 return suit == other.suit && value == other.value;

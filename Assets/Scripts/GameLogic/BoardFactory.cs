@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Karma.Board;
 
 namespace Karma
 {
@@ -72,7 +73,7 @@ namespace Karma
             }
 
             public static BasicBoard MatrixStart(List<List<List<int>>> playerCardValues, List<int> drawPileValues, List<int> playPileValues, List<int> burnPileValues, 
-                int whoStarts=0)
+                int whoStarts=0, BoardPlayOrder boardPlayOrder = BoardPlayOrder.UP, BoardTurnOrder boardTurnOrder = BoardTurnOrder.RIGHT, bool cardsAreFlipped = false)
             {
                 List<Player> players = new();
 
@@ -85,7 +86,7 @@ namespace Karma
                 PlayCardPile playPile = new(playPileValues, CardSuit.Hearts);
                 CardPile burnPile = new(burnPileValues, CardSuit.Hearts);
 
-                return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts);
+                return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts, playOrder: boardPlayOrder, turnOrder: boardTurnOrder, cardsAreFlipped: cardsAreFlipped);
             }
         }
     }

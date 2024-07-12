@@ -181,7 +181,6 @@ public class KarmaGameManager : MonoBehaviour
             foreach (CardObject card in playerProperties.CardsInKarmaUp)
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(card);
-                print("Setting card OnMouseDown for player " + i + " for card: " + card);
             }
 
             playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<CardObject>(karmaBoardManager.CreateKarmaDownCards(player.KarmaDown));

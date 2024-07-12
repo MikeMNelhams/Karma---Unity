@@ -88,7 +88,7 @@ namespace Karma
 
                 Debug.Log(currentLegalCombos + "]");
                 Debug.Log("Starting picking actions for player: " + _board.CurrentPlayerIndex);
-                Debug.Log("Current playable cards: " + _board.CurrentPlayer.PlayableCards);
+                Debug.Log("Current selectable cards BOARD: " + _board.CurrentPlayer.PlayableCards);
                 _playerProperties.EnterPickingAction();
             }
 
