@@ -38,7 +38,7 @@ namespace Karma
             {
                 if (obj == null) { return false; }
                 if (ReferenceEquals(this, obj)) { return true; }
-                if (!(obj is BoardPlayerAction)) { return false; }
+                if (obj is not BoardPlayerAction) { return false; }
                 return Equals((BoardPlayerAction)obj);
             }
 

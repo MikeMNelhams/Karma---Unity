@@ -62,16 +62,16 @@ namespace Karma
 
             public BasicBoard(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
-                bool cardsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
+                bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
                 bool hasBurnedThisTurn = false, int turnsPlayed = 0)
             {
-                SetInitParams(players, drawPile, burnPile, playPile, turnOrder, playOrder, cardsAreFlipped, 
+                SetInitParams(players, drawPile, burnPile, playPile, turnOrder, playOrder, handsAreFlipped, 
                     effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed);
             }
 
             private void SetInitParams(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
-                bool cardsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
+                bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
                 bool hasBurnedThisTurn = false, int turnsPlayed = 0)
             {
                 Players = players;
@@ -80,7 +80,7 @@ namespace Karma
                 PlayPile = playPile;
                 TurnOrder = turnOrder;
                 PlayOrder = playOrder;
-                HandsAreFlipped = cardsAreFlipped;
+                HandsAreFlipped = handsAreFlipped;
                 EffectMultiplier = effectMultiplier;
                 CurrentPlayerIndex = whoStarts;
                 HasBurnedThisTurn = hasBurnedThisTurn;
@@ -187,7 +187,7 @@ namespace Karma
                 ComboFactory.SetCounts(cards);
                 CardCombo cardCombo = ComboFactory.CreateCombo(controller);
                 List<bool> comboVisibility = ComboFactory.ComboVisibility(this);
-                if (addToPile) { PlayPile.Add(cards); }
+                if (addToPile) { PlayPile.Add(cards, comboVisibility); }
                 bool willBurnDueToMinimumRunFour = PlayPile.ContainsMinLengthRun(4);
 
                 NumberOfCardsDrawnThisTurn += DrawUntilFull().Count;
@@ -195,6 +195,7 @@ namespace Karma
                 if (NumberOfCombosPlayedThisTurn > 52) { return false; }
                 cardCombo.Apply(this);
 
+                ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
                 NumberOfCombosPlayedThisTurn++;
                 ComboHistory.Add(cardCombo);
 

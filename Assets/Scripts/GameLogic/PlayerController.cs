@@ -10,12 +10,10 @@ using UnityEngine;
 public class PlayerController : IController
 {
     public bool IsAwaitingInput {  get; set; }
-    public FrozenMultiSet<CardValue> SelectedCardValues { get; set; }
     public BoardPlayerAction SelectedAction { get; set; }
 
     public PlayerController() 
     { 
         IsAwaitingInput = false;
-        SelectedCardValues = new ();
     }
 }

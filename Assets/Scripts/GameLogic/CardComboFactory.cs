@@ -309,7 +309,7 @@ namespace Karma
                     bool visibility = !(board.PlayPile.Count > 0 && board.PlayPile[^1].value == CardValue.FOUR);
                     return Enumerable.Repeat<bool>(visibility, _cards.Count).ToList<bool>();
                 }
-                return Enumerable.Repeat<bool>(true, _counts.Count).ToList<bool>();
+                return Enumerable.Repeat<bool>(true, _cards.Count).ToList<bool>();
             }
         }
     }

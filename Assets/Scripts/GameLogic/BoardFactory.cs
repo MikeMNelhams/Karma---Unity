@@ -73,7 +73,7 @@ namespace Karma
             }
 
             public static BasicBoard MatrixStart(List<List<List<int>>> playerCardValues, List<int> drawPileValues, List<int> playPileValues, List<int> burnPileValues, 
-                int whoStarts=0, BoardPlayOrder boardPlayOrder = BoardPlayOrder.UP, BoardTurnOrder boardTurnOrder = BoardTurnOrder.RIGHT, bool cardsAreFlipped = false)
+                int whoStarts=0, BoardPlayOrder boardPlayOrder = BoardPlayOrder.UP, BoardTurnOrder boardTurnOrder = BoardTurnOrder.RIGHT, bool handsAreFlipped = false, int effectMultiplier = 1)
             {
                 List<Player> players = new();
 
@@ -86,7 +86,7 @@ namespace Karma
                 PlayCardPile playPile = new(playPileValues, CardSuit.Hearts);
                 CardPile burnPile = new(burnPileValues, CardSuit.Hearts);
 
-                return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts, playOrder: boardPlayOrder, turnOrder: boardTurnOrder, cardsAreFlipped: cardsAreFlipped);
+                return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts, playOrder: boardPlayOrder, turnOrder: boardTurnOrder, handsAreFlipped: handsAreFlipped, effectMultiplier: effectMultiplier);
             }
         }
     }

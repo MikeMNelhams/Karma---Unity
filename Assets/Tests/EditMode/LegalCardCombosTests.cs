@@ -11,9 +11,9 @@ public class LegalCardCombosTests
     public void AllSingleCardsPlayableOnEmptyExceptJoker()
     {
         List<List<List<int>>> playerCardValues = new()
-            {
-                new() { new() { 15 }, new() { }, new() { } }
-            };
+        {
+            new() { new() { 15 }, new() { }, new() { } }
+        };
 
         List<int> drawCardValues = new() { };
         List<int> playCardValues = new() { };
@@ -493,7 +493,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, cardsAreFlipped: true);
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
 
         board.StartTurn();
 
@@ -519,7 +519,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 9 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, cardsAreFlipped: true);
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
 
         board.StartTurn();
 
