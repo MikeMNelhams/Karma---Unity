@@ -53,7 +53,7 @@ namespace Karma
                         if (Visibles[0]) { return _cards[0]; }
                         return null;
                     }
-                    for (int i=Visibles.Count - 1; i > 0; i--)
+                    for (int i=Visibles.Count - 1; i > -1; i--)
                     {
                         if (Visibles[i])
                         {

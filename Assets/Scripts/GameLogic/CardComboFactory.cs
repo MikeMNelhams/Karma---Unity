@@ -3,12 +3,10 @@ using Karma.Controller;
 using Karma.Players;
 using Karma.Cards;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DataStructures;
-using UnityEngine.UI;
 
 namespace Karma
 {

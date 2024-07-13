@@ -123,7 +123,7 @@ public class CardComboThreeTests
     }
 
     [Test]
-    public void ThreeWithFillerGroupComboCorrectlyMultipliesEffectMultiplier()
+    public void ThreeWithFillerGroupSixAtEndComboCorrectlyMultipliesEffectMultiplier()
     {
         List<List<List<int>>> playerCardValues = new()
         {
@@ -149,5 +149,34 @@ public class CardComboThreeTests
         Assert.False(board.HandsAreFlipped);
 
         Assert.AreEqual(16, board.EffectMultiplier);
+    }
+
+    [Test]
+    public void ThreeWithFillerGroupNotSixAtEndComboCorrectlyMultipliesEffectMultiplier()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, effectMultiplier: 1);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 3, 3, 6, 3, 3 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
+        Assert.False(board.HandsAreFlipped);
+
+        Assert.AreEqual(32, board.EffectMultiplier);
     }
 }
