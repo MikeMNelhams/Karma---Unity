@@ -350,8 +350,9 @@ public class PlayerProperties : BasePlayerProperties
         {
             cardObject.DisableSelectShader();
             RemoveCardObjectOnMouseDownEvent(cardObject);
-            SelectableCardObjects.Remove(cardObject);
         }
+
+        SelectableCardObjects.RemoveRange(cardObjects);
 
         if (SelectingFrom == PlayingFrom.Hand) { PopulateHand(); }
         if (!karmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
@@ -392,7 +393,7 @@ public class PlayerProperties : BasePlayerProperties
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.RemoveCardObjectOnMouseDownEvent(giverPlayerProperties.PickedUpCard);
-        giverPlayerProperties.CardsInHand.Remove(giverPlayerProperties.PickedUpCard); // TODO this should be PlayableCards.Remove(), but KU and KD aren't physically interactable yet
+        giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.PopulateHand();
     }

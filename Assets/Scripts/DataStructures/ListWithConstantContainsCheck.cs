@@ -10,7 +10,7 @@ namespace DataStructures
     /* Basically a list, but with O(1) check for whether an object is in the list or not */
     public class ListWithConstantContainsCheck<T> : IList<T>
     {
-        readonly List<T> _orderedValues;
+        List<T> _orderedValues;
         readonly Dictionary<T, int> _valueIndices;
 
         public ListWithConstantContainsCheck()
@@ -113,6 +113,29 @@ namespace DataStructures
             }
 
             return _valueIndices.Remove(item);
+        }
+
+        public void RemoveRange(List<T> items)
+        {
+            /* TODO Make a more efficient single pass version for removing multiple: RemoveRange() */
+            HashSet<int> indices = new();
+            int index;
+
+            foreach (T item in items)
+            {
+                index = IndexOf(item);
+                indices.Add(index);
+                _valueIndices.Remove(_orderedValues[index]);
+            }
+
+            List<T> filteredItems = new();
+
+            for (int i = 0; i < _orderedValues.Count; i++)
+            {
+                if (indices.Contains(i)) { continue; }
+                filteredItems.Add(_orderedValues[i]);
+            }
+            _orderedValues = filteredItems;
         }
 
         public void Insert(int index, T item)

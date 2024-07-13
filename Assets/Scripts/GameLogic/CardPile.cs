@@ -163,8 +163,9 @@ namespace Karma
                 if (Count < runLength) { return false; }
                 int totalRun = 1;
                 CardValue majorValue = _cards[0].value;
-                foreach (Card card in _cards) 
+                for (int i = 1; i < _cards.Count; i++)
                 { 
+                    Card card = _cards[i];
                     if (card.value == majorValue) 
                     { 
                         totalRun++; 

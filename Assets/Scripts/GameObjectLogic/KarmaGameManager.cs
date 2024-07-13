@@ -69,10 +69,11 @@ public class KarmaGameManager : MonoBehaviour
         List<int> playCardValues = new() {2, 3, 4, 5 };
         List<int> burnCardValues = new() {15};
 
-        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        int numberOfPlayers = _playersStartInfo.Length;
+        Board = BoardFactory.RandomStart(numberOfPlayers, 1);
+
         RegisterBoardEvents();
-        // int numberOfPlayers = _playerPositions.Count;
-        //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
         CreatePlayers(_playersStartInfo);
         CreatePlayerCardsFromBoard();
         

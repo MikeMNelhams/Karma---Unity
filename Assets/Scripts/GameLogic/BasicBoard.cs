@@ -129,7 +129,7 @@ namespace Karma
                 for (int i = 0; i < numberOfRotations; i++)
                 {
                     hands.Rotate((int)TurnOrder);
-                    BoardEventSystem.TriggerHandsRotatedEventListener(1, this);
+                    BoardEventSystem.TriggerHandsRotatedEventListener((int)TurnOrder, this);
                     for (int j = 0; j < Players.Count; j++)
                     {
                         Players[j].Hand = hands[j];
@@ -201,6 +201,7 @@ namespace Karma
                 {
                     Burn(PlayPile.CountValue(CardValue.JOKER));
                 }
+
                 return false;
             }
 
