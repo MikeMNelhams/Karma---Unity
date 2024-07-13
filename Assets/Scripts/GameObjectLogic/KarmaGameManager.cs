@@ -59,14 +59,14 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 10 }, new() { 3 }, new() { 4 } },
+            new() { new() { 5 }, new() { 3 }, new() { 4 } },
             new() { new() { 15 }, new() { 3 }, new() { 4 } },
             new() { new() { 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
             new() { new() { 10 }, new() { 3 }, new() { 4 } }
         };
 
         List<int> drawCardValues = new() { };
-        List<int> playCardValues = new() {2, 3, 4, 5, 6 };
+        List<int> playCardValues = new() {2, 3, 4, 5 };
         List<int> burnCardValues = new() {15};
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);

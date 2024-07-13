@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Karma.Board;
+using System.Diagnostics;
 
 namespace Karma
 {
@@ -85,7 +86,7 @@ namespace Karma
                 CardPile drawPile = new(drawPileValues, CardSuit.Hearts);
                 PlayCardPile playPile = new(playPileValues, CardSuit.Hearts);
                 CardPile burnPile = new(burnPileValues, CardSuit.Hearts);
-
+                
                 return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts, playOrder: boardPlayOrder, turnOrder: boardTurnOrder, handsAreFlipped: handsAreFlipped, effectMultiplier: effectMultiplier);
             }
         }

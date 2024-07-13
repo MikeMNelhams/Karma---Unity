@@ -126,17 +126,15 @@ namespace Karma
             public void RotateHands(int numberOfRotations, Deque<Hand> hands)
             {
                 if (numberOfRotations == 0) { return; }
-                UnityEngine.Debug.Log("Rotating hands " + numberOfRotations + " times");
                 for (int i = 0; i < numberOfRotations; i++)
                 {
-                    hands.Rotate(1 * (int)TurnOrder);
+                    hands.Rotate((int)TurnOrder);
+                    BoardEventSystem.TriggerHandsRotatedEventListener(1, this);
                     for (int j = 0; j < Players.Count; j++)
                     {
-                        Players[i].Hand = hands[i];
+                        Players[j].Hand = hands[j];
                     }
-                }
-
-                BoardEventSystem.TriggerHandsRotatedEventListener(numberOfRotations, this);
+                }     
             }
 
             public void StartGivingAwayPlayPile(int giverIndex)

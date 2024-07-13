@@ -3,8 +3,6 @@ using NUnit.Framework;
 using Karma.BasicBoard;
 using Karma.Board;
 using Karma.Cards;
-using DataStructures;
-using UnityEngine.Playables;
 
 public class CardComboTwoTests
 {

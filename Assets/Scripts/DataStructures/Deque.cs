@@ -55,6 +55,14 @@ namespace DataStructures
                 AddLeft(PopRight());
             }
         }
+
+        public int Count
+        {
+            get
+            {
+                return _items.Count;
+            }
+        }
     }
 }
 

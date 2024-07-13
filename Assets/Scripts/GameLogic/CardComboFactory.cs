@@ -53,6 +53,7 @@ namespace Karma
                 }
                 Deque<Hand> hands = new (startHands);
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
+                
                 if (numberOfRepeats < board.Players.Count)
                 {
                     board.RotateHands(numberOfRepeats, hands);
