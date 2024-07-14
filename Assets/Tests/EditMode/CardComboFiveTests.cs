@@ -41,8 +41,6 @@ public class CardComboFiveTests
         Player player1 = board.Players[1];
         Player player2 = board.Players[2];
 
-        UnityEngine.Debug.Log(player1.Hand);
-
         Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), player0.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 6, 7 }, CardSuit.Hearts), player1.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.Hearts), player2.Hand);

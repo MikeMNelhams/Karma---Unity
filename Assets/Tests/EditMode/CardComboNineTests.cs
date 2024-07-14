@@ -4,13 +4,15 @@ using Karma.BasicBoard;
 using Karma.Board;
 using Karma.Cards;
 
-public class CardComboSevenTests
+public class CardComboNineTests
 {
     [Test]
-    public void SevenReversesPlayOrderOnly()
+    public void NineSkipsTurnOnly()
     {
         List<List<List<int>>> playerCardValues = new()
         {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
             new() { new() { }, new() { }, new() { } }
         };
 
@@ -24,24 +26,29 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7 }, CardSuit.Hearts);
-
-        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        CardsList cards = new(new List<int>() { 9 }, CardSuit.Hearts);
 
         board.PlayCards(cards, testController);
 
-        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
-
+        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
         Assert.AreEqual(1, board.EffectMultiplier);
         Assert.True(board.HandsAreFlipped);
+
+        board.StepPlayerIndex(1);
+        board.EndTurn();
+
+        Assert.AreEqual(1, board.CurrentPlayerIndex);
     }
 
     [Test]
-    public void SevenEvenCountComboDoesNothing()
+    public void NineCombo()
     {
         List<List<List<int>>> playerCardValues = new()
         {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
             new() { new() { }, new() { }, new() { } }
         };
 
@@ -55,18 +62,23 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7, 7 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 9, 9 }, CardSuit.Hearts);
 
         board.PlayCards(cards, testController);
 
-        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
+        board.StepPlayerIndex(1);
+        board.EndTurn();
+
+        Assert.AreEqual(3, board.CurrentPlayerIndex);
     }
 
     [Test]
-    public void SevenOddCountComboReversesPlayOrder()
+    public void NineComboBurnsDoesNothing()
     {
         List<List<List<int>>> playerCardValues = new()
         {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
             new() { new() { }, new() { }, new() { } }
         };
 
@@ -80,35 +92,13 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7, 7, 7 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 9, 9, 9, 9 }, CardSuit.Hearts);
 
         board.PlayCards(cards, testController);
 
-        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
-    }
+        board.StepPlayerIndex(1);
+        board.EndTurn();
 
-    [Test]
-    public void SevenOddFilledComboReversesPlayOrder()
-    {
-        List<List<List<int>>> playerCardValues = new()
-        {
-            new() { new() { }, new() { }, new() { } }
-        };
-
-        List<int> drawCardValues = new() { };
-        List<int> playCardValues = new() { };
-        List<int> burnCardValues = new() { };
-
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
-
-        board.StartTurn();
-
-        PlayerController testController = new();
-
-        CardsList cards = new(new List<int>() { 7, 7, 7, 6, 6 }, CardSuit.Hearts);
-
-        board.PlayCards(cards, testController);
-
-        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(1, board.CurrentPlayerIndex);
     }
 }

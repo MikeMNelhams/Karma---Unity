@@ -4,10 +4,10 @@ using Karma.BasicBoard;
 using Karma.Board;
 using Karma.Cards;
 
-public class CardComboSevenTests
+public class CardComboEightTests
 {
     [Test]
-    public void SevenReversesPlayOrderOnly()
+    public void EightReversesTurnOrderOnly()
     {
         List<List<List<int>>> playerCardValues = new()
         {
@@ -24,21 +24,21 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7 }, CardSuit.Hearts);
-
-        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
-
-        board.PlayCards(cards, testController);
-
-        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
+        CardsList cards = new(new List<int>() { 8 }, CardSuit.Hearts);
 
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(1, board.EffectMultiplier);
         Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
     }
 
     [Test]
-    public void SevenEvenCountComboDoesNothing()
+    public void EightEvenCountComboDoesNothing()
     {
         List<List<List<int>>> playerCardValues = new()
         {
@@ -55,15 +55,15 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7, 7 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8, 8 }, CardSuit.Hearts);
 
         board.PlayCards(cards, testController);
 
-        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
     }
 
     [Test]
-    public void SevenOddCountComboReversesPlayOrder()
+    public void EightOddCountComboReversesPlayOrder()
     {
         List<List<List<int>>> playerCardValues = new()
         {
@@ -80,15 +80,15 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7, 7, 7 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8, 8, 8 }, CardSuit.Hearts);
 
         board.PlayCards(cards, testController);
 
-        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
     }
 
     [Test]
-    public void SevenOddFilledComboReversesPlayOrder()
+    public void EightOddFilledComboReversesPlayOrder()
     {
         List<List<List<int>>> playerCardValues = new()
         {
@@ -105,10 +105,10 @@ public class CardComboSevenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 7, 7, 7, 6, 6 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8, 8, 8, 6, 6 }, CardSuit.Hearts);
 
         board.PlayCards(cards, testController);
 
-        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
     }
 }

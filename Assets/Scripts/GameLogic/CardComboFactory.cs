@@ -128,6 +128,7 @@ namespace Karma
                 if (cardBelowCombo.value == CardValue.JACK) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
+                else { board.EffectMultiplier = 1; }
                 Debug.Log("Card to replay:" + cardBelowCombo  + " " + numberOfRepeats + " many times");
                 CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
                 board.PlayCards(cardsToReplay, Controller, false);

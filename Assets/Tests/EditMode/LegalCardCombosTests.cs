@@ -725,4 +725,43 @@ public class LegalCardCombosTests
         combo = new() { CardValue.SIX, CardValue.SIX, CardValue.SIX, CardValue.SIX };
         Assert.True(predictedLegalCombos.Contains(combo));
     }
+
+    [Test]
+    public void MoreSixThanMinorCardButStillValidFillerButNotValidFillerAlone()
+    {
+        List<int> testRanks = new() { 8, 8, 8, 6, 6, 6, 6 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 7 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+
+        board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(7, predictedLegalCombos.Count);
+
+        FrozenMultiSet<CardValue> combo = new() { CardValue.EIGHT };
+        Assert.True(predictedLegalCombos.Contains(combo));
+
+        combo = new() { CardValue.EIGHT, CardValue.EIGHT };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT, CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT, CardValue.SIX, CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT, CardValue.SIX, CardValue.SIX, CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+    }
 }
