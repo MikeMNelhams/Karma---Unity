@@ -54,12 +54,11 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 5 }, new() { 3 }, new() { 4 } },
+            new() { new() { 14 }, new() { 3 }, new() { 4 } },
             new() { new() { 15 }, new() { 3 }, new() { 4 } },
             new() { new() { 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
             new() { new() { 10 }, new() { 3 }, new() { 4 } }
@@ -69,9 +68,9 @@ public class KarmaGameManager : MonoBehaviour
         List<int> playCardValues = new() {2, 3, 4, 5 };
         List<int> burnCardValues = new() {15};
 
-        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        int numberOfPlayers = _playersStartInfo.Length;
-        Board = BoardFactory.RandomStart(numberOfPlayers, 1);
+        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        //int numberOfPlayers = _playersStartInfo.Length;
+        //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
 
         RegisterBoardEvents();
         CreatePlayers(_playersStartInfo);

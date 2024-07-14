@@ -77,7 +77,7 @@ namespace Karma
             public CardCombo_SEVEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                if (((uint)(board.EffectMultiplier) & 0b1) == 0b0)
+                if (((Cards.Count * (uint)board.EffectMultiplier) & 0b1) == 0b0)
                 {
                     return;
                 }
@@ -90,7 +90,7 @@ namespace Karma
             public CardCombo_EIGHT(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
-                if (((uint)(board.EffectMultiplier) & 0b1) == 0b0)
+                if (((Cards.Count * (uint)board.EffectMultiplier) & 0b1) == 0b0)
                 {
                     return;
                 }

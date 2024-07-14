@@ -692,4 +692,37 @@ public class LegalCardCombosTests
         FrozenMultiSet<CardValue> combo = new() { CardValue.SIX };
         Assert.True(predictedLegalCombos.Contains(combo));
     }
+
+    [Test]
+    public void AllSixesNoUnplayableCombos()
+    {
+        List<int> testRanks = new() { 6, 6, 6, 6 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 3 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+
+        board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(4, predictedLegalCombos.Count);
+
+        FrozenMultiSet<CardValue> combo = new() { CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+
+        combo = new() { CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.SIX, CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.SIX, CardValue.SIX, CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+    }
 }
