@@ -291,4 +291,190 @@ public class CardComboJackTests
         Assert.AreEqual(new Hand(new List<int>() { 6, 7, 8 }, CardSuit.Hearts), player1.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), player2.Hand);
     }
+
+    [Test]
+    public void JackOnSixDoesNothing()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 6 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 11 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
+        Assert.AreEqual(1, board.EffectMultiplier);
+        Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(0, board.DrawPile.Count);
+        Assert.AreEqual(0, board.BurnPile.Count);
+
+        PlayCardPile expectedPlayPile = new(new List<int>() { 6, 11 }, CardSuit.Hearts);
+        Assert.AreEqual(expectedPlayPile, board.PlayPile);
+    }
+
+    [Test]
+    public void JackOnSeven()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 7 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 11 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
+        Assert.AreEqual(1, board.EffectMultiplier);
+        Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(0, board.DrawPile.Count);
+        Assert.AreEqual(0, board.BurnPile.Count);
+
+        PlayCardPile expectedPlayPile = new(new List<int>() { 7, 11 }, CardSuit.Hearts);
+        Assert.AreEqual(expectedPlayPile, board.PlayPile);
+    }
+
+    [Test]
+    public void JackOnEight()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 8 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 11 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
+        Assert.AreEqual(1, board.EffectMultiplier);
+        Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(0, board.DrawPile.Count);
+        Assert.AreEqual(0, board.BurnPile.Count);
+
+        PlayCardPile expectedPlayPile = new(new List<int>() { 8, 11 }, CardSuit.Hearts);
+        Assert.AreEqual(expectedPlayPile, board.PlayPile);
+    }
+
+    [Test]
+    public void JackOnNine()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 9 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 11 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
+        Assert.AreEqual(1, board.EffectMultiplier);
+        Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(0, board.DrawPile.Count);
+        Assert.AreEqual(0, board.BurnPile.Count);
+
+        PlayCardPile expectedPlayPile = new(new List<int>() { 9, 11 }, CardSuit.Hearts);
+        Assert.AreEqual(expectedPlayPile, board.PlayPile);
+
+        board.StepPlayerIndex(1);
+        board.EndTurn();
+
+        Assert.AreEqual(2, board.CurrentPlayerIndex);
+    }
+
+    [Test]
+    public void JackOnTen()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } },
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 10 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 11 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
+        Assert.AreEqual(1, board.EffectMultiplier);
+        Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(0, board.DrawPile.Count);
+        Assert.AreEqual(0, board.PlayPile.Count);
+
+        CardPile expectedBurnPile = new(new List<int>() { 10, 11 }, CardSuit.Hearts);
+        Assert.AreEqual(expectedBurnPile, board.BurnPile);
+
+        Assert.AreEqual(0, board.CurrentPlayerIndex);
+    }
 }

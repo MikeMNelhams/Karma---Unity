@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEngine;
 using DataStructures;
 
+
 namespace Karma
 {
     namespace CardCombos
@@ -128,7 +129,7 @@ namespace Karma
                 if (cardBelowCombo.value == CardValue.JACK) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
-                else { board.EffectMultiplier = 1; }
+                if (cardBelowCombo.value != CardValue.THREE && cardBelowCombo.value != CardValue.JACK) { board.EffectMultiplier = 1; }
                 Debug.Log("Card to replay:" + cardBelowCombo  + " " + numberOfRepeats + " many times");
                 CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
                 board.PlayCards(cardsToReplay, Controller, false);
@@ -141,10 +142,29 @@ namespace Karma
             public override void Apply(IBoard board)
             {
                 Player currentPlayer = board.CurrentPlayer;
-                if (!currentPlayer.HasCards) { return; }
-                if (currentPlayer.PlayingFrom == PlayingFrom.KarmaUp && currentPlayer.KarmaUp.Count == 0) { return; }
+                if (board.StartingPlayerStartedPlayingFrom == PlayingFrom.KarmaUp && currentPlayer.KarmaUp.Count == 0) { return; }
+                if (InvalidFilter(currentPlayer)) { return; }
+                if (!ValidTargetPlayersExist(board)) { return; }
+                
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-                board.StartGivingAwayCards(numberOfRepeats);  
+                board.StartGivingAwayCards(numberOfRepeats, InvalidFilter);  
+            }
+
+            bool InvalidFilter(Player giver)
+            {
+                if (!giver.HasCards) { return true; }
+                if (giver.PlayableCards.IsExclusively(CardValue.JOKER)) { return true; }
+                return false;
+            }
+
+            bool ValidTargetPlayersExist(IBoard board)
+            {
+                for (int i = 0; i < board.Players.Count; i++)
+                {
+                    if (i == board.CurrentPlayerIndex) { continue; }
+                    if (board.Players[i].HasCards) { return true; }
+                }
+                return false;
             }
         }
 
@@ -154,7 +174,8 @@ namespace Karma
             public override void Apply(IBoard board)
             {
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-                if (board.PlayPile.ContainsMinLengthRun(4)) { board.Burn(0); }
+                // This way K -> K, K, K ends the combo dead in its tracks. 52x the King effect over and over is a nightmare...
+                if (board.PlayPile.ContainsMinLengthRun(4)) { board.Burn(0); return; } 
                 numberOfRepeats = Math.Min(numberOfRepeats, board.BurnPile.Count);
                 if (numberOfRepeats == 0) { return; }
                 CardsList cardsToPlay = board.BurnPile.RemoveFromBottom(numberOfRepeats);

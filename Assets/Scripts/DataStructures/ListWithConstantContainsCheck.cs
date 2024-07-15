@@ -102,11 +102,10 @@ namespace DataStructures
 
         public bool Remove(T item)
         {
-            /* TODO Make a more efficient single pass version for removing multiple: RemoveRange() */
             int index = IndexOf(item);
             _orderedValues.RemoveAt(index);
 
-            for (int i = index + 1; i < _orderedValues.Count; i++)
+            for (int i = index; i < _orderedValues.Count; i++)
             {
                 T item2 = _orderedValues[i];
                 _valueIndices[item2] = index - 1;
@@ -117,24 +116,32 @@ namespace DataStructures
 
         public void RemoveRange(List<T> items)
         {
-            /* TODO Make a more efficient single pass version for removing multiple: RemoveRange() */
-            HashSet<int> indices = new();
+            bool[] isInItems = new bool[_orderedValues.Count];
             int index;
 
             foreach (T item in items)
             {
                 index = IndexOf(item);
-                indices.Add(index);
+                isInItems[index] = true;
                 _valueIndices.Remove(_orderedValues[index]);
             }
 
             List<T> filteredItems = new();
 
+            int k = 0;
             for (int i = 0; i < _orderedValues.Count; i++)
             {
-                if (indices.Contains(i)) { continue; }
-                filteredItems.Add(_orderedValues[i]);
+                if (!isInItems[i])
+                {
+                    _valueIndices[_orderedValues[i]] -= k;
+                    filteredItems.Add(_orderedValues[i]);
+                }
+                else
+                {
+                    k++;
+                }
             }
+
             _orderedValues = filteredItems;
         }
 

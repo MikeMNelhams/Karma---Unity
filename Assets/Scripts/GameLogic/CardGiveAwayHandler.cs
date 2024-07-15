@@ -17,17 +17,23 @@ namespace Karma
 
             public delegate void OnCardGiveAwayListener(Card card, int giverIndex, int receiverIndex);
             event OnCardGiveAwayListener CardGiveAway;
+
+            public delegate bool InvalidFilter(Player giver);
+
             readonly List<OnCardGiveAwayListener> _registeredListeners;
+
+            readonly InvalidFilter _invalidFilter;
 
             public bool IsFinished { get => _numberOfCardsToGiveAway == 0; }
             public int NumberOfCardsRemainingToGiveAway { get => _numberOfCardsToGiveAway; }
 
-            public CardGiveAwayHandler(int NumberOfCardsToGiveAway, IBoard board, int giverIndex)
+            public CardGiveAwayHandler(int NumberOfCardsToGiveAway, IBoard board, int giverIndex, InvalidFilter invalidFilter = null)
             {
                 _numberOfCardsToGiveAway = NumberOfCardsToGiveAway;
                 _giverIndex = giverIndex;
                 _giver = board.Players[giverIndex];
                 _playingFromAtStart = _giver.PlayingFrom;
+                _invalidFilter = invalidFilter;
 
                 _registeredListeners = new();
             }
@@ -37,7 +43,7 @@ namespace Karma
                 if (_numberOfCardsToGiveAway <= 0) { throw new AlreadyCompletedGiveAwayException(); }
 
                 if (_giver.PlayingFrom != _playingFromAtStart) { EndGiveAway(); return; }
-                if (_giver.PlayableCards.IsExclusively(CardValue.JOKER)) { EndGiveAway(); return; }
+                if (_invalidFilter is not null && _invalidFilter(_giver)) { EndGiveAway(); return; }
 
                 _numberOfCardsToGiveAway -= 1;
                 CardGiveAway?.Invoke(card, _giverIndex, receiverIndex);

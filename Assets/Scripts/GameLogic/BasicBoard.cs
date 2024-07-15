@@ -33,7 +33,8 @@ namespace Karma
             public bool HasBurnedThisTurn { get; protected set; }
             public int TurnsPlayed { get; protected set; }
             public int NumberOfCardsDrawnThisTurn { get; protected set; } 
-            
+            public PlayingFrom StartingPlayerStartedPlayingFrom { get; protected set; }
+
             public int TotalJokers { get; protected set; }
             public int NumberOfCombosPlayedThisTurn { get; protected set; }
 
@@ -86,6 +87,7 @@ namespace Karma
                 HasBurnedThisTurn = hasBurnedThisTurn;
                 TurnsPlayed = turnsPlayed;
                 NumberOfCardsDrawnThisTurn = 0;
+                StartingPlayerStartedPlayingFrom = Players[whoStarts].PlayingFrom;
 
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
@@ -143,9 +145,9 @@ namespace Karma
                 UnityEngine.Debug.Log("Giving away play pile time!!");
             }
 
-            public void StartGivingAwayCards(int numberOfCards)
+            public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null)
             {
-                CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex);
+                CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex, invalidFilter);
                 CurrentPlayer.CardGiveAwayHandler.RegisterOnCardGiveAwayListener(ReceiveCard);
                 BoardEventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
             }
@@ -160,6 +162,7 @@ namespace Karma
             public void StartTurn()
             {
                 PlayerIndexWhoStartedTurn = CurrentPlayerIndex;
+                StartingPlayerStartedPlayingFrom = Players[PlayerIndexWhoStartedTurn].PlayingFrom;
                 NumberOfCombosPlayedThisTurn = 0;
                 NumberOfCardsDrawnThisTurn = 0;
                 HasBurnedThisTurn = false;

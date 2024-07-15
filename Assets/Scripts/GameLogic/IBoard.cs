@@ -62,7 +62,7 @@ namespace Karma
             public void ResetPlayOrder();
             public void FlipHands();
             public void RotateHands(int numberOfRotations, Deque<Hand> hands);
-            public void StartGivingAwayCards(int numberOfCards);
+            public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null);
             public void StartGivingAwayPlayPile(int giverIndex);
             public void StartTurn();
             public void EndTurn();
@@ -74,7 +74,7 @@ namespace Karma
             public CardPile DrawPile { get; }
             public CardPile BurnPile { get; }
             public PlayCardPile PlayPile { get; }
-            public BoardEventSystem BoardEventSystem {get; }
+            public BoardEventSystem BoardEventSystem { get; }
             public BoardPlayOrder PlayOrder { get; }
             public BoardTurnOrder TurnOrder { get; }
             public bool HandsAreFlipped { get; set; }
@@ -84,6 +84,7 @@ namespace Karma
             public bool HasBurnedThisTurn { get; }
             public int TurnsPlayed { get; }
             public int NumberOfCardsDrawnThisTurn { get; }
+            public PlayingFrom StartingPlayerStartedPlayingFrom {get;}
             public HashSet<FrozenMultiSet<CardValue>> CurrentLegalCombos { get; }
             public HashSet<BoardPlayerAction> CurrentLegalActions { get; }
             public int TotalJokers { get; }

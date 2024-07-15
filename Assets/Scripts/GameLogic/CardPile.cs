@@ -15,14 +15,14 @@ namespace Karma
             public CardPile(CardsList cards) : base(cards.ToList()) { }
             public CardPile(List<int> cardValues, CardSuit suit) : base(cardValues, suit) { }
             
-            public virtual CardsList RemoveFromBottom(int splitIndex)
+            public virtual CardsList RemoveFromBottom(int numberOfCards)
             {
                 CardsList removedCards = new();
-                for (int i = splitIndex; i < _cards.Count; i++)
+                for (int i = 0; i < numberOfCards; i++)
                 {
                     removedCards.Add(_cards[i]);
                 }
-                _cards.RemoveRange(0, splitIndex);
+                _cards.RemoveRange(0, numberOfCards);
                 return removedCards;
             }
 
