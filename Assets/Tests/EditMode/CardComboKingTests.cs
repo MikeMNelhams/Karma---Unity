@@ -76,6 +76,42 @@ public class CardComboKingTests
     }
 
     [Test]
+    public void KingPlaysBottomOfBurnPileJackPlaysKing()
+    {
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { }, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { };
+        List<int> burnCardValues = new() { 11, 2 };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+
+        board.StartTurn();
+
+        PlayerController testController = new();
+
+        CardsList cards = new(new List<int>() { 13 }, CardSuit.Hearts);
+
+        board.PlayCards(cards, testController);
+
+        Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
+        Assert.AreEqual(1, board.EffectMultiplier);
+        Assert.True(board.HandsAreFlipped);
+
+        Assert.AreEqual(0, board.DrawPile.Count);
+        Assert.AreEqual(0, board.BurnPile.Count);
+        Assert.AreEqual(3, board.PlayPile.Count);
+
+        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 11, 2 }, CardSuit.Hearts);
+        Assert.AreEqual(expectedPlayPile, board.PlayPile);
+
+        Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
+    }
+
+    [Test]
     public void KingPlaysKingThenBurns()
     {
         List<List<List<int>>> playerCardValues = new()

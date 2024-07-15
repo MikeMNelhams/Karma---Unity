@@ -81,6 +81,7 @@ namespace Karma
             public int EffectMultiplier { get; set; }
             public int CurrentPlayerIndex { get; set; }
             public int NumberOfJokersInPlay { get; set; }
+            public int NumberOfAcesInPlay { get; set; }
             public bool HasBurnedThisTurn { get; }
             public int TurnsPlayed { get; }
             public int NumberOfCardsDrawnThisTurn { get; }

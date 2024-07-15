@@ -30,6 +30,7 @@ namespace Karma
             public int CurrentPlayerIndex { get; set; }
             public Player CurrentPlayer { get => Players[CurrentPlayerIndex]; }
             public int NumberOfJokersInPlay { get; set; }
+            public int NumberOfAcesInPlay { get; set; }
             public bool HasBurnedThisTurn { get; protected set; }
             public int TurnsPlayed { get; protected set; }
             public int NumberOfCardsDrawnThisTurn { get; protected set; } 
@@ -87,6 +88,8 @@ namespace Karma
                 HasBurnedThisTurn = hasBurnedThisTurn;
                 TurnsPlayed = turnsPlayed;
                 NumberOfCardsDrawnThisTurn = 0;
+                NumberOfJokersInPlay = playPile.CountValue(CardValue.JOKER);
+                NumberOfAcesInPlay = playPile.CountValue(CardValue.ACE);
                 StartingPlayerStartedPlayingFrom = Players[whoStarts].PlayingFrom;
 
                 ComboHistory = new List<CardCombo>();
@@ -142,7 +145,6 @@ namespace Karma
             public void StartGivingAwayPlayPile(int giverIndex)
             {
                 BoardEventSystem.TriggerStartedPlayPileGiveAway(giverIndex);
-                UnityEngine.Debug.Log("Giving away play pile time!!");
             }
 
             public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null)
@@ -200,9 +202,11 @@ namespace Karma
                 NumberOfCombosPlayedThisTurn++;
                 ComboHistory.Add(cardCombo);
 
-                if (willBurnDueToMinimumRunFour) 
+                int jokerCount = PlayPile.CountValue(CardValue.JOKER);
+
+                if (willBurnDueToMinimumRunFour || jokerCount > 0) 
                 {
-                    Burn(PlayPile.CountValue(CardValue.JOKER));
+                    Burn(jokerCount);
                 }
 
                 return false;
@@ -225,11 +229,12 @@ namespace Karma
                     {
                         int start = PlayPile.Count - jokerCount;
                         indicesToBurn = Enumerable.Range(start, jokerCount).ToList<int>();
-                        CardsList cardsToBurn = PlayPile.PopMultiple(indicesToBurn.ToArray());
-                        NumberOfJokersInPlay -= cardsToBurn.CountValue(CardValue.JOKER);
-                        BurnPile.Add(cardsToBurn);
-                        BoardEventSystem.TriggerBurnEvents(jokerCount);
                     }
+
+                    CardsList cardsToBurn = PlayPile.PopMultiple(indicesToBurn.ToArray());
+                    NumberOfJokersInPlay -= cardsToBurn.CountValue(CardValue.JOKER);
+                    BurnPile.Add(cardsToBurn);
+                    BoardEventSystem.TriggerBurnEvents(jokerCount);
                     return;
                 }
                 BurnPile.Add(PlayPile);

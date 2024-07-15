@@ -182,6 +182,7 @@ namespace Karma
                 foreach (Card card in cardsToPlay)
                 {
                     if (card.value == CardValue.JOKER) { board.NumberOfJokersInPlay++; }
+                    if (card.value == CardValue.ACE) { board.NumberOfAcesInPlay++; }
                     board.PlayCards(new CardsList(card), Controller);
                 }
             }
