@@ -58,7 +58,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 12, 13 }, new() { 3 }, new() { 4 } },
+            new() { new() { 2, 2 }, new() { 3 }, new() { 4 } },
             new() { new() { 14 }, new() { 3 }, new() { 4 } },
             new() { new() { 15, 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
             new() { new() { 10 }, new() { 3 }, new() { 4 } }

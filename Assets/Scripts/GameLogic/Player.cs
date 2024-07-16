@@ -35,14 +35,15 @@ namespace Karma
 
             public override string ToString()
             {
-                return "Player(H" + Hand + ", UK" + KarmaUp + ", DK" + KarmaDown;
+                return "Player(H" + Hand + ", UK" + KarmaUp + ", DK" + KarmaDown + ")";
             }
 
             public int Length {get { return Hand.Count + KarmaUp.Count + KarmaDown.Count; } }
 
             public bool HasCards { get { return Length > 0; } }
             public CardsList PlayableCards 
-            { get
+            { 
+                get
                 {
                     if (Hand.Count > 0)
                     {
@@ -117,11 +118,9 @@ namespace Karma
 
             public DictionaryDefaultInt<CardValue> CountAllCardValues() {
                 DictionaryDefaultInt<CardValue> counts = new();
-
                 counts.UnionInPlace(Hand.CountAllCardValues());
                 counts.UnionInPlace(KarmaUp.CountAllCardValues());
                 counts.UnionInPlace(KarmaDown.CountAllCardValues());
-
                 return counts;
             }
 
