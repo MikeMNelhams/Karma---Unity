@@ -26,7 +26,7 @@ public class CardComboNineTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 9 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 9 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -62,7 +62,7 @@ public class CardComboNineTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 9, 9 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 9, 9 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -92,7 +92,7 @@ public class CardComboNineTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 9, 9, 9, 9 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 9, 9, 9, 9 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 

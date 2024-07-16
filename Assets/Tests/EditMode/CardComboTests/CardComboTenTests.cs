@@ -26,7 +26,7 @@ public class CardComboTenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 10 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 10 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -60,7 +60,7 @@ public class CardComboTenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 10, 10, 10}, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 10, 10, 10}, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -89,7 +89,7 @@ public class CardComboTenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 10, 10, 10, 10 }, CardSuit.Hearts); // Four 10s would ALSO burn
+        CardsList cards = new(new List<int>() { 10, 10, 10, 10 }, CardSuit.DebugDefault); // Four 10s would ALSO burn
 
         board.PlayCards(cards, testController);
 
@@ -118,7 +118,7 @@ public class CardComboTenTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 10, 10, 6, 10, 10 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 10, 10, 6, 10, 10 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -126,7 +126,7 @@ public class CardComboTenTests
         Assert.AreEqual(0, board.PlayPile.Count);
         Assert.AreEqual(8, board.BurnPile.Count);
 
-        PlayCardPile correctPile = new(new List<int>() { 3, 4, 6, 10, 10, 6, 10, 10 }, CardSuit.Hearts);
+        PlayCardPile correctPile = new(new List<int>() { 3, 4, 6, 10, 10, 6, 10, 10 }, CardSuit.DebugDefault);
 
         Assert.AreEqual(correctPile, board.BurnPile);
     }

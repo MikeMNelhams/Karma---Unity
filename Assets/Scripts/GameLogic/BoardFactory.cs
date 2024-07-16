@@ -74,7 +74,7 @@ namespace Karma
             }
 
             public static BasicBoard MatrixStart(List<List<List<int>>> playerCardValues, List<int> drawPileValues, List<int> playPileValues, List<int> burnPileValues, 
-                int whoStarts=0, BoardPlayOrder boardPlayOrder = BoardPlayOrder.UP, BoardTurnOrder boardTurnOrder = BoardTurnOrder.RIGHT, bool handsAreFlipped = false, int effectMultiplier = 1)
+                int whoStarts=0, BoardPlayOrder boardPlayOrder = BoardPlayOrder.UP, BoardTurnOrder boardTurnOrder = BoardTurnOrder.RIGHT, bool handsAreFlipped = false, int effectMultiplier = 1, CardSuit cardSuit = null)
             {
                 List<Player> players = new();
 
@@ -83,9 +83,15 @@ namespace Karma
                     players.Add(new Player(playerCardValues[i]));
                 }
 
-                CardPile drawPile = new(drawPileValues, CardSuit.Hearts);
-                PlayCardPile playPile = new(playPileValues, CardSuit.Hearts);
-                CardPile burnPile = new(burnPileValues, CardSuit.Hearts);
+                CardSuit defaultCardSuit = cardSuit;
+                if (cardSuit is null)
+                {
+                    defaultCardSuit = CardSuit.DebugDefault;
+                }
+
+                CardPile drawPile = new(drawPileValues, defaultCardSuit);
+                PlayCardPile playPile = new(playPileValues, defaultCardSuit);
+                CardPile burnPile = new(burnPileValues, defaultCardSuit);
                 
                 return new BasicBoard(players, drawPile, burnPile, playPile, whoStarts: whoStarts, playOrder: boardPlayOrder, turnOrder: boardTurnOrder, handsAreFlipped: handsAreFlipped, effectMultiplier: effectMultiplier);
             }

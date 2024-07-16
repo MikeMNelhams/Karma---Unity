@@ -16,13 +16,18 @@ namespace Karma
             public Player(Hand hand, CardsList karmaDown, CardsList karmaUp)
             {
                 Hand = hand;
-                this.KarmaDown = karmaDown;
-                this.KarmaUp = karmaUp;
+                KarmaDown = karmaDown;
+                KarmaUp = karmaUp;
             }
 
-            public Player(List<List<int>> playerMatrix)
+            public Player(List<List<int>> playerMatrix, CardSuit cardSuit = null)
             {
-                CardSuit suit = CardSuit.Hearts;
+                CardSuit suit = cardSuit;
+                if (cardSuit is null)
+                {
+                    suit = CardSuit.DebugDefault;
+                }
+
                 Hand = new Hand(playerMatrix[0], suit);
                 KarmaUp = new CardsList(playerMatrix[1], suit);
                 KarmaDown = new CardsList(playerMatrix[2], suit);

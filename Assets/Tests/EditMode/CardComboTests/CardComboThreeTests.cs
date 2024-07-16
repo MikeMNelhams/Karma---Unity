@@ -24,7 +24,7 @@ public class CardComboThreeTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 3 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 3 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -53,7 +53,7 @@ public class CardComboThreeTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 3, 3, 3 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 3, 3, 3 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -82,7 +82,7 @@ public class CardComboThreeTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 3, 3, 3, 3 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 3, 3, 3, 3 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -111,7 +111,7 @@ public class CardComboThreeTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 3, 3, 3 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 3, 3, 3 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -140,7 +140,7 @@ public class CardComboThreeTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 3, 3, 3, 6 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 3, 3, 3, 6 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -169,7 +169,7 @@ public class CardComboThreeTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 3, 3, 6, 3, 3 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 3, 3, 6, 3, 3 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 

@@ -26,7 +26,7 @@ public class CardComboJokerTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 15 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 15 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -39,10 +39,10 @@ public class CardComboJokerTests
         Assert.AreEqual(1, board.BurnPile.Count);
         Assert.AreEqual(4, board.PlayPile.Count);
 
-        PlayCardPile expectedPlayPile = new(new List<int>() { 2, 3, 4, 5 }, CardSuit.Hearts);
+        PlayCardPile expectedPlayPile = new(new List<int>() { 2, 3, 4, 5 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
 
-        Assert.AreEqual(new Card(CardSuit.Hearts, CardValue.JOKER), board.BurnPile[0]);
+        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.JOKER), board.BurnPile[0]);
     }
 
     [Test]
@@ -65,7 +65,7 @@ public class CardComboJokerTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 15 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 15 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -78,7 +78,7 @@ public class CardComboJokerTests
         Assert.AreEqual(1, board.BurnPile.Count);
         Assert.AreEqual(0, board.PlayPile.Count);
 
-        Assert.AreEqual(new Card(CardSuit.Hearts, CardValue.JOKER), board.BurnPile[0]);
+        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.JOKER), board.BurnPile[0]);
     }
 
     [Test]
@@ -101,7 +101,7 @@ public class CardComboJokerTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 15, 15, 15 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 15, 15, 15 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -114,10 +114,10 @@ public class CardComboJokerTests
         Assert.AreEqual(3, board.BurnPile.Count);
         Assert.AreEqual(1, board.PlayPile.Count);
 
-        PlayCardPile expectedBurnPile = new(new List<int>() { 15, 15, 15}, CardSuit.Hearts);
+        PlayCardPile expectedBurnPile = new(new List<int>() { 15, 15, 15}, CardSuit.DebugDefault);
         Assert.AreEqual(expectedBurnPile, board.BurnPile);
 
-        Assert.AreEqual(new Card(CardSuit.Hearts, CardValue.ACE), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile[0]);
     }
 
     [Test]
@@ -140,7 +140,7 @@ public class CardComboJokerTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 15, 15, 6, 15 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 15, 15, 6, 15 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -153,10 +153,10 @@ public class CardComboJokerTests
         Assert.AreEqual(4, board.BurnPile.Count);
         Assert.AreEqual(1, board.PlayPile.Count);
 
-        PlayCardPile expectedBurnPile = new(new List<int>() { 15, 15, 6, 15 }, CardSuit.Hearts);
+        PlayCardPile expectedBurnPile = new(new List<int>() { 15, 15, 6, 15 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedBurnPile, board.BurnPile);
 
-        Assert.AreEqual(new Card(CardSuit.Hearts, CardValue.ACE), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile[0]);
     }
 
     [Test]
@@ -179,7 +179,7 @@ public class CardComboJokerTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 15 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 15 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -192,9 +192,9 @@ public class CardComboJokerTests
         Assert.AreEqual(1, board.BurnPile.Count);
         Assert.AreEqual(1, board.PlayPile.Count);
 
-        PlayCardPile expectedBurnPile = new(new List<int>() { 15 }, CardSuit.Hearts);
+        PlayCardPile expectedBurnPile = new(new List<int>() { 15 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedBurnPile, board.BurnPile);
 
-        Assert.AreEqual(new Card(CardSuit.Hearts, CardValue.ACE), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile[0]);
     }
 }

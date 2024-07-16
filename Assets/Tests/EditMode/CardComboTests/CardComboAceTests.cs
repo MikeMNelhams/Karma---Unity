@@ -24,7 +24,7 @@ public class CardComboAceTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 14 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 14 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -52,7 +52,7 @@ public class CardComboAceTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 14 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 14 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -80,7 +80,7 @@ public class CardComboAceTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 14, 14 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 14, 14 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -106,7 +106,7 @@ public class CardComboAceTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 14, 14, 14 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 14, 14, 14 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -132,7 +132,7 @@ public class CardComboAceTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 14, 14, 14, 6, 14 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 14, 14, 14, 6, 14 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 

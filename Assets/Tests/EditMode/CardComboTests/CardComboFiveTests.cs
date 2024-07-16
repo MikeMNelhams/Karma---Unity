@@ -41,17 +41,17 @@ public class CardComboFiveTests
         Player player1 = board.Players[1];
         Player player2 = board.Players[2];
 
-        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), player0.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 6, 7 }, CardSuit.Hearts), player1.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.Hearts), player2.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player0.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 6, 7 }, CardSuit.DebugDefault), player1.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), player2.Hand);
 
-        Assert.AreEqual(new CardsList(new List<int>() { 9 }, CardSuit.Hearts), player0.KarmaUp);
-        Assert.AreEqual(new CardsList(new List<int>() { 10 }, CardSuit.Hearts), player1.KarmaUp);
-        Assert.AreEqual(new CardsList(new List<int>() { 11 }, CardSuit.Hearts), player2.KarmaUp);
+        Assert.AreEqual(new CardsList(new List<int>() { 9 }, CardSuit.DebugDefault), player0.KarmaUp);
+        Assert.AreEqual(new CardsList(new List<int>() { 10 }, CardSuit.DebugDefault), player1.KarmaUp);
+        Assert.AreEqual(new CardsList(new List<int>() { 11 }, CardSuit.DebugDefault), player2.KarmaUp);
 
-        Assert.AreEqual(new CardsList(new List<int>() { 12 }, CardSuit.Hearts), player0.KarmaDown);
-        Assert.AreEqual(new CardsList(new List<int>() { 13 }, CardSuit.Hearts), player1.KarmaDown);
-        Assert.AreEqual(new CardsList(new List<int>() { 14 }, CardSuit.Hearts), player2.KarmaDown);
+        Assert.AreEqual(new CardsList(new List<int>() { 12 }, CardSuit.DebugDefault), player0.KarmaDown);
+        Assert.AreEqual(new CardsList(new List<int>() { 13 }, CardSuit.DebugDefault), player1.KarmaDown);
+        Assert.AreEqual(new CardsList(new List<int>() { 14 }, CardSuit.DebugDefault), player2.KarmaDown);
     }
 
     [Test]
@@ -87,9 +87,9 @@ public class CardComboFiveTests
 
         UnityEngine.Debug.Log(player1.Hand);
 
-        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.Hearts), player0.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), player1.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 7 }, CardSuit.Hearts), player2.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), player0.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player1.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 7 }, CardSuit.DebugDefault), player2.Hand);
     }
 
     [Test]
@@ -125,9 +125,9 @@ public class CardComboFiveTests
 
         UnityEngine.Debug.Log(player1.Hand);
 
-        Assert.AreEqual(new Hand(new List<int>() { 7 }, CardSuit.Hearts), player0.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.Hearts), player1.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), player2.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 7 }, CardSuit.DebugDefault), player0.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), player1.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player2.Hand);
     }
 
     [Test]
@@ -163,8 +163,8 @@ public class CardComboFiveTests
 
         UnityEngine.Debug.Log(player1.Hand);
 
-        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), player0.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 6, 7, 15 }, CardSuit.Hearts), player1.Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.Hearts), player2.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player0.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 6, 7, 15 }, CardSuit.DebugDefault), player1.Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), player2.Hand);
     }
 }

@@ -24,7 +24,7 @@ public class CardComboKingTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 13 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -36,7 +36,7 @@ public class CardComboKingTests
         Assert.AreEqual(0, board.DrawPile.Count);
         Assert.AreEqual(0, board.BurnPile.Count);
         Assert.AreEqual(1, board.PlayPile.Count);
-        Assert.AreEqual(new Card(CardSuit.Hearts, CardValue.KING), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.KING), board.PlayPile[0]);
     }
 
     [Test]
@@ -57,7 +57,7 @@ public class CardComboKingTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 13 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
         
@@ -69,7 +69,7 @@ public class CardComboKingTests
         Assert.AreEqual(1, board.BurnPile.Count);
         Assert.AreEqual(2, board.PlayPile.Count);
 
-        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 2 }, CardSuit.Hearts);
+        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 2 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);  // It should play the two ONLY
@@ -93,7 +93,7 @@ public class CardComboKingTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 13 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -105,7 +105,7 @@ public class CardComboKingTests
         Assert.AreEqual(0, board.BurnPile.Count);
         Assert.AreEqual(3, board.PlayPile.Count);
 
-        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 11, 2 }, CardSuit.Hearts);
+        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 11, 2 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
@@ -129,7 +129,7 @@ public class CardComboKingTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 13 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -137,7 +137,7 @@ public class CardComboKingTests
         Assert.AreEqual(4, board.BurnPile.Count);
         Assert.AreEqual(0, board.PlayPile.Count);
 
-        PlayCardPile expectedPlayPile = new(new List<int>() { }, CardSuit.Hearts);
+        PlayCardPile expectedPlayPile = new(new List<int>() { }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
     }
 
@@ -159,7 +159,7 @@ public class CardComboKingTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 13, 13, 6, 13 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 13, 13, 6, 13 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -167,7 +167,7 @@ public class CardComboKingTests
         Assert.AreEqual(0, board.BurnPile.Count);
         Assert.AreEqual(6, board.PlayPile.Count);
         
-        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 13, 6, 13, 13, 13 }, CardSuit.Hearts);
+        PlayCardPile expectedPlayPile = new(new List<int>() { 13, 13, 6, 13, 13, 13 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
     }
 }

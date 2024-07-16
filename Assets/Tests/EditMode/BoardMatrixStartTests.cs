@@ -69,9 +69,9 @@ public class BoardMatrixStartTests
         Assert.AreEqual(PlayingFrom.KarmaUp, board.Players[1].PlayingFrom);
         Assert.AreEqual(PlayingFrom.KarmaDown, board.Players[2].PlayingFrom);
 
-        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.Hearts), board.Players[0].Hand);
-        Assert.AreEqual(new Hand(new List<int>() { 5, 6, 7 }, CardSuit.Hearts), board.Players[1].KarmaUp);
-        Assert.AreEqual(new Hand(new List<int>() { 8, 9, 10 }, CardSuit.Hearts), board.Players[2].KarmaDown);
+        Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), board.Players[0].Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 5, 6, 7 }, CardSuit.DebugDefault), board.Players[1].KarmaUp);
+        Assert.AreEqual(new Hand(new List<int>() { 8, 9, 10 }, CardSuit.DebugDefault), board.Players[2].KarmaDown);
 
         Assert.AreEqual(0, board.Players[0].KarmaUp.Count);
         Assert.AreEqual(0, board.Players[0].KarmaDown.Count);
@@ -113,21 +113,21 @@ public class BoardMatrixStartTests
         Assert.AreEqual(PlayingFrom.KarmaUp, board.Players[2].PlayingFrom);
         Assert.AreEqual(PlayingFrom.Hand, board.Players[3].PlayingFrom);
 
-        Assert.AreEqual(new Hand(new List<int>() { 2 }, CardSuit.Hearts), board.Players[0].Hand);
-        Assert.AreEqual(new CardsList(new List<int>() { 3, 3 }, CardSuit.Hearts), board.Players[0].KarmaUp);
+        Assert.AreEqual(new Hand(new List<int>() { 2 }, CardSuit.DebugDefault), board.Players[0].Hand);
+        Assert.AreEqual(new CardsList(new List<int>() { 3, 3 }, CardSuit.DebugDefault), board.Players[0].KarmaUp);
         Assert.AreEqual(0, board.Players[0].KarmaDown.Count);
 
-        Assert.AreEqual(new Hand(new List<int>() { 4, 4, 4 }, CardSuit.Hearts), board.Players[1].Hand);
+        Assert.AreEqual(new Hand(new List<int>() { 4, 4, 4 }, CardSuit.DebugDefault), board.Players[1].Hand);
         Assert.AreEqual(0, board.Players[1].KarmaUp.Count);
-        Assert.AreEqual(new CardsList(new List<int>() { 5, 5, 5 }, CardSuit.Hearts), board.Players[1].KarmaDown);
+        Assert.AreEqual(new CardsList(new List<int>() { 5, 5, 5 }, CardSuit.DebugDefault), board.Players[1].KarmaDown);
 
         Assert.AreEqual(0, board.Players[2].Hand.Count);
-        Assert.AreEqual(new CardsList(new List<int>() { 6, 6, 6 }, CardSuit.Hearts), board.Players[2].KarmaUp);
-        Assert.AreEqual(new CardsList(new List<int>() { 7, 7, 7 }, CardSuit.Hearts), board.Players[2].KarmaDown);
+        Assert.AreEqual(new CardsList(new List<int>() { 6, 6, 6 }, CardSuit.DebugDefault), board.Players[2].KarmaUp);
+        Assert.AreEqual(new CardsList(new List<int>() { 7, 7, 7 }, CardSuit.DebugDefault), board.Players[2].KarmaDown);
 
-        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.Hearts), board.Players[3].Hand);
-        Assert.AreEqual(new CardsList(new List<int>() { 9, 9, 9 }, CardSuit.Hearts), board.Players[3].KarmaUp);
-        Assert.AreEqual(new CardsList(new List<int>() { 10, 10, 10 }, CardSuit.Hearts), board.Players[3].KarmaDown);
+        Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), board.Players[3].Hand);
+        Assert.AreEqual(new CardsList(new List<int>() { 9, 9, 9 }, CardSuit.DebugDefault), board.Players[3].KarmaUp);
+        Assert.AreEqual(new CardsList(new List<int>() { 10, 10, 10 }, CardSuit.DebugDefault), board.Players[3].KarmaDown);
     }
 
     [Test]
@@ -144,11 +144,11 @@ public class BoardMatrixStartTests
         List<int> burnCardValues = new() { 15, 15, 15};
 
         BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
-        Assert.AreEqual(new CardPile(new List<int>() { 2, 3, 4, 5, 6, 7, 8, 9, 10 }, CardSuit.Hearts), board.DrawPile);
+        Assert.AreEqual(new CardPile(new List<int>() { 2, 3, 4, 5, 6, 7, 8, 9, 10 }, CardSuit.DebugDefault), board.DrawPile);
 
-        Assert.AreEqual(new PlayCardPile(new List<int>() { 11, 12, 13, 14 }, CardSuit.Hearts), board.PlayPile);
+        Assert.AreEqual(new PlayCardPile(new List<int>() { 11, 12, 13, 14 }, CardSuit.DebugDefault), board.PlayPile);
 
-        Assert.AreEqual(new CardPile(new List<int>() { 15, 15, 15 }, CardSuit.Hearts), board.BurnPile);
+        Assert.AreEqual(new CardPile(new List<int>() { 15, 15, 15 }, CardSuit.DebugDefault), board.BurnPile);
 
         Assert.AreEqual(2, board.Players.Count);
     }

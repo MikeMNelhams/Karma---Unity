@@ -24,7 +24,7 @@ public class CardComboEightTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 8 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8 }, CardSuit.DebugDefault);
 
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
 
@@ -55,7 +55,7 @@ public class CardComboEightTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 8, 8 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8, 8 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -80,7 +80,7 @@ public class CardComboEightTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 8, 8, 8 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
@@ -105,7 +105,7 @@ public class CardComboEightTests
 
         PlayerController testController = new();
 
-        CardsList cards = new(new List<int>() { 8, 8, 8, 6, 6 }, CardSuit.Hearts);
+        CardsList cards = new(new List<int>() { 8, 8, 8, 6, 6 }, CardSuit.DebugDefault);
 
         board.PlayCards(cards, testController);
 
