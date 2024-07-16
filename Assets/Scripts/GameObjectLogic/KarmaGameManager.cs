@@ -329,11 +329,11 @@ public class KarmaGameManager : MonoBehaviour
     {
         UpdateGameRanks();
         int numberOfPotentialWinners = board.PotentialWinnerIndices.Count;
-        if (numberOfPotentialWinners == 1 && board.NumberOfJokersInPlay == 0)
+        if (numberOfPotentialWinners == 1 && board.CardValuesInPlayCounts[CardValue.JOKER] == 0)
         {
             throw new GameWonException(GameRanks);
         }
-        if (numberOfPotentialWinners >= 2 && board.NumberOfJokersInPlay == 0)
+        if (numberOfPotentialWinners >= 2 && board.CardValuesInPlayCounts[CardValue.JOKER] == 0)
         {
             throw new GameWonException(GameRanks);
         }
@@ -355,7 +355,7 @@ public class KarmaGameManager : MonoBehaviour
         for (int i = 0; i < Board.Players.Count; i++)
         {
             Player player = Board.Players[i];
-            int jokerCount = player.NumberOfJokers;
+            int jokerCount = player.CountValue(CardValue.JOKER);
             if (jokerCount > 0)
             {
                 jokerCounts[i] = jokerCount;

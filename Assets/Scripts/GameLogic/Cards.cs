@@ -93,6 +93,16 @@ namespace Karma
 
             public int Count => _cards.Count;
 
+            public DictionaryDefaultInt<CardValue> CountAllCardValues()
+            {
+                DictionaryDefaultInt<CardValue> counts = new();
+                foreach (Card card in _cards)
+                {
+                    counts.Add(card.value, 1);
+                }
+                return counts;
+            }
+
             public virtual void Add(Card item)
             {
                 _cards.Add(item);

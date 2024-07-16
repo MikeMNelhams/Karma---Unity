@@ -181,8 +181,7 @@ namespace Karma
                 CardsList cardsToPlay = board.BurnPile.RemoveFromBottom(numberOfRepeats);
                 foreach (Card card in cardsToPlay)
                 {
-                    if (card.value == CardValue.JOKER) { board.NumberOfJokersInPlay++; }
-                    if (card.value == CardValue.ACE) { board.NumberOfAcesInPlay++; }
+                    board.CardValuesInPlayCounts[card.value]++;
                     board.PlayCards(new CardsList(card), Controller);
                 }
             }

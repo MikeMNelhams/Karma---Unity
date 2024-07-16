@@ -1,6 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using DataStructures;
 using Karma.Cards;
 
 namespace Karma
@@ -111,25 +110,32 @@ namespace Karma
                 Hand.Shuffle();
             }
 
-            public int NumberOfJokers 
+            public DictionaryDefaultInt<CardValue> CountAllCardValues() {
+                DictionaryDefaultInt<CardValue> counts = new();
+
+                counts.UnionInPlace(Hand.CountAllCardValues());
+                counts.UnionInPlace(KarmaUp.CountAllCardValues());
+                counts.UnionInPlace(KarmaDown.CountAllCardValues());
+
+                return counts;
+            }
+
+            public int CountValue(CardValue cardValue)
             { 
-                get 
+                int total = 0;
+                if (Hand.Count > 0)
                 {
-                    int total = 0;
-                    if (Hand.Count > 0)
-                    {
-                        total += Hand.CountValue(CardValue.JOKER);
-                    }
-                    if (KarmaUp.Count > 0)
-                    {
-                        total += KarmaUp.CountValue(CardValue.JOKER);
-                    }
-                    if (KarmaDown.Count > 0)
-                    {
-                        total += KarmaDown.CountValue(CardValue.JOKER);
-                    }
-                    return total;
-                } 
+                    total += Hand.CountValue(cardValue);
+                }
+                if (KarmaUp.Count > 0)
+                {
+                    total += KarmaUp.CountValue(cardValue);
+                }
+                if (KarmaDown.Count > 0)
+                {
+                    total += KarmaDown.CountValue(cardValue);
+                }
+                return total;
             }
         }
 

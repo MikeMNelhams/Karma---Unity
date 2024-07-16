@@ -29,8 +29,8 @@ namespace Karma
             public int EffectMultiplier { get; set; } 
             public int CurrentPlayerIndex { get; set; }
             public Player CurrentPlayer { get => Players[CurrentPlayerIndex]; }
-            public int NumberOfJokersInPlay { get; set; }
-            public int NumberOfAcesInPlay { get; set; }
+            public DictionaryDefaultInt<CardValue> CardValuesInPlayCounts { get; protected set; }
+            public DictionaryDefaultInt<CardValue> CardValuesTotalCounts { get; protected set; }
             public bool HasBurnedThisTurn { get; protected set; }
             public int TurnsPlayed { get; protected set; }
             public int NumberOfCardsDrawnThisTurn { get; protected set; } 
@@ -88,8 +88,9 @@ namespace Karma
                 HasBurnedThisTurn = hasBurnedThisTurn;
                 TurnsPlayed = turnsPlayed;
                 NumberOfCardsDrawnThisTurn = 0;
-                NumberOfJokersInPlay = playPile.CountValue(CardValue.JOKER);
-                NumberOfAcesInPlay = playPile.CountValue(CardValue.ACE);
+
+                CardValuesInPlayCounts = CountCardValuesInPlay();
+                CardValuesTotalCounts = CountCardValuesTotal(CardValuesInPlayCounts);
                 StartingPlayerStartedPlayingFrom = Players[whoStarts].PlayingFrom;
 
                 ComboHistory = new List<CardCombo>();
@@ -98,6 +99,28 @@ namespace Karma
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
+            }
+
+            DictionaryDefaultInt<CardValue> CountCardValuesInPlay()
+            {
+                DictionaryDefaultInt<CardValue> counts = new();
+                foreach (Player player in Players)
+                {
+                    counts.UnionInPlace(player.CountAllCardValues());
+                }
+
+                counts.UnionInPlace(DrawPile.CountAllCardValues());
+                counts.UnionInPlace(PlayPile.CountAllCardValues());
+
+                return counts;
+            }
+
+            DictionaryDefaultInt<CardValue> CountCardValuesTotal(DictionaryDefaultInt<CardValue> cardValuesInPlayCounts)
+            {
+                DictionaryDefaultInt<CardValue> counts = new();
+                counts.UnionInPlace(cardValuesInPlayCounts);
+                counts.UnionInPlace(BurnPile.CountAllCardValues());
+                return counts;
             }
 
             public void FlipTurnOrder()
@@ -232,12 +255,15 @@ namespace Karma
                     }
 
                     CardsList cardsToBurn = PlayPile.PopMultiple(indicesToBurn.ToArray());
-                    NumberOfJokersInPlay -= cardsToBurn.CountValue(CardValue.JOKER);
+                    CardValuesInPlayCounts[CardValue.JOKER] -= cardsToBurn.CountValue(CardValue.JOKER);
                     BurnPile.Add(cardsToBurn);
                     BoardEventSystem.TriggerBurnEvents(jokerCount);
                     return;
                 }
                 BurnPile.Add(PlayPile);
+                UnityEngine.Debug.Log(PlayPile.CountAllCardValues());
+                CardValuesInPlayCounts.SubtractInPlace(PlayPile.CountAllCardValues());
+
                 PlayPile.Clear();
                 BoardEventSystem.TriggerBurnEvents(jokerCount);
                 return;

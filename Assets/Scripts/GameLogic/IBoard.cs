@@ -80,15 +80,17 @@ namespace Karma
             public bool HandsAreFlipped { get; set; }
             public int EffectMultiplier { get; set; }
             public int CurrentPlayerIndex { get; set; }
-            public int NumberOfJokersInPlay { get; set; }
-            public int NumberOfAcesInPlay { get; set; }
+
+            public DictionaryDefaultInt<CardValue> CardValuesInPlayCounts { get; }
+            public DictionaryDefaultInt<CardValue> CardValuesTotalCounts { get; }
+
             public bool HasBurnedThisTurn { get; }
             public int TurnsPlayed { get; }
             public int NumberOfCardsDrawnThisTurn { get; }
             public PlayingFrom StartingPlayerStartedPlayingFrom {get;}
             public HashSet<FrozenMultiSet<CardValue>> CurrentLegalCombos { get; }
             public HashSet<BoardPlayerAction> CurrentLegalActions { get; }
-            public int TotalJokers { get; }
+            
             public HashSet<int> PotentialWinnerIndices { get; }
             public int NumberOfCombosPlayedThisTurn { get; }
             public int PlayerIndexWhoStartedTurn { get; }
