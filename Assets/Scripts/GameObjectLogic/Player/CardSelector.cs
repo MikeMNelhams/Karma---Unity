@@ -45,6 +45,7 @@ public class CardSelector
     public void Remove(CardObject cardObject)
     {
         Card card = cardObject.CurrentCard;
+        if (!CardObjects.Contains(cardObject)) { return; }
         CardObjects.Remove(cardObject);
         cardObject.DisableSelectShader();
         _selection.Remove(card); 

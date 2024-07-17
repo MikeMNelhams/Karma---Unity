@@ -373,7 +373,7 @@ public class PlayerProperties : BasePlayerProperties
     public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)
     {
         CardSelector.Remove(cardObject);
-        cardObject.OnCardClick -= CardSelector.Toggle;
+        cardObject.OnCardClick -= CardObjectOnMouseDownEvent;
     }
 
     public void ShuffleHand()
@@ -393,9 +393,7 @@ public class PlayerProperties : BasePlayerProperties
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.RemoveCardObjectOnMouseDownEvent(giverPlayerProperties.PickedUpCard);
-        UnityEngine.Debug.Log("Before removing: " + giverPlayerProperties.PickedUpCard + ": " + giverPlayerProperties.SelectableCardObjects);
         giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
-        UnityEngine.Debug.Log("After removing: " + giverPlayerProperties.PickedUpCard + ": " + giverPlayerProperties.SelectableCardObjects);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.PopulateHand();
     }
@@ -484,8 +482,7 @@ public class PlayerProperties : BasePlayerProperties
     {
         get
         {
-            RaycastHit firstHit;
-            Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out firstHit, _rayCastDistanceCutoff, _layerAsLayerMask);
+            Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit firstHit, _rayCastDistanceCutoff, _layerAsLayerMask);
 
             if (firstHit.transform == null) { return null; }
             if (firstHit.transform.parent == null) { return null; }

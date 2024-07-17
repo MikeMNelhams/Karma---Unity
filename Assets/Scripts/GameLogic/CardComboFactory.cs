@@ -5,7 +5,6 @@ using Karma.Cards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using DataStructures;
 
 
@@ -130,7 +129,7 @@ namespace Karma
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
                 if (cardBelowCombo.Value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
                 if (cardBelowCombo.Value != CardValue.THREE && cardBelowCombo.Value != CardValue.JACK) { board.EffectMultiplier = 1; }
-                Debug.Log("Card to replay:" + cardBelowCombo  + " " + numberOfRepeats + " many times");
+                
                 CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
                 board.PlayCards(cardsToReplay, Controller, false);
             }

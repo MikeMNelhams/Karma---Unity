@@ -56,21 +56,21 @@ public class KarmaGameManager : MonoBehaviour
 
     void Start()
     {
-        //List<List<List<int>>> playerCardValues = new()
-        //{
-        //    new() { new() { 11, 12, 12 }, new() { 7, 2, 14 }, new() { 10, 5, 7 } },
-        //    new() { new() { 3, 10, 11 }, new() { 14, 6, 13 }, new() { 3, 14, 4 } },
-        //    new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-        //    new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
-        //};
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { 2, 5, 5 }, new() { 7, 2, 14 }, new() { 10, 5, 7 } },
+            new() { new() { 3, 10, 11 }, new() { 14, 6, 13 }, new() { 3, 14, 4 } },
+            new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+            new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+        };
 
-        //List<int> drawCardValues = new() { 8, 9, 2, 3, 13, 6, 3, 5, 14, 6, 8, 7, 9, 8, 11, 4, 12 };
-        //List<int> playCardValues = new() { };
-        //List<int> burnCardValues = new() { };
+        List<int> drawCardValues = new() { 3, 4, 6, 7, 8 };
+        List<int> playCardValues = new() { };
+        List<int> burnCardValues = new() { };
 
-        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        int numberOfPlayers = _playersStartInfo.Length;
-        Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
+        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        //int numberOfPlayers = _playersStartInfo.Length;
+        //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
         RegisterBoardEvents();
         CreatePlayers(_playersStartInfo);
@@ -230,9 +230,17 @@ public class KarmaGameManager : MonoBehaviour
     void RotateHandsAnimation(int numberOfRotations, IBoard board)
     {
         List<ListWithConstantContainsCheck<CardObject>> beginHands = new();
+
         for (int i = 0; i < board.Players.Count; i++)
         {
-            beginHands.Add(PlayersProperties[i].CardsInHand);
+            PlayerProperties playerProperties = PlayersProperties[i];
+            ListWithConstantContainsCheck<CardObject> hand = playerProperties.CardsInHand;
+            foreach (CardObject cardObject in hand)
+            {
+                playerProperties.RemoveCardObjectOnMouseDownEvent(cardObject);
+            }
+
+            beginHands.Add(hand);
         }
 
         Deque<ListWithConstantContainsCheck<CardObject>> hands = new (beginHands);
@@ -241,7 +249,13 @@ public class KarmaGameManager : MonoBehaviour
         
         for (int i = 0; i < board.Players.Count; i++)
         {
-            PlayersProperties[i].PopulateHand(hands[i]);
+            ListWithConstantContainsCheck<CardObject> hand = hands[i];
+            PlayerProperties playerProperties = PlayersProperties[i];
+            foreach (CardObject cardObject in hand)
+            {
+                playerProperties.SetCardObjectOnMouseDownEvent(cardObject);
+            }
+            PlayersProperties[i].PopulateHand(hand);
         }
     }
 

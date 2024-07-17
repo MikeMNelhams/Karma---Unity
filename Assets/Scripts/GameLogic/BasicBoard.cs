@@ -72,7 +72,7 @@ namespace Karma
                 bool hasBurnedThisTurn = false, int turnsPlayed = 0, IBoardPrinter boardPrinter = null)
             {
                 SetInitParams(players, drawPile, burnPile, playPile, turnOrder, playOrder, handsAreFlipped, 
-                    effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed, null);
+                    effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed, boardPrinter);
             }
 
             private void SetInitParams(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
@@ -270,7 +270,7 @@ namespace Karma
                     return;
                 }
                 BurnPile.Add(PlayPile);
-                UnityEngine.Debug.Log(PlayPile.CountAllCardValues());
+                
                 CardValuesInPlayCounts.SubtractInPlace(PlayPile.CountAllCardValues());
 
                 PlayPile.Clear();
