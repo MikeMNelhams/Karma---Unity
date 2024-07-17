@@ -58,7 +58,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 2, 5, 5 }, new() { 7, 2, 14 }, new() { 10, 5, 7 } },
+            new() { new() { 2, 5, 12 }, new() { 7, 2, 14 }, new() { 10, 5, 7 } },
             new() { new() { 3, 10, 11 }, new() { 14, 6, 13 }, new() { 3, 14, 4 } },
             new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
             new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
@@ -254,6 +254,7 @@ public class KarmaGameManager : MonoBehaviour
             foreach (CardObject cardObject in hand)
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(cardObject);
+                cardObject.transform.SetParent(playerProperties.cardHolder.transform);
             }
             PlayersProperties[i].PopulateHand(hand);
         }

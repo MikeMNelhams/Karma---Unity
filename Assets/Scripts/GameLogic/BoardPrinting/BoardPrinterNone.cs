@@ -4,15 +4,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardPrinterNone : IBoardPrinter
+namespace Karma
 {
-    public void PrintBoard(IBoard board)
+    namespace Board
     {
-        
-    }
+        namespace BoardPrinters
+        {
+            public class BoardPrinterNone : IBoardPrinter
+            {
+                public void PrintBoard(IBoard board)
+                {
 
-    public void PrintChoosableCards(IBoard board)
-    {
-        
+                }
+
+                public void PrintChoosableCards(IBoard board)
+                {
+
+                }
+            }
+        }
     }
 }
