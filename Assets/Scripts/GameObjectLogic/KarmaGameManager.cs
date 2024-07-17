@@ -56,21 +56,21 @@ public class KarmaGameManager : MonoBehaviour
 
     void Start()
     {
-        //List<List<List<int>>> playerCardValues = new()
-        //{
-        //    new() { new() { 2, 2 }, new() { 3 }, new() { 4 } },
-        //    new() { new() { 14 }, new() { 3 }, new() { 4 } },
-        //    new() { new() { 15, 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
-        //    new() { new() { 10 }, new() { 3 }, new() { 4 } }
-        //};
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { 12, 12 }, new() { 3 }, new() { 4 } },
+            new() { new() { 14 }, new() { 3 }, new() { 4 } },
+            new() { new() { 15, 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
+            new() { new() { 10 }, new() { 3 }, new() { 4 } }
+        };
 
-        //List<int> drawCardValues = new() { };
-        //List<int> playCardValues = new() { 2, 3, 4, 5 };
-        //List<int> burnCardValues = new() { 15 };
+        List<int> drawCardValues = new() { 6, 7, 8, 9, 10};
+        List<int> playCardValues = new() { 2, 3, 4, 5 };
+        List<int> burnCardValues = new() { 15 };
 
-        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        int numberOfPlayers = _playersStartInfo.Length;
-        Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
+        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        //int numberOfPlayers = _playersStartInfo.Length;
+        //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
         RegisterBoardEvents();
         CreatePlayers(_playersStartInfo);
@@ -301,16 +301,13 @@ public class KarmaGameManager : MonoBehaviour
     {
         Dictionary<Card, List<int>> cardPositions = new();
         int n = Board.Players[playerIndex].Hand.Count;
-        string handBoardMessage = "Hand (Board): ";
         for (int i = 0; i < n; i++)
         {
             Card card = Board.Players[playerIndex].Hand[i];
             if (!cardPositions.ContainsKey(card)) { cardPositions[card] = new List<int>(); }
             cardPositions[card].Add(i);
-            handBoardMessage += card + " ";
         }
 
-        print(handBoardMessage);
         return cardPositions;
     }
 

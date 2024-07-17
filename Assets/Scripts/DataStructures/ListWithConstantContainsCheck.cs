@@ -108,7 +108,7 @@ namespace DataStructures
             for (int i = index; i < _orderedValues.Count; i++)
             {
                 T item2 = _orderedValues[i];
-                _valueIndices[item2] = index - 1;
+                _valueIndices[item2] -= 1;
             }
 
             return _valueIndices.Remove(item);
@@ -172,12 +172,17 @@ namespace DataStructures
 
         public override string ToString()
         {
-            string message = "ListWCCC[ ";
+            string message = "ListWCCC O[ ";
             foreach (T item in _orderedValues)
             {
-                message += item.ToString() + ", ";
+                message += item + ", ";
             }
 
+            message += "]\nD[";
+            foreach (var kvp in _valueIndices)
+            {
+                message += "(" + kvp.Key + ", " + kvp.Value + ", ";
+            }
             return message + "]";
         }
     }

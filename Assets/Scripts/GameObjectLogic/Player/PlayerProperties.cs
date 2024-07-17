@@ -393,7 +393,9 @@ public class PlayerProperties : BasePlayerProperties
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.RemoveCardObjectOnMouseDownEvent(giverPlayerProperties.PickedUpCard);
+        //UnityEngine.Debug.Log("Before removing: " + giverPlayerProperties.PickedUpCard + ": " + giverPlayerProperties.SelectableCardObjects);
         giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
+        //UnityEngine.Debug.Log("After removing: " + giverPlayerProperties.PickedUpCard + ": " + giverPlayerProperties.SelectableCardObjects);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.PopulateHand();
     }
