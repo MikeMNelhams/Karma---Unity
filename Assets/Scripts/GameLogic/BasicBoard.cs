@@ -300,7 +300,6 @@ namespace Karma
                 if (DrawPile.Count == 0) { return new CardsList(); }
 
                 Player player = Players[playerIndex];
-
                 if (player.Hand.Count >= 3) { return new CardsList(); }
                 int handStartSize = player.Hand.Count;
                 CardsList cardsDrawn = new ();
@@ -380,18 +379,18 @@ namespace Karma
                 }
 
                 Card topCard = PlayPile.VisibleTopCard as Card;
-                CardsList validCards = CardComboCalculator.PlayableCards(PlayOrder, cards, topCard.value);
+                CardsList validCards = CardComboCalculator.PlayableCards(PlayOrder, cards, topCard.Value);
 
-                if (topCard.value == CardValue.ACE)
+                if (topCard.Value == CardValue.ACE)
                 {
-                    if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.value))
+                    if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.Value))
                     {
                         return CardComboCalculator.FillerNotExclusiveCombos(validCards, CardValue.SIX, 3);
                     }
                     return CardComboCalculator.FillerCombos(validCards, CardValue.SIX, 3);
                 }
 
-                if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.value))
+                if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.Value))
                 {
                     return CardComboCalculator.FillerFilterNotExclusiveCombos(validCards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
                 }

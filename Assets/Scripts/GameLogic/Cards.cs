@@ -98,7 +98,7 @@ namespace Karma
                 DictionaryDefaultInt<CardValue> counts = new();
                 foreach (Card card in _cards)
                 {
-                    counts.Add(card.value, 1);
+                    counts.Add(card.Value, 1);
                 }
                 return counts;
             }
@@ -162,9 +162,9 @@ namespace Karma
                 for (int i = 0; i < this._cards.Count; i++)
                 {
                     Card card = this._cards[i];
-                    if (cards.Contains(card.value) && cards[card.value] > 0)
+                    if (cards.Contains(card.Value) && cards[card.Value] > 0)
                     {
-                        cards.Remove(card.value);
+                        cards.Remove(card.Value);
                     }
                     else
                     {
@@ -244,7 +244,7 @@ namespace Karma
 
             public bool IsExclusively(CardValue cardValue)
             {
-                return _cards.All(card => card.value == cardValue);
+                return _cards.All(card => card.Value == cardValue);
             }
 
             public CardsList Get(List<int> indices)
@@ -262,7 +262,7 @@ namespace Karma
                 int total = 0;
                 foreach (Card card in _cards)
                 {
-                    if (card.value == targetValue)
+                    if (card.Value == targetValue)
                     {
                         total++;
                     }
@@ -281,7 +281,7 @@ namespace Karma
                     List<CardValue> cardValues = new();
                     foreach (Card card in _cards)
                     {
-                        cardValues.Add(card.value);
+                        cardValues.Add(card.Value);
                     }
                     return cardValues;
                 }

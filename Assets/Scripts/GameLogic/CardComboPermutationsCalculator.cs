@@ -21,7 +21,7 @@ namespace Karma
                 List<List<CardValue>> outputComboValues = new();
                 foreach (Card card in cards)
                 {
-                    CardValue key = card.value;
+                    CardValue key = card.Value;
                     if (!count.ContainsKey(key)) { count[key] = 1; }
                     else { count[key]++; }
 
@@ -55,7 +55,7 @@ namespace Karma
                 if (cards.Count == 0) { return output; }
                 if (cards.Count == 1)
                 {
-                    if (filter(cards[0].value)) { return output; }
+                    if (filter(cards[0].Value)) { return output; }
                     return SingleCardCombo(cards);
                 }
 
@@ -63,7 +63,7 @@ namespace Karma
                 List<List<CardValue>> outputComboValues = new();
                 foreach (Card card in cards)
                 {
-                    CardValue key = card.value;
+                    CardValue key = card.Value;
                     if (!count.ContainsKey(key)) { count[key] = 1; }
                     else { count[key]++; }
                     if (filter(key)) { continue; }
@@ -102,7 +102,7 @@ namespace Karma
                 List<List<CardValue>> outputComboValues = new();
                 foreach (Card card in cards)
                 {
-                    CardValue key = card.value;
+                    CardValue key = card.Value;
                     if (!count.ContainsKey(key)) { count[key] = 1; }
                     else { count[key]++; }
                     List<CardValue> comboValues = Enumerable.Repeat(key, count[key]).ToList<CardValue>();
@@ -134,7 +134,7 @@ namespace Karma
                 if (cards.Count == 0) { return output; }
                 if (cards.Count == 1)
                 {
-                    if (filter(cards[0].value)) { return output; }
+                    if (filter(cards[0].Value)) { return output; }
                     return SingleCardCombo(cards);
                 }
 
@@ -142,7 +142,7 @@ namespace Karma
                 List<List<CardValue>> outputComboValues = new();
                 foreach (Card card in cards)
                 {
-                    CardValue key = card.value;
+                    CardValue key = card.Value;
                     if (!count.ContainsKey(key)) { count[key] = 1; }
                     else { count[key]++; }
                     if (filter(key)) { continue; }
@@ -172,7 +172,7 @@ namespace Karma
 
             public static HashSet<FrozenMultiSet<CardValue>> SingleCardCombo(CardsList cards)
             {
-                FrozenMultiSet<CardValue> combo = new() { cards[0].value };
+                FrozenMultiSet<CardValue> combo = new() { cards[0].Value };
                 HashSet<FrozenMultiSet<CardValue>> output = new() { combo };
                 return output;
             }
@@ -220,7 +220,7 @@ namespace Karma
                 CardsList playableCards = new();
                 foreach (Card card in cards)
                 {
-                    if (card.value == CardValue.JOKER || IsPotentiallyPlayable(playOrder, card.value, topValue)) {  playableCards.Add(card); }
+                    if (card.Value == CardValue.JOKER || IsPotentiallyPlayable(playOrder, card.Value, topValue)) {  playableCards.Add(card); }
                 }
                 return playableCards;
             }

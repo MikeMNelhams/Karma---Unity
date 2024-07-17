@@ -5,17 +5,17 @@ using System.Linq;
 
 namespace DataStructures 
 {
-    public class SortedMultiSet<T> : IEnumerable<T>
+    public class MultiSet<T> : IEnumerable<T>
     {
-        protected SortedDictionary<T, int> _dict;
+        protected Dictionary<T, int> _dict;
         public int this[T key] {get => _dict[key]; }
 
-        public SortedMultiSet()
+        public MultiSet()
         {
-            _dict = new SortedDictionary<T, int>();
+            _dict = new Dictionary<T, int>();
         }
 
-        public SortedMultiSet(IEnumerable<T> items) : this()
+        public MultiSet(IEnumerable<T> items) : this()
         {
             Add(items);
         }
@@ -27,7 +27,7 @@ namespace DataStructures
 
         public void Add(T item)
         {
-            if (_dict.ContainsKey(item)) { _dict[item]++; }
+            if (Contains(item)) { _dict[item]++; }
             else { _dict[item] = 1; }   
         }
 
@@ -72,7 +72,7 @@ namespace DataStructures
         }
     }
 
-    public class FrozenMultiSet<T> : SortedMultiSet<T>, IEquatable<FrozenMultiSet<T>>
+    public class FrozenMultiSet<T> : MultiSet<T>, IEquatable<FrozenMultiSet<T>>
     {
         public FrozenMultiSet() : base() { }
         public FrozenMultiSet(IEnumerable<T> items) : base(items) { }

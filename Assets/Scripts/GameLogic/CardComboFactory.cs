@@ -126,10 +126,10 @@ namespace Karma
                 if (board.PlayPile.Count <= Cards.Count) { return; }
                 
                 Card cardBelowCombo = board.PlayPile[^(1 + Cards.Count)];
-                if (cardBelowCombo.value == CardValue.JACK) { return; }
+                if (cardBelowCombo.Value == CardValue.JACK) { return; }
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-                if (cardBelowCombo.value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
-                if (cardBelowCombo.value != CardValue.THREE && cardBelowCombo.value != CardValue.JACK) { board.EffectMultiplier = 1; }
+                if (cardBelowCombo.Value == CardValue.THREE) { numberOfRepeats = Cards.Count; }
+                if (cardBelowCombo.Value != CardValue.THREE && cardBelowCombo.Value != CardValue.JACK) { board.EffectMultiplier = 1; }
                 Debug.Log("Card to replay:" + cardBelowCombo  + " " + numberOfRepeats + " many times");
                 CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
                 board.PlayCards(cardsToReplay, Controller, false);
@@ -181,7 +181,7 @@ namespace Karma
                 CardsList cardsToPlay = board.BurnPile.RemoveFromBottom(numberOfRepeats);
                 foreach (Card card in cardsToPlay)
                 {
-                    board.CardValuesInPlayCounts[card.value]++;
+                    board.CardValuesInPlayCounts[card.Value]++;
                     board.PlayCards(new CardsList(card), Controller);
                 }
             }
@@ -276,23 +276,23 @@ namespace Karma
                 _cards = cards;
                 foreach (Card card in cards)
                 {
-                    if (!_counts.ContainsKey(card.value))
+                    if (!_counts.ContainsKey(card.Value))
                     {
-                        _counts[card.value] = 0;
+                        _counts[card.Value] = 0;
                     }
                     else
                     {
-                        _counts[card.value]++;
+                        _counts[card.Value]++;
                     }
                 }
             }
 
             public CardValue ComboCardValue()
             {
-                if (_counts.Count == 1) { return _cards[0].value; }
+                if (_counts.Count == 1) { return _cards[0].Value; }
                 else if (_counts.Count == 2)
                 {
-                    CardValue majorValue = _cards[0].value;
+                    CardValue majorValue = _cards[0].Value;
                     foreach (CardValue cardValue in _cards.CardValues)
                     {
                         if (cardValue != CardValue.SIX)
@@ -327,7 +327,7 @@ namespace Karma
                 }
                 if (cardValue == CardValue.JACK)
                 {
-                    bool visibility = !(board.PlayPile.Count > 0 && board.PlayPile[^1].value == CardValue.FOUR);
+                    bool visibility = !(board.PlayPile.Count > 0 && board.PlayPile[^1].Value == CardValue.FOUR);
                     return Enumerable.Repeat<bool>(visibility, _cards.Count).ToList<bool>();
                 }
                 return Enumerable.Repeat<bool>(true, _cards.Count).ToList<bool>();

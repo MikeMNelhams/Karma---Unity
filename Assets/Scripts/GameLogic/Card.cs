@@ -7,23 +7,23 @@ namespace Karma
     {
         public class Card : IEquatable<Card>, IComparable<Card>
         {
-            public readonly CardSuit suit;
-            public readonly CardValue value;
+            public CardSuit Suit { get; }
+            public CardValue Value { get; }
 
             public Card(CardSuit suit, CardValue value)
             {
-                this.suit = suit;
-                this.value = value;
+                Suit = suit;
+                Value = value;
             }
 
             public bool Equals(Card other)
             {
-                return suit == other.suit && value == other.value;
+                return Suit.Equals(other.Suit) && Value == other.Value;
             }
 
             public override bool Equals(object other)
             {
-                if (other is null) return false;
+                if (other is null) { return false; }
                 if (ReferenceEquals(this, other)) { return true; }
                 if (GetType() != other.GetType()) { return false; }
                 return Equals(other as Card);
@@ -38,24 +38,29 @@ namespace Karma
 
             public override int GetHashCode()
             {
-                return new { suit, value }.GetHashCode();
+                return new { Suit, Value }.GetHashCode();
             }
 
             public override string ToString()
             {
                 string valueString;
-                int valueInt = (int)value;
+                int valueInt = (int)Value;
                 if ((0 <= valueInt) && (valueInt <= 10)) { valueString = valueInt.ToString(); }
-                else { valueString = value.ToString()[0..2]; }
-                return valueString + suit.ToString();
+                else { valueString = Value.ToString()[0..2]; }
+                return valueString + Suit.ToString();
+            }
+
+            public Card Copy()
+            {
+                return new Card(Suit, Value);
             }
 
             public static bool operator ==(Card x, Card y) => x.Equals(y);
             public static bool operator !=(Card x, Card y) => !(x == y);
-            public static bool operator >(Card x, Card y) => x.value > y.value;
-            public static bool operator <(Card x, Card y) => x.value < y.value;
-            public static bool operator >=(Card x, Card y) => x.value >= y.value;
-            public static bool operator <=(Card x, Card y) => x.value <= y.value;
+            public static bool operator >(Card x, Card y) => x.Value > y.Value;
+            public static bool operator <(Card x, Card y) => x.Value < y.Value;
+            public static bool operator >=(Card x, Card y) => x.Value >= y.Value;
+            public static bool operator <=(Card x, Card y) => x.Value <= y.Value;
         }
 
         public class CardSuit : IEquatable<CardSuit>
@@ -67,27 +72,27 @@ namespace Karma
 
             public static readonly CardSuit DebugDefault = Hearts;
 
-            public readonly CardColor color;
-            public readonly String name;
-            readonly String shorthand;
+            public readonly CardColor _color;
+            public readonly string _name;
+            readonly string _shorthand;
 
-            public CardSuit(CardColor color, String name, String shorthand)
+            public CardSuit(CardColor color, string name, string shorthand)
             {
-                this.color = color;
-                this.name = name;
-                this.shorthand = shorthand;
+                _color = color;
+                _name = name;
+                _shorthand = shorthand;
             }
 
             public override string ToString()
             {
-                return shorthand;
+                return _shorthand;
             }
 
             public bool Equals(CardSuit other)
             {
-                if (other is null) return false;
+                if (other is null) { return false; }
                 if (ReferenceEquals(this, other)) { return true; }
-                return shorthand == other.shorthand;
+                return _shorthand == other._shorthand;
             }
         }
 

@@ -56,21 +56,21 @@ public class KarmaGameManager : MonoBehaviour
 
     void Start()
     {
-        List<List<List<int>>> playerCardValues = new()
-        {
-            new() { new() { 12, 12 }, new() { 3 }, new() { 4 } },
-            new() { new() { 14 }, new() { 3 }, new() { 4 } },
-            new() { new() { 15, 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
-            new() { new() { 10 }, new() { 3 }, new() { 4 } }
-        };
+        //List<List<List<int>>> playerCardValues = new()
+        //{
+        //    new() { new() { 11, 12, 12 }, new() { 7, 2, 14 }, new() { 10, 5, 7 } },
+        //    new() { new() { 3, 10, 11 }, new() { 14, 6, 13 }, new() { 3, 14, 4 } },
+        //    new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+        //    new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+        //};
 
-        List<int> drawCardValues = new() { 5, 6, 7, 8, 9, 10, 11};
-        List<int> playCardValues = new() { 2, 3, 4, 5 };
-        List<int> burnCardValues = new() { 15 };
+        //List<int> drawCardValues = new() { 8, 9, 2, 3, 13, 6, 3, 5, 14, 6, 8, 7, 9, 8, 11, 4, 12 };
+        //List<int> playCardValues = new() { };
+        //List<int> burnCardValues = new() { };
 
-        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        //int numberOfPlayers = _playersStartInfo.Length;
-        //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
+        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        int numberOfPlayers = _playersStartInfo.Length;
+        Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
         RegisterBoardEvents();
         CreatePlayers(_playersStartInfo);
@@ -566,13 +566,12 @@ public class KarmaGameManager : MonoBehaviour
         for (int i = 0; i < player.PlayableCards.Count; i++)
         {
             Card card = player.PlayableCards[i];
-            if (card.value == CardValue.JOKER) { jokerIndices.Add(i); }
+            if (card.Value == CardValue.JOKER) { jokerIndices.Add(i); }
         }
         
         HashSet<CardValue> validCardValues = player.PlayableCards.CardValues.ToHashSet();
         validCardValues.Remove(CardValue.JOKER);
 
-        print("Attempting card giveaway. Valid cardValues: " + validCardValues);
         if (validCardValues.Count == 0) { return; }
 
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
@@ -587,7 +586,7 @@ public class KarmaGameManager : MonoBehaviour
         if (selectedCards.Count != 1) { return; }
 
         CardObject selectedCard = selectedCards.First();
-        if (!validCardValues.Contains(selectedCard.CurrentCard.value)) { return; }
+        if (!validCardValues.Contains(selectedCard.CurrentCard.Value)) { return; }
         print("CARD " + selectedCard + " IS VALID FOR GIVEAWAY!!");
         
         playerProperties.SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));

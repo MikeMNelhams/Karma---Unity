@@ -74,7 +74,7 @@ namespace Karma
             {
                 base.Add(card);
                 bool isVisible = true;
-                if (card.value == CardValue.FOUR)
+                if (card.Value == CardValue.FOUR)
                 {
                     isVisible = false;
                 }
@@ -94,7 +94,7 @@ namespace Karma
                 List<bool> visibilities = new();
                 foreach (Card card in cards)
                 {
-                    if (card.value != CardValue.FOUR) 
+                    if (card.Value != CardValue.FOUR) 
                     {
                         visibilities.Add(true);
                     }
@@ -162,18 +162,18 @@ namespace Karma
             {
                 if (Count < runLength) { return false; }
                 int totalRun = 1;
-                CardValue majorValue = _cards[0].value;
+                CardValue majorValue = _cards[0].Value;
                 for (int i = 1; i < _cards.Count; i++)
                 { 
                     Card card = _cards[i];
-                    if (card.value == majorValue) 
+                    if (card.Value == majorValue) 
                     { 
                         totalRun++; 
                     }
                     else
                     {
                         totalRun = 1;
-                        majorValue = card.value;
+                        majorValue = card.Value;
                     }
 
                     if (totalRun == runLength) { return true; }
@@ -192,7 +192,7 @@ namespace Karma
             private List<bool> CheckVisibles()
             {
                 if (_cards.Count == 0) { return new List<bool>(); }
-                if (_cards.Count == 1) { return new List<bool> { _cards[0].value != CardValue.FOUR }; }
+                if (_cards.Count == 1) { return new List<bool> { _cards[0].Value != CardValue.FOUR }; }
 
                 bool[] foundVisibles = Enumerable.Repeat(true, Count).ToArray();
                 List<CardValue> cardValues = base.CardValues;

@@ -19,9 +19,9 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>
         // "/Assets/Resources/Cards/Clubs/Jack.png"
         // Only on Windows: https://docs.unity3d.com/ScriptReference/Application-dataPath.html
         string assetsPath = Application.dataPath;
-        string cardName = Enum.GetName(typeof(CardValue), card.value);
+        string cardName = Enum.GetName(typeof(CardValue), card.Value);
         cardName = cardName[0].ToString().ToUpper() + cardName[1..].ToLower();
-        string resourcePath = assetsPath + "/Resources/Cards/" + card.suit.name + "/" + cardName + ".png";
+        string resourcePath = assetsPath + "/Resources/Cards/" + card.Suit._name + "/" + cardName + ".png";
         if (File.Exists(resourcePath))
         {
             // Image file exists - load bytes into texture

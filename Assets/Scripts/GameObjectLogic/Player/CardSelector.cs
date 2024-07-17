@@ -39,7 +39,7 @@ public class CardSelector
         Card card = cardObject.CurrentCard;
         CardObjects.Add(cardObject);
         _selection.Add(card); 
-        _selectionValues.Add(card.value);
+        _selectionValues.Add(card.Value);
     }
 
     public void Remove(CardObject cardObject)
@@ -48,7 +48,7 @@ public class CardSelector
         CardObjects.Remove(cardObject);
         cardObject.DisableSelectShader();
         _selection.Remove(card); 
-        _selectionValues.Remove(card.value);
+        _selectionValues.Remove(card.Value);
     }
 
     public void Toggle(CardObject cardObject)
