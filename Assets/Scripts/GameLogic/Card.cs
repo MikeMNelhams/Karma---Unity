@@ -43,7 +43,11 @@ namespace Karma
 
             public override string ToString()
             {
-                return value.ToString() + suit.ToString();
+                string valueString;
+                int valueInt = (int)value;
+                if ((0 <= valueInt) && (valueInt <= 10)) { valueString = valueInt.ToString(); }
+                else { valueString = value.ToString().Substring(0, 2).Up; }
+                return valueString + suit.ToString();
             }
 
             public static bool operator ==(Card x, Card y) => x.Equals(y);

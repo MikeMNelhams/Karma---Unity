@@ -10,6 +10,7 @@ using System;
 using Karma.Board.BoardEvents;
 using System.Diagnostics;
 using UnityEngine;
+using Karma.Board.BoardPrinters;
 
 
 namespace Karma
@@ -23,6 +24,7 @@ namespace Karma
             public CardPile BurnPile { get; protected set; }
             public PlayCardPile PlayPile { get; protected set; }
             public BoardEventSystem BoardEventSystem { get; protected set; }
+            public IBoardPrinter BoardPrinter { get; protected set; }
             public BoardPlayOrder PlayOrder { get; protected set; }
             public BoardTurnOrder TurnOrder { get; protected set; }
             public bool HandsAreFlipped { get; set; } 
@@ -93,6 +95,7 @@ namespace Karma
                 CardValuesTotalCounts = CountCardValuesTotal(CardValuesInPlayCounts);
                 StartingPlayerStartedPlayingFrom = Players[whoStarts].PlayingFrom;
 
+                BoardPrinter = new BoardPrinterDebug();
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
                 BoardEventSystem = new BoardEventSystem();
@@ -274,6 +277,11 @@ namespace Karma
                 CurrentPlayerIndex += ((int)TurnOrder) * numberOfRepeats;
                 CurrentPlayerIndex %= Players.Count;
                 CurrentPlayerIndex = CurrentPlayerIndex < 0 ? CurrentPlayerIndex + Players.Count : CurrentPlayerIndex;
+            }
+
+            public void Print()
+            {
+                BoardPrinter.PrintBoard(this);
             }
 
             CardsList DrawUntilFull()

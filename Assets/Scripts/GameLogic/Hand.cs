@@ -46,6 +46,17 @@ namespace Karma
                 int insertIndex = Mathf.Max(left, 0);
                 _cards.Insert(insertIndex, item);
             }
+
+            public override string ToString()
+            {
+                string listString = "";
+                foreach (Card card in _cards)
+                {
+                    listString += card.ToString() + ", ";
+                }
+
+                return "Hand[" + listString + "]";
+            }
         }
     }
 }

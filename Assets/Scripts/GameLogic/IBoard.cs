@@ -6,6 +6,7 @@ using Karma.Players;
 using Karma.Controller;
 using System;
 using Karma.Board.BoardEvents;
+using Karma.Board.BoardPrinters;
 
 namespace Karma
 {
@@ -69,12 +70,14 @@ namespace Karma
             public bool PlayCards(CardsList cards, IController controller);
             public bool PlayCards(CardsList cards, IController controller, bool addToPlayPile);
             public void Burn(int jokerCount);
+            public void Print();
 
             public List<Player> Players { get; }
             public CardPile DrawPile { get; }
             public CardPile BurnPile { get; }
             public PlayCardPile PlayPile { get; }
             public BoardEventSystem BoardEventSystem { get; }
+            public IBoardPrinter BoardPrinter { get; }
             public BoardPlayOrder PlayOrder { get; }
             public BoardTurnOrder TurnOrder { get; }
             public bool HandsAreFlipped { get; set; }

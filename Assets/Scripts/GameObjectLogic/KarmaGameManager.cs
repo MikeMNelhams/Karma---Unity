@@ -56,21 +56,21 @@ public class KarmaGameManager : MonoBehaviour
 
     void Start()
     {
-        List<List<List<int>>> playerCardValues = new()
-        {
-            new() { new() { 2, 2 }, new() { 3 }, new() { 4 } },
-            new() { new() { 14 }, new() { 3 }, new() { 4 } },
-            new() { new() { 15, 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
-            new() { new() { 10 }, new() { 3 }, new() { 4 } }
-        };
+        //List<List<List<int>>> playerCardValues = new()
+        //{
+        //    new() { new() { 2, 2 }, new() { 3 }, new() { 4 } },
+        //    new() { new() { 14 }, new() { 3 }, new() { 4 } },
+        //    new() { new() { 15, 7, 11, 11, 11 }, new() { 3 }, new() { 4 } },
+        //    new() { new() { 10 }, new() { 3 }, new() { 4 } }
+        //};
 
-        List<int> drawCardValues = new() { };
-        List<int> playCardValues = new() { 2, 3, 4, 5 };
-        List<int> burnCardValues = new() { 15 };
+        //List<int> drawCardValues = new() { };
+        //List<int> playCardValues = new() { 2, 3, 4, 5 };
+        //List<int> burnCardValues = new() { 15 };
 
-        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        //int numberOfPlayers = _playersStartInfo.Length;
-        //Board = BoardFactory.RandomStart(numberOfPlayers, 1);
+        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        int numberOfPlayers = _playersStartInfo.Length;
+        Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
         RegisterBoardEvents();
         CreatePlayers(_playersStartInfo);
@@ -82,6 +82,7 @@ public class KarmaGameManager : MonoBehaviour
         AssignButtonEvents();
         _currentPlayerArrow.SetActive(true);
         Board.StartTurn();
+        Board.Print();
     }
 
     void RegisterBoardEvents()
