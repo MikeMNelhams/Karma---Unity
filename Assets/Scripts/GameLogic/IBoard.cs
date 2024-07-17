@@ -67,6 +67,7 @@ namespace Karma
             public void StartGivingAwayPlayPile(int giverIndex);
             public void StartTurn();
             public void EndTurn();
+            public CardsList DrawUntilFull(int playerIndex);
             public bool PlayCards(CardsList cards, IController controller);
             public bool PlayCards(CardsList cards, IController controller, bool addToPlayPile);
             public void Burn(int jokerCount);

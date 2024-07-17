@@ -64,7 +64,7 @@ public class KarmaGameManager : MonoBehaviour
             new() { new() { 10 }, new() { 3 }, new() { 4 } }
         };
 
-        List<int> drawCardValues = new() { 6, 7, 8, 9, 10};
+        List<int> drawCardValues = new() { 5, 6, 7, 8, 9, 10, 11};
         List<int> playCardValues = new() { 2, 3, 4, 5 };
         List<int> burnCardValues = new() { 15 };
 
@@ -247,7 +247,6 @@ public class KarmaGameManager : MonoBehaviour
 
     public void BurnCards(int jokerCount)
     {
-        print("BURN BABY BURN!!! (Joker Count: " + jokerCount + " )");
         if (jokerCount == 0)
         {
             _playTable.MoveEntirePlayPileToBurnPile();
@@ -605,6 +604,7 @@ public class KarmaGameManager : MonoBehaviour
         Player giver = Board.Players[giverIndex];
         print("Giving away picked up card: " + PlayersProperties[giverIndex].PickedUpCard + " to player " + targetIndex);
         giver.CardGiveAwayHandler.GiveAway(PlayersProperties[giverIndex].PickedUpCard.CurrentCard, targetIndex);
+        Board.DrawUntilFull(giverIndex); // TODO move this into BasicBoard somehow?
 
         if (giver.CardGiveAwayHandler.IsFinished)
         {

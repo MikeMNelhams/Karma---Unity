@@ -190,6 +190,7 @@ namespace Karma
                 Player giver = Players[giverIndex];
                 Player receiver = Players[receiverIndex];
                 receiver.ReceiveCard(card, giver);
+                //DrawUntilFull(giverIndex); // For some reason THIS doesn't work??
             }
 
             public void StartTurn()
@@ -224,7 +225,7 @@ namespace Karma
                 if (addToPile) { PlayPile.Add(cards, comboVisibility); }
                 bool willBurnDueToMinimumRunFour = PlayPile.ContainsMinLengthRun(4);
 
-                NumberOfCardsDrawnThisTurn += DrawUntilFull().Count;
+                DrawUntilFull(CurrentPlayerIndex);
 
                 if (NumberOfCombosPlayedThisTurn > 52) { return false; }
                 cardCombo.Apply(this);
@@ -294,20 +295,23 @@ namespace Karma
                 BoardPrinter.PrintChoosableCards(this);
             }
 
-            CardsList DrawUntilFull()
+            public CardsList DrawUntilFull(int playerIndex)
             {
                 if (DrawPile.Count == 0) { return new CardsList(); }
-                if (CurrentPlayer.Hand.Count >= 3) { return new CardsList(); }
-                int handStartSize = CurrentPlayer.Hand.Count;
+
+                Player player = Players[playerIndex];
+
+                if (player.Hand.Count >= 3) { return new CardsList(); }
+                int handStartSize = player.Hand.Count;
                 CardsList cardsDrawn = new ();
                 for (int i = 0; i < 3 - handStartSize; i++) 
                 {
-                    if (DrawPile.Count == 0) { return cardsDrawn; }
-                    cardsDrawn.Add(CurrentPlayer.DrawCard(DrawPile));
+                    if (DrawPile.Count == 0) { break; }
+                    cardsDrawn.Add(player.DrawCard(DrawPile));
                 }
 
-                BoardEventSystem.TriggerPlayerDrawEvents(cardsDrawn.Count, CurrentPlayerIndex);
-
+                NumberOfCardsDrawnThisTurn += cardsDrawn.Count;
+                BoardEventSystem.TriggerPlayerDrawEvents(cardsDrawn.Count, playerIndex);
                 return cardsDrawn;
             }
 
