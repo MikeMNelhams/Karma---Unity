@@ -71,6 +71,7 @@ namespace Karma
             public bool PlayCards(CardsList cards, IController controller, bool addToPlayPile);
             public void Burn(int jokerCount);
             public void Print();
+            public void PrintChooseableCards();
 
             public List<Player> Players { get; }
             public CardPile DrawPile { get; }

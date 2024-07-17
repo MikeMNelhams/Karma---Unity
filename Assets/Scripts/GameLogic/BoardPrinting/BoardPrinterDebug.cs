@@ -22,7 +22,9 @@ namespace Karma
 
                 public void PrintChoosableCards(IBoard board)
                 {
-                    throw new System.NotImplementedException();
+                    string message = "Legal moves from: " + board.CurrentPlayer.PlayableCards + ":\n";
+                    message += BoardPrintingLibrary.CombosRepresentation(board.CurrentLegalCombos);
+                    UnityEngine.Debug.Log(message);
                 }
 
                 string PlayersStateRepresentation(IBoard board)

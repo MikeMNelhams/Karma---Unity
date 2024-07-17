@@ -67,28 +67,7 @@ namespace Karma
 
             public override void OnEnter()
             {
-                string currentLegalCombos = "Currently legal combos ON \'"; ;
-
-                Card topCard = _board.PlayPile.VisibleTopCard;
-                if (topCard is not null)
-                {
-                    currentLegalCombos += _board.PlayPile.VisibleTopCard + "\' ";
-                }
-                else
-                {
-                    currentLegalCombos += "Nothing! ";
-                }
-
-                foreach (FrozenMultiSet<CardValue> combo in _board.CurrentLegalCombos)
-                {
-                    currentLegalCombos += combo + ", ";
-                }
-
-                currentLegalCombos += ": HashSet[";
-
-                Debug.Log(currentLegalCombos + "]");
-                Debug.Log("Starting picking actions for player: " + _board.CurrentPlayerIndex);
-                Debug.Log("Current selectable cards BOARD: " + _board.CurrentPlayer.PlayableCards);
+                _board.PrintChooseableCards();
                 _playerProperties.EnterPickingAction();
             }
 

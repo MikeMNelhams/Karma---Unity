@@ -82,7 +82,6 @@ public class KarmaGameManager : MonoBehaviour
         AssignButtonEvents();
         _currentPlayerArrow.SetActive(true);
         Board.StartTurn();
-        Board.Print();
     }
 
     void RegisterBoardEvents()
@@ -130,8 +129,7 @@ public class KarmaGameManager : MonoBehaviour
                 botNameIndex++;
             }
 
-            if (isCurrentPlayer) { playerProperties.SetControllerState(new PickingAction(Board, playerProperties)); }
-            else { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
+            if (!isCurrentPlayer) { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
         }
 
         SetupPlayerMovementControllers(playersStartInfo);
@@ -450,7 +448,8 @@ public class KarmaGameManager : MonoBehaviour
     void StartTurn(IBoard board)
     {
         MoveCurrentPlayerArrow();
-        PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));  
+        Board.Print();
+        PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));
     }
 
     void IfDebugModeDisableStartingPlayerMovement()

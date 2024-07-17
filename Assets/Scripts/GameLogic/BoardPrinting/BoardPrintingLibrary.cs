@@ -1,4 +1,6 @@
+using DataStructures;
 using Karma.Board;
+using Karma.Cards;
 using Karma.Players;
 using System.Collections.Generic;
 
@@ -31,6 +33,16 @@ namespace Karma
                     comboHistory += combo + ", ";
                 }
                 return comboHistory + "]";
+            }
+
+            public static string CombosRepresentation(HashSet<FrozenMultiSet<CardValue>> combos)
+            {
+                string combosMessage = "Combos[";
+                foreach (var combo in combos)
+                {
+                    combosMessage += combo + ", ";
+                }
+                return combosMessage + "]";
             }
         }
     }

@@ -19,6 +19,8 @@ namespace Karma
     {
         public class BasicBoard : IBoard
         {
+            public static BoardPrinterDebug boardPrinterDefault = new();
+
             public List<Player> Players { get; set; }
             public CardPile DrawPile { get; protected set; }
             public CardPile BurnPile { get; protected set; }
@@ -67,16 +69,16 @@ namespace Karma
             public BasicBoard(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
                 bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
-                bool hasBurnedThisTurn = false, int turnsPlayed = 0)
+                bool hasBurnedThisTurn = false, int turnsPlayed = 0, IBoardPrinter boardPrinter = null)
             {
                 SetInitParams(players, drawPile, burnPile, playPile, turnOrder, playOrder, handsAreFlipped, 
-                    effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed);
+                    effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed, null);
             }
 
             private void SetInitParams(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
                 bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
-                bool hasBurnedThisTurn = false, int turnsPlayed = 0)
+                bool hasBurnedThisTurn = false, int turnsPlayed = 0, IBoardPrinter boardPrinter = null)
             {
                 Players = players;
                 DrawPile = drawPile;
@@ -95,13 +97,16 @@ namespace Karma
                 CardValuesTotalCounts = CountCardValuesTotal(CardValuesInPlayCounts);
                 StartingPlayerStartedPlayingFrom = Players[whoStarts].PlayingFrom;
 
-                BoardPrinter = new BoardPrinterDebug();
+                BoardPrinter = boardPrinter is null ? boardPrinterDefault : boardPrinter;
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
                 BoardEventSystem = new BoardEventSystem();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
+
+                CalculateLegalCombos(CurrentPlayer.PlayableCards);
+                CalculateLegalActions();
             }
 
             DictionaryDefaultInt<CardValue> CountCardValuesInPlay()
@@ -282,6 +287,11 @@ namespace Karma
             public void Print()
             {
                 BoardPrinter.PrintBoard(this);
+            }
+
+            public void PrintChooseableCards()
+            {
+                BoardPrinter.PrintChoosableCards(this);
             }
 
             CardsList DrawUntilFull()
