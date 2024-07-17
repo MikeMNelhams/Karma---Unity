@@ -46,7 +46,7 @@ namespace Karma
                 string valueString;
                 int valueInt = (int)value;
                 if ((0 <= valueInt) && (valueInt <= 10)) { valueString = valueInt.ToString(); }
-                else { valueString = value.ToString().Substring(0, 2).Up; }
+                else { valueString = value.ToString().Substring(0, 2); }
                 return valueString + suit.ToString();
             }
 
