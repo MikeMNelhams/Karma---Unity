@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Karma.BasicBoard;
-using Karma.Board;
-using Karma.Cards;
+using KarmaLogic.BasicBoard;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
 
 public class JokerCountTests
 {
@@ -127,9 +127,6 @@ public class JokerCountTests
         CardsList cards = board.Players[0].PopFromPlayable(new int[] { 1 });
 
         board.PlayCards(cards, testController);
-
-        UnityEngine.Debug.Log("burn pile: " + board.BurnPile);
-        UnityEngine.Debug.Log("play pile: " + board.PlayPile);
 
         Assert.AreEqual(2, board.CardValuesInPlayCounts[CardValue.JOKER]); // It should increase to 3 then back to 3.
         Assert.AreEqual(1, board.BurnPile.Count);

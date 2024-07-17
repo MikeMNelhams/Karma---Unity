@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.IO;
 using System;
-using Karma.Cards;
+using KarmaLogic.Cards;
 
 
 public class CardObject : MonoBehaviour, IEquatable<CardObject>

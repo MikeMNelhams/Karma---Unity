@@ -1,14 +1,14 @@
 using DataStructures;
-using Karma.Board;
-using Karma.Cards;
-using Karma.Controller;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
+using KarmaLogic.Controller;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace BasicBoard
     {

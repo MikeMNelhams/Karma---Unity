@@ -1,6 +1,6 @@
-using Karma.Board;
-using Karma.Controller;
-using Karma.Cards;
+using KarmaLogic.Board;
+using KarmaLogic.Controller;
+using KarmaLogic.Cards;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using System.Linq;
 using DataStructures;
 using UnityEngine.EventSystems;
-using Karma.Players;
+using KarmaLogic.Players;
 
 public class PlayerProperties : BasePlayerProperties
 {
@@ -248,7 +248,6 @@ public class PlayerProperties : BasePlayerProperties
             Debug.Log("Moving card: " + cardObject.CurrentCard + cardObject + " to position: " + position);
             List<int> positions = cardPositions[cardObject.CurrentCard];
             positions.RemoveAt(positions.Count - 1);
-            cardObject.transform.SetParent(cardHolder.transform);
         }
 
         ListWithConstantContainsCheck<CardObject> finalHandCardObjects = new();
@@ -368,6 +367,7 @@ public class PlayerProperties : BasePlayerProperties
     public void SetCardObjectOnMouseDownEvent(CardObject cardObject)
     {
         cardObject.OnCardClick += CardObjectOnMouseDownEvent;
+        cardObject.transform.parent = cardHolder.transform;
     }
 
     public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)

@@ -1,13 +1,13 @@
-using Karma.Cards;
-using Karma.Players;
+using KarmaLogic.Cards;
+using KarmaLogic.Players;
 using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
-using Karma.Board;
+using KarmaLogic.Board;
 using System.Diagnostics;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace BasicBoard
     {

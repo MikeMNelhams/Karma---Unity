@@ -1,14 +1,14 @@
-using Karma.Board;
-using Karma.Controller;
-using Karma.Players;
-using Karma.Cards;
+using KarmaLogic.Board;
+using KarmaLogic.Controller;
+using KarmaLogic.Players;
+using KarmaLogic.Cards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataStructures;
 
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace CardCombos
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using DataStructures;
-using Karma.Cards;
+using KarmaLogic.Cards;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Players
     {

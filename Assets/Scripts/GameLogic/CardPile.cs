@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Cards
     {

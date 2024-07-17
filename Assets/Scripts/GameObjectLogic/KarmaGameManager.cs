@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Karma.GameExceptions;
-using Karma.BasicBoard;
-using Karma.Board;
-using Karma.Board.BoardEvents;
-using Karma.Players;
-using Karma.Cards;
+using KarmaLogic.GameExceptions;
+using KarmaLogic.BasicBoard;
+using KarmaLogic.Board;
+using KarmaLogic.Board.BoardEvents;
+using KarmaLogic.Players;
+using KarmaLogic.Cards;
+using KarmaLogic.Controller;
 using System;
-using Karma.Controller;
 using System.Linq;
 using DataStructures;
-
 
 public class KarmaGameManager : MonoBehaviour
 {
@@ -254,7 +253,6 @@ public class KarmaGameManager : MonoBehaviour
             foreach (CardObject cardObject in hand)
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(cardObject);
-                cardObject.transform.SetParent(playerProperties.cardHolder.transform);
             }
             PlayersProperties[i].PopulateHand(hand);
         }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace GameExceptions
     {

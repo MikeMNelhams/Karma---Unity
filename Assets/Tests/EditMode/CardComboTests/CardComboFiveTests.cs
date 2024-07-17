@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Karma.BasicBoard;
-using Karma.Board;
-using Karma.Cards;
-using Karma.Players;
-using System.Diagnostics;
+using KarmaLogic.BasicBoard;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
+using KarmaLogic.Players;
 
 public class CardComboFiveTests 
 {
@@ -85,8 +84,6 @@ public class CardComboFiveTests
         Player player1 = board.Players[1];
         Player player2 = board.Players[2];
 
-        UnityEngine.Debug.Log(player1.Hand);
-
         Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), player0.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player1.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 7 }, CardSuit.DebugDefault), player2.Hand);
@@ -123,8 +120,6 @@ public class CardComboFiveTests
         Player player1 = board.Players[1];
         Player player2 = board.Players[2];
 
-        UnityEngine.Debug.Log(player1.Hand);
-
         Assert.AreEqual(new Hand(new List<int>() { 7 }, CardSuit.DebugDefault), player0.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault), player1.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player2.Hand);
@@ -160,8 +155,6 @@ public class CardComboFiveTests
         Player player0 = board.Players[0];
         Player player1 = board.Players[1];
         Player player2 = board.Players[2];
-
-        UnityEngine.Debug.Log(player1.Hand);
 
         Assert.AreEqual(new Hand(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), player0.Hand);
         Assert.AreEqual(new Hand(new List<int>() { 6, 7, 15 }, CardSuit.DebugDefault), player1.Hand);

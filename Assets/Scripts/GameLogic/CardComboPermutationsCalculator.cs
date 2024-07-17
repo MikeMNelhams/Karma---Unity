@@ -1,11 +1,11 @@
 using DataStructures;
-using Karma.Cards;
+using KarmaLogic.Cards;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Karma.Board;
+using KarmaLogic.Board;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace BasicBoard
     {

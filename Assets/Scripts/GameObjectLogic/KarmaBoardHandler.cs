@@ -1,5 +1,5 @@
 
-using Karma.Cards;
+using KarmaLogic.Cards;
 using System.Collections.Generic;
 using UnityEngine;
 

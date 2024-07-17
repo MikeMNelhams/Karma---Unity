@@ -1,4 +1,4 @@
-using Karma.Cards;
+using KarmaLogic.Cards;
 using System;
 using System.Collections;
 using System.Collections.Generic;

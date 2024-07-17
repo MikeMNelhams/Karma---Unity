@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Karma.Bots;
-using Karma.Board;
-using Karma.Cards;
+using KarmaLogic.Bots;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
 using System.Linq;
-using Karma.BasicBoard;
+using KarmaLogic.BasicBoard;
 using DataStructures;
 
 

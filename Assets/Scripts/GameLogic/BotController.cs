@@ -1,9 +1,9 @@
 using DataStructures;
-using Karma.Board;
-using Karma.Cards;
-using Karma.Controller;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
+using KarmaLogic.Controller;
 using System.Collections.Generic;
-using Karma.Bots;
+using KarmaLogic.Bots;
 
 public class BotController : IController
 {

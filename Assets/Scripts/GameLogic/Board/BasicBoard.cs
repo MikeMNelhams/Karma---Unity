@@ -1,19 +1,15 @@
-using Karma.Players;
-using Karma.Cards;
-using Karma.CardCombos;
-using Karma.Controller;
-using Karma.Board;
-using System.Collections.Generic;
+using KarmaLogic.Players;
+using KarmaLogic.Cards;
+using KarmaLogic.CardCombos;
+using KarmaLogic.Controller;
+using KarmaLogic.Board;
+using KarmaLogic.Board.BoardEvents;
+using KarmaLogic.Board.BoardPrinters;
 using DataStructures;
+using System.Collections.Generic;
 using System.Linq;
-using System;
-using Karma.Board.BoardEvents;
-using System.Diagnostics;
-using UnityEngine;
-using Karma.Board.BoardPrinters;
 
-
-namespace Karma
+namespace KarmaLogic
 {
     namespace BasicBoard
     {
@@ -235,7 +231,6 @@ namespace Karma
                 ComboHistory.Add(cardCombo);
 
                 int jokerCount = PlayPile.CountValue(CardValue.JOKER);
-
                 if (willBurnDueToMinimumRunFour || jokerCount > 0) 
                 {
                     Burn(jokerCount);

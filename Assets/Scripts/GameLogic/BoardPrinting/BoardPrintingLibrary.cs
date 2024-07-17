@@ -1,10 +1,10 @@
 using DataStructures;
-using Karma.Board;
-using Karma.Cards;
-using Karma.Players;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
+using KarmaLogic.Players;
 using System.Collections.Generic;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Board
     {

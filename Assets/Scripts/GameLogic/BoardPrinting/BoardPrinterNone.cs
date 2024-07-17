@@ -1,10 +1,10 @@
-using Karma.Board;
-using Karma.Board.BoardPrinters;
+using KarmaLogic.Board;
+using KarmaLogic.Board.BoardPrinters;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Board
     {

@@ -1,10 +1,10 @@
 using DataStructures;
-using Karma.Board;
-using Karma.Cards;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
 using System;
 using UnityEngine;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Controller
     {

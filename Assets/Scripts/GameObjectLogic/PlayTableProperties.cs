@@ -1,4 +1,4 @@
-using Karma.Board;
+using KarmaLogic.Board;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

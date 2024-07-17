@@ -1,11 +1,11 @@
 using DataStructures;
-using Karma.Board;
-using Karma.Cards;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Bots
     {

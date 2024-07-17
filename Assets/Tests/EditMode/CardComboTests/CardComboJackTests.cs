@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Karma.BasicBoard;
-using Karma.Board;
-using Karma.Cards;
-using Karma.Players;
+using KarmaLogic.BasicBoard;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
+using KarmaLogic.Players;
 using UnityEditor;
 
 public class CardComboJackTests

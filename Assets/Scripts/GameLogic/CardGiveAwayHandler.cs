@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Karma.Board;
-using Karma.Cards;
+using KarmaLogic.Board;
+using KarmaLogic.Cards;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Players
     {

@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using DataStructures;
-using Karma.Cards;
-using Karma.Players;
-using Karma.Controller;
+using KarmaLogic.Cards;
+using KarmaLogic.Players;
+using KarmaLogic.Controller;
 using System;
-using Karma.Board.BoardEvents;
-using Karma.Board.BoardPrinters;
+using KarmaLogic.Board.BoardEvents;
+using KarmaLogic.Board.BoardPrinters;
 
-namespace Karma
+namespace KarmaLogic
 {
     namespace Board
     {
