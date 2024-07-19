@@ -2,7 +2,8 @@
     "name": "CustomEditorScripts",
     "rootNamespace": "",
     "references": [
-        "GUID:f035880140c078542b291e506494801c"
+        "GUID:f035880140c078542b291e506494801c",
+        "GUID:343deaaf83e0cee4ca978e7df0b80d21"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

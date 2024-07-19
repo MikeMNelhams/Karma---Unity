@@ -26,7 +26,7 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] int _turnLimit = 100;
     [SerializeField] KarmaPlayerStartInfo[] _playersStartInfo;
 
-    [Range(0f, 3f)][SerializeField] int _whichPlayerStarts = 0;
+    [SerializeField] int _whichPlayerStarts = 0;
     [SerializeField] bool _isDebuggingMode = false;
 
     public List<PlayerProperties> PlayersProperties { get; protected set; }
@@ -57,14 +57,14 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 2, 5, 12 }, new() { 7, 2, 14 }, new() { 10, 5, 7 } },
-            new() { new() { 3, 10, 11 }, new() { 14, 6, 13 }, new() { 3, 14, 4 } },
+            new() { new() { 2, 5, 15 }, new() { 2 }, new() { 10, 5, 7 } },
+            new() { new() { 3, 10, 11 }, new() { 2 }, new() { 2 } },
             new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
             new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
         };
 
         List<int> drawCardValues = new() { 3, 4, 6, 7, 8 };
-        List<int> playCardValues = new() { };
+        List<int> playCardValues = new() { 9, 10, 11 };
         List<int> burnCardValues = new() { };
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
@@ -337,14 +337,12 @@ public class KarmaGameManager : MonoBehaviour
     {
         UpdateGameRanks();
         int numberOfPotentialWinners = board.PotentialWinnerIndices.Count;
-        if (numberOfPotentialWinners == 1 && board.CardValuesInPlayCounts[CardValue.JOKER] == 0)
+
+        if (numberOfPotentialWinners >= 1 && board.CardValuesInPlayCounts[CardValue.JOKER] == 0)
         {
             throw new GameWonException(GameRanks);
         }
-        if (numberOfPotentialWinners >= 2 && board.CardValuesInPlayCounts[CardValue.JOKER] == 0)
-        {
-            throw new GameWonException(GameRanks);
-        }
+
         if (numberOfPotentialWinners >= 2)
         {
             VoteForWinners();
@@ -396,8 +394,10 @@ public class KarmaGameManager : MonoBehaviour
             HashSet<int> playerIndices = cardCounts[key];
             ranks.Add(Tuple.Create(key, playerIndices));
         }
+
         ranks.Sort((x, y) => x.Item1.CompareTo(y.Item1));
         GameRanks = new();
+
         foreach ((int rank, HashSet<int> pair) in ranks)
         {
             foreach (int playerIndex in pair)

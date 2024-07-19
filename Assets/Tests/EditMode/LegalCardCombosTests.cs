@@ -12,7 +12,7 @@ public class LegalCardCombosTests
     {
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { new() { 15 }, new() { }, new() { } }
+            new() { new() { 15 }, new() { 14 }, new() { } }
         };
 
         List<int> drawCardValues = new() { };
@@ -489,7 +489,7 @@ public class LegalCardCombosTests
             new() { testRanks, new() { }, new() { } }
         };
 
-        List<int> drawCardValues = new() { };
+        List<int> drawCardValues = new() { 14 };
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
@@ -677,7 +677,7 @@ public class LegalCardCombosTests
             new() { testRanks, new() { }, new() { } }
         };
 
-        List<int> drawCardValues = new() { };
+        List<int> drawCardValues = new() { 14 };
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
@@ -762,6 +762,119 @@ public class LegalCardCombosTests
         combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT, CardValue.SIX, CardValue.SIX, CardValue.SIX };
         Assert.True(predictedLegalCombos.Contains(combo));
         combo = new() { CardValue.EIGHT, CardValue.EIGHT, CardValue.EIGHT, CardValue.SIX, CardValue.SIX, CardValue.SIX, CardValue.SIX };
+        Assert.True(predictedLegalCombos.Contains(combo));
+    }
+
+    [Test]
+    public void JokerSoloPlayableIfNoAces()
+    {
+        List<int> testRanks = new() { 15 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 7 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+
+        board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(1, predictedLegalCombos.Count);
+
+        FrozenMultiSet<CardValue> combo = new() { CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+    }
+
+    [Test]
+    public void JokerGroupPlayableIfNoAces()
+    {
+        List<int> testRanks = new() { 15, 15, 15 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 7 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+
+        board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(3, predictedLegalCombos.Count);
+
+        FrozenMultiSet<CardValue> combo = new() { CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+
+        combo = new() { CardValue.JOKER, CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.JOKER, CardValue.JOKER, CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+    }
+
+    [Test]
+    public void JokerGroupUnplayableIfNoAcesButDownwards()
+    {
+        List<int> testRanks = new() { 15, 15, 15 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 7 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
+
+        board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(0, predictedLegalCombos.Count);
+    }
+
+    [Test]
+    public void JokerGroupSixFilledPlayableIfNoAces()
+    {
+        List<int> testRanks = new() { 15, 15, 15, 6 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 7 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+
+        board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(4, predictedLegalCombos.Count);
+
+        FrozenMultiSet<CardValue> combo = new() { CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+
+        combo = new() { CardValue.JOKER, CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.JOKER, CardValue.JOKER, CardValue.JOKER };
+        Assert.True(predictedLegalCombos.Contains(combo));
+        combo = new() { CardValue.JOKER, CardValue.JOKER, CardValue.JOKER, CardValue.SIX };
         Assert.True(predictedLegalCombos.Contains(combo));
     }
 }

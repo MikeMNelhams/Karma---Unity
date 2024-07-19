@@ -368,15 +368,24 @@ namespace KarmaLogic
                     return CardComboCalculator.HandFlippedCombos(cards);
                 }
 
+                bool jokersHaveAceValues = CardValuesInPlayCounts[CardValue.ACE] == 0;
+
                 if (PlayPile.Count == 0 || PlayPile.VisibleTopCard is null)
                 {
+                    if (jokersHaveAceValues)
+                    {
+                        return CardComboCalculator.FillerCombos(cards, CardValue.SIX, 3);
+                    }
+
                     return CardComboCalculator.FillerAndFilterCombos(cards, CardValue.SIX, CardComboCalculator.IsJoker, 3);
                 }
 
                 Card topCard = PlayPile.VisibleTopCard as Card;
-                CardsList validCards = CardComboCalculator.PlayableCards(PlayOrder, cards, topCard.Value);
+                CardsList validCards = CardComboCalculator.PlayableCards(PlayOrder, cards, topCard.Value, CardValuesInPlayCounts);
 
-                if (topCard.Value == CardValue.ACE)
+                UnityEngine.Debug.Log("Valid cards: " + validCards);
+
+                if (topCard.Value == CardValue.ACE || CardComboCalculator.ContainsPlayableJokersAsAceValues(jokersHaveAceValues, cards))
                 {
                     if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.Value))
                     {

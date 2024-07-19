@@ -4,7 +4,6 @@ using KarmaLogic.BasicBoard;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
 
-
 public class LegalMovesTests
 {
     [Test]
@@ -59,7 +58,7 @@ public class LegalMovesTests
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { orderDependentRanks, new() { }, new() { } }
+            new() { orderDependentRanks, new() { 14 }, new() { } }
         };
 
         List<int> drawCardValues = new() { };
@@ -109,7 +108,7 @@ public class LegalMovesTests
             new() { orderDependentRanks, new() { }, new() { } }
         };
 
-        List<int> drawCardValues = new() { };
+        List<int> drawCardValues = new() { 14 };
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 

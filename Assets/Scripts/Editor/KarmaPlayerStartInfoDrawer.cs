@@ -9,10 +9,10 @@ public class KarmaPlayerStartInfoDrawer : PropertyDrawer
 {
     protected float lineHeight = 18f;
 
-    private GUIContent checkBoxText = new ("Is Playable Character?:");
-    private GUIStyle checkBoxStyle = GUIStyle.none;
-
-    private GUIContent startPositionText = new ("Start Position:");
+    readonly GUIContent checkBoxText = new ("Is Playable Character?:");
+    readonly GUIStyle checkBoxStyle = GUIStyle.none;
+    
+    readonly GUIContent startPositionText = new ("Start Position:");
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {

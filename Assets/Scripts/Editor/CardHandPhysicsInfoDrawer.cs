@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(CardHandPhysicsInfo))]
 public class CardHandPhysicsInfoDrawer : PropertyDrawer
 {
@@ -37,3 +38,4 @@ public class CardHandPhysicsInfoDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 }
+#endif

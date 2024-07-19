@@ -215,12 +215,31 @@ namespace KarmaLogic
                 return cardValue == CardValue.JOKER;
             }
 
-            public static CardsList PlayableCards(BoardPlayOrder playOrder, CardsList cards, CardValue topValue) 
+            public static CardsList PlayableCards(BoardPlayOrder playOrder, CardsList cards, CardValue topValue, DictionaryDefaultInt<CardValue> cardValueInPlayCounts) 
             {
                 CardsList playableCards = new();
+                if (cardValueInPlayCounts[CardValue.ACE] > 0)
+                {
+                    return PlayableCardsAcesInPlay(playOrder, cards, topValue, playableCards);
+                }
+
+                return PlayableCardsNoAcesInPlay(playOrder, cards, topValue, playableCards);
+            }
+
+            static CardsList PlayableCardsAcesInPlay(BoardPlayOrder playOrder, CardsList cards, CardValue topValue, CardsList playableCards)
+            {
                 foreach (Card card in cards)
                 {
-                    if (card.Value == CardValue.JOKER || IsPotentiallyPlayable(playOrder, card.Value, topValue)) {  playableCards.Add(card); }
+                    if (card.Value == CardValue.JOKER || IsPotentiallyPlayable(playOrder, card.Value, topValue)) { playableCards.Add(card); }
+                }
+                return playableCards;
+            }
+
+            static CardsList PlayableCardsNoAcesInPlay(BoardPlayOrder playOrder, CardsList cards, CardValue topValue, CardsList playableCards)
+            {
+                foreach (Card card in cards)
+                {
+                    if (IsPotentiallyPlayable(playOrder, card.Value, topValue)) { playableCards.Add(card); }
                 }
                 return playableCards;
             }
@@ -245,6 +264,11 @@ namespace KarmaLogic
                 Func<CardValue, CardValue, bool> comparison = Comparison(playOrder);
                 bool fillerIsUnplayable = !comparison(filler, topValue);
                 return containsFiller && fillerIsUnplayable;
+            }
+
+            public static bool ContainsPlayableJokersAsAceValues(bool jokersAreAces, CardsList cards)
+            {
+                return jokersAreAces && cards.CountValue(CardValue.JOKER) > 0;
             }
         }
     }
