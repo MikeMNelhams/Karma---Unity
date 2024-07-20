@@ -273,7 +273,7 @@ public class PlayerProperties : BasePlayerProperties
         CardsInHand = cardObjects;
         PopulateHand(cardHandPhysicsInfo);
     }
-    
+
     public void PopulateHand(CardHandPhysicsInfo cardHandPhysicsInfo = null)
     {
         if (cardHandPhysicsInfo != null) { _handPhysicsInfo = cardHandPhysicsInfo; }
@@ -317,6 +317,7 @@ public class PlayerProperties : BasePlayerProperties
             Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
             if (handIsFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
 
+            cardRotation *= Quaternion.Euler(new Vector3(0, -3, 0));
             cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
             j++;
         }

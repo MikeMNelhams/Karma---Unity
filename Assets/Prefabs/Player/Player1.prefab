@@ -451,8 +451,8 @@ MonoBehaviour:
   _playerMovementController: {fileID: 3514090609769126189}
   _rayCastDistanceCutoff: 30
   _handPhysicsInfo:
-    startAngle: -20
-    endAngle: 20
+    startAngle: -25
+    endAngle: 25
     distanceFromHolder: 0.75
     yOffset: -0.25
   playerCamera: {fileID: 591302855537407287}
