@@ -23,7 +23,7 @@ public class PlayTableProperties : MonoBehaviour
         playPileHandler = playPile.GetComponent<KarmaCardPileHandler>();
     }
 
-    public void CreateCardPilesFromBoard(IBoard board)
+    public void CreateCardObjectPilesFromBoard(IBoard board)
     {
         drawPileHandler.CreatePile(board.DrawPile);
         burnPileHandler.CreatePile(board.BurnPile);

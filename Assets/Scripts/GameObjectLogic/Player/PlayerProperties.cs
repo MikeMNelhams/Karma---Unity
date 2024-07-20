@@ -41,6 +41,7 @@ public class PlayerProperties : BasePlayerProperties
     public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
     event OnLeftClickRayCastListener PickedUpCardOnClick;
     event OnLeftClickRayCastListener OnPointingAtPlayer;
+    event OnLeftClickRayCastListener OnVoteForTarget;
 
     public delegate Dictionary<Card, List<int>> CardSorter(int playerIndex);
     CardSorter _handSorter;
@@ -68,11 +69,11 @@ public class PlayerProperties : BasePlayerProperties
             _playerMovementController.TogglePointing();
             if (_playerMovementController.IsPointing)
             {
-                _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
+                _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
             }
             else
             {
-                _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
+                _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
             }
         }
         else if (IsRotationEnabled)
@@ -105,6 +106,12 @@ public class PlayerProperties : BasePlayerProperties
     {
         confirmSelectionButton.gameObject.SetActive(false);
         pickupPlayPileButton.gameObject.SetActive(false);
+    }
+
+    public void EnablePlayerMovement()
+    {
+        IsRotationEnabled = true;
+        IsPointingEnabled = true;
     }
 
     public PlayingFrom SelectingFrom { 
@@ -161,8 +168,6 @@ public class PlayerProperties : BasePlayerProperties
         { 
             confirmSelectionButton.gameObject.SetActive(true); 
         }
-
-
     }
 
     public override void ExitPickingAction()
@@ -172,12 +177,17 @@ public class PlayerProperties : BasePlayerProperties
 
     public override void EnterVotingForWinner()
     {
-        throw new NotImplementedException();
+        pickupPlayPileButton.gameObject.SetActive(false);
+        confirmSelectionButton.gameObject.SetActive(false);
+
+        _playerMovementController.SetPointing(true);
+        _playerMovementController.RegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
     }
 
     public override void ExitVotingForWinner()
     {
-        throw new NotImplementedException();
+        _playerMovementController.SetPointing(false);
+        _playerMovementController.UnRegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
     }
 
     public override void EnterCardGiveAwaySelection()
@@ -199,19 +209,20 @@ public class PlayerProperties : BasePlayerProperties
 
     public override void ExitCardGiveAwayPlayerIndexSelection()
     {
-
+        _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
     
     public override void EnterPlayPileGiveAwayPlayerIndexSelection()
     {
         confirmSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
-        _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerIfValid);
+        _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
     }
 
     public override void ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.SetPointing(false);
+        _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
     }
 
     public void SetControllerState(ControllerState newState)
@@ -445,12 +456,21 @@ public class PlayerProperties : BasePlayerProperties
         PickedUpCard.transform.rotation = cardRotation;
     }
 
-    void ChoosePointedPlayerIfValid()
+    void ChoosePointedPlayerToPickUpPlayPileIfValid()
     {
         if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
  
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         TriggerTargetPickUpPlayPile();
+    }
+
+    void VoteForPointedPlayerToWinIfValid()
+    {
+        if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
+        UnityEngine.Debug.Log("Voting for target clicked");
+        _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
+        if (!KarmaGameManager.Instance.ValidPlayerIndicesForVoting.Contains(TargetPlayerInFrontOfPlayer.Index)) { return; }
+        TriggerVoteForPlayer();
     }
 
     public void RegisterPickedUpCardOnClickEventListener(OnLeftClickRayCastListener eventListener)
@@ -476,6 +496,19 @@ public class PlayerProperties : BasePlayerProperties
         if (_targetPlayerProperties != null)
         {
             OnPointingAtPlayer?.Invoke(Index, _targetPlayerProperties.Index);
+        }
+    }
+
+    public void RegisterVoteForTargetEventListener(OnLeftClickRayCastListener eventListener)
+    {
+        OnVoteForTarget += eventListener;
+    }
+
+    void TriggerVoteForPlayer()
+    {
+        if (_targetPlayerProperties != null)
+        {
+            OnVoteForTarget?.Invoke(Index, _targetPlayerProperties.Index);
         }
     }
 

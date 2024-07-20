@@ -489,8 +489,8 @@ public class LegalCardCombosTests
             new() { testRanks, new() { }, new() { } }
         };
 
-        List<int> drawCardValues = new() { 14 };
-        List<int> playCardValues = new() { 3 };
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 14, 3 };
         List<int> burnCardValues = new() { };
 
         BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);

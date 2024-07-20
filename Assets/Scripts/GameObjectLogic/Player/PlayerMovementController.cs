@@ -27,7 +27,6 @@ public class PlayerMovementController : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.None;
-        _playerHand.SetActive(false);
     }
 
     void Update()

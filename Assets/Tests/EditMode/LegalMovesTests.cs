@@ -3,6 +3,7 @@ using NUnit.Framework;
 using KarmaLogic.BasicBoard;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
+using DataStructures;
 
 public class LegalMovesTests
 {
@@ -108,13 +109,17 @@ public class LegalMovesTests
             new() { orderDependentRanks, new() { }, new() { } }
         };
 
-        List<int> drawCardValues = new() { 14 };
-        List<int> playCardValues = new() { 2 };
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 14, 2 };
         List<int> burnCardValues = new() { };
 
         BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
+
+        HashSet<FrozenMultiSet<CardValue>> predictedCombos = board.CurrentLegalCombos;
+
+        UnityEngine.Debug.Log("predicted combos: " + predictedCombos);
 
         HashSet<BoardPlayerAction> predictedPlayerActions = board.CurrentLegalActions;
 

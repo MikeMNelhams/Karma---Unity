@@ -144,7 +144,9 @@ public class BoardMatrixStartTests
         List<int> burnCardValues = new() { 15, 15, 15};
 
         BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
-        Assert.AreEqual(new CardPile(new List<int>() { 2, 3, 4, 5, 6, 7, 8, 9, 10 }, CardSuit.DebugDefault), board.DrawPile);
+
+        // 6 cards should be drawn! (3 per player)
+        Assert.AreEqual(new CardPile(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), board.DrawPile);
 
         Assert.AreEqual(new PlayCardPile(new List<int>() { 11, 12, 13, 14 }, CardSuit.DebugDefault), board.PlayPile);
 

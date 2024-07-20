@@ -85,6 +85,7 @@ namespace KarmaLogic
                 HandsAreFlipped = handsAreFlipped;
                 EffectMultiplier = effectMultiplier;
                 CurrentPlayerIndex = whoStarts;
+                PlayerIndexWhoStartedTurn = whoStarts;
                 HasBurnedThisTurn = hasBurnedThisTurn;
                 TurnsPlayed = turnsPlayed;
                 NumberOfCardsDrawnThisTurn = 0;
@@ -100,6 +101,11 @@ namespace KarmaLogic
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
+
+                for (int playerIndex = 0; playerIndex < Players.Count; playerIndex++)
+                {
+                    DrawUntilFull(playerIndex);
+                }
 
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
@@ -196,9 +202,10 @@ namespace KarmaLogic
                 NumberOfCombosPlayedThisTurn = 0;
                 NumberOfCardsDrawnThisTurn = 0;
                 HasBurnedThisTurn = false;
+
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
-
+                
                 BoardEventSystem.TriggerOnTurnStartEvents(this);
             }
 
@@ -324,6 +331,8 @@ namespace KarmaLogic
             {
                 get 
                 {
+                    if (DrawPile.Count > 0) { return new HashSet<int>(); }
+
                     HashSet<int> indices = new ();
                     for (int i = 0; i < Players.Count; i++)
                     {
