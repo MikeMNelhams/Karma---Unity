@@ -117,10 +117,6 @@ public class LegalMovesTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedCombos = board.CurrentLegalCombos;
-
-        UnityEngine.Debug.Log("predicted combos: " + predictedCombos);
-
         HashSet<BoardPlayerAction> predictedPlayerActions = board.CurrentLegalActions;
 
         Assert.AreEqual(1, predictedPlayerActions.Count);

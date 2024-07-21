@@ -44,6 +44,7 @@ namespace KarmaLogic
             public int PlayerIndexWhoStartedTurn { get; protected set; }
 
             HashSet<BoardPlayerAction> _allActions;
+            HashSet<int> _potentialWinnerIndices;
 
             public BasicBoard(List<Player> players)
             {
@@ -101,11 +102,9 @@ namespace KarmaLogic
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
+                _potentialWinnerIndices = new HashSet<int>();
 
-                for (int playerIndex = 0; playerIndex < Players.Count; playerIndex++)
-                {
-                    DrawUntilFull(playerIndex);
-                }
+                DrawUntilFullAllPlayers();
 
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
@@ -316,6 +315,14 @@ namespace KarmaLogic
                 return cardsDrawn;
             }
 
+            public void DrawUntilFullAllPlayers()
+            {
+                for (int playerIndex = 0; playerIndex < Players.Count; playerIndex++)
+                {
+                    DrawUntilFull(playerIndex);
+                }
+            }
+
             void ResetEffectMultiplierIfNecessary(CardValue cardValue)
             {
                 if (cardValue == CardValue.THREE) { return; }
@@ -331,20 +338,20 @@ namespace KarmaLogic
             {
                 get 
                 {
-                    if (DrawPile.Count > 0) { return new HashSet<int>(); }
+                    _potentialWinnerIndices.Clear();
+                    if (DrawPile.Count > 0) { return _potentialWinnerIndices; }
 
-                    HashSet<int> indices = new ();
                     for (int i = 0; i < Players.Count; i++)
                     {
                         {
                             Player player = Players[i];
                             if (!player.HasCards)
                             {
-                                indices.Add(i);
+                                _potentialWinnerIndices.Add(i);
                             }
                         }
                     }
-                    return indices;
+                    return _potentialWinnerIndices;
                 }
             }
 
@@ -391,8 +398,6 @@ namespace KarmaLogic
 
                 Card topCard = PlayPile.VisibleTopCard as Card;
                 CardsList validCards = CardComboCalculator.PlayableCards(PlayOrder, cards, topCard.Value, CardValuesInPlayCounts);
-
-                UnityEngine.Debug.Log("Valid cards: " + validCards);
 
                 if (topCard.Value == CardValue.ACE || CardComboCalculator.ContainsPlayableJokersAsAceValues(jokersHaveAceValues, cards))
                 {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyPlayerProperties : BasePlayerProperties
+public class DummyPlayerProperties : BaseCharacterProperties
 {
     public DummyPlayerProperties()
     {

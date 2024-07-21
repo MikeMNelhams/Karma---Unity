@@ -775,8 +775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa5a8b4906b51f4da389fec8c9d18d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 7301702206139819914, guid: 075ad698ae2478d4a81bc0dfa54a1dac, type: 3}
-  playerPrefab: {fileID: 2410296296573889902, guid: 75e9c81ac68b69545bddd1eab9beb352, type: 3}
+  _cardPrefab: {fileID: 7301702206139819914, guid: 075ad698ae2478d4a81bc0dfa54a1dac, type: 3}
+  _playerPrefab: {fileID: 2410296296573889902, guid: 75e9c81ac68b69545bddd1eab9beb352, type: 3}
   _currentPlayerArrow: {fileID: 1984063095}
   _playTable: {fileID: 1598284356}
   _turnLimit: 100

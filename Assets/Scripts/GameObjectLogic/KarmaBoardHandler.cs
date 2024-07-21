@@ -23,7 +23,7 @@ public class KarmaBoardHandler : MonoBehaviour
         float halfHeight = _debugCube.lossyScale.y / 2;
 
         KarmaGameManager gameManager = KarmaGameManager.Instance;
-        float cardDepth = gameManager.cardPrefab.transform.localScale.z;
+        float cardDepth = gameManager._cardPrefab.transform.localScale.z;
 
         int j = 0;
         List<CardObject> cardObjects = new();

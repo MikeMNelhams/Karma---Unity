@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BasePlayerProperties : MonoBehaviour
+public abstract class BaseCharacterProperties : MonoBehaviour
 {
     public abstract void EnterWaitingForTurn();
     public abstract void ExitWaitingForTurn();

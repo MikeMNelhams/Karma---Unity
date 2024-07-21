@@ -1,50 +1,14 @@
-using DataStructures;
 using KarmaLogic.Board;
-using KarmaLogic.Cards;
-using System;
-using UnityEngine;
+
 
 namespace KarmaLogic
 {
     namespace Controller
     {
-        public class IController
-        {
-            public ControllerState State { get; protected set; }
-            public virtual void SetState(ControllerState newState)
-            {
-                State?.OnExit();
-                newState.OnEnter();
-                State = newState;
-            } 
-        }
-
-        public abstract class ControllerState : IEquatable<ControllerState>
-        {
-            protected IBoard _board;
-            public BasePlayerProperties _playerProperties;
-
-            protected ControllerState(IBoard board, BasePlayerProperties playerProperties)
-            {
-                _board = board;
-                _playerProperties = playerProperties;
-            }
-
-            public abstract void OnEnter();
-            public abstract void OnExit();
-            public abstract override int GetHashCode();
-
-            public bool Equals(ControllerState other)
-            {
-                if (ReferenceEquals(this, other)) { return true; }
-                if (GetType() == other.GetType()) { return true; }
-                return false;
-            }
-        }
 
         public class WaitForTurn : ControllerState
         {
-            public WaitForTurn(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) {}
+            public WaitForTurn(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
             public override void OnEnter()
             {
                 _playerProperties.EnterWaitingForTurn();
@@ -63,7 +27,7 @@ namespace KarmaLogic
 
         public class PickingAction : ControllerState
         {
-            public PickingAction(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
+            public PickingAction(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
@@ -84,7 +48,7 @@ namespace KarmaLogic
 
         public class VotingForWinner : ControllerState
         {
-            public VotingForWinner(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
+            public VotingForWinner(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
@@ -104,7 +68,7 @@ namespace KarmaLogic
 
         public class SelectingCardGiveAwaySelectionIndex : ControllerState
         {
-            public SelectingCardGiveAwaySelectionIndex(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwaySelectionIndex(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
@@ -124,7 +88,7 @@ namespace KarmaLogic
 
         public class SelectingCardGiveAwayPlayerIndex : ControllerState
         {
-            public SelectingCardGiveAwayPlayerIndex(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwayPlayerIndex(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {
@@ -144,7 +108,7 @@ namespace KarmaLogic
 
         public class SelectingPlayPileGiveAwayPlayerIndex : ControllerState
         {
-            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, BasePlayerProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
 
             public override void OnEnter()
             {

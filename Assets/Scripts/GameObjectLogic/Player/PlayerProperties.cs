@@ -10,7 +10,7 @@ using DataStructures;
 using UnityEngine.EventSystems;
 using KarmaLogic.Players;
 
-public class PlayerProperties : BasePlayerProperties
+public class PlayerProperties : BaseCharacterProperties
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] float _rayCastDistanceCutoff = 30f;
@@ -112,6 +112,12 @@ public class PlayerProperties : BasePlayerProperties
     {
         IsRotationEnabled = true;
         IsPointingEnabled = true;
+    }
+
+    public void DisablePlayerMovement()
+    {
+        IsRotationEnabled = false;
+        IsPointingEnabled = false;
     }
 
     public PlayingFrom SelectingFrom { 
@@ -467,7 +473,6 @@ public class PlayerProperties : BasePlayerProperties
     void VoteForPointedPlayerToWinIfValid()
     {
         if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
-        UnityEngine.Debug.Log("Voting for target clicked");
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         if (!KarmaGameManager.Instance.ValidPlayerIndicesForVoting.Contains(TargetPlayerInFrontOfPlayer.Index)) { return; }
         TriggerVoteForPlayer();

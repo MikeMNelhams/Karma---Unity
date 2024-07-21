@@ -17,8 +17,8 @@ public class KarmaGameManager : MonoBehaviour
     private static KarmaGameManager _instance;
     public static KarmaGameManager Instance { get { return _instance; } }
 
-    public GameObject cardPrefab;
-    public GameObject playerPrefab;
+    public GameObject _cardPrefab;
+    public GameObject _playerPrefab;
 
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] PlayTableProperties _playTable;
@@ -32,17 +32,17 @@ public class KarmaGameManager : MonoBehaviour
     public List<PlayerProperties> PlayersProperties { get; protected set; }
 
     public IBoard Board { get; protected set; }
-    public PickupPlayPile PickUpAction { get; set; } = new PickupPlayPile();
-    public PlayCardsCombo PlayCardsComboAction { get; set; } = new PlayCardsCombo();
+    public PickupPlayPile PickUpAction { get; set; } = new ();
+    public PlayCardsCombo PlayCardsComboAction { get; set; } = new ();
 
-    public HashSet<int> ValidPlayerIndicesForVoting { get; set; } = new HashSet<int> { };
+    public HashSet<int> ValidPlayerIndicesForVoting { get; set; } = new ();
+    Dictionary<int, int> PlayerJokerCounts { get; set; } = new ();
     Dictionary<int, int> GameRanks { get; set; }
     Dictionary<int, int> VotesForWinners { get; set; }
-    Dictionary<int, int> PlayerJokerCounts { get; set; }
 
     int _totalAvailableVotesForWinners = -1;
 
-    public Transform CardTransform { get { return cardPrefab.transform; } }
+    public Transform CardTransform { get { return _cardPrefab.transform; } }
 
     void Awake()
     {
@@ -58,21 +58,21 @@ public class KarmaGameManager : MonoBehaviour
 
     void Start()
     {
-        List<List<List<int>>> playerCardValues = new()
-        {
-            new() { new() { }, new() { }, new() { } },
-            new() { new() { }, new() { }, new() { } },
-            new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-            new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
-        };
+        //List<List<List<int>>> playerCardValues = new()
+        //{
+        //    new() { new() { }, new() { }, new() { } },
+        //    new() { new() { }, new() { }, new() { } },
+        //    new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+        //    new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+        //};
 
-        List<int> drawCardValues = new() { };
-        List<int> playCardValues = new() { 9, 10, 11 };
-        List<int> burnCardValues = new() { };
+        //List<int> drawCardValues = new() { };
+        //List<int> playCardValues = new() { 9, 10, 11 };
+        //List<int> burnCardValues = new() { };
 
-        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        //int numberOfPlayers = _playersStartInfo.Length;
-        //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
+        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        int numberOfPlayers = _playersStartInfo.Length;
+        Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
         CheckIfGameTurnTimerExceeded(Board);
         InitializeGameRanks();
@@ -114,10 +114,10 @@ public class KarmaGameManager : MonoBehaviour
         {
             Vector3 tableDirection = _playTable.centre - playersStartInfo[playerIndex].startPosition;
             tableDirection.y = 0;
-            GameObject player = Instantiate(playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
-            player.name = "Player " + playerIndex;
 
+            GameObject player = Instantiate(_playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
             PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
+            player.name = "Player " + playerIndex;
             playerProperties.Index = playerIndex;
             playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
             playerProperties.RegisterTargetPickUpPlayPileEventListener(AttemptGiveAwayPlayPile);
@@ -136,25 +136,30 @@ public class KarmaGameManager : MonoBehaviour
             } 
         }
 
-        if (isGameWonWithVoting)
-        {
-            for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
-            {
-                PlayerProperties playerProperties = PlayersProperties[playerIndex];
-                bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
-                if (!playerHasVotes) { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
-            }
-        }
-        else
-        {
-            for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
-            {
-                PlayerProperties playerProperties = PlayersProperties[playerIndex];
-                if (playerIndex != Board.CurrentPlayerIndex) { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
-            }
-        }
+        if (isGameWonWithVoting) { SetupPlayerActionStatesForVotingForWinner(); }
+        else { SetupPlayerActionStateForBasicStart(); }
 
         SetupPlayerMovementControllers(playersStartInfo);
+    }
+
+    void SetupPlayerActionStateForBasicStart()
+    {
+        for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
+        {
+            PlayerProperties playerProperties = PlayersProperties[playerIndex];
+            if (playerIndex != Board.CurrentPlayerIndex) { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
+            else { playerProperties.EnableCamera(); }
+        }
+    }
+
+    void SetupPlayerActionStatesForVotingForWinner()
+    {
+        for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
+        {
+            PlayerProperties playerProperties = PlayersProperties[playerIndex];
+            bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
+            if (!playerHasVotes) { playerProperties.SetControllerState(new WaitForTurn(Board, playerProperties)); }
+        }
     }
 
     void SetupPlayerMovementControllers(KarmaPlayerStartInfo[] playersStartInfo)
@@ -229,7 +234,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public GameObject InstantiateCard(Card card, Vector3 cardPosition, Quaternion cardRotation, GameObject parent)
     {
-        GameObject cardObject = Instantiate(cardPrefab, cardPosition, cardRotation, parent.transform);
+        GameObject cardObject = Instantiate(_cardPrefab, cardPosition, cardRotation, parent.transform);
         CardObject cardFrontBackRenderer = cardObject.GetComponent<CardObject>();
         cardFrontBackRenderer.SetCard(card);
         return cardObject;
@@ -333,20 +338,6 @@ public class KarmaGameManager : MonoBehaviour
         PlayersProperties[receiverIndex].ReceivePickedUpCard(PlayersProperties[giverIndex]);
     }
 
-    Dictionary<Card, List<int>> BoardPlayerHandSorter(int playerIndex)
-    {
-        Dictionary<Card, List<int>> cardPositions = new();
-        int n = Board.Players[playerIndex].Hand.Count;
-        for (int i = 0; i < n; i++)
-        {
-            Card card = Board.Players[playerIndex].Hand[i];
-            if (!cardPositions.ContainsKey(card)) { cardPositions[card] = new List<int>(); }
-            cardPositions[card].Add(i);
-        }
-
-        return cardPositions;
-    }
-
     void InitializeGameRanks()
     {
         GameRanks = new Dictionary<int, int>();
@@ -370,14 +361,6 @@ public class KarmaGameManager : MonoBehaviour
     void CheckIfWinner(IBoard board)
     {
         UpdateGameRanks();
-        string winnerIndicesMessage = "Winner indices: [";
-
-        foreach (int i in board.PotentialWinnerIndices)
-        {
-            winnerIndicesMessage += i + ", ";
-        }
-
-        print(winnerIndicesMessage + "]");
 
         if (IsGameWonWithVoting(board))
         {
@@ -400,27 +383,15 @@ public class KarmaGameManager : MonoBehaviour
 
     void VoteForWinners()
     {
-        Dictionary<int, int> jokerCounts = new();
-        for (int i = 0; i < Board.Players.Count; i++)
-        {
-            Player player = Board.Players[i];
-            int jokerCount = player.CountValue(CardValue.JOKER);
-            if (jokerCount > 0)
-            {
-                jokerCounts[i] = jokerCount;
-            }
-        }
-
-        PlayerJokerCounts = jokerCounts;
-
+        UpdatePlayerJokerCounts();
         UpdateValidTargetPlayersForWinVoting();
 
-        _totalAvailableVotesForWinners = Enumerable.Sum(jokerCounts.Values);
+        _totalAvailableVotesForWinners = Enumerable.Sum(PlayerJokerCounts.Values);
         HashSet<int> playerIndicesToExclude = new();
         playerIndicesToExclude.UnionWith(Enumerable.Range(0, Board.Players.Count).ToList<int>());
         playerIndicesToExclude.ExceptWith(Board.PotentialWinnerIndices);
         
-        foreach (int playerIndex in jokerCounts.Keys)
+        foreach (int playerIndex in PlayerJokerCounts.Keys)
         {
             Board.CurrentPlayerIndex = playerIndex;
             PlayersProperties[playerIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
@@ -455,15 +426,6 @@ public class KarmaGameManager : MonoBehaviour
                 GameRanks[playerIndex] = rank;
             }
         }
-
-        string message = "Overall Rankings: ";
-
-        foreach (KeyValuePair<int, int> kvp in GameRanks)
-        {
-            message += kvp.ToString() + ", ";
-        }
-
-        UnityEngine.Debug.Log(message);
     }
 
     void UpdateValidTargetPlayersForWinVoting()
@@ -479,11 +441,27 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
+    void UpdatePlayerJokerCounts()
+    {
+        PlayerJokerCounts.Clear();
+        for (int i = 0; i < Board.Players.Count; i++)
+        {
+            Player player = Board.Players[i];
+            int jokerCount = player.CountValue(CardValue.JOKER);
+            if (jokerCount > 0)
+            {
+                PlayerJokerCounts[i] = jokerCount;
+            }
+        }
+    }
+
     void StartTurn(IBoard board)
     {
         MoveCurrentPlayerArrow();
         Board.Print();
         if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { return; }
+
+        print("Starting game...");
         PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));
     }
 
@@ -545,7 +523,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         if (_isDebuggingMode && _playersStartInfo[Board.PlayerIndexWhoStartedTurn].isPlayableCharacter)
         {
-            DisablePlayerMovement(Board.PlayerIndexWhoStartedTurn);
+            PlayersProperties[Board.PlayerIndexWhoStartedTurn].DisablePlayerMovement();
         }
     }
 
@@ -667,18 +645,11 @@ public class KarmaGameManager : MonoBehaviour
 
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         HashSet<CardObject> selectedCards = playerProperties.CardSelector.CardObjects;
-        string selectedCardsMessage = "Attempting card giveaway. Selected Cards: ";
 
-        foreach (CardObject card in selectedCards)
-        {
-            selectedCardsMessage += card + " ";
-        }
-        print(selectedCardsMessage);
         if (selectedCards.Count != 1) { return; }
 
         CardObject selectedCard = selectedCards.First();
         if (!validCardValues.Contains(selectedCard.CurrentCard.Value)) { return; }
-        print("CARD " + selectedCard + " IS VALID FOR GIVEAWAY!!");
         
         playerProperties.SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
         playerProperties.PickedUpCard = selectedCard;
@@ -694,7 +665,7 @@ public class KarmaGameManager : MonoBehaviour
         Player giver = Board.Players[giverIndex];
         print("Giving away picked up card: " + PlayersProperties[giverIndex].PickedUpCard + " to player " + targetIndex);
         giver.CardGiveAwayHandler.GiveAway(PlayersProperties[giverIndex].PickedUpCard.CurrentCard, targetIndex);
-        Board.DrawUntilFull(giverIndex); // TODO move this into BasicBoard somehow?
+        Board.DrawUntilFull(giverIndex);
 
         if (giver.CardGiveAwayHandler.IsFinished)
         {
@@ -720,8 +691,17 @@ public class KarmaGameManager : MonoBehaviour
         return;
     }
 
-    void DisablePlayerMovement(int playerIndex)
+    Dictionary<Card, List<int>> BoardPlayerHandSorter(int playerIndex)
     {
-        PlayersProperties[playerIndex].IsRotationEnabled = false;
+        Dictionary<Card, List<int>> cardPositions = new();
+        int n = Board.Players[playerIndex].Hand.Count;
+        for (int i = 0; i < n; i++)
+        {
+            Card card = Board.Players[playerIndex].Hand[i];
+            if (!cardPositions.ContainsKey(card)) { cardPositions[card] = new List<int>(); }
+            cardPositions[card].Add(i);
+        }
+
+        return cardPositions;
     }
 }
