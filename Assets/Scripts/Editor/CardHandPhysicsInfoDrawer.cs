@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 #if UNITY_EDITOR
-[CustomPropertyDrawer(typeof(CardHandPhysicsInfo))]
+[CustomPropertyDrawer(typeof(FanPhysicsInfo))]
 public class CardHandPhysicsInfoDrawer : PropertyDrawer
 {
     protected float fieldWidth = 40.0f;

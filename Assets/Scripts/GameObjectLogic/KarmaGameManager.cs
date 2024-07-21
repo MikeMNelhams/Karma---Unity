@@ -11,6 +11,7 @@ using KarmaLogic.Controller;
 using System;
 using System.Linq;
 using DataStructures;
+using UnityEngine.XR;
 
 public class KarmaGameManager : MonoBehaviour
 {
@@ -188,15 +189,9 @@ public class KarmaGameManager : MonoBehaviour
     {
         for (int i = 0; i < Board.Players.Count; i++)
         {
-            PlayerProperties playerProperties = PlayersProperties[i]; 
-            if (playerProperties.cardHolder == null) { continue; }
-            GameObject cardHolder = playerProperties.cardHolder;
-            CreatePlayerHandCards(i, cardHolder);
-        }
-
-        for (int i = 0; i < Board.Players.Count; i++)
-        {
             PlayerProperties playerProperties = PlayersProperties[i];
+            playerProperties.InstantiatePlayerHandFan(Board.Players[i].Hand);
+
             Player player = Board.Players[i];
             if (i >= _playTable.boardHolders.Count) { break; }
             if (_playTable.boardHolders[i] == null) { continue; }
@@ -217,19 +212,6 @@ public class KarmaGameManager : MonoBehaviour
                 playerProperties.SetCardObjectOnMouseDownEvent(card);
             }
         }   
-    }
-
-    void CreatePlayerHandCards(int playerIndex, GameObject cardHolder)
-    {
-        ListWithConstantContainsCheck<CardObject> cardObjects = new ();
-        foreach (Card card in Board.Players[playerIndex].Hand)
-        {
-            CardObject cardObject = InstantiateCard(card, Vector3.zero, Quaternion.identity, cardHolder).GetComponent<CardObject>();
-            PlayersProperties[playerIndex].SetCardObjectOnMouseDownEvent(cardObject);
-            cardObjects.Add(cardObject);
-        }
-
-        PlayersProperties[playerIndex].PopulateHand(cardObjects);
     }
 
     public GameObject InstantiateCard(Card card, Vector3 cardPosition, Quaternion cardRotation, GameObject parent)
@@ -283,7 +265,7 @@ public class KarmaGameManager : MonoBehaviour
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(cardObject);
             }
-            PlayersProperties[i].PopulateHand(hand);
+            PlayersProperties[i].UpdateHand(hand);
         }
     }
 
@@ -461,7 +443,6 @@ public class KarmaGameManager : MonoBehaviour
         Board.Print();
         if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { return; }
 
-        print("Starting game...");
         PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));
     }
 

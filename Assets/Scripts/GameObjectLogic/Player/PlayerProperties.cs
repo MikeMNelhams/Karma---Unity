@@ -1,23 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using KarmaLogic.Board;
 using KarmaLogic.Controller;
 using KarmaLogic.Cards;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using System.Linq;
-using DataStructures;
-using UnityEngine.EventSystems;
 using KarmaLogic.Players;
+using DataStructures;
+using FanHandlers;
 
 public class PlayerProperties : BaseCharacterProperties
 {
     [SerializeField] PlayerMovementController _playerMovementController;
-    [SerializeField] float _rayCastDistanceCutoff = 30f;
-    [SerializeField] CardHandPhysicsInfo _handPhysicsInfo = CardHandPhysicsInfo.Default;
+    [SerializeField] BaseFanHandler _fanHandler;
 
-    public Camera playerCamera;
-    public GameObject cardHolder;
+    [SerializeField] Camera _playerCamera;
+    [SerializeField] GameObject _cardHolder;
+
+    [SerializeField] float _rayCastCutoff = 30f;
 
     public Button confirmSelectionButton;
     public Button pickupPlayPileButton;
@@ -35,7 +37,7 @@ public class PlayerProperties : BaseCharacterProperties
     public ListWithConstantContainsCheck<CardObject> CardsInKarmaUp { get; set; }
 
     public ListWithConstantContainsCheck<CardObject> CardsInKarmaDown { get; set; }
-
+    
     public CardObject PickedUpCard { get; set; }
 
     public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
@@ -92,14 +94,14 @@ public class PlayerProperties : BaseCharacterProperties
 
     public void EnableCamera()
     {
-        playerCamera.enabled = true;
-        playerCamera.tag = "MainCamera";
+        _playerCamera.enabled = true;
+        _playerCamera.tag = "MainCamera";
     }
 
     public void DisableCamera()
     {
-        playerCamera.tag = "Untagged";
-        playerCamera.enabled = false;
+        _playerCamera.tag = "Untagged";
+        _playerCamera.enabled = false;
     }
 
     public void HideUI()
@@ -148,6 +150,20 @@ public class PlayerProperties : BaseCharacterProperties
     {
         if (card == null) { throw new NullReferenceException(); }
         return SelectableCardObjects.Contains(card);
+    }
+
+    public void InstantiatePlayerHandFan(Hand hand)
+    {
+        ListWithConstantContainsCheck<CardObject> cardObjects = new();
+        KarmaGameManager gameManager = KarmaGameManager.Instance;
+        foreach (Card card in hand)
+        {
+            CardObject cardObject = gameManager.InstantiateCard(card, Vector3.zero, Quaternion.identity, _cardHolder).GetComponent<CardObject>();
+            SetCardObjectOnMouseDownEvent(cardObject);
+            cardObjects.Add(cardObject);
+        }
+
+        UpdateHand(cardObjects);
     }
 
     public override void EnterWaitingForTurn()
@@ -245,7 +261,7 @@ public class PlayerProperties : BaseCharacterProperties
     {
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
-        if (n == 1) { PopulateHand(new ListWithConstantContainsCheck<CardObject>(cardsToAdd)); return; }
+        if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<CardObject>(cardsToAdd)); return; }
 
         ListWithConstantContainsCheck<CardObject> combinedHandCardObjects = CardsInHand;
         combinedHandCardObjects.AddRange(cardsToAdd);
@@ -282,62 +298,21 @@ public class PlayerProperties : BaseCharacterProperties
             handCardObjectsMessage += " " + cardObject.name;
         }
         Debug.Log(handCardObjectsMessage);
-        PopulateHand(finalHandCardObjects);
+        UpdateHand(finalHandCardObjects);
     }
 
-    public void PopulateHand(ListWithConstantContainsCheck<CardObject> cardObjects, CardHandPhysicsInfo cardHandPhysicsInfo = null)
+    public void UpdateHand(ListWithConstantContainsCheck<CardObject> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
-        PopulateHand(cardHandPhysicsInfo);
+        UpdateHand(fanPhysicsInfo);
     }
 
-    public void PopulateHand(CardHandPhysicsInfo cardHandPhysicsInfo = null)
+    public void UpdateHand(FanPhysicsInfo fanPhysicsInfo = null)
     {
-        if (cardHandPhysicsInfo != null) { _handPhysicsInfo = cardHandPhysicsInfo; }
+        bool fanIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
+        if (fanIsFlipped) { ShuffleHand(); }
 
-        bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
-        if (handIsFlipped) { ShuffleHand(); }
-
-        Transform holderTransform = cardHolder.transform;
-
-        Vector3 holderPosition = holderTransform.position;
-
-        if (CardsInHand.Count == 0) { return; }
-        float startAngle = _handPhysicsInfo.startAngle;
-        float endAngle = _handPhysicsInfo.endAngle;
-        float distanceFromHolder = _handPhysicsInfo.distanceFromHolder;
-        float yOffset = _handPhysicsInfo.yOffset;
-
-        if (CardsInHand.Count == 1)
-        {
-            CardObject cardObject = CardsInHand[0];
-            float middleAngle = (startAngle + endAngle) / 2;
-            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, middleAngle, yOffset));
-            Vector3 lookVector = holderPosition - cardPosition;
-
-            Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
-            if (handIsFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
-
-            cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
-            return;
-        }
-
-        float angleStepSize = (endAngle - startAngle) / (CardsInHand.Count - 1);
-
-        int j = 0;
-        foreach (CardObject cardObject in CardsInHand)
-        {
-            float angle = startAngle + j * angleStepSize;
-            Vector3 cardPosition = holderTransform.TransformPoint(RelativeCardPositionInHand(distanceFromHolder, angle, yOffset));
-            Vector3 lookVector = holderPosition - cardPosition;
-
-            Quaternion cardRotation = lookVector.sqrMagnitude < 0.01f ? Quaternion.identity : Quaternion.LookRotation(lookVector);
-            if (handIsFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
-
-            cardRotation *= Quaternion.Euler(new Vector3(0, -3, 0));
-            cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
-            j++;
-        }
+        _fanHandler.TransformCardsIntoFan(CardsInHand, fanIsFlipped, fanPhysicsInfo);
     }
 
     public void FlipHand()
@@ -345,10 +320,7 @@ public class PlayerProperties : BaseCharacterProperties
         bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
         if (handIsFlipped ) { ShuffleHand(); }
 
-        foreach (CardObject cardObject in CardsInHand)
-        {
-            cardObject.transform.Rotate(new Vector3(0, 180, 0));
-        }
+        _fanHandler.FlipFan(CardsInHand);
     }
 
     public void FlipKarmaDownCardsUp()
@@ -371,7 +343,7 @@ public class PlayerProperties : BaseCharacterProperties
 
         SelectableCardObjects.RemoveRange(cardObjects);
 
-        if (SelectingFrom == PlayingFrom.Hand) { PopulateHand(); }
+        if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
         if (!karmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
         return cardObjects;
     }
@@ -385,7 +357,7 @@ public class PlayerProperties : BaseCharacterProperties
     public void SetCardObjectOnMouseDownEvent(CardObject cardObject)
     {
         cardObject.OnCardClick += CardObjectOnMouseDownEvent;
-        cardObject.transform.parent = cardHolder.transform;
+        cardObject.transform.parent = _cardHolder.transform;
     }
 
     public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)
@@ -396,6 +368,7 @@ public class PlayerProperties : BaseCharacterProperties
 
     public void ShuffleHand()
     {
+        // TODO Needs to match the Board order, so this is not necessary as it gets unsorted almost immediately!
         // Fisher-Yates Shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
         int n = CardsInHand.Count;
         while (n > 1)
@@ -413,17 +386,7 @@ public class PlayerProperties : BaseCharacterProperties
         giverPlayerProperties.RemoveCardObjectOnMouseDownEvent(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.PickedUpCard = null;
-        giverPlayerProperties.PopulateHand();
-    }
-
-    Vector3 RelativeCardPositionInHand(float distanceFromCentre, float angle, float yOffset)
-    {
-        if (angle > 90) { throw new ArithmeticException("Angle for cards in hand: " + angle + " should not exceed 90"); }
-        if (angle == 0) { return new Vector3(0, yOffset, distanceFromCentre); }
-        double angleRad = (double)angle * (Math.PI / 180.0f);
-        float x = (float)(distanceFromCentre * Math.Sin(angleRad));
-        float z = (float)(distanceFromCentre * Math.Cos(angleRad));
-        return new Vector3(x, yOffset, z);
+        giverPlayerProperties.UpdateHand();
     }
 
     void MovePickedUpCardIfValid()
@@ -443,20 +406,20 @@ public class PlayerProperties : BaseCharacterProperties
         if (PickedUpCard == null) { return; }
 
         float distanceFromHolder = 0.75f;
-        Vector3 cardPosition = cardHolder.transform.TransformPoint(playerCamera.transform.forward * distanceFromHolder);
+        Vector3 cardPosition = _cardHolder.transform.TransformPoint(_playerCamera.transform.forward * distanceFromHolder);
         
         PickedUpCard.transform.position = cardPosition;
 
         Quaternion cardRotation; 
         if (_targetPlayerProperties != null)
         {
-            Quaternion lookDirection = Quaternion.LookRotation(cardPosition - playerCamera.transform.position);
+            Quaternion lookDirection = Quaternion.LookRotation(cardPosition - _playerCamera.transform.position);
             cardRotation = lookDirection; // Quaternion.Euler(90, 180, 0) *
             cardRotation *= Quaternion.Euler(75, 180, 0);
         }
         else
         {
-            cardRotation = Quaternion.LookRotation(playerCamera.transform.position - cardPosition);
+            cardRotation = Quaternion.LookRotation(_playerCamera.transform.position - cardPosition);
         }
         
         PickedUpCard.transform.rotation = cardRotation;
@@ -521,7 +484,7 @@ public class PlayerProperties : BaseCharacterProperties
     {
         get
         {
-            Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out RaycastHit firstHit, _rayCastDistanceCutoff, _layerAsLayerMask);
+            Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
 
             if (firstHit.transform == null) { return null; }
             if (firstHit.transform.parent == null) { return null; }
