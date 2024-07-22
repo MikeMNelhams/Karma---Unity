@@ -273,6 +273,7 @@ public class KarmaGameManager : MonoBehaviour
             foreach (CardObject cardObject in hand)
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(cardObject);
+                playerProperties.ParentCardToThis(cardObject);
             }
             PlayersProperties[i].UpdateHand(hand);
         }

@@ -14,7 +14,7 @@ using FanHandlers;
 public class PlayerProperties : BaseCharacterProperties
 {
     [SerializeField] PlayerMovementController _playerMovementController;
-    [SerializeField] BaseFanHandler _fanHandler;
+    [SerializeField] FanHandler _fanHandler;
 
     [SerializeField] Camera _playerCamera;
     [SerializeField] GameObject _cardHolder;
@@ -156,10 +156,12 @@ public class PlayerProperties : BaseCharacterProperties
     {
         ListWithConstantContainsCheck<CardObject> cardObjects = new();
         KarmaGameManager gameManager = KarmaGameManager.Instance;
+        
         foreach (Card card in hand)
         {
             CardObject cardObject = gameManager.InstantiateCard(card, Vector3.zero, Quaternion.identity, _cardHolder).GetComponent<CardObject>();
             SetCardObjectOnMouseDownEvent(cardObject);
+            ParentCardToThis(cardObject);
             cardObjects.Add(cardObject);
         }
 
@@ -269,6 +271,7 @@ public class PlayerProperties : BaseCharacterProperties
         foreach (CardObject cardObject in cardsToAdd)
         {
             SetCardObjectOnMouseDownEvent(cardObject);
+            ParentCardToThis(cardObject);
         }
 
         Dictionary<Card, List<int>> cardPositions = _handSorter(Index);
@@ -311,8 +314,14 @@ public class PlayerProperties : BaseCharacterProperties
     {
         bool fanIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
         if (fanIsFlipped) { ShuffleHand(); }
-
+        fanPhysicsInfo ??= FanPhysicsInfo.Default;
         _fanHandler.TransformCardsIntoFan(CardsInHand, fanIsFlipped, fanPhysicsInfo);
+    }
+
+    [ContextMenu("Redraw Fan")]
+    public void UpdateHand()
+    {
+        UpdateHand(null);
     }
 
     public void FlipHand()
@@ -357,13 +366,17 @@ public class PlayerProperties : BaseCharacterProperties
     public void SetCardObjectOnMouseDownEvent(CardObject cardObject)
     {
         cardObject.OnCardClick += CardObjectOnMouseDownEvent;
-        cardObject.transform.parent = _cardHolder.transform;
     }
 
     public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)
     {
         CardSelector.Remove(cardObject);
         cardObject.OnCardClick -= CardObjectOnMouseDownEvent;
+    }
+
+    public void ParentCardToThis(CardObject cardObject)
+    {
+        cardObject.transform.parent = _cardHolder.transform;
     }
 
     public void ShuffleHand()

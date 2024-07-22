@@ -19,6 +19,6 @@ public class CurrentPlayerArrowHandler
     public void MoveArrow(Vector3 playerPosition, Vector3 tablePosition)
     {
         Quaternion towardsTable = Quaternion.LookRotation(tablePosition - playerPosition);
-        _currentPlayerArrow.transform.SetPositionAndRotation(playerPosition + new Vector3(0, -1.5f, 0), Quaternion.Euler(0, towardsTable.eulerAngles.y, 90));
+        _currentPlayerArrow.transform.SetPositionAndRotation(playerPosition + new Vector3(0, 3.5f, 0), Quaternion.Euler(0, towardsTable.eulerAngles.y, 90));
     }
 }

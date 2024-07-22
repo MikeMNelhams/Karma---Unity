@@ -3,12 +3,9 @@ using UnityEngine;
 
 namespace FanHandlers 
 {
-    public abstract class BaseFanHandler : MonoBehaviour
+    public abstract class Fan
     {
-        [SerializeField] protected Transform _holder;
-        [SerializeField] protected FanPhysicsInfo _fanPhysicsInfo;
-
-        public abstract Vector3 RelativeCardPositionInFan(float distanceFromCentre, float angle, float yOffset);
+        
         public abstract void TransformCardsIntoFan(IList<CardObject> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null);
         public void FlipFan(IList<CardObject> cards)
         {

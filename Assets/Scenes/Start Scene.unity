@@ -781,13 +781,13 @@ MonoBehaviour:
   _playTable: {fileID: 1598284356}
   _turnLimit: 100
   _playersStartInfo:
-  - startPosition: {x: 0, y: 5.1, z: 0}
+  - startPosition: {x: 0, y: 0, z: 0}
     isPlayableCharacter: 1
-  - startPosition: {x: 2.5, y: 5.1, z: 2.5}
+  - startPosition: {x: 2.5, y: 0, z: 2.5}
     isPlayableCharacter: 1
-  - startPosition: {x: 0, y: 5.1, z: 5}
+  - startPosition: {x: 0, y: 0, z: 5}
     isPlayableCharacter: 1
-  - startPosition: {x: -2.5, y: 5.1, z: 2.5}
+  - startPosition: {x: -2.5, y: 0, z: 2.5}
     isPlayableCharacter: 1
   _whichPlayerStarts: 0
   _isDebuggingMode: 1
