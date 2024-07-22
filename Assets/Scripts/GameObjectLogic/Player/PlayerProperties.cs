@@ -53,7 +53,7 @@ public class PlayerProperties : BaseCharacterProperties
     int _layerAsLayerMask;
     PlayerProperties _targetPlayerProperties;
 
-    bool karmaDownFlippedUp = false;
+    bool _isKarmaDownFlippedUp = false;
 
     void Awake()
     {
@@ -325,7 +325,7 @@ public class PlayerProperties : BaseCharacterProperties
 
     public void FlipKarmaDownCardsUp()
     {
-        karmaDownFlippedUp = true;
+        _isKarmaDownFlippedUp = true;
         foreach (CardObject cardObject in CardsInKarmaDown)
         {
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
@@ -344,7 +344,7 @@ public class PlayerProperties : BaseCharacterProperties
         SelectableCardObjects.RemoveRange(cardObjects);
 
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
-        if (!karmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
+        if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
         return cardObjects;
     }
 

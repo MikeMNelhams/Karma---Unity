@@ -78,7 +78,7 @@ namespace KarmaLogic
             public CardPile DrawPile { get; }
             public CardPile BurnPile { get; }
             public PlayCardPile PlayPile { get; }
-            public BoardEventSystem BoardEventSystem { get; }
+            public BoardEventSystem EventSystem { get; }
             public IBoardPrinter BoardPrinter { get; }
             public BoardPlayOrder PlayOrder { get; }
             public BoardTurnOrder TurnOrder { get; }

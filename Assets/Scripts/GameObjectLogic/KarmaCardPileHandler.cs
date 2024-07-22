@@ -40,7 +40,7 @@ public class KarmaCardPileHandler : MonoBehaviour
     public void MoveCardsToTopOfPile(List<CardObject> cardObjects)
     {
         KarmaGameManager gameManager = KarmaGameManager.Instance;
-        GameObject cardPrefab = gameManager._cardPrefab;
+
         float cardDepth = gameManager.CardTransform.localScale.z;
         float halfHeight = BottomY;
         float cardIndex = CardObjects.Count;

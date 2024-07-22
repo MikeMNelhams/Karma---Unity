@@ -21,7 +21,7 @@ namespace KarmaLogic
             public CardPile DrawPile { get; protected set; }
             public CardPile BurnPile { get; protected set; }
             public PlayCardPile PlayPile { get; protected set; }
-            public BoardEventSystem BoardEventSystem { get; protected set; }
+            public BoardEventSystem EventSystem { get; protected set; }
             public IBoardPrinter BoardPrinter { get; protected set; }
             public BoardPlayOrder PlayOrder { get; protected set; }
             public BoardTurnOrder TurnOrder { get; protected set; }
@@ -98,7 +98,7 @@ namespace KarmaLogic
                 BoardPrinter = boardPrinter is null ? boardPrinterDefault : boardPrinter;
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
-                BoardEventSystem = new BoardEventSystem();
+                EventSystem = new BoardEventSystem();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
                 CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
@@ -157,7 +157,7 @@ namespace KarmaLogic
             public void FlipHands()
             {
                 HandsAreFlipped = !HandsAreFlipped;
-                BoardEventSystem.TriggerHandsFlippedEvent(this);
+                EventSystem.TriggerHandsFlippedEvent(this);
             }
 
             public void RotateHands(int numberOfRotations, Deque<Hand> hands)
@@ -166,7 +166,7 @@ namespace KarmaLogic
                 for (int i = 0; i < numberOfRotations; i++)
                 {
                     hands.Rotate((int)TurnOrder);
-                    BoardEventSystem.TriggerHandsRotatedEventListener((int)TurnOrder, this);
+                    EventSystem.TriggerHandsRotatedEventListener((int)TurnOrder, this);
                     for (int j = 0; j < Players.Count; j++)
                     {
                         Players[j].Hand = hands[j];
@@ -176,14 +176,14 @@ namespace KarmaLogic
 
             public void StartGivingAwayPlayPile(int giverIndex)
             {
-                BoardEventSystem.TriggerStartedPlayPileGiveAway(giverIndex);
+                EventSystem.TriggerStartedPlayPileGiveAway(giverIndex);
             }
 
             public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null)
             {
                 CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex, invalidFilter);
                 CurrentPlayer.CardGiveAwayHandler.RegisterOnCardGiveAwayListener(ReceiveCard);
-                BoardEventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
+                EventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
             }
 
             void ReceiveCard(Card card, int giverIndex, int receiverIndex)
@@ -205,13 +205,13 @@ namespace KarmaLogic
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
                 
-                BoardEventSystem.TriggerOnTurnStartEvents(this);
+                EventSystem.TriggerOnTurnStartEvents(this);
             }
 
             public void EndTurn()
             {
                 TurnsPlayed++;
-                BoardEventSystem.TriggerOnTurnEndEvents(this);
+                EventSystem.TriggerOnTurnEndEvents(this);
             }
 
             public bool PlayCards(CardsList cards, IController controller)
@@ -267,7 +267,7 @@ namespace KarmaLogic
                     CardsList cardsToBurn = PlayPile.PopMultiple(indicesToBurn.ToArray());
                     CardValuesInPlayCounts[CardValue.JOKER] -= cardsToBurn.CountValue(CardValue.JOKER);
                     BurnPile.Add(cardsToBurn);
-                    BoardEventSystem.TriggerBurnEvents(jokerCount);
+                    EventSystem.TriggerBurnEvents(jokerCount);
                     return;
                 }
                 BurnPile.Add(PlayPile);
@@ -275,7 +275,7 @@ namespace KarmaLogic
                 CardValuesInPlayCounts.SubtractInPlace(PlayPile.CountAllCardValues());
 
                 PlayPile.Clear();
-                BoardEventSystem.TriggerBurnEvents(jokerCount);
+                EventSystem.TriggerBurnEvents(jokerCount);
                 return;
             }
 
@@ -311,7 +311,7 @@ namespace KarmaLogic
                 }
 
                 NumberOfCardsDrawnThisTurn += cardsDrawn.Count;
-                BoardEventSystem.TriggerPlayerDrawEvents(cardsDrawn.Count, playerIndex);
+                EventSystem.TriggerPlayerDrawEvents(cardsDrawn.Count, playerIndex);
                 return cardsDrawn;
             }
 

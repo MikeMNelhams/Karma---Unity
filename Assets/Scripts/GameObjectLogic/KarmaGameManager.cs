@@ -43,7 +43,9 @@ public class KarmaGameManager : MonoBehaviour
 
     int _totalAvailableVotesForWinners = -1;
 
-    public Transform CardTransform { get { return _cardPrefab.transform; } }
+    public Transform CardTransform { get { return  _cardPrefab.transform; } }
+
+    CurrentPlayerArrowHandler _currentPlayerArrowHandler;
 
     void Awake()
     {
@@ -55,6 +57,13 @@ public class KarmaGameManager : MonoBehaviour
         {
             _instance = this;
         }
+
+        InitialiseHandlers();
+    }
+
+    void InitialiseHandlers()
+    {
+        _currentPlayerArrowHandler = new CurrentPlayerArrowHandler(_currentPlayerArrow);
     }
 
     void Start()
@@ -84,26 +93,26 @@ public class KarmaGameManager : MonoBehaviour
         _playTable.CreateCardObjectPilesFromBoard(Board);
 
         AssignButtonEvents();
-        _currentPlayerArrow.SetActive(true);
+        _currentPlayerArrowHandler.SetArrowVisibility(true);
         Board.StartTurn();
     }
 
     void RegisterBoardEvents()
     {
-        Board.BoardEventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(StartTurn));
-        Board.BoardEventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
+        Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(StartTurn));
+        Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
 
-        Board.BoardEventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
-        Board.BoardEventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHandsAnimation));
-        Board.BoardEventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrderAnimation));
-        Board.BoardEventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
-        Board.BoardEventSystem.RegisterPlayPileGiveAwayListener(new BoardEventSystem.BoardOnStartPlayPileGiveAwayListener(StartGiveAwayPlayPile));
+        Board.EventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
+        Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHandsAnimation));
+        Board.EventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrderAnimation));
+        Board.EventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
+        Board.EventSystem.RegisterPlayPileGiveAwayListener(new BoardEventSystem.BoardOnStartPlayPileGiveAwayListener(StartGiveAwayPlayPile));
 
-        Board.BoardEventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
+        Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
 
-        Board.BoardEventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
-        Board.BoardEventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfGameTurnTimerExceeded));
-        Board.BoardEventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfGameTurnTimerExceeded));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
 
     void CreatePlayerObjects(KarmaPlayerStartInfo[] playersStartInfo)
@@ -283,8 +292,11 @@ public class KarmaGameManager : MonoBehaviour
     void MoveCurrentPlayerArrow()
     {
         PlayerProperties playerProperties = PlayersProperties[Board.CurrentPlayerIndex];
-        Quaternion towardsTable = Quaternion.LookRotation(_playTable.transform.position - playerProperties.transform.position);
-        _currentPlayerArrow.transform.SetPositionAndRotation(playerProperties.gameObject.transform.position + new Vector3(0, -1.5f, 0), Quaternion.Euler(0, towardsTable.eulerAngles.y, 90));
+
+        Vector3 playerPosition = playerProperties.transform.position;
+        Vector3 tablePosition = _playTable.transform.position;
+
+        _currentPlayerArrowHandler.MoveArrow(playerPosition, tablePosition);
     }
 
     void MoveCardsFromSelectionToPlayPile(int playerIndex)
