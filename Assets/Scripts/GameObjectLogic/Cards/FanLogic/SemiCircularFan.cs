@@ -7,7 +7,7 @@ namespace FanHandlers
     public class SemiCircularFan : Fan
     {
         [SerializeField] Quaternion _antiClippingRotation = Quaternion.Euler(new Vector3(0, -2, 0));
-        float _radiusWidth = 0.4f;
+        float _radiusWidth = 0.25f;
         float _radiusHeight = 0.25f;
 
         readonly Transform _holder;
@@ -28,7 +28,7 @@ namespace FanHandlers
             }
 
             float degreesToRadians = (float)(Math.PI / 180f);
-            float theta = fanPhysicsInfo.startAngle + (cardIndex * fanPhysicsInfo.totalAngle) / (numberOfCards - 1);
+            float theta = fanPhysicsInfo.endAngle - (cardIndex * fanPhysicsInfo.totalAngle) / (numberOfCards - 1);
             float x = (float)(_radiusWidth * Math.Cos(theta * degreesToRadians + Math.PI / 2));
             float y = (float)((_radiusHeight * Math.Sin(theta * degreesToRadians + Math.PI / 2)) - _radiusHeight / 2);
 

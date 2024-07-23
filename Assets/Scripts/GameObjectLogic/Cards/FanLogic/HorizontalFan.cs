@@ -6,7 +6,7 @@ namespace FanHandlers
 {
     public class HorizontalFan : Fan
     {
-        [SerializeField] Quaternion _antiClippingRotation = Quaternion.Euler(new Vector3(0, -3, 0));
+        Quaternion _antiClippingRotation = Quaternion.Euler(new Vector3(0, -3, 0));
         readonly float _maxHandAngle = 90f;
         readonly Transform _holder;
 
