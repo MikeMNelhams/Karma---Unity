@@ -111,11 +111,6 @@ namespace KarmaLogic
                 return cardDrawn;
             }
 
-            public void ShuffleHand()
-            {
-                Hand.Shuffle();
-            }
-
             public DictionaryDefaultInt<CardValue> CountAllCardValues() {
                 DictionaryDefaultInt<CardValue> counts = new();
                 counts.UnionInPlace(Hand.CountAllCardValues());

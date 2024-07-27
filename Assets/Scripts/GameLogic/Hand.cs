@@ -8,6 +8,9 @@ namespace KarmaLogic
     {
         public class Hand : CardsList
         {
+            public delegate void OnHandOrderChange(int[] indices);
+            event OnHandOrderChange HandOrderChangeEvent;
+
             public Hand() : base() { }
 
             public Hand(Card card) : base(card) { }
@@ -56,6 +59,30 @@ namespace KarmaLogic
                 }
 
                 return "Hand[" + listString + "]";
+            }
+
+            public override int[] Sort()
+            {
+                int[] indices = base.Sort();
+                HandOrderChangeEvent?.Invoke(indices);
+                return indices;
+            }
+
+            public override int[] Shuffle()
+            {
+                int[] indices = base.Shuffle();
+                HandOrderChangeEvent?.Invoke(indices);
+                return indices;
+            }
+
+            public void RegisterHandOrderChangeEvent(OnHandOrderChange eventListener)
+            {
+                HandOrderChangeEvent += eventListener;
+            }
+
+            public void UnregisterHandOrderChangeEvent(OnHandOrderChange eventListener)
+            {
+                HandOrderChangeEvent -= eventListener;
             }
         }
     }

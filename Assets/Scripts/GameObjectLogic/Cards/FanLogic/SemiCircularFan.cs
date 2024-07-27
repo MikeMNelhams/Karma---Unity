@@ -6,9 +6,9 @@ namespace FanHandlers
 {
     public class SemiCircularFan : Fan
     {
-        [SerializeField] Quaternion _antiClippingRotation = Quaternion.Euler(new Vector3(0, -2, 0));
-        float _radiusWidth = 0.25f;
-        float _radiusHeight = 0.25f;
+        Quaternion _antiClippingRotation = Quaternion.Euler(new Vector3(0, -2, 0));
+        readonly float _radiusWidth = 0.25f;
+        readonly float _radiusHeight = 0.25f;
 
         readonly Transform _holder;
 

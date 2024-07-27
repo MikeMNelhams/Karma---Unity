@@ -281,7 +281,6 @@ public class PlayerProperties : BaseCharacterProperties
         {
             int position = cardPositions[cardObject.CurrentCard].Last();
             handCorrectOrder[position] = cardObject;
-            Debug.Log("Moving card: " + cardObject.CurrentCard + cardObject + " to position: " + position);
             List<int> positions = cardPositions[cardObject.CurrentCard];
             positions.RemoveAt(positions.Count - 1);
         }
@@ -304,6 +303,17 @@ public class PlayerProperties : BaseCharacterProperties
         UpdateHand(finalHandCardObjects);
     }
 
+    public void SortHand(int[] sortOrder)
+    {
+        ListWithConstantContainsCheck<CardObject> sortedHand = new();
+        for (int i = 0; i < sortOrder.Length; i++)
+        {
+            sortedHand.Add(CardsInHand[sortOrder[i]]);
+        }
+        
+        UpdateHand(sortedHand);
+    }
+
     public void UpdateHand(ListWithConstantContainsCheck<CardObject> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
@@ -313,7 +323,6 @@ public class PlayerProperties : BaseCharacterProperties
     public void UpdateHand(FanPhysicsInfo fanPhysicsInfo = null)
     {
         bool fanIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
-        if (fanIsFlipped) { ShuffleHand(); }
         fanPhysicsInfo ??= FanPhysicsInfo.Default;
         _fanHandler.TransformCardsIntoFan(CardsInHand, fanIsFlipped, fanPhysicsInfo);
     }
@@ -326,9 +335,6 @@ public class PlayerProperties : BaseCharacterProperties
 
     public void FlipHand()
     {
-        bool handIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
-        if (handIsFlipped ) { ShuffleHand(); }
-
         _fanHandler.FlipFan(CardsInHand);
     }
 
@@ -377,19 +383,6 @@ public class PlayerProperties : BaseCharacterProperties
     public void ParentCardToThis(CardObject cardObject)
     {
         cardObject.transform.parent = _cardHolder.transform;
-    }
-
-    public void ShuffleHand()
-    {
-        // TODO Needs to match the Board order, so this is not necessary as it gets unsorted almost immediately!
-        // Fisher-Yates Shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-        int n = CardsInHand.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            (CardsInHand[n], CardsInHand[k]) = (CardsInHand[k], CardsInHand[n]);
-        }
     }
 
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)

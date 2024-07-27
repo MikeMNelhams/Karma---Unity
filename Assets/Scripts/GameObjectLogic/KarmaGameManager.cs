@@ -68,21 +68,21 @@ public class KarmaGameManager : MonoBehaviour
 
     void Start()
     {
-        //List<List<List<int>>> playerCardValues = new()
-        //{
-        //    new() { new() { }, new() { }, new() { } },
-        //    new() { new() { }, new() { }, new() { } },
-        //    new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-        //    new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
-        //};
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { new() { 2, 3, 14}, new() { 2, 2, 2 }, new() { } },
+            new() { new() { 3, 5, 9 }, new() { 3, 3, 3}, new() { } },
+            new() { new() { 4, 5, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+            new() { new() { 4, 5, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+        };
 
-        //List<int> drawCardValues = new() { };
-        //List<int> playCardValues = new() { 9, 10, 11 };
-        //List<int> burnCardValues = new() { };
+        List<int> drawCardValues = new() { 10, 11, 12};
+        List<int> playCardValues = new() { 9, 10, 11 };
+        List<int> burnCardValues = new() { };
 
-        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        int numberOfPlayers = _playersStartInfo.Length;
-        Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
+        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        //int numberOfPlayers = _playersStartInfo.Length;
+        //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
         CheckIfGameTurnTimerExceeded(Board);
         InitializeGameRanks();
@@ -132,6 +132,7 @@ public class KarmaGameManager : MonoBehaviour
             playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
             playerProperties.RegisterTargetPickUpPlayPileEventListener(AttemptGiveAwayPlayPile);
             playerProperties.SetHandSorter(BoardPlayerHandSorter);
+            Board.Players[playerIndex].Hand.RegisterHandOrderChangeEvent(playerProperties.SortHand);
             PlayersProperties.Add(playerProperties);
             
             if (playerIndex != Board.CurrentPlayerIndex) { playerProperties.EnableCamera(); }

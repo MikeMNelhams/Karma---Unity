@@ -16,7 +16,8 @@ namespace KarmaLogic
                     string gameState = "Draw Pile: " + board.DrawPile + "\n";
                     gameState += "Play Pile: " + board.PlayPile + "\n";
                     gameState += "Burn Pile: " + board.PlayPile + "\n";
-                    gameState += BoardPrintingLibrary.ComboHistoryRepresentation(board);
+                    gameState += BoardPrintingLibrary.ComboHistoryRepresentation(board) + "\n";
+                    gameState += AdditionalBoardInfo(board);
                     UnityEngine.Debug.Log(PlayersStateRepresentation(board) + "\n" + gameState);
                 }
 
@@ -31,6 +32,13 @@ namespace KarmaLogic
                 {
                     List<string> playersRepresentation = BoardPrintingLibrary.PlayersRepresentationDebug(board);
                     return string.Join('\n', playersRepresentation);
+                }
+
+                string AdditionalBoardInfo(IBoard board)
+                {
+                    string message = "Hands are flipped: " + board.HandsAreFlipped;
+                    message += " | Effect Multiplier: " + board.EffectMultiplier;
+                    return message;
                 }
             }
         }

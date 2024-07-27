@@ -200,22 +200,6 @@ namespace KarmaLogic
                 }
 
                 board.FlipHands();
-                if (board.HandsAreFlipped)
-                {
-                    foreach (Player player in board.Players)
-                    {
-                        if (player.Hand.Count == 0) { continue; }
-                        player.Hand.Shuffle();
-                    }
-                }
-                else
-                {
-                    foreach (Player player in board.Players)
-                    {
-                        if (player.Hand.Count == 0) { continue; }
-                        player.Hand.Sort();
-                    }
-                }
             }
         }
 

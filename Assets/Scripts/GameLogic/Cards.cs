@@ -187,16 +187,27 @@ namespace KarmaLogic
                 return cardBeforeSwap;
             }
 
-            public virtual void Shuffle()
+            public virtual int[] Sort()
+            {
+                int[] indices = Enumerable.Range(0, _cards.Count).ToArray();
+                Array.Sort(_cards.ToArray(), indices);
+                _cards.Sort();
+                return indices;
+            }
+
+            public virtual int[] Shuffle()
             {
                 // Fisher-Yates Shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
                 int n = _cards.Count;
+                int[] indices = Enumerable.Range(0, n).ToArray();
                 while (n > 1)
                 {
                     n--;
                     int k = rng.Next(n + 1);
                     (_cards[n], _cards[k]) = (_cards[k], _cards[n]);
+                    (indices[n], indices[k]) = (indices[k], indices[n]);
                 }
+                return indices;
             }
 
             public override string ToString()
@@ -327,11 +338,6 @@ namespace KarmaLogic
                     newCardsList.Add(card);
                 }
                 return newCardsList;
-            }
-
-            public void Sort()
-            {
-                _cards.Sort();
             }
         }
     }

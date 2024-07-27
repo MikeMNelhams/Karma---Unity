@@ -158,6 +158,22 @@ namespace KarmaLogic
             {
                 HandsAreFlipped = !HandsAreFlipped;
                 EventSystem.TriggerHandsFlippedEvent(this);
+                if (HandsAreFlipped)
+                {
+                    foreach (Player player in Players)
+                    {
+                        if (player.Hand.Count == 0) { continue; }
+                        player.Hand.Shuffle();
+                    }
+                }
+                else
+                {
+                    foreach (Player player in Players)
+                    {
+                        if (player.Hand.Count == 0) { continue; }
+                        player.Hand.Sort();
+                    }
+                }
             }
 
             public void RotateHands(int numberOfRotations, Deque<Hand> hands)

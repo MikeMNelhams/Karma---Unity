@@ -145,17 +145,20 @@ namespace KarmaLogic
                 return base.RemoveFromBottom(splitIndex);
             }
 
-            public override void Shuffle()
+            public override int[] Shuffle()
             {
                 // Fisher-Yates Shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
                 int n = _cards.Count;
+                int[] indices = new int[n];
                 while (n > 1)
                 {
                     n--;
                     int k = rng.Next(n + 1);
                     (_cards[n], _cards[k]) = (_cards[k], _cards[n]);
                     (Visibles[n], Visibles[k]) = (Visibles[k], Visibles[n]);
+                    (indices[n], indices[k]) = (indices[k], indices[n]);
                 }
+                return indices;
             }
 
             public bool ContainsMinLengthRun(int runLength)
