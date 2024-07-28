@@ -45,7 +45,7 @@ namespace FanHandlers
         public override void TransformCardsIntoFan(IList<CardObject> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null)
         {
             if (cards.Count == 0) { return; }
-            if (fanPhysicsInfo != null) { fanPhysicsInfo = FanPhysicsInfo.Default; }
+            if (fanPhysicsInfo != null) { fanPhysicsInfo = FanPhysicsInfo.SemiCircularFan; }
 
             CardObject cardObject = cards[0];
 

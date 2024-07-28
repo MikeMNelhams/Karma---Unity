@@ -13,7 +13,7 @@ public class FanPhysicsInfo
 
     public float totalAngle;
 
-    public FanPhysicsInfo(float startAngle = -25.0f, float endAngle = 25.0f, float distanceFromHolder = 0.75f, float yOffset = -0.25f)
+    public FanPhysicsInfo(float startAngle = -30.0f, float endAngle = 30.0f, float distanceFromHolder = 0.75f, float yOffset = -0.25f)
     {
         if (startAngle > endAngle) { throw new ArgumentException("The start angle: \'" + startAngle + "\' must be greater or equal to the end angle: \'" + endAngle + "\'"); }
 
@@ -25,4 +25,20 @@ public class FanPhysicsInfo
     }
 
     public static FanPhysicsInfo Default { get => new(); }
+
+    public static FanPhysicsInfo HorizontalFan
+    {
+        get
+        {
+            return new(startAngle: -25.0f, endAngle: 25.0f);
+        }
+    }
+
+    public static FanPhysicsInfo SemiCircularFan 
+    { 
+        get
+        {
+            return new(startAngle: -75.0f, endAngle: 75.0f);
+        }
+    }
 }
