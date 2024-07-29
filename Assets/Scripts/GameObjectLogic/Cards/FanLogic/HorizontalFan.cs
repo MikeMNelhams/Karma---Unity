@@ -58,7 +58,6 @@ namespace FanHandlers
             Quaternion cardRotation = cardPositionAndRotation.Item2;
 
             if (isFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
-
             cardObject.transform.SetPositionAndRotation(cardPosition, cardRotation);
 
             if (cards.Count == 1) { return; }
