@@ -41,4 +41,12 @@ public class FanPhysicsInfo
             return new(startAngle: -75.0f, endAngle: 75.0f);
         }
     }
+
+    public static FanPhysicsInfo VerticalSemiCircularFan
+    {
+        get
+        {
+            return new(startAngle: -35.0f, endAngle: 35.0f);
+        }
+    }
 }

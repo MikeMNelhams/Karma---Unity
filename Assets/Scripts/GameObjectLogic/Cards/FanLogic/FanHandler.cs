@@ -18,6 +18,7 @@ public class FanHandler : MonoBehaviour
         _fan = _fanMode switch
         {
             FanMode.SEMI_CIRCULAR => new SemiCircularFan(transform),
+            FanMode.VERTICAL_SEMI_CIRCULAR => new VerticalSemiCircularFan(transform),
             _ => new HorizontalFan(transform),
         };
 
@@ -41,5 +42,6 @@ public class FanHandler : MonoBehaviour
 public enum FanMode : byte
 {
     HORIZONTAL = 0,
-    SEMI_CIRCULAR = 1
+    SEMI_CIRCULAR = 1,
+    VERTICAL_SEMI_CIRCULAR = 2
 }

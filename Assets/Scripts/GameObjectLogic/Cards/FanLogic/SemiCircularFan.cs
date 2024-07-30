@@ -46,7 +46,7 @@ namespace FanHandlers
             CardObject cardObject = cards[0];
 
             Tuple<Vector3, Quaternion> cardPositionAndRotation = RelativeCardPositionAndRotationInFan(0, cards.Count, fanPhysicsInfo);
-            Vector3 cardPosition = _holder.transform.TransformPoint(cardPositionAndRotation.Item1);
+            Vector3 cardPosition = cardPositionAndRotation.Item1;
             Quaternion cardRotation = cardPositionAndRotation.Item2;
 
             if (isFlipped) { cardRotation *= Quaternion.Euler(new Vector3(0, 180, 0)); }
