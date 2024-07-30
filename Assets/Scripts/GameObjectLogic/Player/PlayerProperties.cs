@@ -23,6 +23,8 @@ public class PlayerProperties : BaseCharacterProperties
 
     public Button confirmSelectionButton;
     public Button pickupPlayPileButton;
+    [SerializeField] Image nextPlayerLeftArrow;
+    [SerializeField] Image nextPlayerRightArrow;
 
     public IController Controller { get; set; }
     public CardSelector CardSelector { get; protected set; }
@@ -108,6 +110,8 @@ public class PlayerProperties : BaseCharacterProperties
     {
         confirmSelectionButton.gameObject.SetActive(false);
         pickupPlayPileButton.gameObject.SetActive(false);
+        nextPlayerLeftArrow.gameObject.SetActive(false);
+        nextPlayerRightArrow.gameObject.SetActive(false);
     }
 
     public void EnablePlayerMovement()
@@ -191,6 +195,14 @@ public class PlayerProperties : BaseCharacterProperties
         if (legalActions.Contains(gameManager.PlayCardsComboAction)) 
         { 
             confirmSelectionButton.gameObject.SetActive(true); 
+        }
+        if (gameManager.Board.TurnOrder == BoardTurnOrder.RIGHT)
+        {
+            nextPlayerRightArrow.gameObject.SetActive(true);
+        }
+        if (gameManager.Board.TurnOrder == BoardTurnOrder.LEFT)
+        {
+            nextPlayerLeftArrow.gameObject.SetActive(true);
         }
     }
 
