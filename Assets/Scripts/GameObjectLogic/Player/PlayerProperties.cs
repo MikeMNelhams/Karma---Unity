@@ -22,6 +22,7 @@ public class PlayerProperties : BaseCharacterProperties
     [SerializeField] float _rayCastCutoff = 30f;
 
     public Button confirmSelectionButton;
+    public Button clearSelectionButton;
     public Button pickupPlayPileButton;
     [SerializeField] Image nextPlayerLeftArrow;
     [SerializeField] Image nextPlayerRightArrow;
@@ -109,6 +110,7 @@ public class PlayerProperties : BaseCharacterProperties
     public void HideUI()
     {
         confirmSelectionButton.gameObject.SetActive(false);
+        clearSelectionButton.gameObject.SetActive(false);
         pickupPlayPileButton.gameObject.SetActive(false);
         nextPlayerLeftArrow.gameObject.SetActive(false);
         nextPlayerRightArrow.gameObject.SetActive(false);
@@ -195,6 +197,7 @@ public class PlayerProperties : BaseCharacterProperties
         if (legalActions.Contains(gameManager.PlayCardsComboAction)) 
         { 
             confirmSelectionButton.gameObject.SetActive(true); 
+            clearSelectionButton.gameObject.SetActive(true);
         }
         if (gameManager.Board.TurnOrder == BoardTurnOrder.RIGHT)
         {
@@ -213,9 +216,7 @@ public class PlayerProperties : BaseCharacterProperties
 
     public override void EnterVotingForWinner()
     {
-        pickupPlayPileButton.gameObject.SetActive(false);
-        confirmSelectionButton.gameObject.SetActive(false);
-
+        HideUI();
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
     }
@@ -229,16 +230,18 @@ public class PlayerProperties : BaseCharacterProperties
     public override void EnterCardGiveAwaySelection()
     {
         confirmSelectionButton.gameObject.SetActive(true);
+        clearSelectionButton.gameObject.SetActive(true);
     }
 
     public override void ExitCardGiveAwaySelection()
     {
         confirmSelectionButton.gameObject.SetActive(false);
+        clearSelectionButton.gameObject.SetActive(false);
     }
 
     public override void EnterCardGiveAwayPlayerIndexSelection()
     {
-        confirmSelectionButton.gameObject.SetActive(false);
+        HideUI();
         _playerMovementController.SetRotating(true);
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
@@ -251,6 +254,7 @@ public class PlayerProperties : BaseCharacterProperties
     public override void EnterPlayPileGiveAwayPlayerIndexSelection()
     {
         confirmSelectionButton.gameObject.SetActive(false);
+        clearSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
     }

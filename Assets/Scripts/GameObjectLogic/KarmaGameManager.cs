@@ -586,6 +586,7 @@ public class KarmaGameManager : MonoBehaviour
         {
             int index = i;
             PlayersProperties[index].confirmSelectionButton.onClick.AddListener(delegate { TriggerCardSelectionConfirmed(index); });
+            PlayersProperties[index].clearSelectionButton.onClick.AddListener(delegate { TriggerClearSelection(index); });
             PlayersProperties[index].pickupPlayPileButton.onClick.AddListener(delegate { TriggerPickupActionSelected(index); });
         }
     }
@@ -598,6 +599,13 @@ public class KarmaGameManager : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    void TriggerClearSelection(int playerIndex)
+    {
+        if (PlayersProperties[playerIndex].Controller.State is PickingAction) { AttemptClearCardSelection(playerIndex); return; }
+
+        throw new NotImplementedException();
+    }
+
     void TriggerPickupActionSelected(int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
@@ -605,6 +613,13 @@ public class KarmaGameManager : MonoBehaviour
         List<CardObject> playPileCards = _playTable.PopAllFromPlayPile();
         PlayersProperties[playerIndex].AddCardObjectsToHand(playPileCards);
         Board.EndTurn();
+    }
+
+    void AttemptClearCardSelection(int playerIndex)
+    {
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        CardSelector cardSelector = playerProperties.CardSelector;
+        cardSelector.Clear();
     }
 
     void AttemptToPlayCardSelection(int playerIndex)

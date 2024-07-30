@@ -1,7 +1,6 @@
 using DataStructures;
 using KarmaLogic.Cards;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class CardSelector
@@ -63,6 +62,17 @@ public class CardSelector
             Add(cardObject);
         }
         PrintSelectedCards();
+    }
+
+    public void Clear()
+    {
+        foreach (CardObject cardObject in CardObjects)
+        {
+            cardObject.DisableSelectShader();
+        }
+        CardObjects.Clear();
+        _selection = new();
+        _selectionValues = new();
     }
 
     void PrintSelectedCards()
