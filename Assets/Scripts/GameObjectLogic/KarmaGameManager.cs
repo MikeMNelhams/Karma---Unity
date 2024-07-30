@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KarmaLogic.GameExceptions;
@@ -11,8 +10,6 @@ using KarmaLogic.Controller;
 using System;
 using System.Linq;
 using DataStructures;
-using UnityEngine.XR;
-using System.Data.SqlTypes;
 
 public class KarmaGameManager : MonoBehaviour
 {
@@ -50,6 +47,8 @@ public class KarmaGameManager : MonoBehaviour
     ArrowHandler _currentPlayerArrowHandler;
     ArrowHandler _playOrderArrowHandler;
 
+    public static System.Random RNG = new(); // Uniform, system default. Not thread-safe. Great pseudo-random. Volatile in-memory.
+
     void Awake()
     {
         if (_instance != null && _instance != this)
@@ -81,7 +80,7 @@ public class KarmaGameManager : MonoBehaviour
         };
 
         List<int> drawCardValues = new() { 10, 11, 12};
-        List<int> playCardValues = new() { 2 };
+        List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         List<int> burnCardValues = new() { };
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);

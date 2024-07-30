@@ -343,11 +343,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 375781341}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e314684d784de4697bd4a227b22145, type: 3}
+  m_Script: {fileID: 11500000, guid: 465cb7c489507ae46888ee770237ce2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _pileDebugCube: {fileID: 799685259}
   _isFaceUp: 0
+  _cardPileMode: 1
 --- !u!1 &544476013
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,11 +528,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 651445637}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e314684d784de4697bd4a227b22145, type: 3}
+  m_Script: {fileID: 11500000, guid: 465cb7c489507ae46888ee770237ce2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _pileDebugCube: {fileID: 207585593}
   _isFaceUp: 0
+  _cardPileMode: 1
 --- !u!1 &687528755
 GameObject:
   m_ObjectHideFlags: 0
@@ -1772,11 +1774,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1822421500}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3e314684d784de4697bd4a227b22145, type: 3}
+  m_Script: {fileID: 11500000, guid: 465cb7c489507ae46888ee770237ce2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _pileDebugCube: {fileID: 1561952432}
   _isFaceUp: 1
+  _cardPileMode: 1
 --- !u!4 &1822421505
 Transform:
   m_ObjectHideFlags: 0

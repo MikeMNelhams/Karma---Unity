@@ -12,15 +12,15 @@ public class PlayTableProperties : MonoBehaviour
     public GameObject burnPile;
     public GameObject playPile;
 
-    KarmaCardPileHandler drawPileHandler;
-    KarmaCardPileHandler burnPileHandler;
-    KarmaCardPileHandler playPileHandler;
+    CardObjectPileHandler drawPileHandler;
+    CardObjectPileHandler burnPileHandler;
+    CardObjectPileHandler playPileHandler;
 
     void Awake()
     {
-        drawPileHandler = drawPile.GetComponent<KarmaCardPileHandler>();
-        burnPileHandler = burnPile.GetComponent<KarmaCardPileHandler>();
-        playPileHandler = playPile.GetComponent<KarmaCardPileHandler>();
+        drawPileHandler = drawPile.GetComponent<CardObjectPileHandler>();
+        burnPileHandler = burnPile.GetComponent<CardObjectPileHandler>();
+        playPileHandler = playPile.GetComponent<CardObjectPileHandler>();
     }
 
     public void CreateCardObjectPilesFromBoard(IBoard board)

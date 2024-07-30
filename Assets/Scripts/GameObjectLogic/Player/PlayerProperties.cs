@@ -51,8 +51,6 @@ public class PlayerProperties : BaseCharacterProperties
     public delegate Dictionary<Card, List<int>> CardSorter(int playerIndex);
     CardSorter _handSorter;
 
-    protected static System.Random rng = new();
-
     int _layerAsLayerMask;
     PlayerProperties _targetPlayerProperties;
 
