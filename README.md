@@ -9,6 +9,9 @@ Many card games suffer from 2D card interfaces, but this version features 3D int
 The software will be released on Steam for you to play FREE. Release Date TBD. Currently in Alpha.
 *(I am developing it so my friends can all play this game together, but online)*
 
+Preview for Alpha 101 (Game Logic is fully functional, but the art is temporary)
+
+![Preview](https://i.imgur.com/ZojwVms.png)
 ------------
 
 For information on the rules and similar information: [Karma (Wikipedia)](https://en.wikipedia.org/wiki/Shithead(card_game))
