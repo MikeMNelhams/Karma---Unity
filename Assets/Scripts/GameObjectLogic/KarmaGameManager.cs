@@ -12,6 +12,7 @@ using System;
 using System.Linq;
 using DataStructures;
 using UnityEngine.XR;
+using System.Data.SqlTypes;
 
 public class KarmaGameManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class KarmaGameManager : MonoBehaviour
     public GameObject _playerPrefab;
 
     [SerializeField] GameObject _currentPlayerArrow;
+    [SerializeField] GameObject _playOrderArrow;
     [SerializeField] PlayTableProperties _playTable;
 
     [SerializeField] int _turnLimit = 100;
@@ -45,7 +47,8 @@ public class KarmaGameManager : MonoBehaviour
 
     public Transform CardTransform { get { return  _cardPrefab.transform; } }
 
-    CurrentPlayerArrowHandler _currentPlayerArrowHandler;
+    ArrowHandler _currentPlayerArrowHandler;
+    ArrowHandler _playOrderArrowHandler;
 
     void Awake()
     {
@@ -63,7 +66,8 @@ public class KarmaGameManager : MonoBehaviour
 
     void InitialiseHandlers()
     {
-        _currentPlayerArrowHandler = new CurrentPlayerArrowHandler(_currentPlayerArrow);
+        _currentPlayerArrowHandler = new ArrowHandler(_currentPlayerArrow);
+        _playOrderArrowHandler = new ArrowHandler(_playOrderArrow);
     }
 
     void Start()
@@ -94,6 +98,7 @@ public class KarmaGameManager : MonoBehaviour
 
         AssignButtonEvents();
         _currentPlayerArrowHandler.SetArrowVisibility(true);
+        _playOrderArrowHandler.SetArrowVisibility(true);
         Board.StartTurn();
     }
 
@@ -291,6 +296,18 @@ public class KarmaGameManager : MonoBehaviour
         _playTable.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
     }
 
+    void RotatePlayOrderArrow()
+    {
+        if (Board.PlayOrder == BoardPlayOrder.UP)
+        {
+            _playOrderArrowHandler.PointUp();
+        }
+        else
+        {
+            _playOrderArrowHandler.PointDown();
+        }
+    }
+
     void MoveCurrentPlayerArrow()
     {
         PlayerProperties playerProperties = PlayersProperties[Board.CurrentPlayerIndex];
@@ -453,6 +470,7 @@ public class KarmaGameManager : MonoBehaviour
 
     void StartTurn(IBoard board)
     {
+        RotatePlayOrderArrow();
         MoveCurrentPlayerArrow();
         Board.Print();
         if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { return; }
