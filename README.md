@@ -12,6 +12,14 @@ The software will be released on Steam for you to play FREE. Release Date TBD. C
 Preview for Alpha 101 (Game Logic is fully functional, but the art is temporary)
 
 ![Preview](https://i.imgur.com/ZojwVms.png)
+
+## Game Rules + Card Effects
+
+![Game Rules](https://github.com/MikeMNelhams/Karma/blob/master/GameFlowChart.png)
+
 ------------
 
-For information on the rules and similar information: [Karma (Wikipedia)](https://en.wikipedia.org/wiki/Shithead(card_game))
+For more information on the rules and similar information: [Karma (Wikipedia)](https://en.wikipedia.org/wiki/Shithead(card_game))
+
+------------
+
