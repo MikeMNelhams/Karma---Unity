@@ -11,4 +11,4 @@ The software will be released on Steam for you to play FREE. Release Date TBD. C
 
 ------------
 
-For information on the rules and similar information: [Karma (Wikipedia)](https://en.wikipedia.org/wiki/Shithead_(card_game)
+For information on the rules and similar information: [Karma (Wikipedia)](https://en.wikipedia.org/wiki/Shithead(card_game))
