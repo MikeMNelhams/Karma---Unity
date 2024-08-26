@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 4632747956609426142}
   - component: {fileID: 3286352323776346836}
   - component: {fileID: 1394099952953733724}
+  - component: {fileID: 8222351741478787329}
   m_Layer: 0
   m_Name: Card
   m_TagString: Untagged
@@ -218,3 +219,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planeMaterial: {fileID: 2100000, guid: 6d50462f6fa34b54abb80620a139cbe2, type: 2}
   frontQuad: {fileID: 4827444684575247633}
+--- !u!114 &8222351741478787329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301702206139819914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56df413cc1dae094a92b908890790ed6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _timeToWait: 0.5
+  toolTipText: This card is selectable!
+  _cardObject: {fileID: 1394099952953733724}
+  playerPropertiesHolder: {fileID: 0}

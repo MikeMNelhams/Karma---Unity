@@ -1,3 +1,4 @@
+using CardVisibility;
 using KarmaLogic.Cards;
 using System;
 using System.Collections;
@@ -6,7 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 
-public class CardObjectPileHandler : MonoBehaviour
+public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
 {
     [SerializeField] Transform _pileDebugCube;
     [SerializeField] bool _isFaceUp = false;
@@ -142,6 +143,11 @@ public class CardObjectPileHandler : MonoBehaviour
         Vector3 cardPosition = transform.TransformPoint(new(x, -physicsParams.yOffset + h, z));
         Quaternion rotationOffset = Quaternion.Euler(new Vector3(0, 0, zRotation));
         return new Tuple<Vector3, Quaternion>(cardPosition, physicsParams.defaultCardRotation * rotationOffset);
+    }
+
+    public bool IsVisible(int observerPlayerIndex)
+    {
+        return _isFaceUp;
     }
 
     class CardPositionAndRotationParams

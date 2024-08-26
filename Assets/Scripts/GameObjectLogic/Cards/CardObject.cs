@@ -3,15 +3,19 @@ using UnityEngine.EventSystems;
 using System.IO;
 using System;
 using KarmaLogic.Cards;
+using CardVisibility;
 
-
-public class CardObject : MonoBehaviour, IEquatable<CardObject>
+public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibilityHandler
 {
     public Material planeMaterial;
     public GameObject frontQuad;
+
     public Card CurrentCard { get; set; }
+
     public event Action<CardObject> OnCardClick;
-    Material frontMaterial;
+    Material _frontMaterial;
+
+    ICardVisibilityHandler _cardVisibilityHandler;
 
     public void SetCard(Card card)
     {
@@ -31,7 +35,7 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>
             Material materialCopy = new(planeMaterial) {  mainTexture = tex };
             MeshRenderer mr = frontQuad.GetComponent<MeshRenderer>();
             mr.material = materialCopy;
-            frontMaterial = materialCopy;
+            _frontMaterial = materialCopy;
             SetCardName(card.ToString());
         } 
         else
@@ -42,15 +46,15 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>
 
     public void ToggleSelectShader()
     {
-        if (frontMaterial == null) { return; }
-        float fresnelIsEnabled = frontMaterial.GetFloat("_isHighlighted");
-        frontMaterial.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
+        if (_frontMaterial == null) { return; }
+        float fresnelIsEnabled = _frontMaterial.GetFloat("_isHighlighted");
+        _frontMaterial.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
     }
 
     public void DisableSelectShader()
     {
-        if (frontMaterial == null) { return; }
-        frontMaterial.SetFloat("_isHighlighted", 0.0f);
+        if (_frontMaterial == null) { return; }
+        _frontMaterial.SetFloat("_isHighlighted", 0.0f);
     }
 
     void OnMouseDown()
@@ -70,5 +74,26 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>
     {
         if (ReferenceEquals(this, other)) return true;
         return false;
+    }
+
+    public void SetParent(ICardVisibilityHandler cardVisibilityHandler, Transform parentTransform)
+    {
+        transform.parent = parentTransform;
+        SetParent(cardVisibilityHandler);
+    }
+
+    public void SetParent(ICardVisibilityHandler cardVisibilityHandler)
+    {
+        _cardVisibilityHandler = cardVisibilityHandler;
+    }
+
+    public bool IsVisible(int observerPlayerIndex)
+    {
+        if (_cardVisibilityHandler == null)
+        {
+            throw new SystemException("Card has no parent set!");
+        }
+
+        return _cardVisibilityHandler.IsVisible(observerPlayerIndex);
     }
 }

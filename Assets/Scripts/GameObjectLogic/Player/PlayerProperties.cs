@@ -9,16 +9,17 @@ using KarmaLogic.Controller;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using DataStructures;
-using FanHandlers;
+using CardVisibility;
 
-public class PlayerProperties : BaseCharacterProperties
+
+public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] FanHandler _fanHandler;
 
     [SerializeField] Camera _playerCamera;
     [SerializeField] GameObject _cardHolder;
-
+     
     [SerializeField] float _rayCastCutoff = 30f;
 
     public Button confirmSelectionButton;
@@ -26,7 +27,8 @@ public class PlayerProperties : BaseCharacterProperties
     public Button pickupPlayPileButton;
     [SerializeField] Image nextPlayerLeftArrow;
     [SerializeField] Image nextPlayerRightArrow;
-
+    
+    public HoverToolTipHandler HoverTipHandler { get; set; }
     public IController Controller { get; set; }
     public CardSelector CardSelector { get; protected set; }
 
@@ -396,7 +398,7 @@ public class PlayerProperties : BaseCharacterProperties
 
     public void ParentCardToThis(CardObject cardObject)
     {
-        cardObject.transform.parent = _cardHolder.transform;
+        cardObject.SetParent(this, _cardHolder.transform);
     }
 
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
@@ -498,6 +500,17 @@ public class PlayerProperties : BaseCharacterProperties
         {
             OnVoteForTarget?.Invoke(Index, _targetPlayerProperties.Index);
         }
+    }
+
+    public bool IsVisible(int observerPlayerIndex)
+    {
+        KarmaGameManager gameManager = KarmaGameManager.Instance;
+        if (gameManager.Board.HandsAreFlipped)
+        {
+            return observerPlayerIndex != Index;
+        }
+
+        return observerPlayerIndex == Index;
     }
 
     public PlayerProperties TargetPlayerInFrontOfPlayer

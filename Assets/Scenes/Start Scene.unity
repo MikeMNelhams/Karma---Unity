@@ -1158,7 +1158,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1274854928}
-  - component: {fileID: 1274854925}
+  - component: {fileID: 1274854930}
+  - component: {fileID: 1274854929}
   m_Layer: 0
   m_Name: Player2Karma
   m_TagString: Untagged
@@ -1166,21 +1167,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1274854925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1274854924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e1aea241fabf14ca42677cff2f9912, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _debugCube: {fileID: 1431835085}
-  _leftOffset: 0.1
-  _rightOffset: 0.1
 --- !u!4 &1274854928
 Transform:
   m_ObjectHideFlags: 0
@@ -1197,6 +1183,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &1274854929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274854924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c36827b7934834295eecb64bf3bb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugCube: {fileID: 1431835085}
+  _leftOffset: 0.1
+  _rightOffset: 0.1
+--- !u!114 &1274854930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274854924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ce17fe6f723b4398060de1ddc5c7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugCube: {fileID: 1431835085}
+  _leftOffset: 0.1
+  _rightOffset: 0.1
 --- !u!1 &1279859051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,6 +1222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1279859052}
+  - component: {fileID: 1279859054}
   - component: {fileID: 1279859053}
   m_Layer: 0
   m_Name: Player3Karma
@@ -1239,7 +1256,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1279859051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e1aea241fabf14ca42677cff2f9912, type: 3}
+  m_Script: {fileID: 11500000, guid: f1c36827b7934834295eecb64bf3bb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugCube: {fileID: 572786286}
+  _leftOffset: 0.1
+  _rightOffset: 0.1
+--- !u!114 &1279859054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279859051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ce17fe6f723b4398060de1ddc5c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _debugCube: {fileID: 572786286}
@@ -1319,7 +1351,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1390589446}
-  - component: {fileID: 1390589449}
+  - component: {fileID: 1390589448}
+  - component: {fileID: 1390589447}
   m_Layer: 0
   m_Name: Player1Karma
   m_TagString: Untagged
@@ -1343,7 +1376,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1390589449
+--- !u!114 &1390589447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1352,7 +1385,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1390589445}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e1aea241fabf14ca42677cff2f9912, type: 3}
+  m_Script: {fileID: 11500000, guid: f1c36827b7934834295eecb64bf3bb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugCube: {fileID: 2145910422}
+  _leftOffset: 0.1
+  _rightOffset: 0.1
+--- !u!114 &1390589448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390589445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ce17fe6f723b4398060de1ddc5c7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _debugCube: {fileID: 2145910422}
@@ -1472,7 +1520,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1533858440}
-  - component: {fileID: 1533858437}
+  - component: {fileID: 1533858442}
+  - component: {fileID: 1533858441}
   m_Layer: 0
   m_Name: Player4Karma
   m_TagString: Untagged
@@ -1480,21 +1529,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1533858437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1533858436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e1aea241fabf14ca42677cff2f9912, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _debugCube: {fileID: 876613493}
-  _leftOffset: 0.1
-  _rightOffset: 0.1
 --- !u!4 &1533858440
 Transform:
   m_ObjectHideFlags: 0
@@ -1511,6 +1545,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: -270, z: 0}
+--- !u!114 &1533858441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533858436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c36827b7934834295eecb64bf3bb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugCube: {fileID: 876613493}
+  _leftOffset: 0.1
+  _rightOffset: 0.1
+--- !u!114 &1533858442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533858436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a6ce17fe6f723b4398060de1ddc5c7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _debugCube: {fileID: 876613493}
+  _leftOffset: 0.1
+  _rightOffset: 0.1
 --- !u!1 &1561952431
 GameObject:
   m_ObjectHideFlags: 0

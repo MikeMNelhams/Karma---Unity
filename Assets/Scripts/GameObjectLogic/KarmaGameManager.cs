@@ -210,17 +210,17 @@ public class KarmaGameManager : MonoBehaviour
             if (i >= _playTable.boardHolders.Count) { break; }
             if (_playTable.boardHolders[i] == null) { continue; }
             GameObject boardHolder = _playTable.boardHolders[i];
-            KarmaBoardHandler karmaBoardManager = boardHolder.GetComponent<KarmaBoardHandler>();
-            
-            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<CardObject>(karmaBoardManager.CreateKarmaUpCards(player.KarmaUp));
 
+            KarmaUpPilesHandler karmaUpPilesHandler = boardHolder.GetComponent<KarmaUpPilesHandler>();
+            KarmaDownPilesHandler karmaDownPilesHandler = boardHolder.GetComponent<KarmaDownPilesHandler>();
+            
+            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<CardObject>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp));
             foreach (CardObject card in playerProperties.CardsInKarmaUp)
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(card);
             }
 
-            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<CardObject>(karmaBoardManager.CreateKarmaDownCards(player.KarmaDown));
-
+            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<CardObject>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown));
             foreach (CardObject card in playerProperties.CardsInKarmaDown)
             {
                 playerProperties.SetCardObjectOnMouseDownEvent(card);

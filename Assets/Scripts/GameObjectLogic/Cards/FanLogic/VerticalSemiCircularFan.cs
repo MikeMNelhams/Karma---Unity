@@ -47,9 +47,8 @@ namespace FanHandlers
             }
 
             int indexInRow = cardIndex - previousRowSize;
-
             float radius = _radiusInner + _halfCardHeight * rowNumber;
-            //UnityEngine.Debug.Log("Number of cards: " + numberOfCards + " index horizontal: " + cardIndex + " row number: " + rowNumber + " indexInRow: " + indexInRow + " previous row size: " + previousRowSize + " radius: " + radius);
+           
             float degreesToRadians = (float)(Math.PI / 180f);
             float theta = fanPhysicsInfo.endAngle - (indexInRow * fanPhysicsInfo.totalAngle) / (_maxCardsPerRow - 1 + rowNumber);
             float x = (float)(radius * Math.Cos(theta * degreesToRadians + Math.PI / 2));
