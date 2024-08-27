@@ -27,8 +27,10 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public Button pickupPlayPileButton;
     [SerializeField] Image nextPlayerLeftArrow;
     [SerializeField] Image nextPlayerRightArrow;
-    
-    public HoverToolTipHandler HoverTipHandler { get; set; }
+
+    [SerializeField] HoverToolTipHandler _hoverTipHandler;
+
+    public HoverToolTipHandler HoverTipHandler { get => _hoverTipHandler; }
     public IController Controller { get; set; }
     public CardSelector CardSelector { get; protected set; }
 

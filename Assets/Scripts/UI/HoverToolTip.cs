@@ -7,7 +7,7 @@ public class HoverToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] float _timeToWait = 0.5f;
 
     protected HoverToolTipHandler HoverTipHandler { get; set; }
-    public string toolTipText;
+    public string ToolTipText { get; set; }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
@@ -26,10 +26,9 @@ public class HoverToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     void ShowMessage()
     {
-        UnityEngine.Debug.Log("Hover over " + gameObject.name);
         if (HoverTipHandler != null)
         {
-            HoverTipHandler.OnMouseHover(toolTipText, Input.mousePosition);
+            HoverTipHandler.OnMouseHover(ToolTipText, Input.mousePosition);
         }
     }
 

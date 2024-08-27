@@ -37,7 +37,7 @@ public class HoverToolTipHandler : MonoBehaviour
 
         tipWindow.gameObject.SetActive(true);
 
-        tipWindow.transform.position = new Vector2(mousePosition.x + tipWindow.sizeDelta.x * 2, mousePosition.y);
+        tipWindow.transform.position = new Vector2(mousePosition.x + tipWindow.sizeDelta.x / 2, mousePosition.y + tipWindow.sizeDelta.y / 2);
     }
 
     void HideTip()
