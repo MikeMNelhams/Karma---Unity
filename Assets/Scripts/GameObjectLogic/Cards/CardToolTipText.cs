@@ -9,6 +9,8 @@ namespace CardToolTips
         public string CardEffectText { get; private set; }
         public string CardPlayRequirements { get; private set; }
 
+        public bool HasCardPlayRequirements { get => CardPlayRequirements != string.Empty; }
+
         public CardToolTipText(string ID, string cardValue, string cardEffectText, string cardPlayRequirements)
         {
             this.ID = int.Parse(ID);
