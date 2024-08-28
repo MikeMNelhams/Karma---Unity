@@ -18,6 +18,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public GameObject _cardPrefab;
     public GameObject _playerPrefab;
+    MeshRenderer _cardPrefabRenderer;
 
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] GameObject _playOrderArrow;
@@ -61,6 +62,7 @@ public class KarmaGameManager : MonoBehaviour
         }
 
         InitialiseHandlers();
+        _cardPrefabRenderer = _cardPrefab.GetComponent<MeshRenderer>();
     }
 
     void InitialiseHandlers()
@@ -730,5 +732,13 @@ public class KarmaGameManager : MonoBehaviour
         }
 
         return cardPositions;
+    }
+
+    public Bounds CardBounds
+    {
+        get 
+        {
+            return _cardPrefabRenderer.bounds;
+        }
     }
 }

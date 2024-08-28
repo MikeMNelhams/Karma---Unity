@@ -168,9 +168,9 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         {
             KarmaGameManager gameManager = KarmaGameManager.Instance;
             cardXscale = gameManager.CardTransform.lossyScale.x;
-            cardZscale = gameManager.CardTransform.lossyScale.y; // Card dimensions are off, due to using default plane. 
+            cardZscale = gameManager.CardTransform.lossyScale.z; // Card dimensions are off, due to using default plane. 
             yOffset = halfPileCubeHeight;
-            yStep = gameManager.CardTransform.localScale.z;
+            yStep = gameManager.CardBounds.size.z;
 
             this.defaultCardRotation = defaultCardRotation;
             xMax = cardXscale * (pilePhysicsInfo._maxXOffsetPercent / 100.0f);

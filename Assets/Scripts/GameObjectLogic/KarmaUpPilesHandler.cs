@@ -28,7 +28,7 @@ public class KarmaUpPilesHandler : MonoBehaviour, ICardVisibilityHandler
         float halfHeight = _debugCube.lossyScale.y / 2;
 
         KarmaGameManager gameManager = KarmaGameManager.Instance;
-        float cardDepth = gameManager._cardPrefab.transform.localScale.z;
+        float cardDepth = gameManager.CardBounds.size.z;
 
         int j = 0;
         List<CardObject> cardObjects = new();
