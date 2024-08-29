@@ -60,7 +60,7 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
     void OnMouseDown()
     {
         if (OnCardClick == null) { return; }
-        if (EventSystem.current.IsPointerOverGameObject()) { return; }
+        if (!EventSystem.current.IsPointerOverGameObject()) { return; }
         ToggleSelectShader();
         OnCardClick.Invoke(this);
     }

@@ -35,7 +35,6 @@ public class CardTipTextManager : MonoBehaviour
             if (lines[i].Length == 0) { continue; }
 
             string[] row = lines[i].Split(',');
-            Debug.Log(lines[i]);
             tipTexts.Add(new CardToolTipText(row[0], row[1], row[2], row[3]));
         }
 
