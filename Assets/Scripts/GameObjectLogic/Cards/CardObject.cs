@@ -4,21 +4,26 @@ using System.IO;
 using System;
 using KarmaLogic.Cards;
 using CardVisibility;
+using System.Linq;
 
 public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibilityHandler
 {
-    public Material planeMaterial;
-    public GameObject frontQuad;
+    [SerializeField] Material _frontMaterial; // This will get overwritten at runtime, for each individual card.
+    [SerializeField] Material _selectedMaterial;
+    [SerializeField] MeshRenderer _frontMeshRenderer;
+    [SerializeField] MeshRenderer _cardMeshRenderer;
 
     public Card CurrentCard { get; set; }
 
     public event Action<CardObject> OnCardClick;
-    Material _frontMaterial;
+    Material _frontMaterialCopy;
+    Material _selectedMaterialCopy;
 
     ICardVisibilityHandler _cardVisibilityHandler;
 
     public void SetCard(Card card)
     {
+        // IT WOULD BE WAY QUICKER AND MORE EFFICIENT TO INSTEAD HAVE 2 SELECTED SHADERS THAT YOU TOGGLE BETWEEN!
         CurrentCard = card;
         // "/Assets/Resources/Cards/Clubs/Jack.png"
         // Only on Windows: https://docs.unity3d.com/ScriptReference/Application-dataPath.html
@@ -32,29 +37,38 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
             var bytes = File.ReadAllBytes(resourcePath);
             var tex = new Texture2D(1, 1);
             tex.LoadImage(bytes);
-            Material materialCopy = new(planeMaterial) {  mainTexture = tex };
-            MeshRenderer mr = frontQuad.GetComponent<MeshRenderer>();
-            mr.material = materialCopy;
-            _frontMaterial = materialCopy;
+
+            _selectedMaterialCopy = new(_selectedMaterial);
+
+            Material[] cardMaterials = _cardMeshRenderer.materials;
+            Material[] cardMaterialsNew = new Material[cardMaterials.Length];
+            cardMaterialsNew[0] = cardMaterials[0];
+            cardMaterialsNew[1] = _selectedMaterialCopy;
+            _cardMeshRenderer.materials = cardMaterialsNew;
+
+            Material frontMaterialCopy = new(_frontMaterial) {  mainTexture = tex };
+            _frontMeshRenderer.material = frontMaterialCopy;
+            _frontMaterialCopy = frontMaterialCopy;
             SetCardName(card.ToString());
         } 
         else
         {
-            print("File path: " + resourcePath + " does not exist!");
+            throw new Exception("File path: " + resourcePath + " does not exist!");
         }
     }
 
     public void ToggleSelectShader()
     {
-        if (_frontMaterial == null) { return; }
-        float fresnelIsEnabled = _frontMaterial.GetFloat("_isHighlighted");
-        _frontMaterial.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
+        if (_frontMaterialCopy == null) { return; }
+        float fresnelIsEnabled = _frontMaterialCopy.GetFloat("_isHighlighted");
+        _frontMaterialCopy.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
+        //_selectedMaterialCopy.SetFloat("_isEnabled", 1 - fresnelIsEnabled); // I'm not sure if I prefer with or without this!
     }
 
     public void DisableSelectShader()
     {
-        if (_frontMaterial == null) { return; }
-        _frontMaterial.SetFloat("_isHighlighted", 0.0f);
+        if (_frontMaterialCopy == null) { return; }
+        _frontMaterialCopy.SetFloat("_isHighlighted", 0.0f);
     }
 
     void OnMouseDown()

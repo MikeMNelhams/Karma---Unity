@@ -197,7 +197,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
             pickupPlayPileButton.gameObject.SetActive(true); 
         }
         if (legalActions.Contains(gameManager.PlayCardsComboAction)) 
-        { 
+        {
             confirmSelectionButton.gameObject.SetActive(true); 
             clearSelectionButton.gameObject.SetActive(true);
         }

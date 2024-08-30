@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8263121458380483197}
   - component: {fileID: 7507692310711236715}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4827444684575247633}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0.0005}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -155,6 +155,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 69ec8bbbd67727b409acd26e4948f996, type: 2}
+  - {fileID: 2100000, guid: a748ae2c0bc6c0e4cac7d4b2f68293d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -217,8 +218,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ab35ee4fb075d459137f5ca29d5ad1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planeMaterial: {fileID: 2100000, guid: 6d50462f6fa34b54abb80620a139cbe2, type: 2}
-  frontQuad: {fileID: 4827444684575247633}
+  _frontMaterial: {fileID: 2100000, guid: 6d50462f6fa34b54abb80620a139cbe2, type: 2}
+  _selectedMaterial: {fileID: 2100000, guid: a748ae2c0bc6c0e4cac7d4b2f68293d2, type: 2}
+  _frontMeshRenderer: {fileID: 7507692310711236715}
+  _cardMeshRenderer: {fileID: 2654182233445417309}
 --- !u!114 &767087904035219105
 MonoBehaviour:
   m_ObjectHideFlags: 0
