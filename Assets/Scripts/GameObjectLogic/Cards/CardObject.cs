@@ -23,7 +23,6 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
 
     public void SetCard(Card card)
     {
-        // IT WOULD BE WAY QUICKER AND MORE EFFICIENT TO INSTEAD HAVE 2 SELECTED SHADERS THAT YOU TOGGLE BETWEEN!
         CurrentCard = card;
         // "/Assets/Resources/Cards/Clubs/Jack.png"
         // Only on Windows: https://docs.unity3d.com/ScriptReference/Application-dataPath.html
