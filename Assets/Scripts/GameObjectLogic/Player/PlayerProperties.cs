@@ -59,6 +59,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     PlayerProperties _targetPlayerProperties;
 
     bool _isKarmaDownFlippedUp = false;
+    public bool IsToolTipsEnabled { get; set; } = true;
 
     void Awake()
     {
@@ -417,9 +418,8 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     {
         if (!IsRotationEnabled || PickedUpCard == null) { return; }
 
-        _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         MovePickedUpCard();
-        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0))
         {
             TriggerPickedUpCardOnLeftClick();
         }
@@ -429,12 +429,13 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     {
         if (PickedUpCard == null) { return; }
 
+        _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         float distanceFromHolder = 0.75f;
-        Vector3 cardPosition = _cardHolder.transform.TransformPoint(_playerCamera.transform.forward * distanceFromHolder);
+        Vector3 cardPosition = _playerCamera.transform.position + _playerCamera.transform.forward * distanceFromHolder;
         
         PickedUpCard.transform.position = cardPosition;
 
-        Quaternion cardRotation; 
+        Quaternion cardRotation;
         if (_targetPlayerProperties != null)
         {
             Quaternion lookDirection = Quaternion.LookRotation(cardPosition - _playerCamera.transform.position);
@@ -445,7 +446,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         {
             cardRotation = Quaternion.LookRotation(_playerCamera.transform.position - cardPosition);
         }
-        
+
         PickedUpCard.transform.rotation = cardRotation;
     }
 
@@ -519,7 +520,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     {
         get
         {
-            Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
+            Physics.Raycast(PickedUpCard.transform.position, _playerCamera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
 
             if (firstHit.transform == null) { return null; }
             if (firstHit.transform.parent == null) { return null; }
