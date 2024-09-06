@@ -10,6 +10,7 @@ using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using DataStructures;
 using CardVisibility;
+using KarmaLogic.CardCombos;
 
 
 public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
@@ -61,17 +62,70 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     bool _isKarmaDownFlippedUp = false;
     public bool IsToolTipsEnabled { get; set; } = true;
 
+    RaycastHit[] _hits;
+    bool _isLeftButtonMouseDown = false;
+    Vector2 _mousePosition;
+    bool _areLegalMovesHighlighted = true;
+
     void Awake()
     {
         CardsInHand = new();
         CardSelector = new();
         _layerAsLayerMask = 1 << LayerMask.NameToLayer("Player");
+        _hits = new RaycastHit[5];
     }
 
-    private void Update()
+    void Update()
     {
-        if (!Input.GetMouseButtonDown(1)) { return; }
+        if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1)) { return; }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            _isLeftButtonMouseDown = true;
+            _mousePosition = Input.mousePosition;
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            TogglePlayerMovementListeners();
+            return;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (!_isLeftButtonMouseDown) { return; }
+        if (Controller.State is not WaitForTurn) { TrySelectCardObject(); }
+        _isLeftButtonMouseDown = false;
+    }
+
+    void TrySelectCardObject()
+    {
+        int numberOfHits = Physics.RaycastNonAlloc(_playerCamera.ScreenPointToRay(_mousePosition), _hits, _rayCastCutoff);
+
+        if (numberOfHits == 1) { return; }
+        System.Array.Sort(_hits, (a, b) => (a.distance.CompareTo(b.distance)));
+
+        CardObject cardObject = null;
+        foreach (var hit in _hits)
+        {
+            if (hit.transform == null) { continue; }
+            if (hit.transform.TryGetComponent<CardObject>(out cardObject)) { break; }
+        }
+
+        if (cardObject == null) { return; }
+
+        TryToggleCardSelect(cardObject);
+
+        for (int i = 0; i < _hits.Length; i++)
+        {
+            _hits[i] = new RaycastHit();
+        }
+    }
+
+    public void TogglePlayerMovementListeners()
+    {
         if (Controller.State is SelectingPlayPileGiveAwayPlayerIndex && IsPointingEnabled)
         {
             _playerMovementController.TogglePointing();
@@ -96,6 +150,15 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
                 _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
         }
+    }
+
+    public void TryToggleCardSelect(CardObject cardObject)
+    {
+        // Replace the callback system with just using the existing raycast in update loop. This way we can access the camera and WAY more info
+        if (!CardIsSelectable(cardObject)) { return; }
+        if (!cardObject.IsVisible(Index)) { return; }
+        cardObject.ToggleSelectShader();
+        CardSelector.Toggle(cardObject);
     }
 
     public void EnableCamera()
@@ -165,13 +228,19 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     {
         ListWithConstantContainsCheck<CardObject> cardObjects = new();
         KarmaGameManager gameManager = KarmaGameManager.Instance;
-        
+        LegalCombos legalCombos = gameManager.Board.CurrentLegalCombos;
+        print("Legal combo cvc: " + legalCombos.CardValueMaxCounts);
+
         foreach (Card card in hand)
         {
             CardObject cardObject = gameManager.InstantiateCard(card, Vector3.zero, Quaternion.identity, _cardHolder).GetComponent<CardObject>();
-            SetCardObjectOnMouseDownEvent(cardObject);
             ParentCardToThis(cardObject);
             cardObjects.Add(cardObject);
+
+            if (_areLegalMovesHighlighted)
+            {
+                gameManager.ColorLegalCard(cardObject);
+            }
         }
 
         UpdateHand(cardObjects);
@@ -246,6 +315,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     {
         HideUI();
         _playerMovementController.SetRotating(true);
+        
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
 
@@ -289,7 +359,6 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
 
         foreach (CardObject cardObject in cardsToAdd)
         {
-            SetCardObjectOnMouseDownEvent(cardObject);
             ParentCardToThis(cardObject);
         }
 
@@ -336,6 +405,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void UpdateHand(ListWithConstantContainsCheck<CardObject> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
+        if (_areLegalMovesHighlighted) { KarmaGameManager.Instance.ColorLegalCards(CardsInHand); }
         UpdateHand(fanPhysicsInfo);
     }
 
@@ -344,6 +414,23 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         bool fanIsFlipped = KarmaGameManager.Instance.Board.HandsAreFlipped;
         fanPhysicsInfo ??= FanPhysicsInfo.Default;
         _fanHandler.TransformCardsIntoFan(CardsInHand, fanIsFlipped, fanPhysicsInfo);
+    }
+
+    [ContextMenu("Turn Off Legal Move Hints")]
+    public void TurnOffLegalMoveHints()
+    {
+        _areLegalMovesHighlighted = false;
+        foreach (CardObject cardObject in SelectableCardObjects)
+        {
+            cardObject.ResetCardBorder();
+        }
+    }
+
+    [ContextMenu("Turn On Legal Move Hints")]
+    public void TurnOnLegalMoveHints()
+    {
+        _areLegalMovesHighlighted = true;
+        KarmaGameManager.Instance.ColorLegalCards(SelectableCardObjects);
     }
 
     [ContextMenu("Redraw Fan")]
@@ -364,6 +451,8 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         {
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
         }
+
+        if (_areLegalMovesHighlighted) { KarmaGameManager.Instance.ColorLegalCards(CardsInKarmaDown); }
     }
 
     public List<CardObject> PopSelectedCardsFromSelection()
@@ -372,7 +461,8 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         foreach (CardObject cardObject in cardObjects)
         {
             cardObject.DisableSelectShader();
-            RemoveCardObjectOnMouseDownEvent(cardObject);
+            CardSelector.Remove(cardObject);
+            cardObject.ResetCardBorder();
         }
 
         SelectableCardObjects.RemoveRange(cardObjects);
@@ -380,23 +470,6 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
         if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
         return cardObjects;
-    }
-
-    public void CardObjectOnMouseDownEvent(CardObject cardObject)
-    {
-        if (!CardIsSelectable(cardObject)) { return; }
-        CardSelector.Toggle(cardObject);
-    }
-
-    public void SetCardObjectOnMouseDownEvent(CardObject cardObject)
-    {
-        cardObject.OnCardClick += CardObjectOnMouseDownEvent;
-    }
-
-    public void RemoveCardObjectOnMouseDownEvent(CardObject cardObject)
-    {
-        CardSelector.Remove(cardObject);
-        cardObject.OnCardClick -= CardObjectOnMouseDownEvent;
     }
 
     public void ParentCardToThis(CardObject cardObject)
@@ -408,7 +481,6 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
-        giverPlayerProperties.RemoveCardObjectOnMouseDownEvent(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.UpdateHand();

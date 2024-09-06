@@ -40,6 +40,11 @@ namespace KarmaLogic
                 if (GetType() == other.GetType()) { return true; }
                 return false;
             }
+
+            public override string ToString()
+            {
+                return "State ID: " + GetHashCode();
+            }
         }
     }
 }

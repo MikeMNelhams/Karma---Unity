@@ -1,5 +1,6 @@
 using DataStructures;
 using KarmaLogic.Board;
+using KarmaLogic.CardCombos;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace KarmaLogic
                 return comboHistory + "]";
             }
 
-            public static string CombosRepresentation(HashSet<FrozenMultiSet<CardValue>> combos)
+            public static string CombosRepresentation(LegalCombos combos)
             {
                 string combosMessage = "Combos[";
                 foreach (var combo in combos)

@@ -7,6 +7,7 @@ using KarmaLogic.Controller;
 using System;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
+using KarmaLogic.CardCombos;
 
 namespace KarmaLogic
 {
@@ -93,7 +94,7 @@ namespace KarmaLogic
             public int TurnsPlayed { get; }
             public int NumberOfCardsDrawnThisTurn { get; }
             public PlayingFrom StartingPlayerStartedPlayingFrom {get;}
-            public HashSet<FrozenMultiSet<CardValue>> CurrentLegalCombos { get; }
+            public LegalCombos CurrentLegalCombos { get; }
             public HashSet<BoardPlayerAction> CurrentLegalActions { get; }
             
             public HashSet<int> PotentialWinnerIndices { get; }

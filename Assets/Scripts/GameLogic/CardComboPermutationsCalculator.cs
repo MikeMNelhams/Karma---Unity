@@ -1,9 +1,11 @@
 using DataStructures;
 using KarmaLogic.Cards;
+using KarmaLogic.Board;
+using KarmaLogic.CardCombos;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using KarmaLogic.Board;
+
 
 namespace KarmaLogic
 {
@@ -11,9 +13,9 @@ namespace KarmaLogic
     {
         public class CardComboCalculator
         {
-            public static HashSet<FrozenMultiSet<CardValue>> FillerCombos(CardsList cards, CardValue filler, int minToFiller)
+            public static LegalCombos FillerCombos(CardsList cards, CardValue filler, int minToFiller)
             {
-                HashSet<FrozenMultiSet<CardValue>> output = new ();
+                LegalCombos output = new ();
                 if (cards.Count == 0) { return output; }
                 if (cards.Count == 1) { return SingleCardCombo(cards); }
 
@@ -33,7 +35,7 @@ namespace KarmaLogic
 
                 int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) { return output; }
-                HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
+                LegalCombos outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
@@ -49,9 +51,9 @@ namespace KarmaLogic
                 output.UnionWith(outputsIncludingFiller);
                 return output;
             }
-            public static HashSet<FrozenMultiSet<CardValue>> FillerAndFilterCombos(CardsList cards, CardValue filler, Func<CardValue, bool> filter, int minToFiller)
+            public static LegalCombos FillerAndFilterCombos(CardsList cards, CardValue filler, Func<CardValue, bool> filter, int minToFiller)
             {
-                HashSet<FrozenMultiSet<CardValue>> output = new ();
+                LegalCombos output = new ();
                 if (cards.Count == 0) { return output; }
                 if (cards.Count == 1)
                 {
@@ -76,7 +78,7 @@ namespace KarmaLogic
 
                 int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) {return output; }
-                HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
+                LegalCombos outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
@@ -92,13 +94,13 @@ namespace KarmaLogic
                 return output;
             }
 
-            public static HashSet<FrozenMultiSet<CardValue>> FillerNotExclusiveCombos(CardsList cards, CardValue filler, int minToFiller)
+            public static LegalCombos FillerNotExclusiveCombos(CardsList cards, CardValue filler, int minToFiller)
             {
-                if (cards.Count == 0) { return new HashSet<FrozenMultiSet<CardValue>>(); }
+                if (cards.Count == 0) { return new LegalCombos(); }
                 if (cards.Count == 1) { return SingleCardCombo(cards); }
 
                 Dictionary<CardValue, int> count = new ();
-                HashSet<FrozenMultiSet<CardValue>> output = new();
+                LegalCombos output = new();
                 List<List<CardValue>> outputComboValues = new();
                 foreach (Card card in cards)
                 {
@@ -112,7 +114,7 @@ namespace KarmaLogic
                 }
                 int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) { return output; }
-                HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
+                LegalCombos outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
@@ -128,9 +130,9 @@ namespace KarmaLogic
                 return output;
             }
 
-            public static HashSet<FrozenMultiSet<CardValue>> FillerFilterNotExclusiveCombos(CardsList cards, CardValue filler, Func<CardValue, bool> filter, int minToFiller)
+            public static LegalCombos FillerFilterNotExclusiveCombos(CardsList cards, CardValue filler, Func<CardValue, bool> filter, int minToFiller)
             {
-                HashSet<FrozenMultiSet<CardValue>> output = new();
+                LegalCombos output = new();
                 if (cards.Count == 0) { return output; }
                 if (cards.Count == 1)
                 {
@@ -153,7 +155,7 @@ namespace KarmaLogic
                 }
                 int fillerCount = count.GetValueOrDefault(filler);
                 if (fillerCount == 0) { return output; }
-                HashSet<FrozenMultiSet<CardValue>> outputsIncludingFiller = new();
+                LegalCombos outputsIncludingFiller = new();
                 foreach (FrozenMultiSet<CardValue> combo in output)
                 {
                     if (combo.TotalCount < minToFiller) { continue; }
@@ -170,16 +172,16 @@ namespace KarmaLogic
                 return output;
             }
 
-            public static HashSet<FrozenMultiSet<CardValue>> SingleCardCombo(CardsList cards)
+            public static LegalCombos SingleCardCombo(CardsList cards)
             {
                 FrozenMultiSet<CardValue> combo = new() { cards[0].Value };
-                HashSet<FrozenMultiSet<CardValue>> output = new() { combo };
+                LegalCombos output = new() { combo };
                 return output;
             }
 
-            public static HashSet<FrozenMultiSet<CardValue>> HandFlippedCombos(CardsList cards) 
+            public static LegalCombos HandFlippedCombos(CardsList cards) 
             {
-                HashSet<FrozenMultiSet<CardValue>> combos = new();
+                LegalCombos combos = new();
                 foreach (CardValue cardValue in cards.CardValues)
                 {
                     FrozenMultiSet<CardValue> frozenMultiSet = new() { cardValue };
@@ -188,9 +190,9 @@ namespace KarmaLogic
                 return combos;
             }
 
-            static HashSet<FrozenMultiSet<CardValue>> IncorrectlyDoubledFillerCombos(CardValue filler, int fillerCount)
+            static LegalCombos IncorrectlyDoubledFillerCombos(CardValue filler, int fillerCount)
             {
-                HashSet<FrozenMultiSet<CardValue>> output = new();
+                LegalCombos output = new();
                 for (int i = 1; i < fillerCount + 1; i++)
                 {
                     List<CardValue> cardValues = Enumerable.Repeat(filler, fillerCount + i).ToList();
@@ -199,9 +201,9 @@ namespace KarmaLogic
                 return output;
             }
 
-            static HashSet<FrozenMultiSet<CardValue>> FillerCombosNotExclusivelyFiller(CardValue filler, int fillerCount)
+            static LegalCombos FillerCombosNotExclusivelyFiller(CardValue filler, int fillerCount)
             {
-                HashSet<FrozenMultiSet<CardValue>> output = new();
+                LegalCombos output = new();
                 for (int i = 1; i < fillerCount * 2 + 1; i++)
                 {
                     List<CardValue> cardValues = Enumerable.Repeat(filler, i).ToList();

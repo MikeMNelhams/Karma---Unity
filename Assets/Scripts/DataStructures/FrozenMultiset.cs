@@ -7,6 +7,14 @@ namespace DataStructures
     {
         public FrozenMultiSet() : base() { }
         public FrozenMultiSet(IEnumerable<T> items) : base(items) { }
+        public FrozenMultiSet(Dictionary<T, int> items)
+        {
+            _dict = items;
+        }
+        public FrozenMultiSet(T item, int count)
+        {
+            _dict = new Dictionary<T, int> { [item] = count };
+        }
 
         public override int GetHashCode()
         {

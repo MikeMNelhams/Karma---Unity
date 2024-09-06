@@ -15,7 +15,6 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
 
     public Card CurrentCard { get; set; }
 
-    public event Action<CardObject> OnCardClick;
     Material _frontMaterialCopy;
     Material _selectedMaterialCopy;
 
@@ -56,12 +55,23 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
         }
     }
 
-    public void ToggleSelectShader()
+    public void EnableSelectShader(Color color)
     {
         if (_frontMaterialCopy == null) { return; }
-        float fresnelIsEnabled = _frontMaterialCopy.GetFloat("_isHighlighted");
-        _frontMaterialCopy.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
-        //_selectedMaterialCopy.SetFloat("_isEnabled", 1 - fresnelIsEnabled); // I'm not sure if I prefer with or without this!
+        _frontMaterialCopy.SetColor("_fresnelColor", color);
+        _frontMaterialCopy.SetFloat("_isHighlighted", 1.0f); 
+    }
+
+    public void ColorCardBorder(Color color)
+    {
+        _selectedMaterialCopy.SetColor("_color", color);
+        _selectedMaterialCopy.SetFloat("_isEnabled", 1.0f);
+    }
+
+    public void ResetCardBorder()
+    {
+        _selectedMaterialCopy.SetColor("_color", Color.black);
+        _selectedMaterialCopy.SetFloat("_isEnabled", 0.0f);
     }
 
     public void DisableSelectShader()
@@ -70,12 +80,12 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
         _frontMaterialCopy.SetFloat("_isHighlighted", 0.0f);
     }
 
-    void OnMouseDown()
+    public void ToggleSelectShader()
     {
-        if (OnCardClick == null) { return; }
-        if (!EventSystem.current.IsPointerOverGameObject()) { return; }
-        ToggleSelectShader();
-        OnCardClick.Invoke(this);
+        if (_frontMaterialCopy == null) { return; }
+        float fresnelIsEnabled = _frontMaterialCopy.GetFloat("_isHighlighted");
+        _frontMaterialCopy.SetFloat("_isHighlighted", 1 - fresnelIsEnabled);
+        //_selectedMaterialCopy.SetFloat("_isEnabled", 1 - fresnelIsEnabled); // I'm not sure if I prefer with or without this!
     }
 
     public void SetCardName(string name)

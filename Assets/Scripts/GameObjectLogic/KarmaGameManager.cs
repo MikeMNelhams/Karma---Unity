@@ -7,6 +7,7 @@ using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
 using KarmaLogic.Controller;
+using KarmaLogic.CardCombos;
 using System;
 using System.Linq;
 using DataStructures;
@@ -77,12 +78,12 @@ public class KarmaGameManager : MonoBehaviour
         {
             new() { new() { 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 12, 13, 14, 15}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
             new() { new() { 2, 5, 12, 12 }, new() { 3, 3, 3}, new() { } },
-            new() { new() { 2, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-            new() { new() { 2, 5, 12, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+            new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+            new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
         };
 
         List<int> drawCardValues = new() { 10, 11, 12};
-        List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 2 };
+        List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
         List<int> burnCardValues = new() { };
 
         Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
@@ -109,8 +110,8 @@ public class KarmaGameManager : MonoBehaviour
         Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
 
         Board.EventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
-        Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHandsAnimation));
-        Board.EventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrderAnimation));
+        Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHands));
+        Board.EventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrder));
         Board.EventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
         Board.EventSystem.RegisterPlayPileGiveAwayListener(new BoardEventSystem.BoardOnStartPlayPileGiveAwayListener(StartGiveAwayPlayPile));
 
@@ -217,16 +218,7 @@ public class KarmaGameManager : MonoBehaviour
             KarmaDownPilesHandler karmaDownPilesHandler = boardHolder.GetComponent<KarmaDownPilesHandler>();
             
             playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<CardObject>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp));
-            foreach (CardObject card in playerProperties.CardsInKarmaUp)
-            {
-                playerProperties.SetCardObjectOnMouseDownEvent(card);
-            }
-
             playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<CardObject>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown));
-            foreach (CardObject card in playerProperties.CardsInKarmaDown)
-            {
-                playerProperties.SetCardObjectOnMouseDownEvent(card);
-            }
         }   
     }
 
@@ -238,7 +230,7 @@ public class KarmaGameManager : MonoBehaviour
         return cardObject;
     }
 
-    public void FlipHandsAnimation(IBoard board)
+    public void FlipHands(IBoard board)
     {
         for (int i = 0; i < board.Players.Count; i++)
         {
@@ -246,14 +238,14 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    public void RotateHandsInTurnOrderAnimation(int numberOfRotations, IBoard board) 
+    public void RotateHandsInTurnOrder(int numberOfRotations, IBoard board) 
     {
         int k = numberOfRotations % board.Players.Count;
-        RotateHandsAnimation(k * ((int) board.TurnOrder), board);
+        RotateHands(k * ((int) board.TurnOrder), board);
         return;
     }
 
-    void RotateHandsAnimation(int numberOfRotations, IBoard board)
+    void RotateHands(int numberOfRotations, IBoard board)
     {
         List<ListWithConstantContainsCheck<CardObject>> beginHands = new();
 
@@ -261,11 +253,6 @@ public class KarmaGameManager : MonoBehaviour
         {
             PlayerProperties playerProperties = PlayersProperties[i];
             ListWithConstantContainsCheck<CardObject> hand = playerProperties.CardsInHand;
-            foreach (CardObject cardObject in hand)
-            {
-                playerProperties.RemoveCardObjectOnMouseDownEvent(cardObject);
-            }
-
             beginHands.Add(hand);
         }
 
@@ -279,7 +266,6 @@ public class KarmaGameManager : MonoBehaviour
             PlayerProperties playerProperties = PlayersProperties[i];
             foreach (CardObject cardObject in hand)
             {
-                playerProperties.SetCardObjectOnMouseDownEvent(cardObject);
                 playerProperties.ParentCardToThis(cardObject);
             }
             PlayersProperties[i].UpdateHand(hand);
@@ -682,6 +668,8 @@ public class KarmaGameManager : MonoBehaviour
         
         playerProperties.SetControllerState(new SelectingCardGiveAwayPlayerIndex(Board, PlayersProperties[playerIndex]));
         playerProperties.PickedUpCard = selectedCard;
+        playerProperties.PickedUpCard.ResetCardBorder();
+        playerProperties.PickedUpCard.DisableSelectShader();
     }
 
     void AttemptGiveAwayPickedUpCard(int giverIndex, int targetIndex)
@@ -732,6 +720,33 @@ public class KarmaGameManager : MonoBehaviour
         }
 
         return cardPositions;
+    }
+
+    public void ColorLegalCard(CardObject cardObject)
+    {
+        LegalCombos legalCombos = Board.CurrentLegalCombos;
+        if (legalCombos.IsLegal(new FrozenMultiSet<CardValue>(cardObject.CurrentCard.Value, 1)))
+        {
+            cardObject.ColorCardBorder(Color.green);
+            return;
+        }
+
+        if (legalCombos.IsSubsetLegal(new FrozenMultiSet<CardValue>(cardObject.CurrentCard.Value, 1)))
+        {
+            cardObject.ColorCardBorder(Color.blue);
+            return;
+        }
+
+        cardObject.ColorCardBorder(Color.red);
+        return;
+    }
+
+    public void ColorLegalCards(IEnumerable<CardObject> cards)
+    {
+        foreach (CardObject cardObject in cards)
+        {
+            ColorLegalCard(cardObject);
+        }
     }
 
     public Bounds CardBounds

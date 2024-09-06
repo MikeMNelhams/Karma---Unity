@@ -4,6 +4,7 @@ using UnityEngine;
 using KarmaLogic.Bots;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
+using KarmaLogic.CardCombos;
 using System.Linq;
 using KarmaLogic.BasicBoard;
 using DataStructures;
@@ -53,7 +54,7 @@ public class IntegrationTestBot : IBot
 
     public FrozenMultiSet<CardValue> CardsToPlay(IBoard board)
     {
-        HashSet<FrozenMultiSet<CardValue>> legalCombos = board.CurrentLegalCombos;
+        LegalCombos legalCombos = board.CurrentLegalCombos;
         return legalCombos.First();
     }
 

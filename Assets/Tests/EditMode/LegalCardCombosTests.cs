@@ -3,6 +3,7 @@ using NUnit.Framework;
 using KarmaLogic.BasicBoard;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
+using KarmaLogic.CardCombos;
 using DataStructures;
 
 public class LegalCardCombosTests 
@@ -23,7 +24,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         FrozenMultiSet<CardValue> combo = new() { CardValue.JOKER };
 
@@ -70,7 +71,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(13, predictedLegalCombos.Count);
 
@@ -102,7 +103,7 @@ public class LegalCardCombosTests
 
             board.StartTurn();
 
-            HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+            LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
             FrozenMultiSet<CardValue> combo = new() { CardValue.TWO };
 
@@ -129,7 +130,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(1, board.PlayPile.Count);
@@ -164,7 +165,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(1, board.PlayPile.Count);
@@ -199,7 +200,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(9, predictedLegalCombos.Count);
 
@@ -230,7 +231,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(9, predictedLegalCombos.Count);
 
@@ -261,7 +262,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -296,7 +297,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -329,7 +330,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(1, predictedLegalCombos.Count);
 
@@ -355,7 +356,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(0, predictedLegalCombos.Count);
 
@@ -381,7 +382,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -414,7 +415,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(1, predictedLegalCombos.Count);
 
@@ -440,7 +441,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(1, predictedLegalCombos.Count);
 
@@ -466,7 +467,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(3, predictedLegalCombos.Count);
 
@@ -497,7 +498,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(1, predictedLegalCombos.Count);
 
@@ -523,7 +524,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(2, predictedLegalCombos.Count);
 
@@ -553,7 +554,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -583,7 +584,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(5, predictedLegalCombos.Count);
 
@@ -619,7 +620,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -652,7 +653,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -685,7 +686,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(1, predictedLegalCombos.Count);
 
@@ -711,7 +712,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 
@@ -744,7 +745,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(7, predictedLegalCombos.Count);
 
@@ -783,7 +784,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(1, predictedLegalCombos.Count);
 
@@ -809,7 +810,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(3, predictedLegalCombos.Count);
 
@@ -840,7 +841,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(0, predictedLegalCombos.Count);
     }
@@ -863,7 +864,7 @@ public class LegalCardCombosTests
 
         board.StartTurn();
 
-        HashSet<FrozenMultiSet<CardValue>> predictedLegalCombos = board.CurrentLegalCombos;
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
 
         Assert.AreEqual(4, predictedLegalCombos.Count);
 

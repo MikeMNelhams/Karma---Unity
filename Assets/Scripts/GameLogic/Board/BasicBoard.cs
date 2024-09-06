@@ -100,7 +100,7 @@ namespace KarmaLogic
                 ComboFactory = new CardComboFactory();
                 EventSystem = new BoardEventSystem();
                 CurrentLegalActions = new HashSet<BoardPlayerAction>();
-                CurrentLegalCombos = new HashSet<FrozenMultiSet<CardValue>>();
+                CurrentLegalCombos = new LegalCombos();
                 _allActions = new () {new PickupPlayPile(), new PlayCardsCombo()};
                 _potentialWinnerIndices = new HashSet<int>();
 
@@ -371,7 +371,7 @@ namespace KarmaLogic
                 }
             }
 
-            public HashSet<FrozenMultiSet<CardValue>> CurrentLegalCombos { get; protected set; }
+            public LegalCombos CurrentLegalCombos { get; protected set; }
             public HashSet<BoardPlayerAction> CurrentLegalActions { get; protected set; }
 
             void CalculateLegalActions()
@@ -389,12 +389,12 @@ namespace KarmaLogic
 
             void CalculateLegalCombos(CardsList cards)
             {
-                CurrentLegalCombos = LegalCombos(cards);
+                CurrentLegalCombos = GetLegalCombos(cards);
             }
 
-            HashSet<FrozenMultiSet<CardValue>> LegalCombos(CardsList cards)
+            LegalCombos GetLegalCombos(CardsList cards)
             {
-                if (cards.Count == 0) { return new HashSet<FrozenMultiSet<CardValue>>(); }
+                if (cards.Count == 0) { return new LegalCombos(); }
                 if (HandsAreFlipped) 
                 {
                     return CardComboCalculator.HandFlippedCombos(cards);
