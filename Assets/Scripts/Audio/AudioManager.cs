@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -11,9 +9,14 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource _musicSource;
     [SerializeField] AudioSource _SFXSource;
 
-    [Header("Audio Clips")]
+    [Header("Audio Clips - Music")]
     public AudioClip _backgroundMusic;
 
+    [Header("Audio Clips - SFX")]
+    public AudioClip _cardBurn;
+    public AudioClip _cardAddedToPile;
+    public AudioClip _shufflePile;
+    
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -31,5 +34,25 @@ public class AudioManager : MonoBehaviour
         _musicSource.clip = _backgroundMusic;
         _musicSource.loop = true;
         _musicSource.Play();
+
+        _SFXSource.loop = false;
+    }
+
+    public void PlayBurnSFX()
+    {
+        _SFXSource.clip = _cardBurn;
+        _SFXSource.Play();
+    }
+
+    public void PlayShuffleSFX()
+    {
+        _SFXSource.clip = _shufflePile;
+        _SFXSource.Play();
+    }
+
+    public void PlayCardAddedToPileSFX()
+    {
+        _SFXSource.clip = _cardAddedToPile;
+        _SFXSource.Play();
     }
 }

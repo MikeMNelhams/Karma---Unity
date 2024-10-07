@@ -274,6 +274,9 @@ public class KarmaGameManager : MonoBehaviour
 
     public void BurnCards(int jokerCount)
     {
+        AudioManager audioManager = AudioManager.Instance;
+        audioManager.PlayBurnSFX();
+
         if (jokerCount == 0)
         {
             _playTable.MoveEntirePlayPileToBurnPile();
@@ -635,6 +638,8 @@ public class KarmaGameManager : MonoBehaviour
         if (Board.CurrentLegalCombos.Contains(cardSelector.SelectionCardValues))
         {
             print("Card combo is LEGAL!! Proceeding to play " + cardSelector.SelectionCardValues);
+
+            AudioManager.Instance.PlayCardAddedToPileSFX();
 
             CardsList cardSelection = playerProperties.CardSelector.Selection;
             MoveCardsFromSelectionToPlayPile(playerIndex);
