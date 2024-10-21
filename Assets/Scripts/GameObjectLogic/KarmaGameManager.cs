@@ -727,16 +727,31 @@ public class KarmaGameManager : MonoBehaviour
         return cardPositions;
     }
 
-    public void ColorLegalCard(CardObject cardObject)
+    public void ColorLegalCard(CardObject cardObject, CardSelector cardSelector)
     {
         LegalCombos legalCombos = Board.CurrentLegalCombos;
-        if (legalCombos.IsLegal(new FrozenMultiSet<CardValue>(cardObject.CurrentCard.Value, 1)))
+
+        FrozenMultiSet<CardValue> combinedSelection = new();
+        FrozenMultiSet<CardValue> selectionCardValues = cardSelector.SelectionCardValues;
+
+        foreach (CardValue cardValue in selectionCardValues)
+        {
+            combinedSelection.Add(cardValue, selectionCardValues[cardValue]);
+        }
+
+        if (!cardSelector.CardObjects.Contains(cardObject))
+        {
+            combinedSelection.Add(cardObject.CurrentCard.Value);
+        }
+
+        print("Combined selection " + combinedSelection);
+        if (legalCombos.IsLegal(combinedSelection))
         {
             cardObject.ColorCardBorder(Color.green);
             return;
         }
 
-        if (legalCombos.IsSubsetLegal(new FrozenMultiSet<CardValue>(cardObject.CurrentCard.Value, 1)))
+        if (legalCombos.IsSubsetLegal(combinedSelection))
         {
             cardObject.ColorCardBorder(Color.blue);
             return;
@@ -744,14 +759,6 @@ public class KarmaGameManager : MonoBehaviour
 
         cardObject.ColorCardBorder(Color.red);
         return;
-    }
-
-    public void ColorLegalCards(IEnumerable<CardObject> cards)
-    {
-        foreach (CardObject cardObject in cards)
-        {
-            ColorLegalCard(cardObject);
-        }
     }
 
     public Bounds CardBounds

@@ -145,7 +145,7 @@ namespace DataStructures
             }
         }
 
-        public int Max()
+        public int MaxKey()
         {
             int maximum = 0;
             foreach (T key in _dict.Keys)

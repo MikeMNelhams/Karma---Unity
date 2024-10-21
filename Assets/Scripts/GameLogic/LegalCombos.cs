@@ -37,34 +37,34 @@ namespace KarmaLogic.CardCombos
 
         public bool IsSubsetLegal(FrozenMultiSet<CardValue> combo)
         {
-            // Assumes the combo is NOT legal
+            // A non-legal is sublegal if it is currently NOT legal, but it's possible to become legal by adding more cards
+            // A combo could only become legal if it can BECOME a 6 filled legal combo:
+            //  1   Combo has at least 1 non-6 and at least 1 6.
+            //  2   Non-6 is legal by itself
+            //  3   Non-6 count < required filler count
+            //  4   CardValueMaxCounts[Non-6] >= req_filler_count
+            // However, condition 3 is always the case if 1 & 2 are true
             if (combo.TotalCount == 0) { return false; }
-            if (combo.KeyCount > 2) { return false; }
+            if (IsLegal(combo)) { return false; }
+            if (combo.KeyCount != 2) { return false; }
 
             bool containsFiller = combo.Contains(CardValue.SIX);
             if (!containsFiller) { return false; }
 
-            int fillerCount = combo[CardValue.SIX];
+            CardValue nonSix = CardValue.TWO; // Dummy variable
 
-            if (combo.KeyCount == 1)
-            {
-                return CardValueMaxCounts.Max() >= 3;
-            }
-
-            
-            CardValue nonSix = CardValue.TWO;
-            int nonFillerCount = 0;
             foreach (CardValue key in combo)
             {
                 if (key != CardValue.SIX)
                 {
                     nonSix = key;
-                    nonFillerCount = combo[nonSix] - fillerCount;
                     break;
                 }
             }
 
-            return nonFillerCount <= CardValueMaxCounts[nonSix] && fillerCount <= CardValueMaxCounts[CardValue.SIX];
+            if (!IsLegal(new FrozenMultiSet<CardValue> { nonSix })) { return false; }
+
+            return CardValueMaxCounts[nonSix] >= 3;
         }
 
         public bool Contains(FrozenMultiSet<CardValue> combo)

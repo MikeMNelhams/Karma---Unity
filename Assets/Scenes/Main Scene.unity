@@ -1738,6 +1738,12 @@ MonoBehaviour:
   _cardBurn: {fileID: 8300000, guid: 6fdc3562cdc9a7140b19317570a8f511, type: 3}
   _cardAddedToPile: {fileID: 8300000, guid: 73547db10ddb4fb4ea72b559b9990ead, type: 3}
   _shufflePile: {fileID: 8300000, guid: ed1c4aac180860e47a5f5c8cabd55ce0, type: 3}
+  _cardPickup: {fileID: 8300000, guid: 2debeab0ca24eb348b581b21bdb83406, type: 3}
+  audioSettings:
+    musicSettings:
+      _volume: 75
+    sFXSettings:
+      _volume: 75
 --- !u!81 &1444980548
 AudioListener:
   m_ObjectHideFlags: 0

@@ -159,6 +159,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         if (!cardObject.IsVisible(Index)) { return; }
         cardObject.ToggleSelectShader();
         CardSelector.Toggle(cardObject);
+        ColorLegalCards();
     }
 
     public void EnableCamera()
@@ -236,14 +237,21 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
             CardObject cardObject = gameManager.InstantiateCard(card, Vector3.zero, Quaternion.identity, _cardHolder).GetComponent<CardObject>();
             ParentCardToThis(cardObject);
             cardObjects.Add(cardObject);
-
-            if (_areLegalMovesHighlighted)
-            {
-                gameManager.ColorLegalCard(cardObject);
-            }
         }
 
         UpdateHand(cardObjects);
+        ColorLegalCards();
+    }
+
+    void ColorLegalCards()
+    {
+        if (!_areLegalMovesHighlighted) { return; }
+        KarmaGameManager karmaGameManager = KarmaGameManager.Instance;
+
+        foreach (CardObject cardObject in SelectableCardObjects)
+        {
+            karmaGameManager.ColorLegalCard(cardObject, CardSelector);
+        }
     }
 
     public override void EnterWaitingForTurn()
@@ -405,7 +413,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void UpdateHand(ListWithConstantContainsCheck<CardObject> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
-        if (_areLegalMovesHighlighted) { KarmaGameManager.Instance.ColorLegalCards(CardsInHand); }
+        if (_areLegalMovesHighlighted) { ColorLegalCards(); }
         UpdateHand(fanPhysicsInfo);
     }
 
@@ -430,7 +438,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void TurnOnLegalMoveHints()
     {
         _areLegalMovesHighlighted = true;
-        KarmaGameManager.Instance.ColorLegalCards(SelectableCardObjects);
+        ColorLegalCards();
     }
 
     [ContextMenu("Redraw Fan")]
@@ -452,7 +460,9 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
         }
 
-        if (_areLegalMovesHighlighted) { KarmaGameManager.Instance.ColorLegalCards(CardsInKarmaDown); }
+        FrozenMultiSet<CardValue> selectedCards = CardSelector.SelectionCardValues;
+
+        if (_areLegalMovesHighlighted) { ColorLegalCards(); }
     }
 
     public List<CardObject> PopSelectedCardsFromSelection()
@@ -469,6 +479,9 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
 
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
         if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
+
+        ColorLegalCards();
+
         return cardObjects;
     }
 
@@ -484,6 +497,8 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.UpdateHand();
+
+        ColorLegalCards();
     }
 
     void MovePickedUpCardIfValid()
