@@ -67,7 +67,7 @@ public class BotController : IController
 
     public FrozenMultiSet<CardValue> SelectCardsToPlay(IBoard board)
     {
-        return _bot.CardsToPlay(board);
+        return _bot.ComboToPlay(board);
     }
 
     public int VoteForWinner(IBoard board, HashSet<int> excludedPlayerIndices)

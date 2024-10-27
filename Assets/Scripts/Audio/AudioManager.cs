@@ -37,7 +37,9 @@ public class AudioManager : MonoBehaviour
     {
         _musicSource.clip = _backgroundMusic;
         _musicSource.loop = true;
-        _musicSource.volume = audioSettings.musicSettings.Volume;
+        
+        _musicSource.volume = audioSettings.musicSettings.VolumeNormalised;
+        print("Volume: " + audioSettings.musicSettings.VolumeNormalised);
         _musicSource.Play();
 
         _SFXSource.loop = false;
@@ -46,7 +48,7 @@ public class AudioManager : MonoBehaviour
     void PlaySFX(AudioClip clip)
     {
         _SFXSource.clip = clip;
-        _SFXSource.volume = audioSettings.sFXSettings.Volume;
+        _SFXSource.volume = audioSettings.sFXSettings.VolumeNormalised;
         _SFXSource.Play();
     }
 

@@ -52,7 +52,7 @@ public class IntegrationTestBot : IBot
         return legalIndices.First();
     }
 
-    public FrozenMultiSet<CardValue> CardsToPlay(IBoard board)
+    public FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
     {
         LegalCombos legalCombos = board.CurrentLegalCombos;
         return legalCombos.First();

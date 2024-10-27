@@ -15,7 +15,7 @@ namespace KarmaLogic
             public float DelaySeconds { get; }
             public bool IsReady(IBoard board);
             public BoardPlayerAction SelectAction(IBoard board);
-            public FrozenMultiSet<CardValue> CardsToPlay(IBoard board);
+            public FrozenMultiSet<CardValue> ComboToPlay(IBoard board);
             public int CardGiveAwayIndex(IBoard board, HashSet<int> excludedCardsIndices);
             public int CardPlayerGiveAwayIndex(IBoard board, HashSet<int> excludedPlayerIndices);
             public int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices);

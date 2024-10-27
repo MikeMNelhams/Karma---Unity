@@ -12,7 +12,6 @@ using DataStructures;
 using CardVisibility;
 using KarmaLogic.CardCombos;
 
-
 public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
 {
     [SerializeField] PlayerMovementController _playerMovementController;
