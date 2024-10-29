@@ -8,15 +8,15 @@ namespace KarmaLogic
 
         public class WaitForTurn : ControllerState
         {
-            public WaitForTurn(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
+            public WaitForTurn(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
             public override void OnEnter()
             {
-                _playerProperties.EnterWaitingForTurn();
+                _characterProperties.Controller.EnterWaitingForTurn(_board, _characterProperties);
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitWaitingForTurn();
+                _characterProperties.Controller.ExitWaitingForTurn(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -27,17 +27,17 @@ namespace KarmaLogic
 
         public class PickingAction : ControllerState
         {
-            public PickingAction(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
+            public PickingAction(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
             public override void OnEnter()
             {
                 _board.PrintChooseableCards();
-                _playerProperties.EnterPickingAction();
+                _characterProperties.Controller.EnterPickingAction(_board, _characterProperties);
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitPickingAction();
+                _characterProperties.Controller.ExitPickingAction(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -48,16 +48,16 @@ namespace KarmaLogic
 
         public class VotingForWinner : ControllerState
         {
-            public VotingForWinner(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
+            public VotingForWinner(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterVotingForWinner();
+                _characterProperties.Controller.EnterVotingForWinner(_board, _characterProperties);
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitVotingForWinner();
+                _characterProperties.Controller.ExitVotingForWinner(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -68,16 +68,16 @@ namespace KarmaLogic
 
         public class SelectingCardGiveAwaySelectionIndex : ControllerState
         {
-            public SelectingCardGiveAwaySelectionIndex(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwaySelectionIndex(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterCardGiveAwaySelection();
+                _characterProperties.Controller.EnterCardGiveAwaySelection(_board, _characterProperties);
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitCardGiveAwaySelection();
+                _characterProperties.Controller.ExitCardGiveAwaySelection(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -88,16 +88,16 @@ namespace KarmaLogic
 
         public class SelectingCardGiveAwayPlayerIndex : ControllerState
         {
-            public SelectingCardGiveAwayPlayerIndex(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingCardGiveAwayPlayerIndex(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterCardGiveAwayPlayerIndexSelection();
+                _characterProperties.Controller.EnterCardGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitCardGiveAwayPlayerIndexSelection();
+                _characterProperties.Controller.ExitCardGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -108,16 +108,16 @@ namespace KarmaLogic
 
         public class SelectingPlayPileGiveAwayPlayerIndex : ControllerState
         {
-            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, BaseCharacterProperties playerProperties) : base(board, playerProperties) { }
+            public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
             public override void OnEnter()
             {
-                _playerProperties.EnterPlayPileGiveAwayPlayerIndexSelection();
+                _characterProperties.Controller.EnterPlayPileGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
             public override void OnExit()
             {
-                _playerProperties.ExitPlayPileGiveAwayPlayerIndexSelection();
+                _characterProperties.Controller.ExitPlayPileGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
             public override int GetHashCode()

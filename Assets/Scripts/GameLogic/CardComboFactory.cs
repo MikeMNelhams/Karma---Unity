@@ -14,7 +14,7 @@ namespace KarmaLogic
     {
         public class CardCombo_TWO : CardCombo
         {
-            public CardCombo_TWO(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts){}
+            public CardCombo_TWO(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts){}
             public override void Apply(IBoard board)
             {
                 board.ResetPlayOrder();
@@ -23,7 +23,7 @@ namespace KarmaLogic
 
         public class CardCombo_THREE : CardCombo
         {
-            public CardCombo_THREE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_THREE(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 board.EffectMultiplier *= (int)Math.Pow(2, Cards.Count);
@@ -32,7 +32,7 @@ namespace KarmaLogic
 
         public class CardCombo_FOUR : CardCombo
         {
-            public CardCombo_FOUR(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_FOUR(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 return;
@@ -41,7 +41,7 @@ namespace KarmaLogic
 
         public class CardCombo_FIVE : CardCombo
         {
-            public CardCombo_FIVE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_FIVE(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 List<Hand> startHands = new ();
@@ -65,7 +65,7 @@ namespace KarmaLogic
 
         public class CardCombo_SIX : CardCombo
         {
-            public CardCombo_SIX(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_SIX(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 return;
@@ -74,7 +74,7 @@ namespace KarmaLogic
 
         public class CardCombo_SEVEN : CardCombo
         {
-            public CardCombo_SEVEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_SEVEN(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (((Cards.Count * (uint)board.EffectMultiplier) & 0b1) == 0b0)
@@ -87,7 +87,7 @@ namespace KarmaLogic
 
         public class CardCombo_EIGHT : CardCombo
         {
-            public CardCombo_EIGHT(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_EIGHT(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (((Cards.Count * (uint)board.EffectMultiplier) & 0b1) == 0b0)
@@ -99,7 +99,7 @@ namespace KarmaLogic
         }
         public class CardCombo_NINE : CardCombo
         {
-            public CardCombo_NINE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_NINE(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (board.PlayPile.ContainsMinLengthRun(4)) { return; }
@@ -110,7 +110,7 @@ namespace KarmaLogic
 
         public class CardCombo_TEN : CardCombo
         {
-            public CardCombo_TEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_TEN(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 board.Burn(0);
@@ -119,7 +119,7 @@ namespace KarmaLogic
 
         public class CardCombo_JACK : CardCombo
         {
-            public CardCombo_JACK(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_JACK(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 if (board.PlayPile.Count <= Cards.Count) { return; }
@@ -137,7 +137,7 @@ namespace KarmaLogic
 
         public class CardCombo_QUEEN : CardCombo
         {
-            public CardCombo_QUEEN(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_QUEEN(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 Player currentPlayer = board.CurrentPlayer;
@@ -169,7 +169,7 @@ namespace KarmaLogic
 
         public class CardCombo_KING : CardCombo
         {
-            public CardCombo_KING(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_KING(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
@@ -188,7 +188,7 @@ namespace KarmaLogic
 
         public class CardCombo_ACE : CardCombo
         {
-            public CardCombo_ACE(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_ACE(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
@@ -205,7 +205,7 @@ namespace KarmaLogic
 
         public class CardCombo_JOKER : CardCombo
         {
-            public CardCombo_JOKER(CardsList cards, IController controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
+            public CardCombo_JOKER(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
             public override void Apply(IBoard board)
             {
                 board.Burn(Cards.Count);
@@ -290,7 +290,7 @@ namespace KarmaLogic
                 throw new NotImplementedException();
             }
 
-            public CardCombo CreateCombo(IController controller)
+            public CardCombo CreateCombo(Controller.Controller controller)
             {
                 CardValue cardValue = ComboCardValue();
                 if (!_cardComboMap.ContainsKey(cardValue))

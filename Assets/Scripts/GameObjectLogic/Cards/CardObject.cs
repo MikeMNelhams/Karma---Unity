@@ -6,19 +6,15 @@ using KarmaLogic.Cards;
 using CardVisibility;
 using System.Linq;
 
-public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibilityHandler
+public class CardObject : SelectableCard, IEquatable<CardObject>, ICardVisibilityHandler
 {
     [SerializeField] Material _frontMaterial; // This will get overwritten at runtime, for each individual card.
     [SerializeField] Material _selectedMaterial;
     [SerializeField] MeshRenderer _frontMeshRenderer;
     [SerializeField] MeshRenderer _cardMeshRenderer;
 
-    public Card CurrentCard { get; set; }
-
     Material _frontMaterialCopy;
     Material _selectedMaterialCopy;
-
-    ICardVisibilityHandler _cardVisibilityHandler;
 
     public void SetCard(Card card)
     {
@@ -62,25 +58,25 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
         _frontMaterialCopy.SetFloat("_isHighlighted", 1.0f); 
     }
 
-    public void ColorCardBorder(Color color)
+    public override void ColorCardBorder(Color color)
     {
         _selectedMaterialCopy.SetColor("_color", color);
         _selectedMaterialCopy.SetFloat("_isEnabled", 1.0f);
     }
 
-    public void ResetCardBorder()
+    public override void ResetCardBorder()
     {
         _selectedMaterialCopy.SetColor("_color", Color.black);
         _selectedMaterialCopy.SetFloat("_isEnabled", 0.0f);
     }
 
-    public void DisableSelectShader()
+    public override void DisableSelectShader()
     {
         if (_frontMaterialCopy == null) { return; }
         _frontMaterialCopy.SetFloat("_isHighlighted", 0.0f);
     }
 
-    public void ToggleSelectShader()
+    public override void ToggleSelectShader()
     {
         if (_frontMaterialCopy == null) { return; }
         float fresnelIsEnabled = _frontMaterialCopy.GetFloat("_isHighlighted");
@@ -97,26 +93,5 @@ public class CardObject : MonoBehaviour, IEquatable<CardObject>, ICardVisibility
     {
         if (ReferenceEquals(this, other)) return true;
         return false;
-    }
-
-    public void SetParent(ICardVisibilityHandler cardVisibilityHandler, Transform parentTransform)
-    {
-        transform.parent = parentTransform;
-        SetParent(cardVisibilityHandler);
-    }
-
-    public void SetParent(ICardVisibilityHandler cardVisibilityHandler)
-    {
-        _cardVisibilityHandler = cardVisibilityHandler;
-    }
-
-    public bool IsVisible(int observerPlayerIndex)
-    {
-        if (_cardVisibilityHandler == null)
-        {
-            throw new SystemException("Card has no parent set!");
-        }
-
-        return _cardVisibilityHandler.IsVisible(observerPlayerIndex);
     }
 }

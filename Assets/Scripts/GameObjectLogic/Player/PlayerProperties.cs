@@ -3,35 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using KarmaLogic.Board;
 using KarmaLogic.Controller;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using DataStructures;
 using CardVisibility;
-using KarmaLogic.CardCombos;
+using UnityEngine.EventSystems;
 
-public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
+public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibilityHandler
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] FanHandler _fanHandler;
 
     [SerializeField] Camera _playerCamera;
+    [SerializeField] PhysicsRaycaster _playerCameraPhysicsRaycaster;
+    [SerializeField] Canvas _playerCanvas;
     [SerializeField] GameObject _cardHolder;
      
     [SerializeField] float _rayCastCutoff = 30f;
 
-    public Button confirmSelectionButton;
-    public Button clearSelectionButton;
-    public Button pickupPlayPileButton;
+    public Button PickupPlayPileButton { get => _pickupPlayPileButton; }
+    public Button ConfirmSelectionButton { get => _confirmSelectionButton; }
+    public Button ClearSelectionButton { get => _clearSelectionButton; }
+
+    [SerializeField] Button _confirmSelectionButton;
+    [SerializeField] Button _clearSelectionButton;
+    [SerializeField] Button _pickupPlayPileButton;
+
     [SerializeField] Image nextPlayerLeftArrow;
     [SerializeField] Image nextPlayerRightArrow;
 
     [SerializeField] HoverToolTipHandler _hoverTipHandler;
 
     public HoverToolTipHandler HoverTipHandler { get => _hoverTipHandler; }
-    public IController Controller { get; set; }
+    public Controller Controller { get; set; }
     public CardSelector CardSelector { get; protected set; }
 
     public bool IsRotationEnabled { get; set; }
@@ -39,13 +45,13 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
 
     public int Index { get; set; } = -1;
 
-    public ListWithConstantContainsCheck<CardObject> CardsInHand { get; set; }
+    public ListWithConstantContainsCheck<SelectableCard> CardsInHand { get; set; }
     
-    public ListWithConstantContainsCheck<CardObject> CardsInKarmaUp { get; set; }
+    public ListWithConstantContainsCheck<SelectableCard> CardsInKarmaUp { get; set; }
 
-    public ListWithConstantContainsCheck<CardObject> CardsInKarmaDown { get; set; }
+    public ListWithConstantContainsCheck<SelectableCard> CardsInKarmaDown { get; set; }
     
-    public CardObject PickedUpCard { get; set; }
+    public SelectableCard PickedUpCard { get; set; }
 
     public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
     event OnLeftClickRayCastListener PickedUpCardOnClick;
@@ -151,33 +157,37 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         }
     }
 
-    public void TryToggleCardSelect(CardObject cardObject)
+    public void TryToggleCardSelect(SelectableCard cardObject)
     {
         // Replace the callback system with just using the existing raycast in update loop. This way we can access the camera and WAY more info
         if (!CardIsSelectable(cardObject)) { return; }
         if (!cardObject.IsVisible(Index)) { return; }
         cardObject.ToggleSelectShader();
         CardSelector.Toggle(cardObject);
-        ColorLegalCards();
+        TryColorLegalCards();
     }
 
     public void EnableCamera()
     {
         _playerCamera.enabled = true;
         _playerCamera.tag = "MainCamera";
+        _playerCameraPhysicsRaycaster.enabled = true;
+        _playerCanvas.enabled = true;
     }
 
     public void DisableCamera()
     {
         _playerCamera.tag = "Untagged";
         _playerCamera.enabled = false;
+        _playerCameraPhysicsRaycaster.enabled = false;
+        _playerCanvas.enabled = false;
     }
 
     public void HideUI()
     {
-        confirmSelectionButton.gameObject.SetActive(false);
-        clearSelectionButton.gameObject.SetActive(false);
-        pickupPlayPileButton.gameObject.SetActive(false);
+        ConfirmSelectionButton.gameObject.SetActive(false);
+        ClearSelectionButton.gameObject.SetActive(false);
+        PickupPlayPileButton.gameObject.SetActive(false);
         nextPlayerLeftArrow.gameObject.SetActive(false);
         nextPlayerRightArrow.gameObject.SetActive(false);
     }
@@ -204,7 +214,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         }
     }
 
-    public ListWithConstantContainsCheck<CardObject> SelectableCardObjects
+    public ListWithConstantContainsCheck<SelectableCard> SelectableCardObjects
     {
         get
         {
@@ -213,12 +223,12 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
                 PlayingFrom.Hand => CardsInHand,
                 PlayingFrom.KarmaUp => CardsInKarmaUp,
                 PlayingFrom.KarmaDown => CardsInKarmaDown,
-                _ => new ListWithConstantContainsCheck<CardObject>(),
+                _ => new ListWithConstantContainsCheck<SelectableCard>(),
             };
         }
     }
 
-    public bool CardIsSelectable(CardObject card)
+    public bool CardIsSelectable(SelectableCard card)
     {
         if (card == null) { throw new NullReferenceException(); }
         return SelectableCardObjects.Contains(card);
@@ -226,10 +236,8 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
 
     public void InstantiatePlayerHandFan(Hand hand)
     {
-        ListWithConstantContainsCheck<CardObject> cardObjects = new();
+        ListWithConstantContainsCheck<SelectableCard> cardObjects = new();
         KarmaGameManager gameManager = KarmaGameManager.Instance;
-        LegalCombos legalCombos = gameManager.Board.CurrentLegalCombos;
-        print("Legal combo cvc: " + legalCombos.CardValueMaxCounts);
 
         foreach (Card card in hand)
         {
@@ -239,44 +247,41 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         }
 
         UpdateHand(cardObjects);
-        ColorLegalCards();
+        TryColorLegalCards();
     }
 
-    void ColorLegalCards()
+    public void TryColorLegalCards()
     {
-        if (!_areLegalMovesHighlighted) { return; }
+        if (!_areLegalMovesHighlighted) { ColorSelectableCardsAsDefault(); return; }
         KarmaGameManager karmaGameManager = KarmaGameManager.Instance;
 
-        foreach (CardObject cardObject in SelectableCardObjects)
+        foreach (SelectableCard cardObject in SelectableCardObjects)
         {
             karmaGameManager.ColorLegalCard(cardObject, CardSelector);
         }
     }
 
-    public override void EnterWaitingForTurn()
+    void ColorSelectableCardsAsDefault()
     {
-        DisableCamera();
-        HideUI();
+        foreach (SelectableCard cardObject in SelectableCardObjects)
+        {
+            cardObject.ResetCardBorder();
+        }
     }
 
-    public override void ExitWaitingForTurn()
-    {
-        EnableCamera();
-    }
-
-    public override void EnterPickingAction()
+    public void EnterPickingActionUpdateUI()
     {
         KarmaGameManager gameManager = KarmaGameManager.Instance;
         HashSet<BoardPlayerAction> legalActions = gameManager.Board.CurrentLegalActions;
         if (legalActions.Count == 0) { return; }
-        if (legalActions.Contains(gameManager.PickUpAction)) 
-        { 
-            pickupPlayPileButton.gameObject.SetActive(true); 
-        }
-        if (legalActions.Contains(gameManager.PlayCardsComboAction)) 
+        if (legalActions.Contains(gameManager.PickUpAction))
         {
-            confirmSelectionButton.gameObject.SetActive(true); 
-            clearSelectionButton.gameObject.SetActive(true);
+            PickupPlayPileButton.gameObject.SetActive(true);
+        }
+        if (legalActions.Contains(gameManager.PlayCardsComboAction))
+        {
+            ConfirmSelectionButton.gameObject.SetActive(true);
+            ClearSelectionButton.gameObject.SetActive(true);
         }
         if (gameManager.Board.TurnOrder == BoardTurnOrder.RIGHT)
         {
@@ -286,39 +291,40 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         {
             nextPlayerLeftArrow.gameObject.SetActive(true);
         }
+        TryColorLegalCards();
     }
 
-    public override void ExitPickingAction()
+    public void ExitPickingActionUpdateUI()
     {
-        pickupPlayPileButton.gameObject.SetActive(false);
+        PickupPlayPileButton.gameObject.SetActive(false);
     }
 
-    public override void EnterVotingForWinner()
+    public void EnterVotingForWinner()
     {
         HideUI();
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
     }
 
-    public override void ExitVotingForWinner()
+    public void ExitVotingForWinner()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
     }
 
-    public override void EnterCardGiveAwaySelection()
+    public void EnterCardGiveAwaySelection()
     {
-        confirmSelectionButton.gameObject.SetActive(true);
-        clearSelectionButton.gameObject.SetActive(true);
+        ConfirmSelectionButton.gameObject.SetActive(true);
+        ClearSelectionButton.gameObject.SetActive(true);
     }
 
-    public override void ExitCardGiveAwaySelection()
+    public void ExitCardGiveAwaySelection()
     {
-        confirmSelectionButton.gameObject.SetActive(false);
-        clearSelectionButton.gameObject.SetActive(false);
+        ConfirmSelectionButton.gameObject.SetActive(false);
+        ClearSelectionButton.gameObject.SetActive(false);
     }
 
-    public override void EnterCardGiveAwayPlayerIndexSelection()
+    public void EnterCardGiveAwayPlayerIndexSelection()
     {
         HideUI();
         _playerMovementController.SetRotating(true);
@@ -326,20 +332,20 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
 
-    public override void ExitCardGiveAwayPlayerIndexSelection()
+    public void ExitCardGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
     
-    public override void EnterPlayPileGiveAwayPlayerIndexSelection()
+    public void EnterPlayPileGiveAwayPlayerIndexSelection()
     {
-        confirmSelectionButton.gameObject.SetActive(false);
-        clearSelectionButton.gameObject.SetActive(false);
+        ConfirmSelectionButton.gameObject.SetActive(false);
+        ClearSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
     }
 
-    public override void ExitPlayPileGiveAwayPlayerIndexSelection()
+    public void ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
@@ -355,24 +361,24 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         _handSorter = handSorter;
     }
 
-    public void AddCardObjectsToHand(List<CardObject> cardsToAdd)
+    public void AddCardObjectsToHand(List<SelectableCard> cardsToAdd)
     {
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
-        if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<CardObject>(cardsToAdd)); return; }
+        if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<SelectableCard>(cardsToAdd)); return; }
 
-        ListWithConstantContainsCheck<CardObject> combinedHandCardObjects = CardsInHand;
+        ListWithConstantContainsCheck<SelectableCard> combinedHandCardObjects = CardsInHand;
         combinedHandCardObjects.AddRange(cardsToAdd);
 
-        foreach (CardObject cardObject in cardsToAdd)
+        foreach (SelectableCard cardObject in cardsToAdd)
         {
             ParentCardToThis(cardObject);
         }
 
         Dictionary<Card, List<int>> cardPositions = _handSorter(Index);
 
-        CardObject[] handCorrectOrder = new CardObject[n];
-        foreach (CardObject cardObject in combinedHandCardObjects)
+        SelectableCard[] handCorrectOrder = new CardObject[n];
+        foreach (SelectableCard cardObject in combinedHandCardObjects)
         {
             int position = cardPositions[cardObject.CurrentCard].Last();
             handCorrectOrder[position] = cardObject;
@@ -380,7 +386,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
             positions.RemoveAt(positions.Count - 1);
         }
 
-        ListWithConstantContainsCheck<CardObject> finalHandCardObjects = new();
+        ListWithConstantContainsCheck<SelectableCard> finalHandCardObjects = new();
         for (int i = 0; i < handCorrectOrder.Length; i++)
         {
             if (handCorrectOrder[i] != null)
@@ -390,17 +396,18 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         }
 
         string handCardObjectsMessage = "Hand (CardObjects):";
-        foreach (CardObject cardObject in finalHandCardObjects)
+        foreach (SelectableCard cardObject in finalHandCardObjects)
         {
             handCardObjectsMessage += " " + cardObject.name;
         }
+        
         Debug.Log(handCardObjectsMessage);
         UpdateHand(finalHandCardObjects);
     }
 
     public void SortHand(int[] sortOrder)
     {
-        ListWithConstantContainsCheck<CardObject> sortedHand = new();
+        ListWithConstantContainsCheck<SelectableCard> sortedHand = new();
         for (int i = 0; i < sortOrder.Length; i++)
         {
             sortedHand.Add(CardsInHand[sortOrder[i]]);
@@ -409,10 +416,10 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         UpdateHand(sortedHand);
     }
 
-    public void UpdateHand(ListWithConstantContainsCheck<CardObject> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
+    public void UpdateHand(ListWithConstantContainsCheck<SelectableCard> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
-        if (_areLegalMovesHighlighted) { ColorLegalCards(); }
+        TryColorLegalCards();
         UpdateHand(fanPhysicsInfo);
     }
 
@@ -427,7 +434,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void TurnOffLegalMoveHints()
     {
         _areLegalMovesHighlighted = false;
-        foreach (CardObject cardObject in SelectableCardObjects)
+        foreach (SelectableCard cardObject in SelectableCardObjects)
         {
             cardObject.ResetCardBorder();
         }
@@ -437,7 +444,7 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void TurnOnLegalMoveHints()
     {
         _areLegalMovesHighlighted = true;
-        ColorLegalCards();
+        TryColorLegalCards();
     }
 
     [ContextMenu("Redraw Fan")]
@@ -454,20 +461,20 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void FlipKarmaDownCardsUp()
     {
         _isKarmaDownFlippedUp = true;
-        foreach (CardObject cardObject in CardsInKarmaDown)
+        foreach (SelectableCard cardObject in CardsInKarmaDown)
         {
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
         }
 
         FrozenMultiSet<CardValue> selectedCards = CardSelector.SelectionCardValues;
 
-        if (_areLegalMovesHighlighted) { ColorLegalCards(); }
+        TryColorLegalCards();
     }
 
-    public List<CardObject> PopSelectedCardsFromSelection()
+    public List<SelectableCard> PopSelectedCardsFromSelection()
     {
-        List<CardObject> cardObjects = CardSelector.CardObjects.ToList<CardObject>();
-        foreach (CardObject cardObject in cardObjects)
+        List<SelectableCard> cardObjects = CardSelector.CardObjects.ToList<SelectableCard>();
+        foreach (SelectableCard cardObject in cardObjects)
         {
             cardObject.DisableSelectShader();
             CardSelector.Remove(cardObject);
@@ -479,12 +486,12 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
         if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
 
-        ColorLegalCards();
+        TryColorLegalCards();
 
         return cardObjects;
     }
 
-    public void ParentCardToThis(CardObject cardObject)
+    public void ParentCardToThis(SelectableCard cardObject)
     {
         cardObject.SetParent(this, _cardHolder.transform);
     }
@@ -492,12 +499,12 @@ public class PlayerProperties : BaseCharacterProperties, ICardVisibilityHandler
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
-        AddCardObjectsToHand(new List<CardObject>() { giverPlayerProperties.PickedUpCard });
+        AddCardObjectsToHand(new List<SelectableCard>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.UpdateHand();
 
-        ColorLegalCards();
+        TryColorLegalCards();
     }
 
     void MovePickedUpCardIfValid()

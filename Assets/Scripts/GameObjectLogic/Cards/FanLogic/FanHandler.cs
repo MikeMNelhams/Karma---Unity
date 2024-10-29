@@ -25,14 +25,14 @@ public class FanHandler : MonoBehaviour
         _fanMap[_fanMode] = _fan;
     }
 
-    public void TransformCardsIntoFan(IList<CardObject> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null)
+    public void TransformCardsIntoFan(IList<SelectableCard> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null)
     {
         fanPhysicsInfo ??= FanPhysicsInfo.Default;
         UpdateFanMode();
         _fan.TransformCardsIntoFan(cards, isFlipped, fanPhysicsInfo);
     }
 
-    public void FlipFan(IList<CardObject> cards)
+    public void FlipFan(IList<SelectableCard> cards)
     {
         UpdateFanMode(); 
         _fan.FlipFan(cards);

@@ -990,11 +990,11 @@ MonoBehaviour:
   - startPosition: {x: 0, y: 0, z: 0}
     isPlayableCharacter: 1
   - startPosition: {x: 2.5, y: 0, z: 2.5}
-    isPlayableCharacter: 0
+    isPlayableCharacter: 1
   - startPosition: {x: 0, y: 0, z: 5}
-    isPlayableCharacter: 0
+    isPlayableCharacter: 1
   - startPosition: {x: -2.5, y: 0, z: 2.5}
-    isPlayableCharacter: 0
+    isPlayableCharacter: 1
   _whichPlayerStarts: 0
   _isDebuggingMode: 1
 --- !u!1 &863761617 stripped
@@ -1741,7 +1741,7 @@ MonoBehaviour:
   _cardPickup: {fileID: 8300000, guid: 2debeab0ca24eb348b581b21bdb83406, type: 3}
   audioSettings:
     musicSettings:
-      _volume: 50
+      _volume: 0
     sFXSettings:
       _volume: 75
 --- !u!81 &1444980548

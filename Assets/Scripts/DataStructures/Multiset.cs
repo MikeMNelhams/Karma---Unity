@@ -10,7 +10,7 @@ namespace DataStructures
     public class MultiSet<T> : IEnumerable<T>
     {
         protected Dictionary<T, int> _dict;
-        public int this[T key] { get => _dict[key]; }
+        public int this[T key] { get => _dict[key]; set => _dict[key] = value; }
 
         public MultiSet()
         {
@@ -118,6 +118,16 @@ namespace DataStructures
         }
 
         public int KeyCount { get => _dict.Keys.Count; }
+
+        public int TotalCount
+        {
+            get
+            {
+                int total = 0;
+                foreach (int value in _dict.Values) { total += value; }
+                return total;
+            }
+        }
 
         public Dictionary<T, int>.KeyCollection Keys { get => _dict.Keys; }
 

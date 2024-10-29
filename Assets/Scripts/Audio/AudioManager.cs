@@ -39,7 +39,6 @@ public class AudioManager : MonoBehaviour
         _musicSource.loop = true;
         
         _musicSource.volume = audioSettings.musicSettings.VolumeNormalised;
-        print("Volume: " + audioSettings.musicSettings.VolumeNormalised);
         _musicSource.Play();
 
         _SFXSource.loop = false;

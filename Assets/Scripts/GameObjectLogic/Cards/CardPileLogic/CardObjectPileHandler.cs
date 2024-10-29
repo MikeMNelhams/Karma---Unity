@@ -16,7 +16,7 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
     CardPilePhysicsInfo _pilePhysicsInfo;
     CardPositionAndRotationParams _cardPositionAndRotationParams;
 
-    public List<CardObject> CardObjects { get; protected set; }
+    public List<SelectableCard> CardObjects { get; protected set; }
 
     void Awake()
     {
@@ -41,12 +41,12 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    public void MoveCardsToTopOfPile(List<CardObject> cardObjects)
+    public void MoveCardsToTopOfPile(List<SelectableCard> cardObjects)
     {
         int cardIndex = CardObjects.Count;
         for (int i = 0; i < cardObjects.Count; i++) 
         {
-            CardObject cardObject = cardObjects[i];
+            SelectableCard cardObject = cardObjects[i];
             cardObject.DisableSelectShader();
             cardObject.transform.SetParent(transform);
             
@@ -57,9 +57,9 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    public List<CardObject> PopCardsFromTop(int numberOfCards)
+    public List<SelectableCard> PopCardsFromTop(int numberOfCards)
     {
-        List<CardObject> removedCardObjects = new();
+        List<SelectableCard> removedCardObjects = new();
         for (int i = 0; i < numberOfCards; i++)
         {
             removedCardObjects.Add(CardObjects[^(i+1)]);
@@ -69,14 +69,14 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         return removedCardObjects;
     }
 
-    public List<CardObject> PopAllCards()
+    public List<SelectableCard> PopAllCards()
     {
-        List<CardObject> removedCardObjects = new();
-        foreach (CardObject cardObject in CardObjects)
+        List<SelectableCard> removedCardObjects = new();
+        foreach (SelectableCard cardObject in CardObjects)
         {
             removedCardObjects.Add(cardObject);
         }
-        CardObjects = new List<CardObject>();
+        CardObjects = new List<SelectableCard>();
         return removedCardObjects;
     }
 
@@ -98,7 +98,7 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
     {
         for (int i = 0; i < CardObjects.Count; i++)
         {
-            CardObject cardObject = CardObjects[i];
+            SelectableCard cardObject = CardObjects[i];
             Tuple<Vector3, Quaternion> positionAndRotation = CardPositionAndRotation(i, _cardPositionAndRotationParams);
 
             cardObject.gameObject.transform.SetPositionAndRotation(positionAndRotation.Item1, positionAndRotation.Item2);

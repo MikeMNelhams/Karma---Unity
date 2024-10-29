@@ -28,7 +28,7 @@ namespace KarmaLogic
         public abstract class BoardPlayerAction : IEquatable<BoardPlayerAction>
         {
             public abstract bool IsValid(IBoard board);
-            public abstract void Apply(IBoard board, IController controller, CardsList selectedCards);
+            public abstract void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards);
             public abstract BoardPlayerAction Copy();
             public abstract string Name { get; }
             public override int GetHashCode() 
@@ -69,8 +69,8 @@ namespace KarmaLogic
             public void StartTurn();
             public void EndTurn();
             public CardsList DrawUntilFull(int playerIndex);
-            public bool PlayCards(CardsList cards, IController controller);
-            public bool PlayCards(CardsList cards, IController controller, bool addToPlayPile);
+            public bool PlayCards(CardsList cards, Controller.Controller controller);
+            public bool PlayCards(CardsList cards, Controller.Controller controller, bool addToPlayPile);
             public void Burn(int jokerCount);
             public void Print();
             public void PrintChooseableCards();
@@ -112,6 +112,11 @@ namespace KarmaLogic
                 string message = "The action: \'" + boardPlayerAction.Name + "\' is invalid.";
                 throw new InvalidBoardPlayerActionException(message);
             }
+        }
+
+        public class NoValidBoardPlayerActionsException : Exception
+        {
+            public NoValidBoardPlayerActionsException() : base() { }
         }
     }
 }

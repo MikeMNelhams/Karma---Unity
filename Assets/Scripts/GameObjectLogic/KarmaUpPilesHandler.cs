@@ -14,7 +14,7 @@ public class KarmaUpPilesHandler : MonoBehaviour, ICardVisibilityHandler
         return true;
     }
 
-    public List<CardObject> CreateKarmaUpCards(CardsList karmaUp)
+    public List<SelectableCard> CreateKarmaUpCards(CardsList karmaUp)
     {
         float width = _debugCube.localScale.x;
         float left = -width / 2 + _leftOffset * width;
@@ -31,7 +31,7 @@ public class KarmaUpPilesHandler : MonoBehaviour, ICardVisibilityHandler
         float cardDepth = gameManager.CardBounds.size.z;
 
         int j = 0;
-        List<CardObject> cardObjects = new();
+        List<SelectableCard> cardObjects = new();
         foreach (Card card in karmaUp)
         {
             float x = left + j * xStepSize;

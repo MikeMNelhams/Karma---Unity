@@ -230,12 +230,12 @@ namespace KarmaLogic
                 EventSystem.TriggerOnTurnEndEvents(this);
             }
 
-            public bool PlayCards(CardsList cards, IController controller)
+            public bool PlayCards(CardsList cards, Controller.Controller controller)
             {
                 return PlayCards(cards, controller, true);
             }
 
-            public bool PlayCards(CardsList cards, IController controller, bool addToPile=true)
+            public bool PlayCards(CardsList cards, Controller.Controller controller, bool addToPile=true)
             {
                 ComboFactory.SetCounts(cards);
                 CardCombo cardCombo = ComboFactory.CreateCombo(controller);

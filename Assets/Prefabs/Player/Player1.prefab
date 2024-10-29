@@ -681,11 +681,13 @@ MonoBehaviour:
   _playerMovementController: {fileID: 3514090609769126189}
   _fanHandler: {fileID: 5429502247356510483}
   _playerCamera: {fileID: 591302855537407287}
+  _playerCameraPhysicsRaycaster: {fileID: 1456619289760157775}
+  _playerCanvas: {fileID: 4334094610365338560}
   _cardHolder: {fileID: 7220275289808238900}
   _rayCastCutoff: 30
-  confirmSelectionButton: {fileID: 5297352977011485884}
-  clearSelectionButton: {fileID: 5985505432715335266}
-  pickupPlayPileButton: {fileID: 2959293848319132927}
+  _confirmSelectionButton: {fileID: 5297352977011485884}
+  _clearSelectionButton: {fileID: 5985505432715335266}
+  _pickupPlayPileButton: {fileID: 2959293848319132927}
   nextPlayerLeftArrow: {fileID: 3381463859126228450}
   nextPlayerRightArrow: {fileID: 1238892279136908032}
   _hoverTipHandler: {fileID: 7348956982852587095}

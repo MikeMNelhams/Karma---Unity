@@ -1,71 +1,94 @@
+using DataStructures;
+using KarmaLogic.Controller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class DummyPlayerProperties : BaseCharacterProperties
+public class DummyPlayerProperties : MonoBehaviour, ICharacterProperties
 {
     public DummyPlayerProperties()
     {
 
     }
 
-    public override void EnterCardGiveAwayPlayerIndexSelection()
+    public Controller Controller { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
+    public Button PickupPlayPileButton => throw new System.NotImplementedException();
+
+    public Button ConfirmSelectionButton => throw new System.NotImplementedException();
+
+    public Button ClearSelectionButton => throw new System.NotImplementedException();
+
+    public ListWithConstantContainsCheck<SelectableCard> SelectableCardObjects => throw new System.NotImplementedException();
+
+    public void EnableCamera()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void EnterCardGiveAwaySelection()
+    public void DisableCamera()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void EnterPickingAction()
+    public void HideUI()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void EnterPlayPileGiveAwayPlayerIndexSelection()
+    public void EnterPickingActionUpdateUI()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void EnterVotingForWinner()
+    public void ExitPickingActionUpdateUI()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void EnterWaitingForTurn()
+    public void EnterVotingForWinner()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void ExitCardGiveAwayPlayerIndexSelection()
+    public void ExitVotingForWinner()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void ExitCardGiveAwaySelection()
+    public void EnterCardGiveAwaySelection()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void ExitPickingAction()
+    public void ExitCardGiveAwaySelection()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void ExitPlayPileGiveAwayPlayerIndexSelection()
+    public void EnterCardGiveAwayPlayerIndexSelection()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void ExitVotingForWinner()
+    public void ExitCardGiveAwayPlayerIndexSelection()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    public override void ExitWaitingForTurn()
+    public void EnterPlayPileGiveAwayPlayerIndexSelection()
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void ExitPlayPileGiveAwayPlayerIndexSelection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TryToggleCardSelect(SelectableCard cardObject)
+    {
+        throw new System.NotImplementedException();
     }
 }

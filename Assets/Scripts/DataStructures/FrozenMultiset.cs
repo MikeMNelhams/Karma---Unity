@@ -21,16 +21,6 @@ namespace DataStructures
             return GetOrderIndependentHashCode(_dict);
         }
 
-        public int TotalCount
-        {
-            get
-            {
-                int total = 0;
-                foreach (int value in _dict.Values) { total += value; }
-                return total;
-            }
-        }
-
         public override string ToString()
         {
             string output = "FMS[ ";

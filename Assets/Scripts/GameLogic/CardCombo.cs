@@ -10,10 +10,10 @@ namespace KarmaLogic
         public abstract class CardCombo : IEquatable<CardCombo>
         {
             public CardsList Cards { get; protected set; }
-            public IController Controller { get; protected set; }
+            public Controller.Controller Controller { get; protected set; }
             protected Dictionary<CardValue, int> _counts;
 
-            public CardCombo(CardsList cards, IController controller, Dictionary<CardValue, int> counts)
+            public CardCombo(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts)
             {
                 Cards = cards;
                 Controller = controller;
