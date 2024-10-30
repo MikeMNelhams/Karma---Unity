@@ -21,9 +21,9 @@ namespace KarmaLogic
                 State?.OnExit();
                 State = newState;
                 newState.OnEnter();
-                //UnityEngine.Debug.Log("number of listeners: " + _onFinishStateTransitionListeners.Count);
-                //OnFinishStateTransition?.Invoke();
-                //UnregisterOnFinishTransitionListeners();
+                UnityEngine.Debug.Log("number of listeners: " + _onFinishStateTransitionListeners.Count);
+                OnFinishStateTransition?.Invoke();
+                UnregisterOnFinishTransitionListeners();
             }
 
             public abstract void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties);

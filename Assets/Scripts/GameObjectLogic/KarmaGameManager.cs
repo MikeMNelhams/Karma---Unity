@@ -108,7 +108,6 @@ public class KarmaGameManager : MonoBehaviour
     void RegisterBoardEvents()
     {
         Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(StartTurn));
-        Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
 
         Board.EventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
         Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHands));
@@ -482,7 +481,7 @@ public class KarmaGameManager : MonoBehaviour
         Board.Print();
         if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { return; }
 
-        //PlayersProperties[board.CurrentPlayerIndex].Controller.RegisterOnFinishTransitionListener(delegate { CheckIfWinner(board); });
+        PlayersProperties[board.CurrentPlayerIndex].Controller.RegisterOnFinishTransitionListener(delegate { CheckIfWinner(board); });
         PlayersProperties[board.CurrentPlayerIndex].SetControllerState(new PickingAction(board, PlayersProperties[board.CurrentPlayerIndex]));
     }
 
