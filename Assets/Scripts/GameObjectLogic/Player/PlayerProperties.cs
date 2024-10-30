@@ -516,11 +516,10 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
+
         AddCardObjectsToHand(new List<SelectableCard>() { giverPlayerProperties.PickedUpCard });
-        giverPlayerProperties.SelectableCardObjects.Remove(giverPlayerProperties.PickedUpCard);
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.UpdateHand();
-
         TryColorLegalCards();
     }
 

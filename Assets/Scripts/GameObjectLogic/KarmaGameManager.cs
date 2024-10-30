@@ -709,6 +709,8 @@ public class KarmaGameManager : MonoBehaviour
 
         print("selecting player index state now!!");
         playerProperties.PickedUpCard = selectedCard;
+        playerProperties.CardSelector.Remove(selectedCard);
+        playerProperties.SelectableCardObjects.Remove(selectedCard);
         playerProperties.PickedUpCard.ResetCardBorder();
         playerProperties.PickedUpCard.DisableSelectShader();
 
