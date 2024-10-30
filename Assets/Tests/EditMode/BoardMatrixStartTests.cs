@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 using KarmaLogic.BasicBoard;
-using KarmaLogic.Board;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 
