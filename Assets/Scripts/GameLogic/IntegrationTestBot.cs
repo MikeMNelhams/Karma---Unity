@@ -29,7 +29,7 @@ public class IntegrationTestBot : IBot
         return board is not null;
     }
 
-    public int CardGiveAwayIndex(IBoard board, HashSet<int> excludedCardsIndices)
+    public int CardGiveAwayIndex(IBoard board)
     {
         CardsList playableCards = board.CurrentPlayer.PlayableCards;
         List<CardValue> cardValues = playableCards.CardValues;

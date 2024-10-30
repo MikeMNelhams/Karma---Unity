@@ -1,7 +1,5 @@
 using DataStructures;
 using KarmaLogic.Controller;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +9,8 @@ public class DummyPlayerProperties : MonoBehaviour, ICharacterProperties
     {
 
     }
+    
+    public int Index { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public Controller Controller { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
@@ -88,6 +88,16 @@ public class DummyPlayerProperties : MonoBehaviour, ICharacterProperties
     }
 
     public void TryToggleCardSelect(SelectableCard cardObject)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TriggerVoteForPlayer(int targetIndex)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TriggerTargetReceivePickedUpCard(int targetIndex)
     {
         throw new System.NotImplementedException();
     }

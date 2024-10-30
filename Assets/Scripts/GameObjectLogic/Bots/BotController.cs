@@ -1,6 +1,7 @@
 using DataStructures;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
+using KarmaLogic.Players;
 using KarmaLogic.Controller;
 using System.Collections.Generic;
 using KarmaLogic.Bots;
@@ -10,7 +11,9 @@ using System.Collections;
 
 public class BotController : Controller
 {
-    public IBot _bot;
+    readonly IBot _bot;
+
+    public float DelaySeconds { get => _bot.DelaySeconds; }
 
     public BotController(IBot bot)
     {
@@ -22,9 +25,9 @@ public class BotController : Controller
         return _bot.PreferredStartDirection(board);
     }
 
-    public int GiveAwayCardIndex(IBoard board, HashSet<int> excludedCardsIndices)
+    public int GiveAwayCardIndex(IBoard board)
     {
-        return _bot.CardGiveAwayIndex(board, excludedCardsIndices);
+        return _bot.CardGiveAwayIndex(board);
     }
 
     public int GiveAwayPlayerIndex(IBoard board, HashSet<int> excludedPlayerIndices)
@@ -55,11 +58,6 @@ public class BotController : Controller
     public FrozenMultiSet<CardValue> SelectComboToPlay(IBoard board)
     {
         return _bot.ComboToPlay(board);
-    }
-
-    public int VoteForWinner(IBoard board, HashSet<int> excludedPlayerIndices)
-    {
-        return _bot.VoteForWinnerIndex(board, excludedPlayerIndices);
     }
 
     public override void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
@@ -95,7 +93,6 @@ public class BotController : Controller
             characterProperties.TryToggleCardSelect(cardObject);
         }
 
-        UnityEngine.Debug.Log("State of confirmed player " + characterProperties.Controller.State.GetHashCode());
         characterProperties.ConfirmSelectionButton.onClick?.Invoke();
     }
 
@@ -106,32 +103,47 @@ public class BotController : Controller
 
     public override void EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties)
     {
-        throw new System.NotImplementedException();
+        int voteTargetIndex = _bot.VoteForWinnerIndex(board, new HashSet<int>() { characterProperties.Index });
+        characterProperties.TriggerVoteForPlayer(voteTargetIndex);
     }
 
     public override void ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
     {
-        throw new System.NotImplementedException();
+        int cardGiveAwayIndex = _bot.CardGiveAwayIndex(board);
+        SelectableCard selectedGiveawayCard = characterProperties.SelectableCardObjects[cardGiveAwayIndex];
+        characterProperties.TryToggleCardSelect(selectedGiveawayCard);
+        characterProperties.ConfirmSelectionButton.onClick?.Invoke();
     }
 
     public override void ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
-        throw new System.NotImplementedException();
+        HashSet<int> invalidTargetIndices = new () { characterProperties.Index };
+        for (int i = 0; i < board.Players.Count; i++)
+        {
+            Player player = board.Players[i];
+            if (!player.HasCards)
+            {
+                invalidTargetIndices.Add(i);
+            }
+        }
+
+        int targetIndex = _bot.CardPlayerGiveAwayIndex(board, invalidTargetIndices);
+        characterProperties.TriggerTargetReceivePickedUpCard(targetIndex);
     }
 
     public override void ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.Log("exiting player index selection state!");
     }
 
     public override void EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)

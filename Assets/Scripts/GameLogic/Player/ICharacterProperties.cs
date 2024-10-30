@@ -5,6 +5,7 @@ using DataStructures;
 
 public interface ICharacterProperties
 {
+    public int Index { get; set; }
     public Controller Controller { get; set; }
 
     public Button PickupPlayPileButton { get; }
@@ -22,6 +23,8 @@ public interface ICharacterProperties
     public void DisableCamera();
 
     public void HideUI();
+
+    public void TriggerVoteForPlayer(int targetIndex);
 
     public void EnterPickingActionUpdateUI();
 
@@ -42,4 +45,6 @@ public interface ICharacterProperties
     public void EnterPlayPileGiveAwayPlayerIndexSelection();
 
     public void ExitPlayPileGiveAwayPlayerIndexSelection();
+
+    public void TriggerTargetReceivePickedUpCard(int targetIndex);
 }

@@ -6,6 +6,19 @@ namespace KarmaLogic
     namespace Controller
     {
 
+        public class NullState : ControllerState
+        {
+            public NullState(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
+            public override void OnEnter() { }
+
+            public override void OnExit() { }
+
+            public override int GetHashCode()
+            {
+                return -1;
+            }
+        }
+
         public class WaitForTurn : ControllerState
         {
             public WaitForTurn(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }

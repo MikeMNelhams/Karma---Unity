@@ -16,7 +16,7 @@ namespace KarmaLogic
             public bool IsReady(IBoard board);
             public BoardPlayerAction SelectAction(IBoard board);
             public FrozenMultiSet<CardValue> ComboToPlay(IBoard board);
-            public int CardGiveAwayIndex(IBoard board, HashSet<int> excludedCardsIndices);
+            public int CardGiveAwayIndex(IBoard board);
             public int CardPlayerGiveAwayIndex(IBoard board, HashSet<int> excludedPlayerIndices);
             public int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices);
             public bool WantsToMulligan(IBoard board);

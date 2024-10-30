@@ -1,6 +1,7 @@
 using KarmaLogic.Board;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace KarmaLogic
 {
@@ -9,11 +10,20 @@ namespace KarmaLogic
         public abstract class Controller
         {
             public ControllerState State { get; protected set; }
+
+            public delegate void OnFinishStateTransitionListener();
+
+            protected event OnFinishStateTransitionListener OnFinishStateTransition;
+            protected readonly List<OnFinishStateTransitionListener> _onFinishStateTransitionListeners = new();
+
             public virtual void SetState(ControllerState newState)
             {
                 State?.OnExit();
                 State = newState;
                 newState.OnEnter();
+                //UnityEngine.Debug.Log("number of listeners: " + _onFinishStateTransitionListeners.Count);
+                //OnFinishStateTransition?.Invoke();
+                //UnregisterOnFinishTransitionListeners();
             }
 
             public abstract void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties);
@@ -33,6 +43,21 @@ namespace KarmaLogic
 
             public abstract void EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
             public abstract void ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
+
+            public virtual void RegisterOnFinishTransitionListener(OnFinishStateTransitionListener listener)
+            {
+                OnFinishStateTransition += listener;
+            }
+
+            void UnregisterOnFinishTransitionListeners()
+            {
+                foreach (OnFinishStateTransitionListener listener in _onFinishStateTransitionListeners)
+                {
+                    OnFinishStateTransition -= listener;
+                }
+
+                _onFinishStateTransitionListeners.Clear();
+            }
         }
 
         public abstract class ControllerState : IEquatable<ControllerState>

@@ -10,6 +10,7 @@ using KarmaLogic.Players;
 using DataStructures;
 using CardVisibility;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibilityHandler
 {
@@ -75,6 +76,8 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
     void Awake()
     {
         CardsInHand = new();
+        CardsInKarmaUp = new();
+        CardsInKarmaDown = new();
         CardSelector = new();
         _layerAsLayerMask = 1 << LayerMask.NameToLayer("Player");
         _hits = new RaycastHit[5];
@@ -169,6 +172,7 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
 
     public void EnableCamera()
     {
+        print("Enabling camera for player: " + Index);
         _playerCamera.enabled = true;
         _playerCamera.tag = "MainCamera";
         _playerCameraPhysicsRaycaster.enabled = true;
@@ -177,6 +181,7 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
 
     public void DisableCamera()
     {
+        print("Disabling camera for player: " + Index);
         _playerCamera.tag = "Untagged";
         _playerCamera.enabled = false;
         _playerCameraPhysicsRaycaster.enabled = false;
@@ -328,7 +333,6 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
     {
         HideUI();
         _playerMovementController.SetRotating(true);
-        
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
     }
 
@@ -351,9 +355,29 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
     }
 
+    /// <summary>
+    /// Asynchronous
+    /// </summary>
+    /// <param name="newState"></param>
     public void SetControllerState(ControllerState newState)
     {
-        Controller.SetState(newState);
+        if (Controller is BotController)
+        {
+            StartCoroutine(SetBotControllerState(newState));
+        }
+        else
+        {
+            Controller.SetState(newState);
+            print("STATE for player: " + Index + ": " + Controller.State.GetHashCode());
+        }
+    }
+
+    IEnumerator SetBotControllerState(ControllerState newState)
+    {
+        BotController controller = Controller as BotController;
+        yield return new WaitForSeconds(controller.DelaySeconds);
+        controller.SetState(newState);
+        print("STATE for player: " + Index + ": " + Controller.State.GetHashCode());
     }
 
     public void SetHandSorter(CardSorter handSorter)
@@ -395,13 +419,6 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
             }
         }
 
-        string handCardObjectsMessage = "Hand (CardObjects):";
-        foreach (SelectableCard cardObject in finalHandCardObjects)
-        {
-            handCardObjectsMessage += " " + cardObject.name;
-        }
-        
-        Debug.Log(handCardObjectsMessage);
         UpdateHand(finalHandCardObjects);
     }
 
@@ -512,9 +529,9 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         if (!IsRotationEnabled || PickedUpCard == null) { return; }
 
         MovePickedUpCard();
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && _targetPlayerProperties != null)
         {
-            TriggerPickedUpCardOnLeftClick();
+            TriggerTargetReceivePickedUpCard(_targetPlayerProperties.Index);
         }
     }
 
@@ -548,15 +565,18 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
  
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
-        TriggerTargetPickUpPlayPile();
+        if (_targetPlayerProperties == null) { return; }
+
+        TriggerTargetPickUpPlayPile(_targetPlayerProperties.Index);
     }
 
     void VoteForPointedPlayerToWinIfValid()
     {
         if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
+        if (_targetPlayerProperties == null) { return; }
         if (!KarmaGameManager.Instance.ValidPlayerIndicesForVoting.Contains(TargetPlayerInFrontOfPlayer.Index)) { return; }
-        TriggerVoteForPlayer();
+        TriggerVoteForPlayer(TargetPlayerInFrontOfPlayer.Index);
     }
 
     public void RegisterPickedUpCardOnClickEventListener(OnLeftClickRayCastListener eventListener)
@@ -564,12 +584,9 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         PickedUpCardOnClick += eventListener;
     }
 
-    void TriggerPickedUpCardOnLeftClick()
+    public void TriggerTargetReceivePickedUpCard(int targetIndex)
     {
-        if (_targetPlayerProperties != null)
-        {
-            PickedUpCardOnClick?.Invoke(Index, _targetPlayerProperties.Index);
-        }
+        PickedUpCardOnClick?.Invoke(Index, targetIndex);
     }
 
     public void RegisterTargetPickUpPlayPileEventListener(OnLeftClickRayCastListener eventListener)
@@ -577,12 +594,9 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         OnPointingAtPlayer += eventListener;
     }
 
-    void TriggerTargetPickUpPlayPile()
+    public void TriggerTargetPickUpPlayPile(int targetIndex)
     {
-        if (_targetPlayerProperties != null)
-        {
-            OnPointingAtPlayer?.Invoke(Index, _targetPlayerProperties.Index);
-        }
+        OnPointingAtPlayer?.Invoke(Index, targetIndex);
     }
 
     public void RegisterVoteForTargetEventListener(OnLeftClickRayCastListener eventListener)
@@ -590,12 +604,9 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         OnVoteForTarget += eventListener;
     }
 
-    void TriggerVoteForPlayer()
+    public void TriggerVoteForPlayer(int targetIndex)
     {
-        if (_targetPlayerProperties != null)
-        {
-            OnVoteForTarget?.Invoke(Index, _targetPlayerProperties.Index);
-        }
+        OnVoteForTarget?.Invoke(Index, targetIndex);
     }
 
     public bool IsVisible(int observerPlayerIndex)

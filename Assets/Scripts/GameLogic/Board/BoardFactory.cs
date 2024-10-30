@@ -1,11 +1,7 @@
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
-using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using KarmaLogic.Board;
-using System.Diagnostics;
 
 namespace KarmaLogic
 {

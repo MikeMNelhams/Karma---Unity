@@ -1,11 +1,5 @@
-using DataStructures;
 using KarmaLogic.Board;
-using KarmaLogic.Cards;
 using KarmaLogic.Controller;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 public class PlayerController : Controller
 {
@@ -45,6 +39,11 @@ public class PlayerController : Controller
         characterProperties.EnterVotingForWinner();
     }
 
+    public override void ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
+    {
+        characterProperties.ExitVotingForWinner();
+    }
+
     public override void ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.ExitCardGiveAwayPlayerIndexSelection();
@@ -63,10 +62,5 @@ public class PlayerController : Controller
     public override void ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.ExitPlayPileGiveAwayPlayerIndexSelection();
-    }
-
-    public override void ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
-    {
-        characterProperties.ExitVotingForWinner();
     }
 }
