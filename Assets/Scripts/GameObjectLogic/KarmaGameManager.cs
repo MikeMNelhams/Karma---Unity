@@ -526,8 +526,8 @@ public class KarmaGameManager : MonoBehaviour
 
     void StepToNextPlayer()
     {
+        PlayersProperties[Board.PlayerIndexWhoStartedTurn].Controller.RegisterOnFinishTransitionListener(StepToNextPlayerAfterStateTransition);
         PlayersProperties[Board.PlayerIndexWhoStartedTurn].SetControllerState(new WaitForTurn(Board, PlayersProperties[Board.PlayerIndexWhoStartedTurn]));
-        StepToNextPlayerAfterStateTransition();
     }
 
     void StepToNextPlayerAfterStateTransition()

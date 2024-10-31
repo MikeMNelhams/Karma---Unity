@@ -13,7 +13,6 @@ namespace KarmaLogic
 
             public delegate void OnFinishStateTransitionListener();
 
-            protected event OnFinishStateTransitionListener OnFinishStateTransition;
             protected readonly List<OnFinishStateTransitionListener> _onFinishStateTransitionListeners = new();
 
             public virtual void SetState(ControllerState newState)
@@ -21,8 +20,8 @@ namespace KarmaLogic
                 State?.OnExit();
                 State = newState;
                 newState.OnEnter();
-                UnityEngine.Debug.Log("number of listeners: " + _onFinishStateTransitionListeners.Count);
-                OnFinishStateTransition?.Invoke();
+                if (_onFinishStateTransitionListeners == null) { throw new NullReferenceException("On Finish State Transition failed. Null ref"); }
+                TriggerFinishStateTransitionListeners();
                 UnregisterOnFinishTransitionListeners();
             }
 
@@ -44,18 +43,21 @@ namespace KarmaLogic
             public abstract void EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
             public abstract void ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
 
-            public virtual void RegisterOnFinishTransitionListener(OnFinishStateTransitionListener listener)
+            public void RegisterOnFinishTransitionListener(OnFinishStateTransitionListener listener)
             {
-                OnFinishStateTransition += listener;
+                _onFinishStateTransitionListeners.Add(listener);
+            }
+
+            void TriggerFinishStateTransitionListeners()
+            {
+                foreach (OnFinishStateTransitionListener listener in _onFinishStateTransitionListeners)
+                {
+                    listener?.Invoke();
+                }
             }
 
             void UnregisterOnFinishTransitionListeners()
             {
-                foreach (OnFinishStateTransitionListener listener in _onFinishStateTransitionListeners)
-                {
-                    OnFinishStateTransition -= listener;
-                }
-
                 _onFinishStateTransitionListeners.Clear();
             }
         }
