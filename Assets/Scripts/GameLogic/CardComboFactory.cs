@@ -138,7 +138,7 @@ namespace KarmaLogic
         public class CardCombo_QUEEN : CardCombo
         {
             public CardCombo_QUEEN(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts) : base(cards, controller, counts) { }
-            public override void Apply(IBoard board)
+            public override async void Apply(IBoard board)
             {
                 Player currentPlayer = board.CurrentPlayer;
                 if (board.StartingPlayerStartedPlayingFrom == PlayingFrom.KarmaUp && currentPlayer.KarmaUp.Count == 0) { return; }
@@ -146,7 +146,7 @@ namespace KarmaLogic
                 if (!ValidTargetPlayersExist(board)) { return; }
                 
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-                board.StartGivingAwayCards(numberOfRepeats, InvalidFilter);  
+                await board.StartGivingAwayCards(numberOfRepeats, InvalidFilter);  
             }
 
             bool InvalidFilter(Player giver)

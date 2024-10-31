@@ -12,7 +12,7 @@ namespace KarmaLogic
         public interface IBot
         {
             public string Name { get; }
-            public float DelaySeconds { get; }
+            public int DelaySeconds { get; }
             public bool IsReady(IBoard board);
             public BoardPlayerAction SelectAction(IBoard board);
             public FrozenMultiSet<CardValue> ComboToPlay(IBoard board);

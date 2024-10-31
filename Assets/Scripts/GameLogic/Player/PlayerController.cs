@@ -1,66 +1,72 @@
 using KarmaLogic.Board;
 using KarmaLogic.Controller;
+using System.Threading.Tasks;
 
 public class PlayerController : Controller
 {
-    public override void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
+    public override Task EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.DisableCamera();
         characterProperties.HideUI();
+        return Task.CompletedTask;
     }
 
-    public override void ExitWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
+    public override Task ExitWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.EnableCamera();
+        return Task.CompletedTask;
     }
 
-    public override void EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override async Task EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.EnterCardGiveAwayPlayerIndexSelection();
+        await characterProperties.EnterCardGiveAwayPlayerIndexSelection();
     }
 
-    public override void EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
+    public override async Task EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.EnterCardGiveAwaySelection();
+        await characterProperties.EnterCardGiveAwaySelection();
     }
 
-    public override void EnterPickingAction(IBoard board, ICharacterProperties characterProperties)
+    public override Task EnterPickingAction(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.EnterPickingActionUpdateUI();
+        return Task.CompletedTask;
     }
 
-    public override void EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override async Task EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.EnterPlayPileGiveAwayPlayerIndexSelection();
+        await characterProperties.EnterPlayPileGiveAwayPlayerIndexSelection();
     }
 
-    public override void EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties)
+    public override Task EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.EnterVotingForWinner();
+        return Task.CompletedTask;
     }
 
-    public override void ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
+    public override Task ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
     {
         characterProperties.ExitVotingForWinner();
+        return Task.CompletedTask;
     }
 
-    public override void ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override async Task ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.ExitCardGiveAwayPlayerIndexSelection();
+        await characterProperties.ExitCardGiveAwayPlayerIndexSelection();
     }
 
-    public override void ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
+    public override async Task ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.ExitCardGiveAwaySelection();
+        await characterProperties.ExitCardGiveAwaySelection();
     }
 
-    public override void ExitPickingAction(IBoard board, ICharacterProperties characterProperties)
+    public override async Task ExitPickingAction(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.ExitPickingActionUpdateUI();
+        await characterProperties.ExitPickingActionUpdateUI();
     }
 
-    public override void ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override async Task ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
-        characterProperties.ExitPlayPileGiveAwayPlayerIndexSelection();
+        await characterProperties.ExitPlayPileGiveAwayPlayerIndexSelection();
     }
 }

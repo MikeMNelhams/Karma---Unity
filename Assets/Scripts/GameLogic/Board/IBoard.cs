@@ -5,6 +5,7 @@ using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using KarmaLogic.Controller;
 using System;
+using System.Threading.Tasks;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
 using KarmaLogic.CardCombos;
@@ -28,7 +29,7 @@ namespace KarmaLogic
         public abstract class BoardPlayerAction : IEquatable<BoardPlayerAction>
         {
             public abstract bool IsValid(IBoard board);
-            public abstract void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards);
+            public abstract Task Apply(IBoard board, Controller.Controller controller, CardsList selectedCards);
             public abstract BoardPlayerAction Copy();
             public abstract string Name { get; }
             public override int GetHashCode() 
@@ -64,13 +65,13 @@ namespace KarmaLogic
             public void ResetPlayOrder();
             public void FlipHands();
             public void RotateHands(int numberOfRotations, Deque<Hand> hands);
-            public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null);
+            public Task StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null);
             public void StartGivingAwayPlayPile(int giverIndex);
             public void StartTurn();
             public void EndTurn();
             public CardsList DrawUntilFull(int playerIndex);
-            public bool PlayCards(CardsList cards, Controller.Controller controller);
-            public bool PlayCards(CardsList cards, Controller.Controller controller, bool addToPlayPile);
+            public Task PlayCards(CardsList cards, Controller.Controller controller);
+            public Task PlayCards(CardsList cards, Controller.Controller controller, bool addToPlayPile);
             public void Burn(int jokerCount);
             public void Print();
             public void PrintChooseableCards();

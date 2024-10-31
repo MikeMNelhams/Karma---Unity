@@ -7,6 +7,7 @@ using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
 using DataStructures;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Linq;
 
 namespace KarmaLogic
@@ -195,11 +196,11 @@ namespace KarmaLogic
                 EventSystem.TriggerStartedPlayPileGiveAway(giverIndex);
             }
 
-            public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null)
+            public async Task StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null)
             {
                 CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex, invalidFilter);
                 CurrentPlayer.CardGiveAwayHandler.RegisterOnCardGiveAwayListener(ReceiveCard);
-                EventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
+                await EventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
             }
 
             void ReceiveCard(Card card, int giverIndex, int receiverIndex)
@@ -226,17 +227,16 @@ namespace KarmaLogic
 
             public void EndTurn()
             {
-                UnityEngine.Debug.Log("END TURN HAS BEEN CALLED!");
                 TurnsPlayed++;
                 EventSystem.TriggerOnTurnEndEvents(this);
             }
 
-            public bool PlayCards(CardsList cards, Controller.Controller controller)
+            public Task PlayCards(CardsList cards, Controller.Controller controller)
             {
                 return PlayCards(cards, controller, true);
             }
 
-            public bool PlayCards(CardsList cards, Controller.Controller controller, bool addToPile=true)
+            public Task PlayCards(CardsList cards, Controller.Controller controller, bool addToPile=true)
             {
                 ComboFactory.SetCounts(cards);
                 CardCombo cardCombo = ComboFactory.CreateCombo(controller);
@@ -246,7 +246,7 @@ namespace KarmaLogic
 
                 DrawUntilFull(CurrentPlayerIndex);
 
-                if (NumberOfCombosPlayedThisTurn > 52) { return false; }
+                if (NumberOfCombosPlayedThisTurn > 52) { return Task.CompletedTask; }
                 cardCombo.Apply(this);
 
                 ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
@@ -258,8 +258,7 @@ namespace KarmaLogic
                 {
                     Burn(jokerCount);
                 }
-
-                return false;
+                return Task.CompletedTask;
             }
 
             public void Burn(int jokerCount)

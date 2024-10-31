@@ -11,6 +11,7 @@ using DataStructures;
 using CardVisibility;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibilityHandler
 {
@@ -54,7 +55,7 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
     
     public SelectableCard PickedUpCard { get; set; }
 
-    public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
+    public delegate Task OnLeftClickRayCastListener(int giverIndex, int targetIndex);
     event OnLeftClickRayCastListener PickedUpCardOnClick;
     event OnLeftClickRayCastListener OnPointingAtPlayer;
     event OnLeftClickRayCastListener OnVoteForTarget;
@@ -274,11 +275,11 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         }
     }
 
-    public void EnterPickingActionUpdateUI()
+    public Task EnterPickingActionUpdateUI()
     {
         KarmaGameManager gameManager = KarmaGameManager.Instance;
         HashSet<BoardPlayerAction> legalActions = gameManager.Board.CurrentLegalActions;
-        if (legalActions.Count == 0) { return; }
+        if (legalActions.Count == 0) { return Task.CompletedTask; }
         if (legalActions.Contains(gameManager.PickUpAction))
         {
             PickupPlayPileButton.gameObject.SetActive(true);
@@ -297,87 +298,93 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
             nextPlayerLeftArrow.gameObject.SetActive(true);
         }
         TryColorLegalCards();
+        return Task.CompletedTask;
     }
 
-    public void ExitPickingActionUpdateUI()
+    public Task ExitPickingActionUpdateUI()
     {
         PickupPlayPileButton.gameObject.SetActive(false);
+        return Task.CompletedTask;
     }
 
-    public void EnterVotingForWinner()
+    public Task EnterVotingForWinner()
     {
         HideUI();
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
+        return Task.CompletedTask;
     }
 
-    public void ExitVotingForWinner()
+    public Task ExitVotingForWinner()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
+        return Task.CompletedTask;
     }
 
-    public void EnterCardGiveAwaySelection()
+    public Task EnterCardGiveAwaySelection()
     {
         ConfirmSelectionButton.gameObject.SetActive(true);
         ClearSelectionButton.gameObject.SetActive(true);
+        return Task.CompletedTask;
     }
 
-    public void ExitCardGiveAwaySelection()
+    public Task ExitCardGiveAwaySelection()
     {
         ConfirmSelectionButton.gameObject.SetActive(false);
         ClearSelectionButton.gameObject.SetActive(false);
+        return Task.CompletedTask;
     }
 
-    public void EnterCardGiveAwayPlayerIndexSelection()
+    public Task EnterCardGiveAwayPlayerIndexSelection()
     {
         HideUI();
         _playerMovementController.SetRotating(true);
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
+        return Task.CompletedTask;
     }
 
-    public void ExitCardGiveAwayPlayerIndexSelection()
+    public Task ExitCardGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
+        return Task.CompletedTask;
     }
     
-    public void EnterPlayPileGiveAwayPlayerIndexSelection()
+    public Task EnterPlayPileGiveAwayPlayerIndexSelection()
     {
         ConfirmSelectionButton.gameObject.SetActive(false);
         ClearSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
+        return Task.CompletedTask;
     }
 
-    public void ExitPlayPileGiveAwayPlayerIndexSelection()
+    public Task ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
+        return Task.CompletedTask;
     }
 
-    /// <summary>
-    /// Asynchronous
-    /// </summary>
-    /// <param name="newState"></param>
-    public void SetControllerState(ControllerState newState)
+    public async Task SetControllerState(ControllerState newState)
     {
         if (Controller is BotController)
         {
-            StartCoroutine(SetBotControllerState(newState));
+            await SetBotControllerState(newState);
         }
         else
         {
-            Controller.SetState(newState);
+            await Controller.SetState(newState);
             print("STATE for player: " + Index + ": " + Controller.State.GetHashCode());
         }
     }
 
-    IEnumerator SetBotControllerState(ControllerState newState)
+    async Task SetBotControllerState(ControllerState newState)
     {
         BotController controller = Controller as BotController;
-        yield return new WaitForSeconds(controller.DelaySeconds);
-        controller.SetState(newState);
-        print("STATE for player: " + Index + ": " + Controller.State.GetHashCode());
+        await Task.Delay(controller.DelaySeconds * 1000);
+        await controller.SetState(newState);
+        print("STATE AFTER, player: " + Index + ": " + Controller.State.GetHashCode());
     }
 
     public void SetHandSorter(CardSorter handSorter)
@@ -523,14 +530,14 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         TryColorLegalCards();
     }
 
-    void MovePickedUpCardIfValid()
+    async void MovePickedUpCardIfValid()
     {
         if (!IsRotationEnabled || PickedUpCard == null) { return; }
 
         MovePickedUpCard();
         if (Input.GetMouseButtonDown(0) && _targetPlayerProperties != null)
         {
-            TriggerTargetReceivePickedUpCard(_targetPlayerProperties.Index);
+            await TriggerTargetReceivePickedUpCard(_targetPlayerProperties.Index);
         }
     }
 
@@ -583,9 +590,9 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         PickedUpCardOnClick += eventListener;
     }
 
-    public void TriggerTargetReceivePickedUpCard(int targetIndex)
+    public async Task TriggerTargetReceivePickedUpCard(int targetIndex)
     {
-        PickedUpCardOnClick?.Invoke(Index, targetIndex);
+        await PickedUpCardOnClick?.Invoke(Index, targetIndex);
     }
 
     public void RegisterTargetPickUpPlayPileEventListener(OnLeftClickRayCastListener eventListener)
@@ -603,9 +610,10 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         OnVoteForTarget += eventListener;
     }
 
-    public void TriggerVoteForPlayer(int targetIndex)
+    public Task TriggerVoteForPlayer(int targetIndex)
     {
         OnVoteForTarget?.Invoke(Index, targetIndex);
+        return Task.CompletedTask;
     }
 
     public bool IsVisible(int observerPlayerIndex)

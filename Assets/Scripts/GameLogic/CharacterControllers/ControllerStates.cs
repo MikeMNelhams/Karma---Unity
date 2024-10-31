@@ -1,4 +1,5 @@
 using KarmaLogic.Board;
+using System.Threading.Tasks;
 
 
 namespace KarmaLogic
@@ -9,9 +10,9 @@ namespace KarmaLogic
         public class NullState : ControllerState
         {
             public NullState(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
-            public override void OnEnter() { }
+            public override Task OnEnter() { return Task.CompletedTask; }
 
-            public override void OnExit() { }
+            public override Task OnExit() { return Task.CompletedTask; }
 
             public override int GetHashCode()
             {
@@ -22,14 +23,14 @@ namespace KarmaLogic
         public class WaitForTurn : ControllerState
         {
             public WaitForTurn(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
-            public override void OnEnter()
+            public override async Task OnEnter()
             {
-                _characterProperties.Controller.EnterWaitingForTurn(_board, _characterProperties);
+                await _characterProperties.Controller.EnterWaitingForTurn(_board, _characterProperties);
             }
 
-            public override void OnExit()
+            public override async Task OnExit()
             {
-                _characterProperties.Controller.ExitWaitingForTurn(_board, _characterProperties);
+                await _characterProperties.Controller.ExitWaitingForTurn(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -42,15 +43,15 @@ namespace KarmaLogic
         {
             public PickingAction(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
-            public override void OnEnter()
+            public override async Task OnEnter()
             {
                 _board.PrintChooseableCards();
-                _characterProperties.Controller.EnterPickingAction(_board, _characterProperties);
+                await _characterProperties.Controller.EnterPickingAction(_board, _characterProperties);
             }
 
-            public override void OnExit()
+            public override async Task OnExit()
             {
-                _characterProperties.Controller.ExitPickingAction(_board, _characterProperties);
+                await _characterProperties.Controller.ExitPickingAction(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -63,14 +64,14 @@ namespace KarmaLogic
         {
             public VotingForWinner(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
-            public override void OnEnter()
+            public override async Task OnEnter()
             {
-                _characterProperties.Controller.EnterVotingForWinner(_board, _characterProperties);
+                await _characterProperties.Controller.EnterVotingForWinner(_board, _characterProperties);
             }
 
-            public override void OnExit()
+            public override async Task OnExit()
             {
-                _characterProperties.Controller.ExitVotingForWinner(_board, _characterProperties);
+                await _characterProperties.Controller.ExitVotingForWinner(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -83,14 +84,14 @@ namespace KarmaLogic
         {
             public SelectingCardGiveAwaySelectionIndex(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
-            public override void OnEnter()
+            public override async Task OnEnter()
             {
-                _characterProperties.Controller.EnterCardGiveAwaySelection(_board, _characterProperties);
+                await _characterProperties.Controller.EnterCardGiveAwaySelection(_board, _characterProperties);
             }
 
-            public override void OnExit()
+            public override async Task OnExit()
             {
-                _characterProperties.Controller.ExitCardGiveAwaySelection(_board, _characterProperties);
+                await _characterProperties.Controller.ExitCardGiveAwaySelection(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -103,14 +104,14 @@ namespace KarmaLogic
         {
             public SelectingCardGiveAwayPlayerIndex(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
-            public override void OnEnter()
+            public override async Task OnEnter()
             {
-                _characterProperties.Controller.EnterCardGiveAwayPlayerIndexSelection(_board, _characterProperties);
+                await _characterProperties.Controller.EnterCardGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
-            public override void OnExit()
+            public override async Task OnExit()
             {
-                _characterProperties.Controller.ExitCardGiveAwayPlayerIndexSelection(_board, _characterProperties);
+                await _characterProperties.Controller.ExitCardGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
             public override int GetHashCode()
@@ -123,14 +124,14 @@ namespace KarmaLogic
         {
             public SelectingPlayPileGiveAwayPlayerIndex(IBoard board, ICharacterProperties characterProperties) : base(board, characterProperties) { }
 
-            public override void OnEnter()
+            public override async Task OnEnter()
             {
-                _characterProperties.Controller.EnterPlayPileGiveAwayPlayerIndexSelection(_board, _characterProperties);
+                await _characterProperties.Controller.EnterPlayPileGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
-            public override void OnExit()
+            public override async Task OnExit()
             {
-                _characterProperties.Controller.ExitPlayPileGiveAwayPlayerIndexSelection(_board, _characterProperties);
+                await _characterProperties.Controller.ExitPlayPileGiveAwayPlayerIndexSelection(_board, _characterProperties);
             }
 
             public override int GetHashCode()

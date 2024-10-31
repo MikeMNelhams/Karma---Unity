@@ -2,6 +2,7 @@ using KarmaLogic.Board;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KarmaLogic
 {
@@ -15,32 +16,33 @@ namespace KarmaLogic
 
             protected readonly Queue<OnFinishStateTransitionListener> _onFinishStateTransitionListeners = new();
 
-            public virtual void SetState(ControllerState newState)
+            // TODO MAKE ASYNC! await on exit, await on enter, remove the listeners callback!!
+            public virtual async Task SetState(ControllerState newState)
             {
-                State?.OnExit();
+                await State?.OnExit();
                 State = newState;
-                newState.OnEnter();
+                await newState.OnEnter();
                 if (_onFinishStateTransitionListeners == null) { throw new NullReferenceException("On Finish State Transition failed. Null ref"); }
                 TriggerFinishStateTransitionListeners();
             }
 
-            public abstract void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties);
-            public abstract void ExitWaitingForTurn(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task ExitWaitingForTurn(IBoard board, ICharacterProperties characterProperties);
 
-            public abstract void EnterPickingAction(IBoard board, ICharacterProperties characterProperties);
-            public abstract void ExitPickingAction(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task EnterPickingAction(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task ExitPickingAction(IBoard board, ICharacterProperties characterProperties);
 
-            public abstract void EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties);
-            public abstract void ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties);
 
-            public abstract void EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties);
-            public abstract void ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties);
 
-            public abstract void EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
-            public abstract void ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
 
-            public abstract void EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
-            public abstract void ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
+            public abstract Task ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties);
 
             public void RegisterOnFinishTransitionListener(OnFinishStateTransitionListener listener)
             {
@@ -68,8 +70,8 @@ namespace KarmaLogic
                 _characterProperties = characterProperties;
             }
 
-            public abstract void OnEnter();
-            public abstract void OnExit();
+            public abstract Task OnEnter();
+            public abstract Task OnExit();
             public abstract override int GetHashCode();
 
             public bool Equals(ControllerState other)

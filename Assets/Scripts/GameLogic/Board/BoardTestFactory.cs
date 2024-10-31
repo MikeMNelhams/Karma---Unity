@@ -32,7 +32,7 @@ namespace KarmaLogic
                     new() { new() { 12, 12, 12}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
                     new() { new() { 2, 5, 12, 12 }, new() { 3, 3, 3}, new() { } },
                     new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-                    new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+                    new() { new() { 2, 4, 5, 10, 12 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
                 };
 
                 List<int> drawCardValues = new() { 7, 6, 5, 4, 4 };

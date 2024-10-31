@@ -5,6 +5,7 @@ using KarmaLogic.Controller;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace KarmaLogic
                 return new PickupPlayPile();
             }
 
-            public override void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards)
+            public override async Task Apply(IBoard board, Controller.Controller controller, CardsList selectedCards)
             {
                 board.CurrentPlayer.Pickup(board.PlayPile);
                 board.EffectMultiplier = 1;
@@ -37,10 +38,10 @@ namespace KarmaLogic
         {
             public PlayCardsCombo() { }
 
-            public override void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards)
+            public override async Task Apply(IBoard board, Controller.Controller controller, CardsList selectedCards)
             {
                 CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(selectedCards);
-                board.PlayCards(cardsToPlay, controller);
+                await board.PlayCards(cardsToPlay, controller);
             }
 
             public override BoardPlayerAction Copy()
