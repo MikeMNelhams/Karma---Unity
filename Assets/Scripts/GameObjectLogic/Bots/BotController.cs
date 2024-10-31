@@ -8,13 +8,12 @@ using KarmaLogic.Bots;
 using KarmaLogic.BasicBoard;
 using UnityEngine;
 using System.Collections;
-using System.Threading.Tasks;
 
 public class BotController : Controller
 {
     readonly IBot _bot;
 
-    public int DelaySeconds { get => _bot.DelaySeconds; }
+    public float DelaySeconds { get => _bot.DelaySeconds; }
 
     public BotController(IBot bot)
     {
@@ -61,17 +60,17 @@ public class BotController : Controller
         return _bot.ComboToPlay(board);
     }
 
-    public override Task EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
+    public override void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
     {
-        return Task.CompletedTask;
+        
     }
 
-    public override Task ExitWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
+    public override void ExitWaitingForTurn(IBoard board, ICharacterProperties characterProperties)
     {
-        return Task.CompletedTask;
+        
     }
 
-    public override Task EnterPickingAction(IBoard board, ICharacterProperties characterProperties)
+    public override void EnterPickingAction(IBoard board, ICharacterProperties characterProperties)
     {
         BoardPlayerAction selectedAction = _bot.SelectAction(board);
         if (!board.CurrentLegalActions.Contains(selectedAction))
@@ -79,7 +78,7 @@ public class BotController : Controller
             throw new InvalidBoardPlayerActionException(selectedAction);
         }
         UnityEngine.Debug.Log("Bot selected action: " + selectedAction);
-        if (selectedAction is PickupPlayPile) { characterProperties.PickupPlayPileButton.onClick?.Invoke(); return Task.CompletedTask; ; }
+        if (selectedAction is PickupPlayPile) { characterProperties.PickupPlayPileButton.onClick?.Invoke(); return; }
         if (selectedAction is not PlayCardsCombo) { throw new InvalidBoardPlayerActionException(selectedAction); }
         FrozenMultiSet<CardValue> selectedCombo = SelectComboToPlay(board);
         MultiSet<CardValue> combo = new ();
@@ -95,42 +94,38 @@ public class BotController : Controller
         }
 
         characterProperties.ConfirmSelectionButton.onClick?.Invoke();
-        return Task.CompletedTask;
     }
 
-    public override Task ExitPickingAction(IBoard board, ICharacterProperties characterProperties)
+    public override void ExitPickingAction(IBoard board, ICharacterProperties characterProperties)
     {
-        return Task.CompletedTask;
+        
     }
 
-    public override async Task EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties)
+    public override void EnterVotingForWinner(IBoard board, ICharacterProperties characterProperties)
     {
         int voteTargetIndex = _bot.VoteForWinnerIndex(board, new HashSet<int>() { characterProperties.Index });
-        await characterProperties.TriggerVoteForPlayer(voteTargetIndex);
+        characterProperties.TriggerVoteForPlayer(voteTargetIndex);
     }
 
-    public override Task ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
+    public override void ExitVotingForWinner(IBoard board, ICharacterProperties characterProperties)
     {
-        return Task.CompletedTask;
+        
     }
 
-    public override Task EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
+    public override void EnterCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
     {
         int cardGiveAwayIndex = _bot.CardGiveAwayIndex(board);
-        UnityEngine.Debug.Log("Giving card to player index: " + cardGiveAwayIndex);
         SelectableCard selectedGiveawayCard = characterProperties.SelectableCardObjects[cardGiveAwayIndex];
         characterProperties.TryToggleCardSelect(selectedGiveawayCard);
         characterProperties.ConfirmSelectionButton.onClick?.Invoke();
-        return Task.CompletedTask;
-
     }
 
-    public override Task ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
+    public override void ExitCardGiveAwaySelection(IBoard board, ICharacterProperties characterProperties)
     {
-        return Task.CompletedTask;
+        
     }
 
-    public override async Task EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override void EnterCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
         HashSet<int> invalidTargetIndices = new () { characterProperties.Index };
         for (int i = 0; i < board.Players.Count; i++)
@@ -143,21 +138,20 @@ public class BotController : Controller
         }
 
         int targetIndex = _bot.CardPlayerGiveAwayIndex(board, invalidTargetIndices);
-        await characterProperties.TriggerTargetReceivePickedUpCard(targetIndex);
+        characterProperties.TriggerTargetReceivePickedUpCard(targetIndex);
     }
 
-    public override Task ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override void ExitCardGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
         UnityEngine.Debug.Log("exiting player index selection state!");
-        return Task.CompletedTask;
     }
 
-    public override Task EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override void EnterPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
         throw new System.NotImplementedException();
     }
 
-    public override Task ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
+    public override void ExitPlayPileGiveAwayPlayerIndexSelection(IBoard board, ICharacterProperties characterProperties)
     {
         throw new System.NotImplementedException();
     }

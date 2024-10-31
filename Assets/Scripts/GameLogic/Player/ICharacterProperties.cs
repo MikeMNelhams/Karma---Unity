@@ -2,7 +2,6 @@ using UnityEngine;
 using KarmaLogic.Controller;
 using UnityEngine.UI;
 using DataStructures;
-using System.Threading.Tasks;
 
 public interface ICharacterProperties
 {
@@ -25,27 +24,27 @@ public interface ICharacterProperties
 
     public void HideUI();
 
-    public Task TriggerVoteForPlayer(int targetIndex);
+    public void TriggerVoteForPlayer(int targetIndex);
 
-    public Task EnterPickingActionUpdateUI();
+    public void EnterPickingActionUpdateUI();
 
-    public Task ExitPickingActionUpdateUI();
+    public void ExitPickingActionUpdateUI();
 
-    public Task EnterVotingForWinner();
+    public void EnterVotingForWinner();
 
-    public Task ExitVotingForWinner();
+    public void ExitVotingForWinner();
 
-    public Task EnterCardGiveAwaySelection();
+    public void EnterCardGiveAwaySelection();
 
-    public Task ExitCardGiveAwaySelection();
+    public void ExitCardGiveAwaySelection();
 
-    public Task EnterCardGiveAwayPlayerIndexSelection();
+    public void EnterCardGiveAwayPlayerIndexSelection();
 
-    public Task ExitCardGiveAwayPlayerIndexSelection();
+    public void ExitCardGiveAwayPlayerIndexSelection();
 
-    public Task EnterPlayPileGiveAwayPlayerIndexSelection();
+    public void EnterPlayPileGiveAwayPlayerIndexSelection();
 
-    public Task ExitPlayPileGiveAwayPlayerIndexSelection();
+    public void ExitPlayPileGiveAwayPlayerIndexSelection();
 
-    public Task TriggerTargetReceivePickedUpCard(int targetIndex);
+    public void TriggerTargetReceivePickedUpCard(int targetIndex);
 }

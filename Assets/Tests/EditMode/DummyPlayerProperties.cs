@@ -1,6 +1,5 @@
 using DataStructures;
 using KarmaLogic.Controller;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +9,9 @@ public class DummyPlayerProperties : MonoBehaviour, ICharacterProperties
     {
 
     }
-
+    
     public int Index { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
+
     public Controller Controller { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public Button PickupPlayPileButton => throw new System.NotImplementedException();
@@ -22,62 +22,12 @@ public class DummyPlayerProperties : MonoBehaviour, ICharacterProperties
 
     public ListWithConstantContainsCheck<SelectableCard> SelectableCardObjects => throw new System.NotImplementedException();
 
-    public void DisableCamera()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public void EnableCamera()
     {
         throw new System.NotImplementedException();
     }
 
-    public Task EnterCardGiveAwayPlayerIndexSelection()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task EnterCardGiveAwaySelection()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task EnterPickingActionUpdateUI()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task EnterPlayPileGiveAwayPlayerIndexSelection()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task EnterVotingForWinner()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task ExitCardGiveAwayPlayerIndexSelection()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task ExitCardGiveAwaySelection()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task ExitPickingActionUpdateUI()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task ExitPlayPileGiveAwayPlayerIndexSelection()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public Task ExitVotingForWinner()
+    public void DisableCamera()
     {
         throw new System.NotImplementedException();
     }
@@ -87,17 +37,67 @@ public class DummyPlayerProperties : MonoBehaviour, ICharacterProperties
         throw new System.NotImplementedException();
     }
 
-    public Task TriggerTargetReceivePickedUpCard(int targetIndex)
+    public void EnterPickingActionUpdateUI()
     {
         throw new System.NotImplementedException();
     }
 
-    public Task TriggerVoteForPlayer(int targetIndex)
+    public void ExitPickingActionUpdateUI()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void EnterVotingForWinner()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ExitVotingForWinner()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void EnterCardGiveAwaySelection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ExitCardGiveAwaySelection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void EnterCardGiveAwayPlayerIndexSelection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ExitCardGiveAwayPlayerIndexSelection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void EnterPlayPileGiveAwayPlayerIndexSelection()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         throw new System.NotImplementedException();
     }
 
     public void TryToggleCardSelect(SelectableCard cardObject)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TriggerVoteForPlayer(int targetIndex)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TriggerTargetReceivePickedUpCard(int targetIndex)
     {
         throw new System.NotImplementedException();
     }

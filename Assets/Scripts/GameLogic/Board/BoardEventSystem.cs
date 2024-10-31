@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using KarmaLogic.Cards;
 
@@ -16,7 +15,7 @@ namespace KarmaLogic
                 public delegate void BoardBurnEventListener(int jokerCount);
                 public delegate void PlayerDrawEventListener(int numberOfCards, int playerIndex);
                 public delegate void BoardHandsRotationEventListener(int numberOfRotations, IBoard board);
-                public delegate Task BoardOnStartCardGiveAwayListener(int numberOfCards, int playerIndex);
+                public delegate void BoardOnStartCardGiveAwayListener(int numberOfCards, int playerIndex);
                 public delegate void BoardOnStartPlayPileGiveAwayListener(int playerIndex);
 
                 public event BoardEventListener HandsFlippedEvent;
@@ -63,9 +62,9 @@ namespace KarmaLogic
                     StartedCardGiveAway += listener;
                 }
 
-                public async Task TriggerStartedCardGiveAway(int numberOfCards, int giverIndex)
+                public void TriggerStartedCardGiveAway(int numberOfCards, int giverIndex)
                 {
-                    await StartedCardGiveAway?.Invoke(numberOfCards, giverIndex);
+                    StartedCardGiveAway?.Invoke(numberOfCards, giverIndex);
                 }
 
                 public void RegisterPlayPileGiveAwayListener(BoardOnStartPlayPileGiveAwayListener listener)

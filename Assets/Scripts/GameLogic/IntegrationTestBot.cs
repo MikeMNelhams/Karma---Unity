@@ -13,10 +13,10 @@ using DataStructures;
 public class IntegrationTestBot : IBot
 {
     public string Name { get; protected set;}
-    public int DelaySeconds { get; protected set; }
+    public float DelaySeconds { get; protected set; }
     protected List<BoardPlayerAction> _knownActions = new ();
 
-    public IntegrationTestBot(string name, int delay)
+    public IntegrationTestBot(string name, float delay)
     {
         Name = name;
         DelaySeconds = delay;
