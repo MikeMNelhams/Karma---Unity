@@ -102,8 +102,6 @@ namespace DataStructures
 
         public bool Remove(T item)
         {
-            UnityEngine.Debug.Log("LWCC removing: " + item);
-            UnityEngine.Debug.Log("LWCC Currently: " + ToString());
             int index = IndexOf(item);
             _orderedValues.RemoveAt(index);
 

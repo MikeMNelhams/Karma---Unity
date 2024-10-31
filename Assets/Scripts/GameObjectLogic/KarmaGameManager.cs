@@ -410,6 +410,7 @@ public class KarmaGameManager : MonoBehaviour
         playerIndicesToExclude.UnionWith(Enumerable.Range(0, Board.Players.Count).ToList<int>());
         playerIndicesToExclude.ExceptWith(Board.PotentialWinnerIndices);
         
+        // Voting is asynchronous
         foreach (int playerIndex in PlayerJokerCounts.Keys)
         {
             Board.CurrentPlayerIndex = playerIndex;
@@ -730,8 +731,8 @@ public class KarmaGameManager : MonoBehaviour
 
         if (giver.CardGiveAwayHandler.IsFinished)
         {
+            PlayersProperties[giverIndex].Controller.RegisterOnFinishTransitionListener(Board.EndTurn);
             PlayersProperties[giverIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[giverIndex]));
-            Board.EndTurn();
             return;
         }
 
@@ -747,8 +748,8 @@ public class KarmaGameManager : MonoBehaviour
 
         PlayersProperties[targetIndex].AddCardObjectsToHand(_playTable.PopAllFromPlayPile());
 
+        PlayersProperties[giverIndex].Controller.RegisterOnFinishTransitionListener(Board.EndTurn);
         PlayersProperties[giverIndex].SetControllerState(new WaitForTurn(Board, PlayersProperties[giverIndex]));
-        Board.EndTurn();
         return;
     }
 

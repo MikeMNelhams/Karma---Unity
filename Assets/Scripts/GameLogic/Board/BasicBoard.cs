@@ -226,6 +226,7 @@ namespace KarmaLogic
 
             public void EndTurn()
             {
+                UnityEngine.Debug.Log("END TURN HAS BEEN CALLED!");
                 TurnsPlayed++;
                 EventSystem.TriggerOnTurnEndEvents(this);
             }

@@ -13,7 +13,7 @@ namespace KarmaLogic
 
             public delegate void OnFinishStateTransitionListener();
 
-            protected readonly List<OnFinishStateTransitionListener> _onFinishStateTransitionListeners = new();
+            protected readonly Queue<OnFinishStateTransitionListener> _onFinishStateTransitionListeners = new();
 
             public virtual void SetState(ControllerState newState)
             {
@@ -22,7 +22,6 @@ namespace KarmaLogic
                 newState.OnEnter();
                 if (_onFinishStateTransitionListeners == null) { throw new NullReferenceException("On Finish State Transition failed. Null ref"); }
                 TriggerFinishStateTransitionListeners();
-                UnregisterOnFinishTransitionListeners();
             }
 
             public abstract void EnterWaitingForTurn(IBoard board, ICharacterProperties characterProperties);
@@ -45,20 +44,16 @@ namespace KarmaLogic
 
             public void RegisterOnFinishTransitionListener(OnFinishStateTransitionListener listener)
             {
-                _onFinishStateTransitionListeners.Add(listener);
+                _onFinishStateTransitionListeners.Enqueue(listener);
             }
 
             void TriggerFinishStateTransitionListeners()
             {
-                foreach (OnFinishStateTransitionListener listener in _onFinishStateTransitionListeners)
+                while (_onFinishStateTransitionListeners.Count > 0)
                 {
-                    listener?.Invoke();
+                    OnFinishStateTransitionListener listener = _onFinishStateTransitionListeners.Dequeue() ?? throw new NullReferenceException("NULL LISTENER!!");
+                    listener.Invoke();
                 }
-            }
-
-            void UnregisterOnFinishTransitionListeners()
-            {
-                _onFinishStateTransitionListeners.Clear();
             }
         }
 
