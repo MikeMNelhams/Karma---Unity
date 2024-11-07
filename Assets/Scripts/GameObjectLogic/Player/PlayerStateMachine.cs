@@ -34,7 +34,7 @@ namespace StateMachineV2
             },
             {
                 new StateTransition(State.PickingAction, Command.CardGiveAwayComboPlayed),
-                new StateTransitionResult(State.SelectingCardGiveAwayIndex)
+                new StateTransitionResult(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { playerProperties.EnterCardGiveAwaySelection })
             },
             {
                 new StateTransition(State.PickingAction, Command.TurnEnded),
@@ -46,7 +46,7 @@ namespace StateMachineV2
             },
             {
                 new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.CardGiveAwayUnfinished),
-                new StateTransitionResult(State.SelectingCardGiveAwayIndex)
+                new StateTransitionResult(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { playerProperties.EnterCardGiveAwaySelection })
             },
             {
                 new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.Burned),

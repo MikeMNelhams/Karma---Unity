@@ -350,10 +350,11 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         _playerMovementController.UnRegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
     }
 
-    public void EnterCardGiveAwaySelection()
+    public Task EnterCardGiveAwaySelection()
     {
         ConfirmSelectionButton.gameObject.SetActive(true);
         ClearSelectionButton.gameObject.SetActive(true);
+        return Task.CompletedTask;
     }
 
     public void ExitCardGiveAwaySelection()
