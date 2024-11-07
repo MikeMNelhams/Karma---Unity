@@ -24,11 +24,9 @@ public class CardComboJokerTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 15 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -63,11 +61,9 @@ public class CardComboJokerTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 15 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -99,11 +95,9 @@ public class CardComboJokerTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 15, 15, 15 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -138,11 +132,9 @@ public class CardComboJokerTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 15, 15, 6, 15 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -177,11 +169,9 @@ public class CardComboJokerTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 15 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);

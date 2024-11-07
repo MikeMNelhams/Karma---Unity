@@ -22,11 +22,9 @@ public class CardComboThreeTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 3 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -51,11 +49,9 @@ public class CardComboThreeTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 3, 3, 3 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -80,11 +76,9 @@ public class CardComboThreeTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 3, 3, 3, 3 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -109,11 +103,9 @@ public class CardComboThreeTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 3, 3, 3 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -138,11 +130,9 @@ public class CardComboThreeTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 3, 3, 3, 6 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -167,11 +157,9 @@ public class CardComboThreeTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 3, 3, 6, 3, 3 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);

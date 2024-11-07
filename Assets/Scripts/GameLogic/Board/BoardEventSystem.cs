@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KarmaLogic.Cards;
+using System;
 
 namespace KarmaLogic
 {
@@ -11,6 +12,7 @@ namespace KarmaLogic
         {
             public class BoardEventSystem
             {
+                public delegate void EventListenerAutoTearDown();
                 public delegate void BoardEventListener(IBoard board);
                 public delegate void BoardBurnEventListener(int jokerCount);
                 public delegate void PlayerDrawEventListener(int numberOfCards, int playerIndex);
@@ -26,6 +28,42 @@ namespace KarmaLogic
                 public event BoardBurnEventListener OnBurnEvent;
                 public event BoardOnStartCardGiveAwayListener StartedCardGiveAway;
                 public event BoardOnStartPlayPileGiveAwayListener StartedPlayPileGiveAway;
+                
+                // Events that cleanup after themselves:
+                public Queue<EventListenerAutoTearDown> _onFinishPlaySuccesfulComboListeners = new ();
+                public Queue<EventListenerAutoTearDown> _onFinishGiveAwayListeners = new ();
+
+                public void RegisterOnFinishPlaySuccesfulComboListener(EventListenerAutoTearDown listener)
+                {
+                    _onFinishPlaySuccesfulComboListeners ??= new ();
+                    _onFinishPlaySuccesfulComboListeners.Enqueue(listener);
+                }
+
+                public void TriggerOnFinishPlaySuccesfulComboListenersWithTearDown()
+                {
+                    while (_onFinishPlaySuccesfulComboListeners.Count > 0)
+                    {
+                        EventListenerAutoTearDown listener = _onFinishPlaySuccesfulComboListeners.Dequeue() 
+                            ?? throw new NullReferenceException("Null Board Finish Play Succesful Combo Listener");
+                        listener.Invoke();
+                    }
+                }
+
+                public void RegisterOnFinishGiveAwayListener(EventListenerAutoTearDown listener)
+                {
+                    _onFinishGiveAwayListeners ??= new ();
+                    _onFinishGiveAwayListeners.Enqueue(listener);
+                }
+
+                public void TriggerOnFinishGiveAwayListenersWithTearDown()
+                {
+                    while (_onFinishGiveAwayListeners.Count > 0)
+                    {
+                        EventListenerAutoTearDown listener = _onFinishGiveAwayListeners.Dequeue() 
+                            ?? throw new NullReferenceException("Null Board Finish Give Away listener"); 
+                        listener.Invoke();
+                    }
+                }
 
                 public void RegisterHandsRotatedListener(BoardHandsRotationEventListener listener)
                 {

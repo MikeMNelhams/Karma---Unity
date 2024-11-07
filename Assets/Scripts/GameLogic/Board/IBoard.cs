@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DataStructures;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
-using KarmaLogic.Controller;
+using StateMachineV2;
 using System;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
@@ -28,8 +28,9 @@ namespace KarmaLogic
         public abstract class BoardPlayerAction : IEquatable<BoardPlayerAction>
         {
             public abstract bool IsValid(IBoard board);
-            public abstract void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards);
+            public abstract void Apply(IBoard board, CardsList selectedCards);
             public abstract BoardPlayerAction Copy();
+            
             public abstract string Name { get; }
             public override int GetHashCode() 
             { 
@@ -52,6 +53,24 @@ namespace KarmaLogic
             public static bool operator ==(BoardPlayerAction x, BoardPlayerAction y) => x.Equals(y);
             public static bool operator !=(BoardPlayerAction x, BoardPlayerAction y) => !x.Equals(y);
 
+            public delegate void OnFinishListener();
+
+            Queue<OnFinishListener> _onFinishListeners = new();
+
+            public void RegisterOnFinishListener(OnFinishListener listener)
+            {
+                _onFinishListeners ??= new();
+                _onFinishListeners.Enqueue(listener);
+            }
+
+            protected void TriggerFinishListeners()
+            {
+                while (_onFinishListeners.Count > 0)
+                {
+                    OnFinishListener listener = _onFinishListeners.Dequeue() ?? throw new NullReferenceException("Null listener!");
+                    listener.Invoke();
+                }
+            }
         }
 
         public interface IBoard
@@ -69,8 +88,8 @@ namespace KarmaLogic
             public void StartTurn();
             public void EndTurn();
             public CardsList DrawUntilFull(int playerIndex);
-            public bool PlayCards(CardsList cards, Controller.Controller controller);
-            public bool PlayCards(CardsList cards, Controller.Controller controller, bool addToPlayPile);
+            public void PlayCards(CardsList cards);
+            public void PlayCards(CardsList cards, bool addToPlayPile);
             public void Burn(int jokerCount);
             public void Print();
             public void PrintChooseableCards();

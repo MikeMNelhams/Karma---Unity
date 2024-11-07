@@ -22,11 +22,9 @@ public class CardComboKingTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -55,11 +53,9 @@ public class CardComboKingTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
         
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
         Assert.AreEqual(1, board.EffectMultiplier);
@@ -91,11 +87,9 @@ public class CardComboKingTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
         Assert.AreEqual(1, board.EffectMultiplier);
@@ -127,11 +121,9 @@ public class CardComboKingTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 13 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(0, board.DrawPile.Count);
         Assert.AreEqual(4, board.BurnPile.Count);
@@ -157,11 +149,9 @@ public class CardComboKingTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 13, 13, 6, 13 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(0, board.DrawPile.Count);
         Assert.AreEqual(0, board.BurnPile.Count);

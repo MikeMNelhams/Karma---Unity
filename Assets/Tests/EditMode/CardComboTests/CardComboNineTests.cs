@@ -24,11 +24,9 @@ public class CardComboNineTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 9 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -60,11 +58,9 @@ public class CardComboNineTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 9, 9 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         board.StepPlayerIndex(1);
         board.EndTurn();
@@ -90,11 +86,9 @@ public class CardComboNineTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 9, 9, 9, 9 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         board.StepPlayerIndex(1);
         board.EndTurn();

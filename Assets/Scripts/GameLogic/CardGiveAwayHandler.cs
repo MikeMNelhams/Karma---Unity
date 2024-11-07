@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using KarmaLogic.Board;
@@ -20,7 +21,10 @@ namespace KarmaLogic
 
             public delegate bool InvalidFilter(Player giver);
 
-            readonly List<OnCardGiveAwayListener> _registeredListeners;
+            readonly List<OnCardGiveAwayListener> _onGiveAwayListeners;
+
+            public delegate void OnFinishGiveAwayListener();
+            Queue<OnFinishGiveAwayListener> _onFinishGiveAwayListeners = new ();
 
             readonly InvalidFilter _invalidFilter;
 
@@ -35,7 +39,7 @@ namespace KarmaLogic
                 _playingFromAtStart = _giver.PlayingFrom;
                 _invalidFilter = invalidFilter;
 
-                _registeredListeners = new();
+                _onGiveAwayListeners = new();
             }
 
             public void GiveAway(Card card, int receiverIndex)
@@ -48,28 +52,45 @@ namespace KarmaLogic
                 _numberOfCardsToGiveAway -= 1;
                 CardGiveAway?.Invoke(card, _giverIndex, receiverIndex);
                 if (!_giver.HasCards) { EndGiveAway(); return; }
-                if (_numberOfCardsToGiveAway == 0) { RemoveAllListeners(); } 
+                if (_numberOfCardsToGiveAway == 0) { RemoveAllOnGiveAwayListeners(); } 
             }
 
             public void RegisterOnCardGiveAwayListener(OnCardGiveAwayListener listener)
             {
                 CardGiveAway += listener;
-                _registeredListeners.Add(listener);
+                _onGiveAwayListeners.Add(listener);
             }
 
             void EndGiveAway()
             {
                 _numberOfCardsToGiveAway = 0;
-                RemoveAllListeners();
+                RemoveAllOnGiveAwayListeners();
+                TriggerOnFinishCardGiveAwayListeners();
             }
 
-            void RemoveAllListeners()
+            void RemoveAllOnGiveAwayListeners()
             {
-                foreach (OnCardGiveAwayListener listener in _registeredListeners)
+                foreach (OnCardGiveAwayListener listener in _onGiveAwayListeners)
                 {
                     CardGiveAway -= listener;
                 }
-                _registeredListeners.Clear();
+                _onGiveAwayListeners.Clear();
+            }
+
+            public void RegisterOnFinishCardGiveAwayListener(OnFinishGiveAwayListener listener)
+            {
+                _onFinishGiveAwayListeners ??= new();
+                _onFinishGiveAwayListeners.Enqueue(listener);
+            }
+
+            void TriggerOnFinishCardGiveAwayListeners()
+            {
+                while (_onFinishGiveAwayListeners.Count > 0)
+                {
+                    OnFinishGiveAwayListener listener = _onFinishGiveAwayListeners.Dequeue() 
+                        ?? throw new NullReferenceException("Null reference exception for on finish giveaway listener!");
+                    listener.Invoke();
+                }
             }
         }
 

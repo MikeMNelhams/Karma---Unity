@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using KarmaLogic.Board;
-using KarmaLogic.Controller;
 
 namespace KarmaLogic
 {
@@ -10,14 +9,17 @@ namespace KarmaLogic
         public abstract class CardCombo : IEquatable<CardCombo>
         {
             public CardsList Cards { get; protected set; }
-            public Controller.Controller Controller { get; protected set; }
             protected Dictionary<CardValue, int> _counts;
 
-            public CardCombo(CardsList cards, Controller.Controller controller, Dictionary<CardValue, int> counts)
+            public delegate void OnFinishApplyComboListener();
+
+            readonly Queue<OnFinishApplyComboListener> _onFinishApplyComboListeners;
+
+            public CardCombo(CardsList cards, Dictionary<CardValue, int> counts)
             {
                 Cards = cards;
-                Controller = controller;
                 _counts = counts;
+                _onFinishApplyComboListeners = new Queue<OnFinishApplyComboListener>();
             }
 
             public int Length { get { return Cards.Count; } }
@@ -37,6 +39,21 @@ namespace KarmaLogic
             public bool Equals(CardCombo other)
             {
                 return Cards.Equals(other.Cards);
+            }
+
+            public void RegisterOnFinishApplyComboListener(OnFinishApplyComboListener listener)
+            {
+                _onFinishApplyComboListeners.Enqueue(listener);
+            }
+
+            protected void TriggerOnFinishApplyComboListeners()
+            {
+                while (_onFinishApplyComboListeners.Count > 0)
+                {
+                    OnFinishApplyComboListener listener = _onFinishApplyComboListeners.Dequeue() 
+                        ?? throw new NullReferenceException("Null listener reference when applying combo!");
+                    listener.Invoke();
+                }
             }
         }
     }

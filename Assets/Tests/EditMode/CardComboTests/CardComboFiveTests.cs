@@ -27,9 +27,8 @@ public class CardComboFiveTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 0 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -71,9 +70,8 @@ public class CardComboFiveTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 0, 1 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -107,9 +105,8 @@ public class CardComboFiveTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 0, 1, 2 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
@@ -143,9 +140,8 @@ public class CardComboFiveTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 0 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);

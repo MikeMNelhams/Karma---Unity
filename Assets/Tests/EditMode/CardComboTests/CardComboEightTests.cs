@@ -22,13 +22,11 @@ public class CardComboEightTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 8 }, CardSuit.DebugDefault);
 
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(1, board.EffectMultiplier);
@@ -53,11 +51,9 @@ public class CardComboEightTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 8, 8 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardTurnOrder.RIGHT, board.TurnOrder);
     }
@@ -78,11 +74,9 @@ public class CardComboEightTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 8, 8, 8 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
     }
@@ -103,11 +97,9 @@ public class CardComboEightTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 8, 8, 8, 6, 6 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
     }

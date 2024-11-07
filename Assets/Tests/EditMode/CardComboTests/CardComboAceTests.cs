@@ -22,11 +22,9 @@ public class CardComboAceTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 14 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -50,11 +48,9 @@ public class CardComboAceTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 14 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -78,11 +74,9 @@ public class CardComboAceTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 14, 14 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(1, board.EffectMultiplier);
         Assert.False(board.HandsAreFlipped);
@@ -104,11 +98,9 @@ public class CardComboAceTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 14, 14, 14 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(1, board.EffectMultiplier);
         Assert.True(board.HandsAreFlipped);
@@ -130,11 +122,9 @@ public class CardComboAceTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 14, 14, 14, 6, 14 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(1, board.EffectMultiplier);
         Assert.True(board.HandsAreFlipped);

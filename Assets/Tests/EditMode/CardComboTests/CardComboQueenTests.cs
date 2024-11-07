@@ -3,7 +3,6 @@ using NUnit.Framework;
 using KarmaLogic.BasicBoard;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
-using KarmaLogic.Controller;
 
 public class CardComboQueenTests
 {
@@ -25,11 +24,10 @@ public class CardComboQueenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
 
         CardsList cards = new(new List<int>() { 12 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -57,11 +55,9 @@ public class CardComboQueenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 12 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -90,11 +86,9 @@ public class CardComboQueenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 12 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.Null(board.Players[0].CardGiveAwayHandler);
     }
@@ -117,11 +111,9 @@ public class CardComboQueenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 12 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -149,11 +141,9 @@ public class CardComboQueenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.CurrentPlayer.PopFromPlayable(new int[] { 0 }); 
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.NotNull(board.Players[0].CardGiveAwayHandler);
         Assert.AreEqual(1, board.Players[0].CardGiveAwayHandler.NumberOfCardsRemainingToGiveAway);
@@ -177,11 +167,9 @@ public class CardComboQueenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.CurrentPlayer.PopFromPlayable(new int[] { 0 });
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.Null(board.Players[0].CardGiveAwayHandler);
     }

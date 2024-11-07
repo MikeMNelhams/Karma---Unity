@@ -4,15 +4,17 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using KarmaLogic.Board;
-using KarmaLogic.Controller;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using DataStructures;
 using CardVisibility;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Threading.Tasks;
+using StateMachineV2;
+using TMPro;
 
-public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibilityHandler
+public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] FanHandler _fanHandler;
@@ -37,8 +39,10 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
 
     [SerializeField] HoverToolTipHandler _hoverTipHandler;
 
+    [SerializeField] TextMeshProUGUI _currentStateTextBox;
+
     public HoverToolTipHandler HoverTipHandler { get => _hoverTipHandler; }
-    public Controller Controller { get; set; }
+    public StateMachine StateMachine { get; set; }
     public CardSelector CardSelector { get; protected set; }
 
     public bool IsRotationEnabled { get; set; }
@@ -104,7 +108,7 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
     void FixedUpdate()
     {
         if (!_isLeftButtonMouseDown) { return; }
-        if (Controller.State is not WaitForTurn) { TrySelectCardObject(); }
+        if (StateMachine.CurrentState is not State.WaitingForTurn) { TrySelectCardObject(); }
         _isLeftButtonMouseDown = false;
     }
 
@@ -134,7 +138,7 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
 
     public void TogglePlayerMovementListeners()
     {
-        if (Controller.State is SelectingPlayPileGiveAwayPlayerIndex && IsPointingEnabled)
+        if (StateMachine.CurrentState is State.SelectingPlayPileGiveAwayPlayerIndex && IsPointingEnabled)
         {
             _playerMovementController.TogglePointing();
             if (_playerMovementController.IsPointing)
@@ -170,31 +174,34 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         TryColorLegalCards();
     }
 
-    public void EnableCamera()
+    public Task EnableCamera()
     {
         print("Enabling camera for player: " + Index);
         _playerCamera.enabled = true;
         _playerCamera.tag = "MainCamera";
         _playerCameraPhysicsRaycaster.enabled = true;
         _playerCanvas.enabled = true;
+        return Task.CompletedTask;
     }
 
-    public void DisableCamera()
+    public Task DisableCamera()
     {
         print("Disabling camera for player: " + Index);
         _playerCamera.tag = "Untagged";
         _playerCamera.enabled = false;
         _playerCameraPhysicsRaycaster.enabled = false;
         _playerCanvas.enabled = false;
+        return Task.CompletedTask;
     }
 
-    public void HideUI()
+    public Task HideUI()
     {
         ConfirmSelectionButton.gameObject.SetActive(false);
         ClearSelectionButton.gameObject.SetActive(false);
         PickupPlayPileButton.gameObject.SetActive(false);
         nextPlayerLeftArrow.gameObject.SetActive(false);
         nextPlayerRightArrow.gameObject.SetActive(false);
+        return Task.CompletedTask;
     }
 
     public void EnablePlayerMovement()
@@ -274,11 +281,35 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         }
     }
 
-    public void EnterPickingActionUpdateUI()
+    public async Task ProcessStateCommand(Command command)
+    {
+        await StateMachine.MoveNext(command);
+        await UpdateDisplayedDebugInfo();
+    }
+
+    public Task UpdateDisplayedDebugInfo()
+    {
+        _currentStateTextBox.text = "Most recent STATE:\n" + StateMachine.CurrentState;
+        return Task.CompletedTask;
+    }
+
+    public Task EnterMulligan()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    public Task ExitMulligan()
+    {
+        // TODO
+        throw new NotImplementedException();
+    }
+
+    public Task EnterPickingActionUpdateUI()
     {
         KarmaGameManager gameManager = KarmaGameManager.Instance;
         HashSet<BoardPlayerAction> legalActions = gameManager.Board.CurrentLegalActions;
-        if (legalActions.Count == 0) { return; }
+        if (legalActions.Count == 0) { return Task.CompletedTask; }
         if (legalActions.Contains(gameManager.PickUpAction))
         {
             PickupPlayPileButton.gameObject.SetActive(true);
@@ -297,11 +328,13 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
             nextPlayerLeftArrow.gameObject.SetActive(true);
         }
         TryColorLegalCards();
+        return Task.CompletedTask;
     }
 
-    public void ExitPickingActionUpdateUI()
+    public Task ExitPickingActionUpdateUI()
     {
         PickupPlayPileButton.gameObject.SetActive(false);
+        return Task.CompletedTask;
     }
 
     public void EnterVotingForWinner()
@@ -329,55 +362,33 @@ public class PlayerProperties : MonoBehaviour, ICharacterProperties, ICardVisibi
         ClearSelectionButton.gameObject.SetActive(false);
     }
 
-    public void EnterCardGiveAwayPlayerIndexSelection()
+    public Task EnterCardGiveAwayPlayerIndexSelection()
     {
         HideUI();
         _playerMovementController.SetRotating(true);
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
+        return Task.CompletedTask;
     }
 
-    public void ExitCardGiveAwayPlayerIndexSelection()
+    public Task ExitCardGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
+        return Task.CompletedTask;
     }
     
-    public void EnterPlayPileGiveAwayPlayerIndexSelection()
+    public Task EnterPlayPileGiveAwayPlayerIndexSelection()
     {
         ConfirmSelectionButton.gameObject.SetActive(false);
         ClearSelectionButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
+        return Task.CompletedTask;
     }
 
     public void ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
-    }
-
-    /// <summary>
-    /// Asynchronous
-    /// </summary>
-    /// <param name="newState"></param>
-    public void SetControllerState(ControllerState newState)
-    {
-        if (Controller is BotController)
-        {
-            StartCoroutine(SetBotControllerState(newState));
-        }
-        else
-        {
-            Controller.SetState(newState);
-            print("STATE for player: " + Index + ": " + Controller.State.GetHashCode());
-        }
-    }
-
-    IEnumerator SetBotControllerState(ControllerState newState)
-    {
-        BotController controller = Controller as BotController;
-        yield return new WaitForSeconds(controller.DelaySeconds);
-        controller.SetState(newState);
-        print("STATE for player: " + Index + ": " + Controller.State.GetHashCode());
     }
 
     public void SetHandSorter(CardSorter handSorter)

@@ -1,12 +1,5 @@
-using DataStructures;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
-using KarmaLogic.Controller;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
 
 namespace KarmaLogic
 {
@@ -26,10 +19,11 @@ namespace KarmaLogic
                 return new PickupPlayPile();
             }
 
-            public override void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards)
+            public override void Apply(IBoard board, CardsList selectedCards)
             {
                 board.CurrentPlayer.Pickup(board.PlayPile);
                 board.EffectMultiplier = 1;
+                TriggerFinishListeners();
             }
         }
 
@@ -37,10 +31,11 @@ namespace KarmaLogic
         {
             public PlayCardsCombo() { }
 
-            public override void Apply(IBoard board, Controller.Controller controller, CardsList selectedCards)
+            public override void Apply(IBoard board, CardsList selectedCards)
             {
                 CardsList cardsToPlay = board.CurrentPlayer.PlayableCards.Remove(selectedCards);
-                board.PlayCards(cardsToPlay, controller);
+                board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(TriggerFinishListeners);
+                board.PlayCards(cardsToPlay);
             }
 
             public override BoardPlayerAction Copy()

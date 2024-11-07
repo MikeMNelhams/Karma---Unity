@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using KarmaLogic.BasicBoard;
-using KarmaLogic.Board;
 using KarmaLogic.Cards;
 
 public class AceCountTests
@@ -68,13 +67,11 @@ public class AceCountTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].PopFromPlayable(new int[] { 2 });
 
         Assert.AreEqual(3, board.CardValuesInPlayCounts[CardValue.ACE]);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(3, board.CardValuesInPlayCounts[CardValue.ACE]);
     }
@@ -97,13 +94,11 @@ public class AceCountTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].PopFromPlayable(new int[] { 2 });
 
         Assert.AreEqual(6, board.CardValuesInPlayCounts[CardValue.ACE]);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(1, board.CardValuesInPlayCounts[CardValue.ACE]);
     }

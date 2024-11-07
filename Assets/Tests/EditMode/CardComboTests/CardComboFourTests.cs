@@ -22,13 +22,11 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4 }, CardSuit.DebugDefault);
 
         Assert.AreEqual(null, board.PlayPile.VisibleTopCard);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -54,11 +52,9 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4, 4 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(null, board.PlayPile.VisibleTopCard);
     }
@@ -79,11 +75,9 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4, 4 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.THREE), board.PlayPile.VisibleTopCard);
     }
@@ -104,13 +98,11 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4, 4 }, CardSuit.DebugDefault);
 
         Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.THREE), board.PlayPile.VisibleTopCard);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.THREE), board.PlayPile.VisibleTopCard);
     }
@@ -131,11 +123,9 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4, 6, 4, 4 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(null, board.PlayPile.VisibleTopCard);
     }
@@ -156,11 +146,9 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4, 6, 4, 4 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(null, board.PlayPile.VisibleTopCard);
     }
@@ -181,13 +169,11 @@ public class CardComboFourTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 4, 6, 4, 4 }, CardSuit.DebugDefault);
 
         Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.THREE), board.PlayPile.VisibleTopCard);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.THREE), board.PlayPile.VisibleTopCard);
     }

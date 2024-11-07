@@ -24,11 +24,9 @@ public class CardComboTwoTests
 
         board.StartTurn();
 
-        PlayerController testController = new ();
-
         CardsList cards = new (new List<int>() { 2 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
 
@@ -53,11 +51,9 @@ public class CardComboTwoTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 2 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
 
@@ -82,11 +78,9 @@ public class CardComboTwoTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 2, 2, 2 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
 
@@ -111,11 +105,9 @@ public class CardComboTwoTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 2, 2, 2, 6 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
 
@@ -140,11 +132,9 @@ public class CardComboTwoTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 2, 2, 2 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
 

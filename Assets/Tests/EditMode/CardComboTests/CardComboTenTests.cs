@@ -24,11 +24,9 @@ public class CardComboTenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 10 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(BoardTurnOrder.LEFT, board.TurnOrder);
@@ -58,11 +56,9 @@ public class CardComboTenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 10, 10, 10}, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(0, board.CurrentPlayerIndex);
         Assert.AreEqual(0, board.PlayPile.Count);
@@ -87,11 +83,9 @@ public class CardComboTenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 10, 10, 10, 10 }, CardSuit.DebugDefault); // Four 10s would ALSO burn
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(0, board.CurrentPlayerIndex);
         Assert.AreEqual(0, board.PlayPile.Count);
@@ -116,11 +110,9 @@ public class CardComboTenTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = new(new List<int>() { 10, 10, 6, 10, 10 }, CardSuit.DebugDefault);
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(0, board.CurrentPlayerIndex);
         Assert.AreEqual(0, board.PlayPile.Count);

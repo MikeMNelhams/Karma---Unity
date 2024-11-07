@@ -75,10 +75,8 @@ public class DrawingCardsTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 0, 1 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Hand correctHand = new(new List<int> { 2, 4, 5 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
@@ -104,10 +102,8 @@ public class DrawingCardsTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 2 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Hand correctHand = new(new List<int> { 2, 2, 5 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
@@ -133,10 +129,8 @@ public class DrawingCardsTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 2 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Hand correctHand = new(new List<int> { 2, 2, 4 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
@@ -162,10 +156,8 @@ public class DrawingCardsTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 0, 1, 2, 3 });
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Hand correctHand = new(new List<int> { 3, 4 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);

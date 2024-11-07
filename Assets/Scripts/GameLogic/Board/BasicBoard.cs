@@ -1,7 +1,7 @@
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
 using KarmaLogic.CardCombos;
-using KarmaLogic.Controller;
+using StateMachineV2;
 using KarmaLogic.Board;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
@@ -199,6 +199,7 @@ namespace KarmaLogic
             {
                 CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex, invalidFilter);
                 CurrentPlayer.CardGiveAwayHandler.RegisterOnCardGiveAwayListener(ReceiveCard);
+                CurrentPlayer.CardGiveAwayHandler.RegisterOnFinishCardGiveAwayListener(EventSystem.TriggerOnFinishGiveAwayListenersWithTearDown);
                 EventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
             }
 
@@ -231,22 +232,24 @@ namespace KarmaLogic
                 EventSystem.TriggerOnTurnEndEvents(this);
             }
 
-            public bool PlayCards(CardsList cards, Controller.Controller controller)
+            public void PlayCards(CardsList cards)
             {
-                return PlayCards(cards, controller, true);
+                PlayCards(cards, true);
             }
 
-            public bool PlayCards(CardsList cards, Controller.Controller controller, bool addToPile=true)
+            public void PlayCards(CardsList cards, bool addToPile=true)
             {
                 ComboFactory.SetCounts(cards);
-                CardCombo cardCombo = ComboFactory.CreateCombo(controller);
+                CardCombo cardCombo = ComboFactory.CreateCombo();
                 List<bool> comboVisibility = ComboFactory.ComboVisibility(this);
                 if (addToPile) { PlayPile.Add(cards, comboVisibility); }
                 bool willBurnDueToMinimumRunFour = PlayPile.ContainsMinLengthRun(4);
 
                 DrawUntilFull(CurrentPlayerIndex);
 
-                if (NumberOfCombosPlayedThisTurn > 52) { return false; }
+                if (NumberOfCombosPlayedThisTurn > 52) { return; }
+
+                cardCombo.RegisterOnFinishApplyComboListener(EventSystem.TriggerOnFinishPlaySuccesfulComboListenersWithTearDown);
                 cardCombo.Apply(this);
 
                 ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
@@ -259,7 +262,7 @@ namespace KarmaLogic
                     Burn(jokerCount);
                 }
 
-                return false;
+                return;
             }
 
             public void Burn(int jokerCount)

@@ -68,11 +68,9 @@ public class JokerCountTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].PopFromPlayable(new int[] { 2 });
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(2, board.CardValuesInPlayCounts[CardValue.JOKER]);
     }
@@ -95,11 +93,9 @@ public class JokerCountTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].PopFromPlayable(new int[] { 2, 3, 4 });
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(2, board.CardValuesInPlayCounts[CardValue.JOKER]);
     }
@@ -122,11 +118,9 @@ public class JokerCountTests
 
         board.StartTurn();
 
-        PlayerController testController = new();
-
         CardsList cards = board.Players[0].PopFromPlayable(new int[] { 1 });
 
-        board.PlayCards(cards, testController);
+        board.PlayCards(cards);
 
         Assert.AreEqual(2, board.CardValuesInPlayCounts[CardValue.JOKER]); // It should increase to 3 then back to 3.
         Assert.AreEqual(1, board.BurnPile.Count);
