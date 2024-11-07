@@ -92,7 +92,6 @@ public class IntegrationTestBot : IBot
         {
             if (board.CurrentLegalActions.Contains(action))
             {
-                Debug.Log("VALID chosen action by BOT " + Name + ": " + action);
                 return action;
             }
         }

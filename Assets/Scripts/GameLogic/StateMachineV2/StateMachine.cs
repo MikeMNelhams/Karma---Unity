@@ -37,5 +37,14 @@ namespace StateMachineV2
             await nextStateResult.InvokeTransitionActions();
             return CurrentState;
         }
+
+        public virtual async ValueTask<State> MoveNextStrict(Command command)
+        {
+            StateTransitionResult nextStateResult = GetNext(command);
+            if (nextStateResult.HasFailed) { throw new StateTransitionFailedException(command); }
+            CurrentState = nextStateResult.State;
+            await nextStateResult.InvokeTransitionActions();
+            return CurrentState;
+        }
     }
 }

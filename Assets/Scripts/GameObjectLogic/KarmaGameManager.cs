@@ -150,7 +150,7 @@ public class KarmaGameManager : MonoBehaviour
             {
                 string botName = "Bot " + botNameIndex;
                 IntegrationTestBot bot = new (botName, 0.5f);
-                playerProperties.StateMachine = new BotStateMachine(playerProperties);
+                playerProperties.StateMachine = new BotStateMachine(bot, Board, playerProperties);
                 playerProperties.name = botName;
                 playerProperties.DisableCamera();
                 botNameIndex++;
@@ -511,9 +511,10 @@ public class KarmaGameManager : MonoBehaviour
         {
             await activePlayer.ProcessStateCommand(Command.TurnEnded);
             StepToNextPlayer();
+            return;
         }
 
-        throw new NotImplementedException("Impossible game state: player is in unknown state at the end of the turn!");
+        throw new NotImplementedException("Impossible game state: player is in unknown state at the end of the turn: " + activePlayerState);
     }
 
     void StepToNextPlayer()
