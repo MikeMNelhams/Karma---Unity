@@ -289,6 +289,7 @@ namespace KarmaLogic
                     CardValuesInPlayCounts[CardValue.JOKER] -= cardsToBurn.CountValue(CardValue.JOKER);
                     BurnPile.Add(cardsToBurn);
                     EventSystem.TriggerBurnEvents(jokerCount);
+                    CalculateLegalCombos(CurrentPlayer.PlayableCards);
                     return;
                 }
                 BurnPile.Add(PlayPile);
@@ -297,6 +298,7 @@ namespace KarmaLogic
 
                 PlayPile.Clear();
                 EventSystem.TriggerBurnEvents(jokerCount);
+                CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 return;
             }
 

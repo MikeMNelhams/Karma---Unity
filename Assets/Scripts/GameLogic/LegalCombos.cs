@@ -152,6 +152,16 @@ namespace KarmaLogic.CardCombos
         {
             return this.GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            string output = "LegalCombos[";
+            foreach (FrozenMultiSet<CardValue> combo in Combos)
+            {
+                output += combo + ", ";
+            }
+            return output + "]";
+        }
     }
 }
 

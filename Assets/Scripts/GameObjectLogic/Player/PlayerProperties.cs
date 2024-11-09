@@ -488,17 +488,13 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         _fanHandler.FlipFan(CardsInHand);
     }
 
-    public void FlipKarmaDownCardsUp()
+    void FlipKarmaDownCardsUp()
     {
         IsKarmaDownFlippedUp = true;
         foreach (SelectableCard cardObject in CardsInKarmaDown)
         {
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
         }
-
-        FrozenMultiSet<CardValue> selectedCards = CardSelector.SelectionCardValues;
-
-        TryColorLegalCards();
     }
 
     public List<SelectableCard> PopSelectedCardsFromSelection()
@@ -515,8 +511,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
         if (!IsKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaDown) { FlipKarmaDownCardsUp(); }
-
-        TryColorLegalCards();
 
         return cardObjects;
     }

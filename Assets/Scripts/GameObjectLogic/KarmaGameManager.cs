@@ -683,6 +683,8 @@ public class KarmaGameManager : MonoBehaviour
 
             CardsList cardSelection = playerProperties.CardSelector.Selection;
             MoveCardsFromSelectionToPlayPile(playerIndex);
+            
+            PlayCardsComboAction.RegisterOnFinishListener(playerProperties.TryColorLegalCards);
             PlayCardsComboAction.RegisterOnFinishListener(Board.EndTurn);
             PlayCardsComboAction.Apply(Board, cardSelection);
         }
