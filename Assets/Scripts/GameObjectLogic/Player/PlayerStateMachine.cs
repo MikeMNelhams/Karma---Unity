@@ -59,11 +59,11 @@ namespace StateMachineV2
             },
             {
                 new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.Burned),
-                new StateTransitionResult(State.PickingAction)
+                new StateTransitionResult(State.PickingAction, new List<StateTransitionListener> { playerProperties.ExitPlayPileGiveAwayPlayerIndexSelection })
             },
             {
                 new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),
-                new StateTransitionResult(State.WaitingForTurn)
+                new StateTransitionResult(State.WaitingForTurn, new List<StateTransitionListener> { playerProperties.ExitPlayPileGiveAwayPlayerIndexSelection })
             },
             {
                 new StateTransition(State.WaitingForTurn, Command.VotingStarted),

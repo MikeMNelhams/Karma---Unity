@@ -424,6 +424,33 @@ public class LegalCardCombosTests
     }
 
     [Test]
+    public void JokerUnPlayableOnTwoWhenAcesInPlay()
+    {
+        List<int> testRanks = new() { 15 };
+
+        List<List<List<int>>> playerCardValues = new()
+        {
+            new() { testRanks, new() { }, new() { } },
+            new() { new() { 14 } , new() { 2, 3 }, new() { 5 } }
+        };
+
+        List<int> drawCardValues = new() { };
+        List<int> playCardValues = new() { 2 };
+        List<int> burnCardValues = new() { };
+
+        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+
+        board.StartTurn();
+
+        LegalCombos predictedLegalCombos = board.CurrentLegalCombos;
+
+        Assert.AreEqual(0, predictedLegalCombos.Count);
+
+        FrozenMultiSet<CardValue> combo = new() { CardValue.JOKER };
+        Assert.False(predictedLegalCombos.Contains(combo));
+    }
+
+    [Test]
     public void JokerPlayableOnAceDownwards()
     {
         List<int> testRanks = new() { 15 };

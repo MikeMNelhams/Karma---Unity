@@ -24,7 +24,7 @@ namespace KarmaLogic
             readonly List<OnCardGiveAwayListener> _onGiveAwayListeners;
 
             public delegate void OnFinishGiveAwayListener();
-            Queue<OnFinishGiveAwayListener> _onFinishGiveAwayListeners;
+            protected Queue<OnFinishGiveAwayListener> _onFinishGiveAwayListeners;
 
             readonly InvalidFilter _invalidFilter;
 

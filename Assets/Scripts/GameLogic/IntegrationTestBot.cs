@@ -64,6 +64,7 @@ public class IntegrationTestBot : IBot
         potentialWinnerIndices.ExceptWith(excludedPlayerIndices);
         if (potentialWinnerIndices.Count > 0)
         {
+            UnityEngine.Debug.Log("Bot voting tactically");
             return potentialWinnerIndices.ToList<int>()[0];
         }
         HashSet<int> otherPlayerIndices = OtherPlayerIndices(board);

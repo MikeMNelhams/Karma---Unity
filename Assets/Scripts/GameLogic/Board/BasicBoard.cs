@@ -249,10 +249,7 @@ namespace KarmaLogic
                 DrawUntilFull(CurrentPlayerIndex);
 
                 if (NumberOfCombosPlayedThisTurn > 52) { return; }
-                // If Queen / Joker, this is valid
-                // Else: the onfinish listeners MUST go at the bottom of this func
-                bool comboChangesPlayerState = cardCombo is CardCombo_QUEEN || cardCombo is CardCombo_JOKER;
-                //if (comboChangesPlayerState) { cardCombo.RegisterOnFinishApplyComboListener(EventSystem.TriggerOnFinishPlaySuccesfulComboListenersWithTearDown); }
+
                 cardCombo.Apply(this);
 
                 ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
@@ -422,7 +419,7 @@ namespace KarmaLogic
 
                 Card topCard = PlayPile.VisibleTopCard as Card;
                 CardsList validCards = CardComboCalculator.PlayableCards(PlayOrder, cards, topCard.Value, CardValuesInPlayCounts);
-
+                
                 if (topCard.Value == CardValue.ACE || CardComboCalculator.ContainsPlayableJokersAsAceValues(jokersHaveAceValues, cards))
                 {
                     if (CardComboCalculator.ContainsUnplayableFiller(PlayOrder, cards, topCard.Value))

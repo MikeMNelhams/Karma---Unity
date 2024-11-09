@@ -990,11 +990,11 @@ MonoBehaviour:
   - startPosition: {x: 0, y: 0, z: 0}
     isPlayableCharacter: 1
   - startPosition: {x: 2.5, y: 0, z: 2.5}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   - startPosition: {x: 0, y: 0, z: 5}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   - startPosition: {x: -2.5, y: 0, z: 2.5}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   _whichPlayerStarts: 0
   _isDebuggingMode: 1
 --- !u!1 &863761617 stripped

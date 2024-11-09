@@ -166,7 +166,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void TryToggleCardSelect(SelectableCard cardObject)
     {
-        // Replace the callback system with just using the existing raycast in update loop. This way we can access the camera and WAY more info
+        // Replace this with just using the existing raycast in update loop. This way we can access the camera and WAY more info
         if (!CardIsSelectable(cardObject)) { return; }
         if (!cardObject.IsVisible(Index)) { return; }
         cardObject.ToggleSelectShader();
@@ -387,10 +387,11 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         return Task.CompletedTask;
     }
 
-    public void ExitPlayPileGiveAwayPlayerIndexSelection()
+    public Task ExitPlayPileGiveAwayPlayerIndexSelection()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
+        return Task.CompletedTask;
     }
 
     public void SetHandSorter(CardSorter handSorter)
@@ -514,7 +515,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         SelectableCardObjects.RemoveRange(cardObjects);
 
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
-        if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaUp) { FlipKarmaDownCardsUp(); }
+        if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaDown) { FlipKarmaDownCardsUp(); }
 
         TryColorLegalCards();
 
@@ -635,7 +636,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     {
         get
         {
-            Physics.Raycast(PickedUpCard.transform.position, _playerCamera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
+            Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
 
             if (firstHit.transform == null) { return null; }
             if (firstHit.transform.parent == null) { return null; }

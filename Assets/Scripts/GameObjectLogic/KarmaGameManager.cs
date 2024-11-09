@@ -88,7 +88,8 @@ public class KarmaGameManager : MonoBehaviour
         List<int> burnCardValues = new() { };
 
         // BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        Board = BoardTestFactory.BotQueenCombo();
+        //Board = BoardTestFactory.BotJokerCombo();
+        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
         //int numberOfPlayers = _playersStartInfo.Length;
         //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
@@ -150,7 +151,7 @@ public class KarmaGameManager : MonoBehaviour
             else 
             {
                 string botName = "Bot " + botNameIndex;
-                IntegrationTestBot bot = new (botName, 1.5f);
+                IntegrationTestBot bot = new (botName, 2.0f);
                 playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                 playerProperties.name = botName;
                 playerProperties.DisableCamera();

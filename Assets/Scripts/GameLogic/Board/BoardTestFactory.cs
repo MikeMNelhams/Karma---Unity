@@ -42,6 +42,23 @@ namespace KarmaLogic
                 return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
             }
 
+            public static BasicBoard BotJokerCombo()
+            {
+                List<List<List<int>>> playerCardValues = new()
+                {
+                    new() { new() { 15}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                    new() { new() { 2, 5, 12, 14 }, new() { 3, 3, 3}, new() { } },
+                    new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+                    new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 14 }, new() { 10, 13, 9 } }
+                };
+
+                List<int> drawCardValues = new() { };
+                List<int> playCardValues = new() { };
+                List<int> burnCardValues = new() { };
+
+                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0, handsAreFlipped: true);
+            }
+
         }
     }
 }

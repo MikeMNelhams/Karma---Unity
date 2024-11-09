@@ -23,8 +23,8 @@ namespace FanHandlers
             _holder = holder;
             _antiClippingAmount = antiClippingRotation;
             _maxCardsPerRow = maxCardsPerRow;
-            _halfCardHeight = KarmaGameManager.Instance.CardTransform.lossyScale.y;
-            _cardDepth = KarmaGameManager.Instance.CardTransform.lossyScale.z;
+            _halfCardHeight = KarmaGameManager.Instance.CardBounds.extents.y;
+            _cardDepth = KarmaGameManager.Instance.CardBounds.extents.z;
         }
 
         Tuple<Vector3, Quaternion> RelativeCardPositionAndRotationInFan(int cardIndex, int numberOfCards, FanPhysicsInfo fanPhysicsInfo)
@@ -56,7 +56,7 @@ namespace FanHandlers
             float z = fanPhysicsInfo.distanceFromHolder + rowNumber * _cardDepth;
             Vector3 cardPosition = _holder.transform.TransformPoint(new(x, y + fanPhysicsInfo.yOffset, z));
 
-            Quaternion cardRotation = Quaternion.Euler(new Vector3(0, 180 + _antiClippingAmount, -theta));
+            Quaternion cardRotation = Quaternion.LookRotation(cardPosition - _holder.transform.position) * Quaternion.Euler(new Vector3(0, 180 + _antiClippingAmount, -theta));
             return new Tuple<Vector3, Quaternion>(cardPosition, cardRotation);
         }
 
