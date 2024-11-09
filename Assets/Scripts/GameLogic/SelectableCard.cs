@@ -3,7 +3,7 @@ using CardVisibility;
 using UnityEngine;
 using System;
 
-public abstract class SelectableCard : MonoBehaviour
+public abstract class SelectableCard : MonoBehaviour, ICardVisibilityHandler
 {
     public Card CurrentCard { get; set; }
     protected ICardVisibilityHandler _cardVisibilityHandler;
@@ -35,5 +35,15 @@ public abstract class SelectableCard : MonoBehaviour
         }
 
         return _cardVisibilityHandler.IsVisible(observerPlayerIndex);
+    }
+
+    public bool IsOwnedBy(int observerPlayerIndex)
+    {
+        if (_cardVisibilityHandler == null)
+        {
+            throw new SystemException("Card has no parent set!");
+        }
+
+        return _cardVisibilityHandler.IsOwnedBy(observerPlayerIndex);
     }
 }

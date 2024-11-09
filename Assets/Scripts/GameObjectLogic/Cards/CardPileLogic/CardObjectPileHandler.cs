@@ -150,6 +150,11 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         return _isFaceUp;
     }
 
+    public bool IsOwnedBy(int observerPlayerIndex)
+    {
+        return false;
+    }
+
     class CardPositionAndRotationParams
     {
         // Inner class intermediate between CardPilePhysicsInfo and the CardObjectPileHandler. 

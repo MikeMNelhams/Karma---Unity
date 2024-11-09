@@ -69,7 +69,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     int _layerAsLayerMask;
     PlayerProperties _targetPlayerProperties;
 
-    bool _isKarmaDownFlippedUp = false;
+    public bool IsKarmaDownFlippedUp { get; protected set; } = false;
     public bool IsToolTipsEnabled { get; set; } = true;
 
     RaycastHit[] _hits;
@@ -166,9 +166,8 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void TryToggleCardSelect(SelectableCard cardObject)
     {
-        // Replace this with just using the existing raycast in update loop. This way we can access the camera and WAY more info
         if (!CardIsSelectable(cardObject)) { return; }
-        if (!cardObject.IsVisible(Index)) { return; }
+        if (!cardObject.IsOwnedBy(Index)) { return; }
         cardObject.ToggleSelectShader();
         CardSelector.Toggle(cardObject);
         TryColorLegalCards();
@@ -491,7 +490,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void FlipKarmaDownCardsUp()
     {
-        _isKarmaDownFlippedUp = true;
+        IsKarmaDownFlippedUp = true;
         foreach (SelectableCard cardObject in CardsInKarmaDown)
         {
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
@@ -515,7 +514,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         SelectableCardObjects.RemoveRange(cardObjects);
 
         if (SelectingFrom == PlayingFrom.Hand) { UpdateHand(); }
-        if (!_isKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaDown) { FlipKarmaDownCardsUp(); }
+        if (!IsKarmaDownFlippedUp && SelectingFrom == PlayingFrom.KarmaDown) { FlipKarmaDownCardsUp(); }
 
         TryColorLegalCards();
 
@@ -629,6 +628,11 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
             return observerPlayerIndex != Index;
         }
 
+        return observerPlayerIndex == Index;
+    }
+
+    public bool IsOwnedBy(int observerPlayerIndex)
+    {
         return observerPlayerIndex == Index;
     }
 

@@ -6,7 +6,7 @@ using KarmaLogic.Cards;
 using CardVisibility;
 using System.Linq;
 
-public class CardObject : SelectableCard, IEquatable<CardObject>, ICardVisibilityHandler
+public class CardObject : SelectableCard, IEquatable<CardObject>
 {
     [SerializeField] Material _frontMaterial; // This will get overwritten at runtime, for each individual card.
     [SerializeField] Material _selectedMaterial;

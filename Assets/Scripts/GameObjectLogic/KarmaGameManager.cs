@@ -88,8 +88,8 @@ public class KarmaGameManager : MonoBehaviour
         List<int> burnCardValues = new() { };
 
         // BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        //Board = BoardTestFactory.BotJokerCombo();
-        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
+        Board = BoardTestFactory.BotJokerCombo();
+        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
         //int numberOfPlayers = _playersStartInfo.Length;
         //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
@@ -229,8 +229,8 @@ public class KarmaGameManager : MonoBehaviour
             KarmaUpPilesHandler karmaUpPilesHandler = boardHolder.GetComponent<KarmaUpPilesHandler>();
             KarmaDownPilesHandler karmaDownPilesHandler = boardHolder.GetComponent<KarmaDownPilesHandler>();
             
-            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<SelectableCard>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp));
-            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<SelectableCard>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown));
+            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<SelectableCard>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp, i));
+            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<SelectableCard>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown, i));
         }   
     }
 

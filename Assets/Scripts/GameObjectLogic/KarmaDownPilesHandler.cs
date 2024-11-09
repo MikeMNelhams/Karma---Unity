@@ -9,12 +9,19 @@ public class KarmaDownPilesHandler : MonoBehaviour, ICardVisibilityHandler
     [SerializeField] float _leftOffset = 0.1f;
     [SerializeField] float _rightOffset = 0.1f;
 
+    public int OwnerIndex { get; protected set; }
+
     public bool IsVisible(int observerPlayerIndex)
     {
-        return false;
+        return KarmaGameManager.Instance.PlayersProperties[observerPlayerIndex].IsKarmaDownFlippedUp;
     }
 
-    public List<SelectableCard> CreateKarmaDownCards(CardsList karmaDown)
+    public bool IsOwnedBy(int observerPlayerIndex)
+    {
+        return KarmaGameManager.Instance.PlayersProperties[observerPlayerIndex].Index == OwnerIndex;
+    }
+
+    public List<SelectableCard> CreateKarmaDownCards(CardsList karmaDown, int ownerIndex)
     {
         float width = _debugCube.localScale.x;
         float left = -width / 2 + _leftOffset * width;
@@ -24,6 +31,8 @@ public class KarmaDownPilesHandler : MonoBehaviour, ICardVisibilityHandler
         {
             throw new System.Exception("Cards are overlapping, change leftOffset to be < rightOffset");
         }
+
+        OwnerIndex = ownerIndex;
 
         float karmaDownOffset = 0.01f;
         float xStepSize = (right - left) / 2;
