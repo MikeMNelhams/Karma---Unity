@@ -30,6 +30,7 @@ namespace StateMachineV2
 
         public virtual async ValueTask<State> MoveNext(Command command)
         {
+            UnityEngine.Debug.Log("MoveNext: " + CurrentState + " + " + command);
             State startState = CurrentState;
             StateTransitionResult nextStateResult = GetNext(command);
             if (nextStateResult.HasFailed) { return startState; }

@@ -45,11 +45,15 @@ namespace StateMachineV2
                 },
                 {
                     new StateTransition(State.PickingAction, Command.PlayPileGiveAwayComboPlayed),
-                    new StateTransitionResult(State.SelectingPlayPileGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay })
+                    new StateTransitionResult(State.SelectingPlayPileGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterPlayPileGiveAwayPlayerIndexSelection })
                 },
                 {
                     new StateTransition(State.PickingAction, Command.GameEnded),
                     new StateTransitionResult(State.Null)
+                },
+                {
+                    new StateTransition(State.PickingAction, Command.HasNoCardsLeft),
+                    new StateTransitionResult(State.PotentialWinner, new List<StateTransitionListener> { })
                 },
                 {
                     new StateTransition(State.WaitingForTurn, Command.TurnStarted),
@@ -58,6 +62,10 @@ namespace StateMachineV2
                 {
                     new StateTransition(State.WaitingForTurn, Command.GameEnded),
                     new StateTransitionResult(State.Null)
+                },
+                {
+                    new StateTransition(State.WaitingForTurn, Command.HasNoCardsLeft),
+                    new StateTransitionResult(State.PotentialWinner)
                 },
                 {
                     new StateTransition(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),
@@ -72,12 +80,20 @@ namespace StateMachineV2
                     new StateTransitionResult(State.PickingAction)
                 },
                 {
-                    new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.Burned),
-                    new StateTransitionResult(State.PickingAction)
+                    new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),
+                    new StateTransitionResult(State.WaitingForTurn)
                 },
                 {
                     new StateTransition(State.VotingForWinner, Command.GameEnded),
                     new StateTransitionResult(State.Null)
+                },
+                {
+                    new StateTransition(State.PotentialWinner, Command.GotJokered),
+                    new StateTransitionResult(State.WaitingForTurn)
+                },
+                {
+                    new StateTransition(State.PotentialWinner, Command.TurnStarted),
+                    new StateTransitionResult(State.PotentialWinner)
                 }
             };
         }
@@ -136,6 +152,13 @@ namespace StateMachineV2
 
             int targetIndex = _bot.CardPlayerGiveAwayIndex(_board, invalidTargetIndices);
             _playerProperties.TriggerTargetReceivePickedUpCard(targetIndex);
+            return Task.CompletedTask;
+        }
+
+        Task EnterPlayPileGiveAwayPlayerIndexSelection()
+        {
+            int targetIndex = _bot.JokerTargetIndex(_board, new HashSet<int>() { _playerProperties.Index });
+            _playerProperties.TriggerTargetPickUpPlayPile(targetIndex);
             return Task.CompletedTask;
         }
     }

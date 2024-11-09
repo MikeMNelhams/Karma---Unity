@@ -29,9 +29,9 @@ namespace KarmaLogic
                 public event BoardOnStartCardGiveAwayListener StartedCardGiveAway;
                 public event BoardOnStartPlayPileGiveAwayListener StartedPlayPileGiveAway;
                 
-                // Events that cleanup after themselves:
+                // Events that cleanup after themselves after triggering
                 public Queue<EventListenerAutoTearDown> _onFinishPlaySuccesfulComboListeners = new ();
-                public Queue<EventListenerAutoTearDown> _onFinishGiveAwayListeners = new ();
+                public Queue<EventListenerAutoTearDown> _onFinishCardGiveAwayListeners = new ();
 
                 public void RegisterOnFinishPlaySuccesfulComboListener(EventListenerAutoTearDown listener)
                 {
@@ -49,18 +49,18 @@ namespace KarmaLogic
                     }
                 }
 
-                public void RegisterOnFinishGiveAwayListener(EventListenerAutoTearDown listener)
+                public void RegisterOnFinishCardGiveAwayListener(EventListenerAutoTearDown listener)
                 {
-                    _onFinishGiveAwayListeners ??= new ();
-                    _onFinishGiveAwayListeners.Enqueue(listener);
+                    _onFinishCardGiveAwayListeners ??= new ();
+                    _onFinishCardGiveAwayListeners.Enqueue(listener);
                 }
 
-                public void TriggerOnFinishGiveAwayListenersWithTearDown()
+                public void TriggerOnFinishCardGiveAwayListenersWithTearDown()
                 {
-                    while (_onFinishGiveAwayListeners.Count > 0)
+                    while (_onFinishCardGiveAwayListeners.Count > 0)
                     {
-                        EventListenerAutoTearDown listener = _onFinishGiveAwayListeners.Dequeue() 
-                            ?? throw new NullReferenceException("Null Board Finish Give Away listener"); 
+                        EventListenerAutoTearDown listener = _onFinishCardGiveAwayListeners.Dequeue() 
+                            ?? throw new NullReferenceException("Null Board Finish Card Give Away listener"); 
                         listener.Invoke();
                     }
                 }

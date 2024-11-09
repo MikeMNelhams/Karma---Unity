@@ -16,6 +16,8 @@ namespace StateMachineV2
         CardGiveAwayIndexSelected,
         CardGiveAwayUnfinished,
         PlayPileGiveAwayComboPlayed, 
-        VotingStarted
+        VotingStarted, 
+        HasNoCardsLeft,
+        GotJokered
     }
 }

@@ -64,7 +64,6 @@ public class IntegrationTestBot : IBot
         potentialWinnerIndices.ExceptWith(excludedPlayerIndices);
         if (potentialWinnerIndices.Count > 0)
         {
-            UnityEngine.Debug.Log("Bot voting tactically");
             return potentialWinnerIndices.ToList<int>()[0];
         }
         HashSet<int> otherPlayerIndices = OtherPlayerIndices(board);
@@ -91,6 +90,12 @@ public class IntegrationTestBot : IBot
     {
         foreach (BoardPlayerAction action in _knownActions)
         {
+            // If can play Joker, play it
+            if (board.CurrentLegalActions.Contains(_knownActions[1]) && board.CurrentLegalCombos.Contains(new FrozenMultiSet<CardValue>() { CardValue.JOKER }))
+            {
+                return _knownActions[1];
+            }
+
             if (board.CurrentLegalActions.Contains(action))
             {
                 return action;

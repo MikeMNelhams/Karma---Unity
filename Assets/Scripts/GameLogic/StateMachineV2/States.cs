@@ -15,7 +15,8 @@ namespace StateMachineV2
         SelectingCardGiveAwayPlayerIndex,
         SelectingPlayPileGiveAwayPlayerIndex,
         VotingForWinner,
-        Mulligan
+        Mulligan, 
+        PotentialWinner
     }
 }
 

@@ -42,6 +42,10 @@ namespace StateMachineV2
                 new StateTransitionResult(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitPickingActionUpdateUI, playerProperties.DisableCamera })
             },
             {
+                new StateTransition(State.PickingAction, Command.HasNoCardsLeft),
+                new StateTransitionResult(State.PotentialWinner, new List<StateTransitionListener> {playerProperties.ExitPickingActionUpdateUI, playerProperties.DisableCamera })
+            },
+            {
                 new StateTransition(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),
                 new StateTransitionResult(State.SelectingCardGiveAwayPlayerIndex, new List<StateTransitionListener>{ playerProperties.EnterCardGiveAwayPlayerIndexSelection, playerProperties.UpdateDisplayedDebugInfo })
             },
@@ -74,12 +78,20 @@ namespace StateMachineV2
                 new StateTransitionResult(State.PickingAction, new List<StateTransitionListener>{ playerProperties.EnterPickingActionUpdateUI, playerProperties.EnableCamera })
             },
             {
+                new StateTransition(State.WaitingForTurn, Command.HasNoCardsLeft),
+                new StateTransitionResult(State.PotentialWinner)
+            },
+            {
                 new StateTransition(State.WaitingForTurn, Command.GameEnded),
                 new StateTransitionResult(State.Null)
             },
             {
                 new StateTransition(State.VotingForWinner, Command.GameEnded),
                 new StateTransitionResult(State.Null)
+            },
+            {
+                new StateTransition(State.PotentialWinner, Command.GotJokered),
+                new StateTransitionResult(State.WaitingForTurn)
             }
         };
             CurrentState = State.Null;

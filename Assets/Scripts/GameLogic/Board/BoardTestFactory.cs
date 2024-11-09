@@ -48,15 +48,15 @@ namespace KarmaLogic
                 {
                     new() { new() { 15}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
                     new() { new() { 2, 5, 12, 14 }, new() { 3, 3, 3}, new() { } },
-                    new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-                    new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 14 }, new() { 10, 13, 9 } }
+                    new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 15, 2 }, new() { 2, 13, 9 } },
+                    new() { new() { }, new() { }, new() { } }
                 };
 
                 List<int> drawCardValues = new() { };
-                List<int> playCardValues = new() { };
+                List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
                 List<int> burnCardValues = new() { };
 
-                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0, handsAreFlipped: true);
+                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
             }
 
         }

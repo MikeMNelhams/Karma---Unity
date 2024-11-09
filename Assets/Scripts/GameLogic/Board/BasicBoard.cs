@@ -200,7 +200,7 @@ namespace KarmaLogic
             {
                 CurrentPlayer.CardGiveAwayHandler = new CardGiveAwayHandler(numberOfCards, this, CurrentPlayerIndex, invalidFilter);
                 CurrentPlayer.CardGiveAwayHandler.RegisterOnCardGiveAwayListener(ReceiveCard);
-                CurrentPlayer.CardGiveAwayHandler.RegisterOnFinishCardGiveAwayListener(EventSystem.TriggerOnFinishGiveAwayListenersWithTearDown);
+                CurrentPlayer.CardGiveAwayHandler.RegisterOnFinishCardGiveAwayListener(EventSystem.TriggerOnFinishCardGiveAwayListenersWithTearDown);
                 EventSystem.TriggerStartedCardGiveAway(numberOfCards, CurrentPlayerIndex);
             }
 

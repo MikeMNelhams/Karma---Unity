@@ -119,7 +119,8 @@ public class KarmaGameManager : MonoBehaviour
 
         Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
 
-        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfWinner));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(IfWinnerVoteOrEndGame));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckPotentialWinners));
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfGameTurnTimerExceeded));
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
@@ -151,7 +152,7 @@ public class KarmaGameManager : MonoBehaviour
             else 
             {
                 string botName = "Bot " + botNameIndex;
-                IntegrationTestBot bot = new (botName, 2.0f);
+                IntegrationTestBot bot = new (botName, 0.1f);
                 playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                 playerProperties.name = botName;
                 playerProperties.DisableCamera();
@@ -351,6 +352,7 @@ public class KarmaGameManager : MonoBehaviour
 
     async void StartGiveAwayPlayPile(int giverIndex)
     {
+        print("START PLAY PILE GIVE AWAY");
         await PlayersProperties[giverIndex].ProcessStateCommand(Command.PlayPileGiveAwayComboPlayed);
     }
 
@@ -380,7 +382,7 @@ public class KarmaGameManager : MonoBehaviour
         return board.PotentialWinnerIndices.Count >= 1 && board.CardValuesInPlayCounts[CardValue.JOKER] == 0;
     }
 
-    void CheckIfWinner(IBoard board)
+    void IfWinnerVoteOrEndGame(IBoard board)
     {
         UpdateGameRanks();
 
@@ -483,10 +485,20 @@ public class KarmaGameManager : MonoBehaviour
         RotatePlayOrderArrow();
         MoveCurrentPlayerArrow();
         Board.Print();
-        if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { return; }
+
+        if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { IfWinnerVoteOrEndGame(board); return; }
+
+        if (!Board.CurrentPlayer.HasCards) { await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCardsLeft); }
+
+        if (PlayersProperties[board.CurrentPlayerIndex].StateMachine.CurrentState is State.PotentialWinner)
+        {
+            Board.EndTurn();
+            return;
+        }
+
+        if (_playersStartInfo[board.CurrentPlayerIndex].isPlayableCharacter) { IfDebugModeEnableCurrentPlayerMovement(); }
 
         await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
-        CheckIfWinner(board);
     }
 
     async void NextTurn(IBoard board)
@@ -497,6 +509,12 @@ public class KarmaGameManager : MonoBehaviour
 
         // They can != only by PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this reset. 
         Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+
+        if (activePlayerState is State.PotentialWinner)
+        {
+            StepToNextPlayer();
+            return;
+        }
 
         if (board.HasBurnedThisTurn && board.Players[board.PlayerIndexWhoStartedTurn].HasCards)
         {
@@ -523,11 +541,10 @@ public class KarmaGameManager : MonoBehaviour
 
     void StepToNextPlayer()
     {
-        IfDebugModeDisableStartingPlayerMovement();
+        if (_playersStartInfo[Board.CurrentPlayerIndex].isPlayableCharacter) { IfDebugModeDisableStartingPlayerMovement(); }
         Board.StepPlayerIndex(1);
         print("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
         Board.StartTurn();
-        IfDebugModeEnableCurrentPlayerMovement();
     }
 
     void PlayTurnAgain()
@@ -669,7 +686,18 @@ public class KarmaGameManager : MonoBehaviour
             PlayCardsComboAction.RegisterOnFinishListener(Board.EndTurn);
             PlayCardsComboAction.Apply(Board, cardSelection);
         }
+
         return Task.CompletedTask;
+    }
+
+    async void CheckPotentialWinners(IBoard board)
+    {
+        for (int playerIndex = 0; playerIndex < board.Players.Count; playerIndex++)
+        {
+            if (board.Players[playerIndex].HasCards) { continue; }
+
+            await PlayersProperties[playerIndex].ProcessStateCommand(Command.HasNoCardsLeft);
+        }
     }
 
     async Task AttemptToSelectCardForGiveAway(int playerIndex)

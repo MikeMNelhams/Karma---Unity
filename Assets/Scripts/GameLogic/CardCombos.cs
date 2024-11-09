@@ -160,7 +160,7 @@ namespace KarmaLogic
 
                     int numberOfRepeats = Cards.Count * board.EffectMultiplier;
 
-                    board.EventSystem.RegisterOnFinishGiveAwayListener(TriggerOnFinishApplyComboListeners);
+                    board.EventSystem.RegisterOnFinishCardGiveAwayListener(TriggerOnFinishApplyComboListeners);
                     board.StartGivingAwayCards(numberOfRepeats, InvalidFilter);
                 }
 
@@ -196,7 +196,7 @@ namespace KarmaLogic
                 foreach (Card card in cardsToPlay)
                 {
                     board.CardValuesInPlayCounts[card.Value]++;
-                    board.EventSystem.RegisterOnFinishGiveAwayListener(TriggerOnFinishApplyComboListeners);
+                    board.EventSystem.RegisterOnFinishCardGiveAwayListener(TriggerOnFinishApplyComboListeners);
                     board.PlayCards(new CardsList(card));
                 }
             }
@@ -228,8 +228,8 @@ namespace KarmaLogic
             {
                 board.Burn(Cards.Count);
                 if (board.PlayPile.Count == 0) { return; }
-                // TODO bind TriggerOnFinishApplyComboListeners(); as callback onfinish!
-                board.StartGivingAwayPlayPile(board.PlayerIndexWhoStartedTurn);
+
+                board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(delegate { board.StartGivingAwayPlayPile(board.CurrentPlayerIndex); });
             }
         }
     }
