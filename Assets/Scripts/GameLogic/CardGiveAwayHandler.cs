@@ -24,7 +24,7 @@ namespace KarmaLogic
             readonly List<OnCardGiveAwayListener> _onGiveAwayListeners;
 
             public delegate void OnFinishGiveAwayListener();
-            Queue<OnFinishGiveAwayListener> _onFinishGiveAwayListeners = new ();
+            Queue<OnFinishGiveAwayListener> _onFinishGiveAwayListeners;
 
             readonly InvalidFilter _invalidFilter;
 
@@ -40,6 +40,7 @@ namespace KarmaLogic
                 _invalidFilter = invalidFilter;
 
                 _onGiveAwayListeners = new();
+                _onFinishGiveAwayListeners = new();
             }
 
             public void GiveAway(Card card, int receiverIndex)
@@ -51,8 +52,12 @@ namespace KarmaLogic
 
                 _numberOfCardsToGiveAway -= 1;
                 CardGiveAway?.Invoke(card, _giverIndex, receiverIndex);
-                if (!_giver.HasCards) { EndGiveAway(); return; }
-                if (_numberOfCardsToGiveAway == 0) { RemoveAllOnGiveAwayListeners(); } 
+                if (!_giver.HasCards || _numberOfCardsToGiveAway == 0) 
+                { 
+                    RemoveAllOnGiveAwayListeners(); 
+                    EndGiveAway(); 
+                    return; 
+                }
             }
 
             public void RegisterOnCardGiveAwayListener(OnCardGiveAwayListener listener)
@@ -79,7 +84,6 @@ namespace KarmaLogic
 
             public void RegisterOnFinishCardGiveAwayListener(OnFinishGiveAwayListener listener)
             {
-                _onFinishGiveAwayListeners ??= new();
                 _onFinishGiveAwayListeners.Enqueue(listener);
             }
 

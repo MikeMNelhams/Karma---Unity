@@ -685,9 +685,9 @@ MonoBehaviour:
   _playerCanvas: {fileID: 4334094610365338560}
   _cardHolder: {fileID: 7220275289808238900}
   _rayCastCutoff: 30
-  _confirmSelectionButton: {fileID: 5297352977011485884}
-  _clearSelectionButton: {fileID: 5985505432715335266}
-  _pickupPlayPileButton: {fileID: 2959293848319132927}
+  _confirmSelectionButton: {fileID: 2111623973868251397}
+  _clearSelectionButton: {fileID: 8164165656496719736}
+  _pickupPlayPileButton: {fileID: 2758722993043286609}
   nextPlayerLeftArrow: {fileID: 3381463859126228450}
   nextPlayerRightArrow: {fileID: 1238892279136908032}
   _hoverTipHandler: {fileID: 7348956982852587095}
@@ -747,7 +747,7 @@ GameObject:
   - component: {fileID: 8117899799302828476}
   - component: {fileID: 2465314564377353001}
   - component: {fileID: 7009137114256530836}
-  - component: {fileID: 5985505432715335266}
+  - component: {fileID: 8164165656496719736}
   m_Layer: 5
   m_Name: ClearSelectionButton
   m_TagString: Untagged
@@ -814,7 +814,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5985505432715335266
+--- !u!114 &8164165656496719736
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2556993927030099816}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 6042c4af3a2fc0940b154a6b76ac2c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -835,8 +835,8 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0.8082627, b: 0.56, a: 1}
-    m_HighlightedColor: {r: 1, g: 0.6445092, b: 0.339, a: 1}
+    m_NormalColor: {r: 0.8490566, g: 0.72143, b: 0.43654326, a: 1}
+    m_HighlightedColor: {r: 0.89411765, g: 0.5850295, b: 0.17167057, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -1678,7 +1678,7 @@ GameObject:
   - component: {fileID: 219428121710296698}
   - component: {fileID: 6297311820291115216}
   - component: {fileID: 4501786522092621331}
-  - component: {fileID: 2959293848319132927}
+  - component: {fileID: 2758722993043286609}
   m_Layer: 5
   m_Name: PickupPlayPileButton
   m_TagString: Untagged
@@ -1745,7 +1745,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2959293848319132927
+--- !u!114 &2758722993043286609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1754,7 +1754,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7916974809861400767}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 6042c4af3a2fc0940b154a6b76ac2c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -1766,10 +1766,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.8745099, g: 1, b: 0.60784316, a: 1}
-    m_HighlightedColor: {r: 0.6183306, g: 0.8396226, b: 0.24951048, a: 1}
-    m_PressedColor: {r: 0.3116725, g: 0.49056602, b: 0.0485938, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.8674, g: 1, b: 0.4575472, a: 1}
+    m_HighlightedColor: {r: 0.39062506, g: 0.745283, b: 0.21444462, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.276353, g: 0.413, b: 0.19328399, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1986,7 +1986,7 @@ GameObject:
   - component: {fileID: 3154321977634224310}
   - component: {fileID: 7965319665918678728}
   - component: {fileID: 2896349791472409823}
-  - component: {fileID: 5297352977011485884}
+  - component: {fileID: 2111623973868251397}
   m_Layer: 5
   m_Name: ConfirmSelectionButton
   m_TagString: Untagged
@@ -2053,7 +2053,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5297352977011485884
+--- !u!114 &2111623973868251397
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2062,7 +2062,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8714930450781987347}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 6042c4af3a2fc0940b154a6b76ac2c40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -2075,8 +2075,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.754717, g: 0.4314327, b: 0.25987896, a: 1}
-    m_PressedColor: {r: 0.6226415, g: 0.24025823, b: 0.09104663, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1

@@ -8,6 +8,7 @@ using KarmaLogic.Board.BoardPrinters;
 using DataStructures;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KarmaLogic
 {
@@ -248,8 +249,10 @@ namespace KarmaLogic
                 DrawUntilFull(CurrentPlayerIndex);
 
                 if (NumberOfCombosPlayedThisTurn > 52) { return; }
-
-                cardCombo.RegisterOnFinishApplyComboListener(EventSystem.TriggerOnFinishPlaySuccesfulComboListenersWithTearDown);
+                // If Queen / Joker, this is valid
+                // Else: the onfinish listeners MUST go at the bottom of this func
+                bool comboChangesPlayerState = cardCombo is CardCombo_QUEEN || cardCombo is CardCombo_JOKER;
+                //if (comboChangesPlayerState) { cardCombo.RegisterOnFinishApplyComboListener(EventSystem.TriggerOnFinishPlaySuccesfulComboListenersWithTearDown); }
                 cardCombo.Apply(this);
 
                 ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
@@ -262,6 +265,7 @@ namespace KarmaLogic
                     Burn(jokerCount);
                 }
 
+                EventSystem.TriggerOnFinishPlaySuccesfulComboListenersWithTearDown();
                 return;
             }
 

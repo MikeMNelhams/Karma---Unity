@@ -14,7 +14,7 @@ namespace StateMachineV2
         protected IBot _bot;
         protected PlayerProperties _playerProperties;
 
-        public BotStateMachine(IBot bot, IBoard board, PlayerProperties playerProperties)
+        public BotStateMachine(IBot bot, PlayerProperties playerProperties, IBoard board)
         {
             _board = board;
             _bot = bot;
@@ -50,7 +50,7 @@ namespace StateMachineV2
             await Task.Delay((int)(_bot.DelaySeconds * 1000));
         }
         
-        Task EnterPickingAction()
+        async Task EnterPickingAction()
         {
             BoardPlayerAction selectedAction = _bot.SelectAction(_board);
             if (!_board.CurrentLegalActions.Contains(selectedAction))
@@ -59,7 +59,7 @@ namespace StateMachineV2
             }
             UnityEngine.Debug.Log("Bot selected action: " + selectedAction);
             // The button methods NEED to be awaited. May have to create an entirely custom button class :(
-            if (selectedAction is PickupPlayPile) { _playerProperties.PickupPlayPileButton.onClick?.Invoke(); return Task.CompletedTask; }
+            if (selectedAction is PickupPlayPile) { await _playerProperties.PickupPlayPileButton.onClick?.Invoke(); return; }
             if (selectedAction is not PlayCardsCombo) { throw new InvalidBoardPlayerActionException(selectedAction); }
             FrozenMultiSet<CardValue> selectedCombo = _bot.ComboToPlay(_board);
             MultiSet<CardValue> combo = new();
@@ -74,8 +74,7 @@ namespace StateMachineV2
                 _playerProperties.TryToggleCardSelect(cardObject);
             }
 
-            _playerProperties.ConfirmSelectionButton.onClick?.Invoke(); // The button methods NEED to be awaited. May have to create an entirely custom button class :(
-            return Task.CompletedTask;
+            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke(); // The button methods NEED to be awaited. May have to create an entirely custom button class :(
         }
     }
 }

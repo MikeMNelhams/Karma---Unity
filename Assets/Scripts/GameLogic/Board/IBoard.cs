@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DataStructures;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
-using StateMachineV2;
 using System;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;

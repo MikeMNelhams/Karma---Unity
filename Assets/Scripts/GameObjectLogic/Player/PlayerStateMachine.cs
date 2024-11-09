@@ -1,3 +1,4 @@
+using KarmaLogic.Board;
 using System.Collections.Generic;
 
 namespace StateMachineV2

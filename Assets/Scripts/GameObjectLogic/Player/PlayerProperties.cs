@@ -26,13 +26,13 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
      
     [SerializeField] float _rayCastCutoff = 30f;
 
-    public Button PickupPlayPileButton { get => _pickupPlayPileButton; }
-    public Button ConfirmSelectionButton { get => _confirmSelectionButton; }
-    public Button ClearSelectionButton { get => _clearSelectionButton; }
+    public ButtonAwaitable PickupPlayPileButton { get => _pickupPlayPileButton; }
+    public ButtonAwaitable ConfirmSelectionButton { get => _confirmSelectionButton; }
+    public ButtonAwaitable ClearSelectionButton { get => _clearSelectionButton; }
 
-    [SerializeField] Button _confirmSelectionButton;
-    [SerializeField] Button _clearSelectionButton;
-    [SerializeField] Button _pickupPlayPileButton;
+    [SerializeField] ButtonAwaitable _confirmSelectionButton;
+    [SerializeField] ButtonAwaitable _clearSelectionButton;
+    [SerializeField] ButtonAwaitable _pickupPlayPileButton;
 
     [SerializeField] Image nextPlayerLeftArrow;
     [SerializeField] Image nextPlayerRightArrow;
@@ -528,7 +528,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
-
         AddCardObjectsToHand(new List<SelectableCard>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.UpdateHand();

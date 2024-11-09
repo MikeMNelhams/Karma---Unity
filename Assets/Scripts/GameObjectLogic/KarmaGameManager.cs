@@ -10,6 +10,7 @@ using KarmaLogic.CardCombos;
 using StateMachineV2;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DataStructures;
 
 public class KarmaGameManager : MonoBehaviour
@@ -150,7 +151,7 @@ public class KarmaGameManager : MonoBehaviour
             {
                 string botName = "Bot " + botNameIndex;
                 IntegrationTestBot bot = new (botName, 0.5f);
-                playerProperties.StateMachine = new BotStateMachine(bot, Board, playerProperties);
+                playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                 playerProperties.name = botName;
                 playerProperties.DisableCamera();
                 botNameIndex++;
@@ -338,6 +339,7 @@ public class KarmaGameManager : MonoBehaviour
         Board.Players[playerIndex].CardGiveAwayHandler.RegisterOnCardGiveAwayListener(new CardGiveAwayHandler.OnCardGiveAwayListener(GiveAwayCard));
         print("GIVE AWAY STARTED");
         Board.Players[playerIndex].CardGiveAwayHandler.RegisterOnFinishCardGiveAwayListener(PrintGiveAwayEnded);
+        Board.Players[playerIndex].CardGiveAwayHandler.RegisterOnFinishCardGiveAwayListener(Board.EndTurn);
         await playerProperties.ProcessStateCommand(Command.CardGiveAwayComboPlayed);
     }
 
@@ -490,7 +492,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayerProperties activePlayer = PlayersProperties[Board.PlayerIndexWhoStartedTurn];
         State activePlayerState = activePlayer.StateMachine.CurrentState;
-        print("End of turn CURRENT PLAYER STATE: " + activePlayer.StateMachine.CurrentState);
+        print("While end of turn CURRENT PLAYER STATE: " + activePlayer.StateMachine.CurrentState);
 
         // They can != only by PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this reset. 
         Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
@@ -502,17 +504,18 @@ public class KarmaGameManager : MonoBehaviour
             return;
         }
 
-        if (activePlayerState is State.WaitingForTurn)
+        if (Board.CurrentPlayer.CardGiveAwayHandler != null && !Board.CurrentPlayer.CardGiveAwayHandler.IsFinished)
         {
-            StepToNextPlayer();
             return;
         }
-        else
+
+        if (activePlayerState is not State.WaitingForTurn)
         {
             await activePlayer.ProcessStateCommand(Command.TurnEnded);
-            StepToNextPlayer();
-            return;
         }
+
+        StepToNextPlayer();
+        return;
 
         throw new NotImplementedException("Impossible game state: player is in unknown state at the end of the turn: " + activePlayerState);
     }
@@ -521,6 +524,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         IfDebugModeDisableStartingPlayerMovement();
         Board.StepPlayerIndex(1);
+        print("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
         Board.StartTurn();
         IfDebugModeEnableCurrentPlayerMovement();
     }
@@ -584,16 +588,19 @@ public class KarmaGameManager : MonoBehaviour
         for (int i = 0; i < PlayersProperties.Count; i++)
         {
             int index = i;
-            PlayersProperties[i].ConfirmSelectionButton.onClick.AddListener(delegate { TriggerCardSelectionConfirmed(index); });
-            PlayersProperties[i].ClearSelectionButton.onClick.AddListener(delegate { TriggerClearSelection(index); });
-            PlayersProperties[i].PickupPlayPileButton.onClick.AddListener(delegate { TriggerPickupActionSelected(index); });
+            async Task triggerCardSelectionConfirmed() => await TriggerCardSelectionConfirmed(index);
+            async Task triggerClearSelection() => await TriggerClearSelection(index);
+            async Task triggerPickupActionSelected() => await TriggerPickupActionSelected(index);
+            PlayersProperties[i].ConfirmSelectionButton.onClick.AddListener(triggerCardSelectionConfirmed);
+            PlayersProperties[i].ClearSelectionButton.onClick.AddListener(triggerClearSelection);
+            PlayersProperties[i].PickupPlayPileButton.onClick.AddListener(triggerPickupActionSelected);
         }
     }
 
-    void TriggerCardSelectionConfirmed(int playerIndex)
+    async Task TriggerCardSelectionConfirmed(int playerIndex)
     {
-        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.PickingAction) { AttemptToPlayCardSelection(playerIndex); return; }
-        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.SelectingCardGiveAwayIndex) { AttemptToGiveAwayCardSelection(playerIndex); return; }
+        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.PickingAction) { await AttemptToPlayCardSelection(playerIndex); return; }
+        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.SelectingCardGiveAwayIndex) { await AttemptToSelectCardForGiveAway(playerIndex); return; }
 
         for (int i = 0; i < PlayersProperties.Count; i++)
         {
@@ -602,30 +609,32 @@ public class KarmaGameManager : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    void TriggerClearSelection(int playerIndex)
+    async Task TriggerClearSelection(int playerIndex)
     {
-        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.PickingAction) { AttemptClearCardSelection(playerIndex); return; }
+        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.PickingAction) { await AttemptClearCardSelection(playerIndex); return; }
         throw new NotImplementedException();
     }
 
-    void TriggerPickupActionSelected(int playerIndex)
+    Task TriggerPickupActionSelected(int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         PickUpAction.Apply(Board, playerProperties.CardSelector.Selection);
         List<SelectableCard> playPileCards = _playTable.PopAllFromPlayPile();
         PlayersProperties[playerIndex].AddCardObjectsToHand(playPileCards);
         Board.EndTurn();
+        return Task.CompletedTask;
     }
 
-    void AttemptClearCardSelection(int playerIndex)
+    Task AttemptClearCardSelection(int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         CardSelector cardSelector = playerProperties.CardSelector;
         cardSelector.Clear();
         playerProperties.TryColorLegalCards();
+        return Task.CompletedTask;
     }
 
-    void AttemptToPlayCardSelection(int playerIndex)
+    Task AttemptToPlayCardSelection(int playerIndex)
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         CardSelector cardSelector = playerProperties.CardSelector;
@@ -659,9 +668,10 @@ public class KarmaGameManager : MonoBehaviour
             PlayCardsComboAction.RegisterOnFinishListener(Board.EndTurn);
             PlayCardsComboAction.Apply(Board, cardSelection);
         }
+        return Task.CompletedTask;
     }
 
-    async void AttemptToGiveAwayCardSelection(int playerIndex)
+    async Task AttemptToSelectCardForGiveAway(int playerIndex)
     {
         print("Attempting to give away card selection: " + PlayersProperties[playerIndex].CardSelector.CardObjects.First());
         Player player = Board.Players[playerIndex];
@@ -709,7 +719,6 @@ public class KarmaGameManager : MonoBehaviour
         if (giver.CardGiveAwayHandler.IsFinished)
         {
             await PlayersProperties[giverIndex].StateMachine.MoveNext(Command.TurnEnded);
-            Board.EndTurn();
             return;
         }
 
