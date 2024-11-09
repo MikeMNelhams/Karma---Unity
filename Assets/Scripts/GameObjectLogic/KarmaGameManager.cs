@@ -150,7 +150,7 @@ public class KarmaGameManager : MonoBehaviour
             else 
             {
                 string botName = "Bot " + botNameIndex;
-                IntegrationTestBot bot = new (botName, 0.5f);
+                IntegrationTestBot bot = new (botName, 1.5f);
                 playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                 playerProperties.name = botName;
                 playerProperties.DisableCamera();

@@ -67,7 +67,7 @@ namespace StateMachineV2
             },
             {
                 new StateTransition(State.WaitingForTurn, Command.VotingStarted),
-                new StateTransitionResult(State.VotingForWinner)
+                new StateTransitionResult(State.VotingForWinner, new List<StateTransitionListener> { playerProperties.EnterVotingForWinner })
             },
             {
                 new StateTransition(State.WaitingForTurn, Command.TurnStarted),
@@ -80,7 +80,7 @@ namespace StateMachineV2
             {
                 new StateTransition(State.VotingForWinner, Command.GameEnded),
                 new StateTransitionResult(State.Null)
-            },
+            }
         };
             CurrentState = State.Null;
         }

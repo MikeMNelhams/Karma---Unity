@@ -4,6 +4,7 @@ using KarmaLogic.Board;
 using KarmaLogic.Bots;
 using KarmaLogic.BasicBoard;
 using KarmaLogic.Cards;
+using KarmaLogic.Players;
 using DataStructures;
 
 namespace StateMachineV2
@@ -39,8 +40,36 @@ namespace StateMachineV2
                     new StateTransitionResult(State.WaitingForTurn, new List<StateTransitionListener> { })
                 },
                 {
+                    new StateTransition(State.PickingAction, Command.CardGiveAwayComboPlayed),
+                    new StateTransitionResult(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwaySelection})
+                },
+                {
                     new StateTransition(State.WaitingForTurn, Command.TurnStarted),
                     new StateTransitionResult(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
+                },
+                {
+                    new StateTransition(State.WaitingForTurn, Command.GameEnded),
+                    new StateTransitionResult(State.Null)
+                },
+                {
+                    new StateTransition(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),
+                    new StateTransitionResult(State.SelectingCardGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwayPlayerIndexSelection})
+                },
+                {
+                    new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
+                    new StateTransitionResult(State.WaitingForTurn)
+                },
+                {
+                    new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.Burned),
+                    new StateTransitionResult(State.PickingAction)
+                },
+                {
+                    new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.Burned),
+                    new StateTransitionResult(State.PickingAction)
+                },
+                {
+                    new StateTransition(State.VotingForWinner, Command.GameEnded),
+                    new StateTransitionResult(State.Null)
                 }
             };
         }
@@ -75,6 +104,31 @@ namespace StateMachineV2
             }
 
             await _playerProperties.ConfirmSelectionButton.onClick?.Invoke(); // The button methods NEED to be awaited. May have to create an entirely custom button class :(
+        }
+
+        async Task EnterCardGiveAwaySelection()
+        {
+            int cardGiveAwayIndex = _bot.CardGiveAwayIndex(_board);
+            SelectableCard selectedGiveawayCard = _playerProperties.SelectableCardObjects[cardGiveAwayIndex];
+            _playerProperties.TryToggleCardSelect(selectedGiveawayCard);
+            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
+        }
+
+        Task EnterCardGiveAwayPlayerIndexSelection()
+        {
+            HashSet<int> invalidTargetIndices = new() { _playerProperties.Index };
+            for (int i = 0; i < _board.Players.Count; i++)
+            {
+                Player player = _board.Players[i];
+                if (!player.HasCards)
+                {
+                    invalidTargetIndices.Add(i);
+                }
+            }
+
+            int targetIndex = _bot.CardPlayerGiveAwayIndex(_board, invalidTargetIndices);
+            _playerProperties.TriggerTargetReceivePickedUpCard(targetIndex);
+            return Task.CompletedTask;
         }
     }
 }

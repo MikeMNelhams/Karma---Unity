@@ -337,11 +337,12 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         return Task.CompletedTask;
     }
 
-    public void EnterVotingForWinner()
+    public Task EnterVotingForWinner()
     {
         HideUI();
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
+        return Task.CompletedTask;
     }
 
     public void ExitVotingForWinner()
