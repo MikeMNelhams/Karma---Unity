@@ -68,16 +68,8 @@ namespace StateMachineV2
                     new StateTransitionResult(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { playerProperties.EnterCardGiveAwaySelection })
                 },
                 {
-                    new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.Burned),
-                    new StateTransitionResult(State.PickingAction)
-                },
-                {
                     new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
                     new StateTransitionResult(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitCardGiveAwayPlayerIndexSelection, playerProperties.DisableCamera})
-                },
-                {
-                    new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.Burned),
-                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener> { playerProperties.ExitPlayPileGiveAwayPlayerIndexSelection })
                 },
                 {
                     new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),

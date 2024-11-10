@@ -75,6 +75,23 @@ namespace KarmaLogic
 
                 return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
             }
+
+            public static BasicBoard BotWeirdBugTest()
+            {
+                List<List<List<int>>> playerCardValues = new()
+                {
+                    new() { new() { 5, 6, 7}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                    new() { new() { 2, 5, 8, 12, 12, 12, 12}, new() { 3 }, new() { } },
+                    new() { new() { }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+                    new() { new() { 2, 3, 3, 4, 4, 4, 4, 5, 5, 11, 12, 10, 12, 12 }, new() { }, new() { 10, 13, 9 } }
+                };
+
+                List<int> drawCardValues = new() { };
+                List<int> playCardValues = new() { 2 };
+                List<int> burnCardValues = new() { 2 };
+
+                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
+            }
         }
     }
 }

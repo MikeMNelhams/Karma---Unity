@@ -48,6 +48,10 @@ namespace StateMachineV2
                     new StateTransitionResult(State.WaitingForTurn)
                 },
                 {
+                    new StateTransition(State.PickingAction, Command.TurnStarted),
+                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener> { Delay, EnterPickingAction })
+                },
+                {
                     new StateTransition(State.PickingAction, Command.CardGiveAwayComboPlayed),
                     new StateTransitionResult(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwaySelection})
                 },
@@ -82,10 +86,6 @@ namespace StateMachineV2
                 {
                     new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
                     new StateTransitionResult(State.WaitingForTurn)
-                },
-                {
-                    new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.Burned),
-                    new StateTransitionResult(State.PickingAction)
                 },
                 {
                     new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),

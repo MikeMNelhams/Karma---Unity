@@ -38,6 +38,7 @@ namespace KarmaLogic
                 {
                     string message = "Hands are flipped: " + board.HandsAreFlipped;
                     message += " | Effect Multiplier: " + board.EffectMultiplier;
+                    message += " | Current Player Index " + board.CurrentPlayerIndex;
                     return message;
                 }
             }

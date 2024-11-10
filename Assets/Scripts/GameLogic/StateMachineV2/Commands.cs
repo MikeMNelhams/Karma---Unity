@@ -9,7 +9,6 @@ namespace StateMachineV2
     {
         TurnStarted,
         TurnEnded,
-        Burned,
         Mulligan,
         GameEnded,
         CardGiveAwayComboPlayed,

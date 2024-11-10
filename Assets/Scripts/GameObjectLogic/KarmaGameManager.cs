@@ -298,6 +298,8 @@ public class KarmaGameManager : MonoBehaviour
     public void RotateHandsInTurnOrder(int numberOfRotations, IBoard board) 
     {
         int k = numberOfRotations % board.Players.Count;
+        if (k == 0) { return; }
+        DeselectAllCards();
         RotateHands(k * ((int) board.TurnOrder), board);
         return;
     }
@@ -326,6 +328,14 @@ public class KarmaGameManager : MonoBehaviour
                 playerProperties.ParentCardToThis(cardObject);
             }
             PlayersProperties[i].UpdateHand(hand);
+        }
+    }
+
+    void DeselectAllCards()
+    {
+        foreach (PlayerProperties playerProperties in PlayersProperties)
+        {
+            playerProperties.CardSelector.Clear();
         }
     }
 
