@@ -344,10 +344,11 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         return Task.CompletedTask;
     }
 
-    public void ExitVotingForWinner()
+    public Task ExitVotingForWinner()
     {
         _playerMovementController.SetPointing(false);
         _playerMovementController.UnRegisterPlayerPointingEventListener(VoteForPointedPlayerToWinIfValid);
+        return Task.CompletedTask;
     }
 
     public Task EnterCardGiveAwaySelection()

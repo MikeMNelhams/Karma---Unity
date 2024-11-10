@@ -31,6 +31,7 @@ public class KarmaGameManager : MonoBehaviour
 
     [SerializeField] int _whichPlayerStarts = 0;
     [SerializeField] bool _isDebuggingMode = false;
+    int _numberOfPlayableCharacters;
 
     public List<PlayerProperties> PlayersProperties { get; protected set; }
 
@@ -88,7 +89,7 @@ public class KarmaGameManager : MonoBehaviour
         List<int> burnCardValues = new() { };
 
         // BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        Board = BoardTestFactory.BotJokerCombo();
+        Board = BoardTestFactory.BotQueenCombo();
         //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
         //int numberOfPlayers = _playersStartInfo.Length;
         //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
@@ -104,6 +105,7 @@ public class KarmaGameManager : MonoBehaviour
         AssignButtonEvents();
         _currentPlayerArrowHandler.SetArrowVisibility(true);
         _playOrderArrowHandler.SetArrowVisibility(true);
+        _numberOfPlayableCharacters = _playersStartInfo.Where(x => x.isPlayableCharacter).Count();
         Board.StartTurn();
     }
 
@@ -120,7 +122,7 @@ public class KarmaGameManager : MonoBehaviour
         Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
 
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(IfWinnerVoteOrEndGame));
-        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckPotentialWinners));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckPotentialWinner));
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfGameTurnTimerExceeded));
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
@@ -147,7 +149,7 @@ public class KarmaGameManager : MonoBehaviour
 
             if (playersStartInfo[playerIndex].isPlayableCharacter) 
             { 
-                playerProperties.StateMachine = new PlayerStateMachine(playerProperties);
+                playerProperties.StateMachine = new PlayerStateMachine(playerProperties, Board);
             }
             else 
             {
@@ -185,11 +187,31 @@ public class KarmaGameManager : MonoBehaviour
 
     async void SetupPlayerActionStatesForVotingForWinner()
     {
+        bool setFirstVotingPlayerForDebugMode = false;
         for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
         {
             PlayerProperties playerProperties = PlayersProperties[playerIndex];
             bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
-            if (!playerHasVotes) { await playerProperties.ProcessStateCommand(Command.TurnEnded); }
+            if (!Board.Players[playerIndex].HasCards)
+            {
+                await playerProperties.ProcessStateCommand(Command.HasNoCards);
+                continue;
+            }
+
+            if (!playerHasVotes) 
+            { 
+                await playerProperties.ProcessStateCommand(Command.TurnEnded);
+                continue;
+            }
+
+            if (_isDebuggingMode && setFirstVotingPlayerForDebugMode) 
+            { 
+                await playerProperties.ProcessStateCommand(Command.TurnEnded); 
+                continue; 
+            }
+            setFirstVotingPlayerForDebugMode = true;
+            await playerProperties.ProcessStateCommand(Command.VotingStarted); 
+
         }
     }
 
@@ -241,6 +263,28 @@ public class KarmaGameManager : MonoBehaviour
         CardObject cardFrontBackRenderer = cardObject.GetComponent<CardObject>();
         cardFrontBackRenderer.SetCard(card);
         return cardObject;
+    }
+
+    public void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement=null)
+    {
+        if (!_isDebuggingMode) { return; }
+        if (_numberOfPlayableCharacters <= 1) { return; }
+
+        for (int playerIndex = playerCameraDisabledIndex + 1; playerIndex < Board.Players.Count; playerIndex++)
+        {
+            if (!_playersStartInfo[playerIndex].isPlayableCharacter) { continue; }
+            if (stateRequirement != null && !stateRequirement(PlayersProperties[playerIndex].StateMachine.CurrentState)) { continue; }
+            PlayersProperties[playerIndex].EnableCamera();
+            return;
+        }
+
+        for (int playerIndex = 0; playerIndex < playerCameraDisabledIndex; playerIndex++)
+        {
+            if (!_playersStartInfo[playerIndex].isPlayableCharacter) { continue; }
+            if (stateRequirement != null && !stateRequirement(PlayersProperties[playerIndex].StateMachine.CurrentState)) { continue; }
+            PlayersProperties[playerIndex].EnableCamera();
+            return;
+        }
     }
 
     public void FlipHands(IBoard board)
@@ -414,14 +458,29 @@ public class KarmaGameManager : MonoBehaviour
         HashSet<int> playerIndicesToExclude = new();
         playerIndicesToExclude.UnionWith(Enumerable.Range(0, Board.Players.Count).ToList<int>());
         playerIndicesToExclude.ExceptWith(Board.PotentialWinnerIndices);
+
         
-        // Voting is asynchronous
-        foreach (int playerIndex in PlayerJokerCounts.Keys)
+        if (_isDebuggingMode)
         {
-            Board.CurrentPlayerIndex = playerIndex;
-            PlayersProperties[playerIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
-            await PlayersProperties[playerIndex].ProcessStateCommand(Command.VotingStarted);
+            int firstValidIndex = PlayerJokerCounts.Keys.Min(); // Where(x => x > Board.CurrentPlayerIndex)
+            PlayersProperties[firstValidIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
+            await PlayersProperties[firstValidIndex].ProcessStateCommand(Command.VotingStarted);
+            return;
         }
+        else
+        {
+            List<Task> tasks = new ();
+
+            // Voting is asynchronous
+            foreach (int playerIndex in PlayerJokerCounts.Keys)
+            {
+                Board.CurrentPlayerIndex = playerIndex;
+                PlayersProperties[playerIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
+                tasks.Add(PlayersProperties[playerIndex].ProcessStateCommand(Command.VotingStarted));
+            }
+
+            await Task.WhenAll(tasks);
+        } 
     }
 
     void UpdateGameRanks()
@@ -486,9 +545,10 @@ public class KarmaGameManager : MonoBehaviour
         MoveCurrentPlayerArrow();
         Board.Print();
 
-        if (IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board)) { IfWinnerVoteOrEndGame(board); return; }
+        bool alreadyVoting = ValidPlayerIndicesForVoting.Count > 0;
+        bool gameIsWon = IsGameWonWithoutVoting(board) || IsGameWonWithVoting(board);
 
-        if (!Board.CurrentPlayer.HasCards) { await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCardsLeft); }
+        if (!alreadyVoting && gameIsWon) { IfWinnerVoteOrEndGame(board); return; }
 
         if (PlayersProperties[board.CurrentPlayerIndex].StateMachine.CurrentState is State.PotentialWinner)
         {
@@ -496,8 +556,15 @@ public class KarmaGameManager : MonoBehaviour
             return;
         }
 
-        if (_playersStartInfo[board.CurrentPlayerIndex].isPlayableCharacter) { IfDebugModeEnableCurrentPlayerMovement(); }
+        if (!Board.CurrentPlayer.HasCards) { await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards); }
 
+        if (_playersStartInfo[board.CurrentPlayerIndex].isPlayableCharacter) { IfDebugModeEnableCurrentPlayerMovement(); }
+        if (PlayerJokerCounts.Keys.Contains(Board.CurrentPlayerIndex))
+        {
+            PlayersProperties[board.CurrentPlayerIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
+            await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.VotingStarted);
+            return;
+        }
         await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
     }
 
@@ -510,7 +577,7 @@ public class KarmaGameManager : MonoBehaviour
         // They can != only by PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this reset. 
         Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
 
-        if (activePlayerState is State.PotentialWinner)
+        if (activePlayerState is State.PotentialWinner || activePlayerState is State.GameOver)
         {
             StepToNextPlayer();
             return;
@@ -571,13 +638,27 @@ public class KarmaGameManager : MonoBehaviour
 
     async void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
     {
+        print("Triggered a vote for player: " + voteTargetIndex + " by " + votingPlayerIndex);
+        
         if (!VotesForWinners.ContainsKey(voteTargetIndex)) { VotesForWinners[voteTargetIndex] = 0; }
         VotesForWinners[voteTargetIndex] += PlayerJokerCounts[votingPlayerIndex];
         int totalVotes = Enumerable.Sum(VotesForWinners.Values);
-        if (totalVotes == _totalAvailableVotesForWinners) { DecideWinners(); throw new GameWonException(GameRanks); }
+        print("There are " + totalVotes + " out of " + _totalAvailableVotesForWinners);
+        if (totalVotes == _totalAvailableVotesForWinners) 
+        { 
+            DecideWinners(); 
+            throw new GameWonException(GameRanks); 
+        }
         await PlayersProperties[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
+        EnableNextPlayableCamera(voteTargetIndex, IsWaitingTurn);
+        Board.EndTurn();
     }
     
+    bool IsWaitingTurn(State state)
+    {
+        return state == State.WaitingForTurn;
+    }
+
     void DecideWinners()
     {
         if (VotesForWinners.Count > 0)
@@ -617,19 +698,27 @@ public class KarmaGameManager : MonoBehaviour
 
     async Task TriggerCardSelectionConfirmed(int playerIndex)
     {
-        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.PickingAction) { await AttemptToPlayCardSelection(playerIndex); return; }
-        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.SelectingCardGiveAwayIndex) { await AttemptToSelectCardForGiveAway(playerIndex); return; }
-
-        for (int i = 0; i < PlayersProperties.Count; i++)
+        PlayerProperties playerProperties = PlayersProperties[playerIndex];
+        if (playerProperties.StateMachine.CurrentState is State.PickingAction) 
         {
-            print("state of " + i + " AFTER: " + PlayersProperties[i].StateMachine.CurrentState);
+            if (playerProperties.CardSelector.CardObjects.Count == 0) { return; }
+            await AttemptToPlayCardSelection(playerIndex); 
+            return; 
         }
+        if (playerProperties.StateMachine.CurrentState is State.SelectingCardGiveAwayIndex) 
+        { 
+            if (playerProperties.CardSelector.CardObjects.Count == 0) { return; }
+            await AttemptToSelectCardForGiveAway(playerIndex); 
+            return; 
+        }
+
         throw new NotImplementedException();
     }
 
     async Task TriggerClearSelection(int playerIndex)
     {
-        if (PlayersProperties[playerIndex].StateMachine.CurrentState is State.PickingAction) { await AttemptClearCardSelection(playerIndex); return; }
+        State state = PlayersProperties[playerIndex].StateMachine.CurrentState;
+        if (state is State.PickingAction || state is State.SelectingCardGiveAwayIndex) { await AttemptClearCardSelection(playerIndex); return; }
         throw new NotImplementedException();
     }
 
@@ -692,14 +781,11 @@ public class KarmaGameManager : MonoBehaviour
         return Task.CompletedTask;
     }
 
-    async void CheckPotentialWinners(IBoard board)
+    async void CheckPotentialWinner(IBoard board)
     {
-        for (int playerIndex = 0; playerIndex < board.Players.Count; playerIndex++)
-        {
-            if (board.Players[playerIndex].HasCards) { continue; }
+        if (board.CurrentPlayer.HasCards) { return; }
 
-            await PlayersProperties[playerIndex].ProcessStateCommand(Command.HasNoCardsLeft);
-        }
+        await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards);
     }
 
     async Task AttemptToSelectCardForGiveAway(int playerIndex)

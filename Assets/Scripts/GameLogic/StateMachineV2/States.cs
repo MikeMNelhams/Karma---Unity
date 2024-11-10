@@ -16,7 +16,8 @@ namespace StateMachineV2
         SelectingPlayPileGiveAwayPlayerIndex,
         VotingForWinner,
         Mulligan, 
-        PotentialWinner
+        PotentialWinner,
+        GameOver
     }
 }
 

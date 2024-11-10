@@ -25,7 +25,7 @@ namespace StateMachineV2
             {
                 {
                     new StateTransition(State.Null, Command.Mulligan),
-                    new StateTransitionResult(State.Mulligan)
+                    new StateTransitionResult(State.Mulligan) // TODO implement
                 },
                 {
                     new StateTransition(State.Null, Command.TurnEnded),
@@ -36,8 +36,16 @@ namespace StateMachineV2
                     new StateTransitionResult(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
                 },
                 {
+                    new StateTransition(State.Null, Command.VotingStarted),
+                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener> { Delay, EnterVotingForWinner })
+                },
+                {
+                    new StateTransition(State.Null, Command.HasNoCards),
+                    new StateTransitionResult(State.PotentialWinner)
+                },
+                {
                     new StateTransition(State.PickingAction, Command.TurnEnded),
-                    new StateTransitionResult(State.WaitingForTurn, new List<StateTransitionListener> { })
+                    new StateTransitionResult(State.WaitingForTurn)
                 },
                 {
                     new StateTransition(State.PickingAction, Command.CardGiveAwayComboPlayed),
@@ -52,7 +60,7 @@ namespace StateMachineV2
                     new StateTransitionResult(State.Null)
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.HasNoCardsLeft),
+                    new StateTransition(State.PickingAction, Command.HasNoCards),
                     new StateTransitionResult(State.PotentialWinner, new List<StateTransitionListener> { })
                 },
                 {
@@ -64,7 +72,7 @@ namespace StateMachineV2
                     new StateTransitionResult(State.Null)
                 },
                 {
-                    new StateTransition(State.WaitingForTurn, Command.HasNoCardsLeft),
+                    new StateTransition(State.WaitingForTurn, Command.HasNoCards),
                     new StateTransitionResult(State.PotentialWinner)
                 },
                 {
@@ -85,15 +93,15 @@ namespace StateMachineV2
                 },
                 {
                     new StateTransition(State.VotingForWinner, Command.GameEnded),
-                    new StateTransitionResult(State.Null)
+                    new StateTransitionResult(State.GameOver)
                 },
                 {
                     new StateTransition(State.PotentialWinner, Command.GotJokered),
                     new StateTransitionResult(State.WaitingForTurn)
                 },
                 {
-                    new StateTransition(State.PotentialWinner, Command.TurnStarted),
-                    new StateTransitionResult(State.PotentialWinner)
+                    new StateTransition(State.PotentialWinner, Command.TurnEnded),
+                    new StateTransitionResult(State.GameOver)
                 }
             };
         }
@@ -159,6 +167,13 @@ namespace StateMachineV2
         {
             int targetIndex = _bot.JokerTargetIndex(_board, new HashSet<int>() { _playerProperties.Index });
             _playerProperties.TriggerTargetPickUpPlayPile(targetIndex);
+            return Task.CompletedTask;
+        }
+
+        Task EnterVotingForWinner()
+        {
+            int targetIndex = _bot.VoteForWinnerIndex(_board, new HashSet<int> { _playerProperties.Index });
+            _playerProperties.TriggerVoteForPlayer(targetIndex);
             return Task.CompletedTask;
         }
     }
