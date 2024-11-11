@@ -39,7 +39,7 @@ namespace StateMachines
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.VotingStarted),
-                    new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener> { Delay, EnterVotingForWinner })
+                    new StateTransitionResult<State>(State.GameOver, new List<StateTransitionListener> { Delay, EnterVotingForWinner })
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.HasNoCards),
@@ -76,6 +76,10 @@ namespace StateMachines
                 {
                     new StateTransition<State, Command>(State.WaitingForTurn, Command.HasNoCards),
                     new StateTransitionResult<State>(State.PotentialWinner)
+                },
+                {
+                    new StateTransition<State, Command>(State.WaitingForTurn, Command.VotingStarted),
+                    new StateTransitionResult<State>(State.GameOver, new List<StateTransitionListener> { Delay, EnterVotingForWinner })
                 },
                 {
                     new StateTransition<State, Command>(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),

@@ -89,7 +89,7 @@ public class KarmaGameManager : MonoBehaviour
         List<int> burnCardValues = new() { };
 
         // BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        Board = BoardTestFactory.BotQueenCombo();
+        Board = BoardTestFactory.BotVotingTestBoard();
         //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
         //int numberOfPlayers = _playersStartInfo.Length;
         //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
@@ -189,31 +189,53 @@ public class KarmaGameManager : MonoBehaviour
 
     async void SetupPlayerActionStatesForVotingForWinner()
     {
-        bool setFirstVotingPlayerForDebugMode = false;
         for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
         {
             PlayerProperties playerProperties = PlayersProperties[playerIndex];
-            bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
-            if (!Board.Players[playerIndex].HasCards)
-            {
+            if (!Board.Players[playerIndex].HasCards) 
+            { 
                 await playerProperties.ProcessStateCommand(Command.HasNoCards);
                 continue;
             }
 
-            if (!playerHasVotes) 
-            { 
+            bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
+            if (Board.Players[playerIndex].HasCards && !playerHasVotes)
+            {
                 await playerProperties.ProcessStateCommand(Command.TurnEnded);
-                continue;
             }
+        }
 
-            if (_isDebuggingMode && setFirstVotingPlayerForDebugMode) 
-            { 
-                await playerProperties.ProcessStateCommand(Command.TurnEnded); 
-                continue; 
+        if (_isDebuggingMode)
+        {
+            bool setFirstVotingPlayerForDebugMode = false;
+
+            for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
+            {
+                PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
+
+                if (!playerHasVotes) { continue; }
+
+                if (!setFirstVotingPlayerForDebugMode)
+                {
+                    setFirstVotingPlayerForDebugMode = true;
+                    await playerProperties.ProcessStateCommand(Command.VotingStarted);
+                }
+                else
+                {
+                    await playerProperties.ProcessStateCommand(Command.TurnEnded);
+                }
             }
-            setFirstVotingPlayerForDebugMode = true;
-            await playerProperties.ProcessStateCommand(Command.VotingStarted); 
+        }
+        else
+        {
+            for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
+            {
+                PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
 
+                if (playerHasVotes) { await playerProperties.ProcessStateCommand(Command.VotingStarted); }    
+            }
         }
     }
 
