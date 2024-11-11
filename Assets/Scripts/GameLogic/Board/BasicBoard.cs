@@ -1,7 +1,7 @@
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
 using KarmaLogic.CardCombos;
-using StateMachineV2;
+using StateMachines;
 using KarmaLogic.Board;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
@@ -191,9 +191,10 @@ namespace KarmaLogic
                 }     
             }
 
-            public void StartGivingAwayPlayPile(int giverIndex)
+            public void StartGivingAwayPlayPile(PlayPileGiveAwayHandler.InvalidFilter invalidFilter = null)
             {
-                EventSystem.TriggerStartedPlayPileGiveAway(giverIndex);
+                CurrentPlayer.PlayPileGiveAwayHandler = new PlayPileGiveAwayHandler(this, CurrentPlayerIndex, invalidFilter);
+                EventSystem.TriggerStartedPlayPileGiveAway(CurrentPlayerIndex);
             }
 
             public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null)

@@ -4,6 +4,7 @@ using DataStructures;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using System;
+using System.Threading.Tasks;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;
 using KarmaLogic.CardCombos;
@@ -83,7 +84,7 @@ namespace KarmaLogic
             public void FlipHands();
             public void RotateHands(int numberOfRotations, Deque<Hand> hands);
             public void StartGivingAwayCards(int numberOfCards, CardGiveAwayHandler.InvalidFilter invalidFilter = null);
-            public void StartGivingAwayPlayPile(int giverIndex);
+            public void StartGivingAwayPlayPile(PlayPileGiveAwayHandler.InvalidFilter invalidFilter = null);
             public void StartTurn();
             public void EndTurn();
             public CardsList DrawUntilFull(int playerIndex);

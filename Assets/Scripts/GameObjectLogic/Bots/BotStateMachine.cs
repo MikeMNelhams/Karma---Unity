@@ -7,174 +7,172 @@ using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using DataStructures;
 
-namespace StateMachineV2
+namespace StateMachines
 {
-    public class BotStateMachine : StateMachine
+    namespace CharacterStateMachines
     {
-        protected IBoard _board;
-        protected IBot _bot;
-        protected PlayerProperties _playerProperties;
-
-        public BotStateMachine(IBot bot, PlayerProperties playerProperties, IBoard board)
+        public class BotStateMachine : StateMachine<State, Command>
         {
-            _board = board;
-            _bot = bot;
-            _playerProperties = playerProperties;
+            protected IBoard _board;
+            protected IBot _bot;
+            protected PlayerProperties _playerProperties;
 
-            Transitions = new Dictionary<StateTransition, StateTransitionResult>()
+            public BotStateMachine(IBot bot, PlayerProperties playerProperties, IBoard board)
+            {
+                _board = board;
+                _bot = bot;
+                _playerProperties = playerProperties;
+
+                Transitions = new Dictionary<StateTransition<State, Command>, StateTransitionResult<State>>()
             {
                 {
-                    new StateTransition(State.Null, Command.Mulligan),
-                    new StateTransitionResult(State.Mulligan) // TODO implement
+                    new StateTransition<State, Command>(State.Null, Command.Mulligan),
+                    new StateTransitionResult<State>(State.Mulligan) // TODO implement
                 },
                 {
-                    new StateTransition(State.Null, Command.TurnEnded),
-                    new StateTransitionResult(State.WaitingForTurn, new List<StateTransitionListener> { })
+                    new StateTransition<State, Command>(State.Null, Command.TurnEnded),
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener> { })
                 },
                 {
-                    new StateTransition(State.Null, Command.TurnStarted),
-                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
+                    new StateTransition<State, Command>(State.Null, Command.TurnStarted),
+                    new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
                 },
                 {
-                    new StateTransition(State.Null, Command.VotingStarted),
-                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener> { Delay, EnterVotingForWinner })
+                    new StateTransition<State, Command>(State.Null, Command.VotingStarted),
+                    new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener> { Delay, EnterVotingForWinner })
                 },
                 {
-                    new StateTransition(State.Null, Command.HasNoCards),
-                    new StateTransitionResult(State.PotentialWinner)
+                    new StateTransition<State, Command>(State.Null, Command.HasNoCards),
+                    new StateTransitionResult<State>(State.PotentialWinner)
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.TurnEnded),
-                    new StateTransitionResult(State.WaitingForTurn)
+                    new StateTransition<State, Command>(State.PickingAction, Command.TurnEnded),
+                    new StateTransitionResult<State>(State.WaitingForTurn)
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.TurnStarted),
-                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener> { Delay, EnterPickingAction })
+                    new StateTransition<State, Command>(State.PickingAction, Command.CardGiveAwayComboPlayed),
+                    new StateTransitionResult<State>(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwaySelection})
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.CardGiveAwayComboPlayed),
-                    new StateTransitionResult(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwaySelection})
+                    new StateTransition<State, Command>(State.PickingAction, Command.PlayPileGiveAwayComboPlayed),
+                    new StateTransitionResult<State>(State.SelectingPlayPileGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterPlayPileGiveAwayPlayerIndexSelection })
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.PlayPileGiveAwayComboPlayed),
-                    new StateTransitionResult(State.SelectingPlayPileGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterPlayPileGiveAwayPlayerIndexSelection })
+                    new StateTransition<State, Command>(State.PickingAction, Command.GameEnded),
+                    new StateTransitionResult<State>(State.Null)
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.GameEnded),
-                    new StateTransitionResult(State.Null)
+                    new StateTransition<State, Command>(State.PickingAction, Command.HasNoCards),
+                    new StateTransitionResult<State>(State.PotentialWinner, new List<StateTransitionListener> { })
                 },
                 {
-                    new StateTransition(State.PickingAction, Command.HasNoCards),
-                    new StateTransitionResult(State.PotentialWinner, new List<StateTransitionListener> { })
+                    new StateTransition<State, Command>(State.WaitingForTurn, Command.TurnStarted),
+                    new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
                 },
                 {
-                    new StateTransition(State.WaitingForTurn, Command.TurnStarted),
-                    new StateTransitionResult(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
+                    new StateTransition<State, Command>(State.WaitingForTurn, Command.GameEnded),
+                    new StateTransitionResult<State>(State.Null)
                 },
                 {
-                    new StateTransition(State.WaitingForTurn, Command.GameEnded),
-                    new StateTransitionResult(State.Null)
+                    new StateTransition<State, Command>(State.WaitingForTurn, Command.HasNoCards),
+                    new StateTransitionResult<State>(State.PotentialWinner)
                 },
                 {
-                    new StateTransition(State.WaitingForTurn, Command.HasNoCards),
-                    new StateTransitionResult(State.PotentialWinner)
+                    new StateTransition<State, Command>(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),
+                    new StateTransitionResult<State>(State.SelectingCardGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwayPlayerIndexSelection})
                 },
                 {
-                    new StateTransition(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),
-                    new StateTransitionResult(State.SelectingCardGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwayPlayerIndexSelection})
+                    new StateTransition<State, Command>(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
+                    new StateTransitionResult<State>(State.WaitingForTurn)
                 },
                 {
-                    new StateTransition(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
-                    new StateTransitionResult(State.WaitingForTurn)
+                    new StateTransition<State, Command>(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),
+                    new StateTransitionResult<State>(State.WaitingForTurn)
                 },
                 {
-                    new StateTransition(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),
-                    new StateTransitionResult(State.WaitingForTurn)
+                    new StateTransition<State, Command>(State.VotingForWinner, Command.GameEnded),
+                    new StateTransitionResult<State>(State.GameOver)
                 },
                 {
-                    new StateTransition(State.VotingForWinner, Command.GameEnded),
-                    new StateTransitionResult(State.GameOver)
+                    new StateTransition<State, Command>(State.PotentialWinner, Command.GotJokered),
+                    new StateTransitionResult<State>(State.WaitingForTurn)
                 },
                 {
-                    new StateTransition(State.PotentialWinner, Command.GotJokered),
-                    new StateTransitionResult(State.WaitingForTurn)
-                },
-                {
-                    new StateTransition(State.PotentialWinner, Command.TurnEnded),
-                    new StateTransitionResult(State.GameOver)
+                    new StateTransition<State, Command>(State.PotentialWinner, Command.GameEnded),
+                    new StateTransitionResult<State>(State.GameOver)
                 }
             };
-        }
-
-        async Task Delay()
-        {
-            await Task.Delay((int)(_bot.DelaySeconds * 1000));
-        }
-        
-        async Task EnterPickingAction()
-        {
-            BoardPlayerAction selectedAction = _bot.SelectAction(_board);
-            if (!_board.CurrentLegalActions.Contains(selectedAction))
-            {
-                throw new InvalidBoardPlayerActionException(selectedAction);
-            }
-            UnityEngine.Debug.Log("Bot selected action: " + selectedAction);
-            // The button methods NEED to be awaited. May have to create an entirely custom button class :(
-            if (selectedAction is PickupPlayPile) { await _playerProperties.PickupPlayPileButton.onClick?.Invoke(); return; }
-            if (selectedAction is not PlayCardsCombo) { throw new InvalidBoardPlayerActionException(selectedAction); }
-            FrozenMultiSet<CardValue> selectedCombo = _bot.ComboToPlay(_board);
-            MultiSet<CardValue> combo = new();
-
-            foreach (SelectableCard cardObject in _playerProperties.SelectableCardObjects)
-            {
-                CardValue cardValue = cardObject.CurrentCard.Value;
-                if (!selectedCombo.Contains(cardValue)) { continue; }
-                if (combo.Contains(cardValue) && combo[cardValue] >= selectedCombo[cardValue]) { continue; }
-
-                combo.Add(cardValue, 1);
-                _playerProperties.TryToggleCardSelect(cardObject);
             }
 
-            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke(); // The button methods NEED to be awaited. May have to create an entirely custom button class :(
-        }
-
-        async Task EnterCardGiveAwaySelection()
-        {
-            int cardGiveAwayIndex = _bot.CardGiveAwayIndex(_board);
-            SelectableCard selectedGiveawayCard = _playerProperties.SelectableCardObjects[cardGiveAwayIndex];
-            _playerProperties.TryToggleCardSelect(selectedGiveawayCard);
-            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
-        }
-
-        Task EnterCardGiveAwayPlayerIndexSelection()
-        {
-            HashSet<int> invalidTargetIndices = new() { _playerProperties.Index };
-            for (int i = 0; i < _board.Players.Count; i++)
+            async Task Delay()
             {
-                Player player = _board.Players[i];
-                if (!player.HasCards)
+                await Task.Delay((int)(_bot.DelaySeconds * 1000));
+            }
+
+            async Task EnterPickingAction()
+            {
+                BoardPlayerAction selectedAction = _bot.SelectAction(_board);
+                if (!_board.CurrentLegalActions.Contains(selectedAction))
                 {
-                    invalidTargetIndices.Add(i);
+                    throw new InvalidBoardPlayerActionException(selectedAction);
                 }
+                UnityEngine.Debug.Log("Bot selected action: " + selectedAction);
+                // The button methods NEED to be awaited. May have to create an entirely custom button class :(
+                if (selectedAction is PickupPlayPile) { await _playerProperties.PickupPlayPileButton.onClick?.Invoke(); return; }
+                if (selectedAction is not PlayCardsCombo) { throw new InvalidBoardPlayerActionException(selectedAction); }
+                FrozenMultiSet<CardValue> selectedCombo = _bot.ComboToPlay(_board);
+                MultiSet<CardValue> combo = new();
+
+                foreach (SelectableCard cardObject in _playerProperties.SelectableCardObjects)
+                {
+                    CardValue cardValue = cardObject.CurrentCard.Value;
+                    if (!selectedCombo.Contains(cardValue)) { continue; }
+                    if (combo.Contains(cardValue) && combo[cardValue] >= selectedCombo[cardValue]) { continue; }
+
+                    combo.Add(cardValue, 1);
+                    _playerProperties.TryToggleCardSelect(cardObject);
+                }
+
+                await _playerProperties.ConfirmSelectionButton.onClick?.Invoke(); // The button methods NEED to be awaited. May have to create an entirely custom button class :(
             }
 
-            int targetIndex = _bot.CardPlayerGiveAwayIndex(_board, invalidTargetIndices);
-            _playerProperties.TriggerTargetReceivePickedUpCard(targetIndex);
-            return Task.CompletedTask;
-        }
+            async Task EnterCardGiveAwaySelection()
+            {
+                int cardGiveAwayIndex = _bot.CardGiveAwayIndex(_board);
+                SelectableCard selectedGiveawayCard = _playerProperties.SelectableCardObjects[cardGiveAwayIndex];
+                _playerProperties.TryToggleCardSelect(selectedGiveawayCard);
+                await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
+            }
 
-        Task EnterPlayPileGiveAwayPlayerIndexSelection()
-        {
-            int targetIndex = _bot.JokerTargetIndex(_board, new HashSet<int>() { _playerProperties.Index });
-            _playerProperties.TriggerTargetPickUpPlayPile(targetIndex);
-            return Task.CompletedTask;
-        }
+            Task EnterCardGiveAwayPlayerIndexSelection()
+            {
+                HashSet<int> invalidTargetIndices = new() { _playerProperties.Index };
+                for (int i = 0; i < _board.Players.Count; i++)
+                {
+                    Player player = _board.Players[i];
+                    if (!player.HasCards)
+                    {
+                        invalidTargetIndices.Add(i);
+                    }
+                }
 
-        Task EnterVotingForWinner()
-        {
-            int targetIndex = _bot.VoteForWinnerIndex(_board, new HashSet<int> { _playerProperties.Index });
-            _playerProperties.TriggerVoteForPlayer(targetIndex);
-            return Task.CompletedTask;
+                int targetIndex = _bot.CardPlayerGiveAwayIndex(_board, invalidTargetIndices);
+                _playerProperties.TriggerTargetReceivePickedUpCard(targetIndex);
+                return Task.CompletedTask;
+            }
+
+            async Task EnterPlayPileGiveAwayPlayerIndexSelection()
+            {
+                int targetIndex = _bot.JokerTargetIndex(_board, new HashSet<int>() { _playerProperties.Index });
+                await _playerProperties.TriggerTargetPickUpPlayPile(targetIndex);
+            }
+
+            Task EnterVotingForWinner()
+            {
+                int targetIndex = _bot.VoteForWinnerIndex(_board, new HashSet<int> { _playerProperties.Index });
+                _playerProperties.TriggerVoteForPlayer(targetIndex);
+                return Task.CompletedTask;
+            }
         }
     }
 }

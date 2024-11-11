@@ -11,7 +11,8 @@ using CardVisibility;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Threading.Tasks;
-using StateMachineV2;
+using StateMachines;
+using StateMachines.CharacterStateMachines;
 using TMPro;
 
 public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
@@ -42,7 +43,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     [SerializeField] TextMeshProUGUI _currentStateTextBox;
 
     public HoverToolTipHandler HoverTipHandler { get => _hoverTipHandler; }
-    public StateMachine StateMachine { get; set; }
+    public StateMachine<State, Command> StateMachine { get; set; }
     public CardSelector CardSelector { get; protected set; }
 
     public bool IsRotationEnabled { get; set; }
@@ -59,9 +60,11 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public SelectableCard PickedUpCard { get; set; }
 
     public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
+    public delegate Task OnLeftClickRayCastAwaitableListener(int giverIndex, int targetIndex);
     event OnLeftClickRayCastListener PickedUpCardOnClick;
-    event OnLeftClickRayCastListener OnPointingAtPlayer;
     event OnLeftClickRayCastListener OnVoteForTarget;
+
+    List<OnLeftClickRayCastAwaitableListener> _onPointingAtPlayerAwaitableListeners;
 
     public delegate Dictionary<Card, List<int>> CardSorter(int playerIndex);
     CardSorter _handSorter;
@@ -79,12 +82,13 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void Awake()
     {
-        CardsInHand = new();
-        CardsInKarmaUp = new();
-        CardsInKarmaDown = new();
-        CardSelector = new();
+        CardsInHand = new ();
+        CardsInKarmaUp = new ();
+        CardsInKarmaDown = new ();
+        CardSelector = new ();
         _layerAsLayerMask = 1 << LayerMask.NameToLayer("Player");
         _hits = new RaycastHit[5];
+        _onPointingAtPlayerAwaitableListeners = new ();
     }
 
     void Update()
@@ -382,6 +386,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     {
         ConfirmSelectionButton.gameObject.SetActive(false);
         ClearSelectionButton.gameObject.SetActive(false);
+        PickupPlayPileButton.gameObject.SetActive(false);
         _playerMovementController.SetPointing(true);
         _playerMovementController.RegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
         return Task.CompletedTask;
@@ -401,6 +406,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void AddCardObjectsToHand(List<SelectableCard> cardsToAdd)
     {
+        print("Player index: " + Index + " is receiving the playPile!!!");
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
         if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<SelectableCard>(cardsToAdd)); return; }
@@ -566,14 +572,14 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         PickedUpCard.transform.rotation = cardRotation;
     }
 
-    void ChoosePointedPlayerToPickUpPlayPileIfValid()
+    async void ChoosePointedPlayerToPickUpPlayPileIfValid()
     {
         if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
  
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         if (_targetPlayerProperties == null) { return; }
 
-        TriggerTargetPickUpPlayPile(_targetPlayerProperties.Index);
+        await TriggerTargetPickUpPlayPile(_targetPlayerProperties.Index);
     }
 
     void VoteForPointedPlayerToWinIfValid()
@@ -595,14 +601,18 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         PickedUpCardOnClick?.Invoke(Index, targetIndex);
     }
 
-    public void RegisterTargetPickUpPlayPileEventListener(OnLeftClickRayCastListener eventListener)
+    public void RegisterTargetPickUpPlayPileEventListener(OnLeftClickRayCastAwaitableListener eventListener)
     {
-        OnPointingAtPlayer += eventListener;
+        _onPointingAtPlayerAwaitableListeners.Add(eventListener);
     }
 
-    public void TriggerTargetPickUpPlayPile(int targetIndex)
+    public async Task TriggerTargetPickUpPlayPile(int targetIndex)
     {
-        OnPointingAtPlayer?.Invoke(Index, targetIndex);
+        foreach (OnLeftClickRayCastAwaitableListener listener in _onPointingAtPlayerAwaitableListeners)
+        {
+            if (listener == null) { throw new NullReferenceException("TargetPickupPlayPileAwaitableListener is null!"); }
+            await listener(Index, targetIndex);
+        }
     }
 
     public void RegisterVoteForTargetEventListener(OnLeftClickRayCastListener eventListener)

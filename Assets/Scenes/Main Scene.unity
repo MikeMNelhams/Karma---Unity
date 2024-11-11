@@ -285,19 +285,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1066243272853569440, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: -0.000000030908623
       objectReference: {fileID: 0}
     - target: {fileID: 1066243272853569440, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1066243272853569440, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
-      propertyPath: m_LocalRotation.y
       value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 1066243272853569440, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.000000030908623
+      objectReference: {fileID: 0}
+    - target: {fileID: 1066243272853569440, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 1066243272853569440, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -988,13 +988,13 @@ MonoBehaviour:
   _turnLimit: 100
   _playersStartInfo:
   - startPosition: {x: 0, y: 0, z: 0}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   - startPosition: {x: 2.5, y: 0, z: 2.5}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   - startPosition: {x: 0, y: 0, z: 5}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   - startPosition: {x: -2.5, y: 0, z: 2.5}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   _whichPlayerStarts: 0
   _isDebuggingMode: 1
 --- !u!1 &863761617 stripped

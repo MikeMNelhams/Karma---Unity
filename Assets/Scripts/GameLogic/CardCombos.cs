@@ -229,7 +229,7 @@ namespace KarmaLogic
                 board.Burn(Cards.Count);
                 if (board.PlayPile.Count == 0) { return; }
 
-                board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(delegate { board.StartGivingAwayPlayPile(board.CurrentPlayerIndex); });
+                board.StartGivingAwayPlayPile();
             }
         }
     }

@@ -12,6 +12,7 @@ namespace KarmaLogic
             public CardsList KarmaDown { get; set; }
             public CardsList KarmaUp { get; set; }
             public CardGiveAwayHandler CardGiveAwayHandler { get; set; }
+            public PlayPileGiveAwayHandler PlayPileGiveAwayHandler { get; set; }
 
             public Player(Hand hand, CardsList karmaDown, CardsList karmaUp)
             {

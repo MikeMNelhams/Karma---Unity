@@ -7,7 +7,7 @@ using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
 using KarmaLogic.CardCombos;
-using StateMachineV2;
+using StateMachines.CharacterStateMachines;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -117,7 +117,6 @@ public class KarmaGameManager : MonoBehaviour
         Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHands));
         Board.EventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrder));
         Board.EventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
-        Board.EventSystem.RegisterPlayPileGiveAwayListener(new BoardEventSystem.BoardOnStartPlayPileGiveAwayListener(StartGiveAwayPlayPile));
 
         Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
 
@@ -149,7 +148,7 @@ public class KarmaGameManager : MonoBehaviour
 
             if (playersStartInfo[playerIndex].isPlayableCharacter) 
             { 
-                playerProperties.StateMachine = new PlayerStateMachine(playerProperties, Board);
+                playerProperties.StateMachine = new PlayerStateMachine(playerProperties);
             }
             else 
             {
@@ -170,19 +169,22 @@ public class KarmaGameManager : MonoBehaviour
 
     async void SetupPlayerActionStateForBasicStart()
     {
+        // TODO the Command.HasNoCards and Command.TurnEnded can all be Task.WhenAll() awaited for minor startup performance improvement (might save a frame or two)
         for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
         {
-
             PlayerProperties playerProperties = PlayersProperties[playerIndex];
-            if (playerIndex == Board.CurrentPlayerIndex) 
+            if (!Board.Players[playerIndex].HasCards)
             {
-                await playerProperties.ProcessStateCommand(Command.TurnStarted);
+                await playerProperties.ProcessStateCommand(Command.HasNoCards);
+                continue;
             }
-            else 
+            if (playerIndex != Board.CurrentPlayerIndex)
             {
                 await playerProperties.ProcessStateCommand(Command.TurnEnded);
             }
         }
+
+        await PlayersProperties[Board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
     }
 
     async void SetupPlayerActionStatesForVotingForWinner()
@@ -404,12 +406,6 @@ public class KarmaGameManager : MonoBehaviour
         print("GIVE AWAY ENDED!!!");
     }
 
-    async void StartGiveAwayPlayPile(int giverIndex)
-    {
-        print("START PLAY PILE GIVE AWAY");
-        await PlayersProperties[giverIndex].ProcessStateCommand(Command.PlayPileGiveAwayComboPlayed);
-    }
-
     void GiveAwayCard(Card card, int giverIndex, int receiverIndex)
     {
         PlayersProperties[receiverIndex].ReceivePickedUpCard(PlayersProperties[giverIndex]);
@@ -580,6 +576,7 @@ public class KarmaGameManager : MonoBehaviour
 
     async void NextTurn(IBoard board)
     {
+        // WARNING: Using PlayerProperties.StateMachine.CurrentState is unstable, since this is async VOID!
         PlayerProperties activePlayer = PlayersProperties[Board.PlayerIndexWhoStartedTurn];
         State activePlayerState = activePlayer.StateMachine.CurrentState;
         print("While end of turn CURRENT PLAYER STATE: " + activePlayer.StateMachine.CurrentState);
@@ -593,7 +590,21 @@ public class KarmaGameManager : MonoBehaviour
             return;
         }
 
-        if (board.HasBurnedThisTurn && board.Players[board.PlayerIndexWhoStartedTurn].HasCards)
+        if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && !Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
+        {
+            print("The good ending!");
+            await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.PlayPileGiveAwayComboPlayed);
+            return;
+        }
+
+        if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
+        {
+            await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
+            PlayTurnAgain();
+            return;
+        }
+
+        if (board.HasBurnedThisTurn && board.Players[board.CurrentPlayerIndex].HasCards)
         {
             print("BURN BABY BURN!");
             PlayTurnAgain();
@@ -721,7 +732,7 @@ public class KarmaGameManager : MonoBehaviour
             await AttemptToSelectCardForGiveAway(playerIndex); 
             return; 
         }
-
+        print("Bot is in state: " + PlayersProperties[playerIndex].StateMachine.CurrentState);
         throw new NotImplementedException();
     }
 
@@ -845,6 +856,7 @@ public class KarmaGameManager : MonoBehaviour
 
         if (giver.CardGiveAwayHandler.IsFinished)
         {
+            giver.CardGiveAwayHandler = null;
             await PlayersProperties[giverIndex].StateMachine.MoveNext(Command.TurnEnded);
             return;
         }
@@ -852,15 +864,19 @@ public class KarmaGameManager : MonoBehaviour
         await PlayersProperties[giverIndex].StateMachine.MoveNext(Command.CardGiveAwayUnfinished);
     }
 
-    async void AttemptGiveAwayPlayPile(int giverIndex, int targetIndex)
+    async Task AttemptGiveAwayPlayPile(int giverIndex, int targetIndex)
     {
         if (targetIndex == giverIndex) { return; }
-
-        print("Giving away PLAY PILE (board) to player: " + targetIndex);
-        Board.Players[targetIndex].Pickup(Board.PlayPile);
+        Player giver = Board.Players[giverIndex];
+        giver.PlayPileGiveAwayHandler.GiveAway(targetIndex);
+        print(giverIndex + " is giving away PLAY PILE (board) to player: " + targetIndex);
+        Board.Players[targetIndex].Pickup(Board.PlayPile); // TODO Register this at the beginning!
 
         PlayersProperties[targetIndex].AddCardObjectsToHand(_playTable.PopAllFromPlayPile());
 
+        giver.PlayPileGiveAwayHandler = null;
+
+        await PlayersProperties[targetIndex].StateMachine.MoveNext(Command.GotJokered);
         await PlayersProperties[giverIndex].StateMachine.MoveNext(Command.TurnEnded);
         Board.EndTurn();
         return;
