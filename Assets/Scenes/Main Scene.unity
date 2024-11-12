@@ -988,7 +988,7 @@ MonoBehaviour:
   _turnLimit: 100
   _playersStartInfo:
   - startPosition: {x: 0, y: 0, z: 0}
-    isPlayableCharacter: 1
+    isPlayableCharacter: 0
   - startPosition: {x: 2.5, y: 0, z: 2.5}
     isPlayableCharacter: 0
   - startPosition: {x: 0, y: 0, z: 5}
@@ -997,6 +997,8 @@ MonoBehaviour:
     isPlayableCharacter: 0
   _whichPlayerStarts: 0
   _isSinglePlayer: 1
+  _playerModeSelector:
+    _mode: 0
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}

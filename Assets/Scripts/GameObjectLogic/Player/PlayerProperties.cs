@@ -607,7 +607,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         if (!IsPointingEnabled || !Input.GetMouseButtonDown(0)) { return; }
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         if (_targetPlayerProperties == null) { return; }
-        if (!KarmaGameManager.Instance.ValidPlayerIndicesForVoting.Contains(TargetPlayerInFrontOfPlayer.Index)) { return; }
+        if (!KarmaGameManager.Instance.SelectedKarmaPlayerMode.ValidPlayerIndicesForVoting.Contains(TargetPlayerInFrontOfPlayer.Index)) { return; }
         TriggerVoteForPlayer(TargetPlayerInFrontOfPlayer.Index);
     }
 

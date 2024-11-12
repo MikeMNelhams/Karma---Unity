@@ -116,6 +116,7 @@ namespace KarmaLogic
             public LegalCombos CurrentLegalCombos { get; }
             public HashSet<BoardPlayerAction> CurrentLegalActions { get; }
             
+            public int WhichPlayerStartedGame { get; }
             public HashSet<int> PotentialWinnerIndices { get; }
             public int NumberOfCombosPlayedThisTurn { get; }
             public int PlayerIndexWhoStartedTurn { get; }

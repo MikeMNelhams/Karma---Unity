@@ -27,7 +27,13 @@ namespace KarmaLogic
             public GameTurnLimitExceededException(string message) : base(message) { }
             public GameTurnLimitExceededException(Dictionary<int, int> gameRanks, int turnLimit)
             {
-                string message = "Max turn limit of " + turnLimit + " has been hit!\nGame rankings: " + gameRanks;
+                string message = "Max turn limit of " + turnLimit + " has been hit!\nGame rankings: ";
+
+                foreach (KeyValuePair<int, int> kvp in gameRanks)
+                {
+                    message += kvp.ToString() + ", ";
+                }
+
                 throw new GameTurnLimitExceededException(message);
             }
         }

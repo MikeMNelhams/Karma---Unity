@@ -42,6 +42,7 @@ namespace KarmaLogic
 
             public List<CardCombo> ComboHistory { get; protected set; }
             public CardComboFactory ComboFactory { get; protected set; }
+            public int WhichPlayerStartedGame {  get; protected set; }
             public int PlayerIndexWhoStartedTurn { get; protected set; }
 
             HashSet<BoardPlayerAction> _allActions;
@@ -86,6 +87,7 @@ namespace KarmaLogic
                 PlayOrder = playOrder;
                 HandsAreFlipped = handsAreFlipped;
                 EffectMultiplier = effectMultiplier;
+                WhichPlayerStartedGame = whoStarts;
                 CurrentPlayerIndex = whoStarts;
                 PlayerIndexWhoStartedTurn = whoStarts;
                 HasBurnedThisTurn = hasBurnedThisTurn;
