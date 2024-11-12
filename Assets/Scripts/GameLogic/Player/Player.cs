@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DataStructures;
 using KarmaLogic.Cards;
@@ -13,6 +14,9 @@ namespace KarmaLogic
             public CardsList KarmaUp { get; set; }
             public CardGiveAwayHandler CardGiveAwayHandler { get; set; }
             public PlayPileGiveAwayHandler PlayPileGiveAwayHandler { get; set; }
+
+            public delegate void OnSwapHandWithKarmaUpListener(int handIndex, int karmaUpIndex);
+            event OnSwapHandWithKarmaUpListener OnSwapHandWithKarmaUp;
 
             public Player(Hand hand, CardsList karmaDown, CardsList karmaUp)
             {
@@ -99,9 +103,10 @@ namespace KarmaLogic
                 return PlayableCards.PopMultiple(indices);
             }
 
-            public void SwapHandWithPlayable(int handIndex, int upKarmaIndex)
+            public void SwapHandWithKarmaUp(int handIndex, int upKarmaIndex)
             {
                 (Hand[handIndex], KarmaUp[upKarmaIndex]) = (KarmaUp[upKarmaIndex], Hand[handIndex]);
+                OnSwapHandWithKarmaUp?.Invoke(handIndex, upKarmaIndex);
                 Hand.Sort();
             }
 
@@ -136,6 +141,11 @@ namespace KarmaLogic
                     total += KarmaDown.CountValue(cardValue);
                 }
                 return total;
+            }
+
+            public void RegisterOnSwapHandWithPlayableEvent(OnSwapHandWithKarmaUpListener listener)
+            {
+                OnSwapHandWithKarmaUp += listener;
             }
         }
 

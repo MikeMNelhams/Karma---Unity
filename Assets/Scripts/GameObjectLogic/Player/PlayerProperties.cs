@@ -26,15 +26,19 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     [SerializeField] GameObject _cardHolder;
      
     [SerializeField] float _rayCastCutoff = 30f;
-
+    
     public ButtonAwaitable PickupPlayPileButton { get => _pickupPlayPileButton; }
     public ButtonAwaitable ConfirmSelectionButton { get => _confirmSelectionButton; }
     public ButtonAwaitable ClearSelectionButton { get => _clearSelectionButton; }
+    public ButtonAwaitable FinishMulliganButton { get => _finishMulliganButton; }
 
+    [Header("Buttons")]
     [SerializeField] ButtonAwaitable _confirmSelectionButton;
     [SerializeField] ButtonAwaitable _clearSelectionButton;
     [SerializeField] ButtonAwaitable _pickupPlayPileButton;
+    [SerializeField] ButtonAwaitable _finishMulliganButton;
 
+    [Header("Player UI other")]
     [SerializeField] Image nextPlayerLeftArrow;
     [SerializeField] Image nextPlayerRightArrow;
 
@@ -170,8 +174,9 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void TryToggleCardSelect(SelectableCard cardObject)
     {
-        if (!CardIsSelectable(cardObject)) { return; }
         if (!cardObject.IsOwnedBy(Index)) { return; }
+        if (StateMachine.CurrentState is not State.Mulligan && !IsCardSelectable(cardObject)) { return; }
+        
         cardObject.ToggleSelectShader();
         CardSelector.Toggle(cardObject);
         TryColorLegalCards();
@@ -202,6 +207,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         ConfirmSelectionButton.gameObject.SetActive(false);
         ClearSelectionButton.gameObject.SetActive(false);
         PickupPlayPileButton.gameObject.SetActive(false);
+        FinishMulliganButton.gameObject.SetActive(false);
         nextPlayerLeftArrow.gameObject.SetActive(false);
         nextPlayerRightArrow.gameObject.SetActive(false);
         return Task.CompletedTask;
@@ -243,7 +249,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    public bool CardIsSelectable(SelectableCard card)
+    public bool IsCardSelectable(SelectableCard card)
     {
         if (card == null) { throw new NullReferenceException(); }
         return SelectableCardObjects.Contains(card);
@@ -267,7 +273,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void TryColorLegalCards()
     {
-        if (!_areLegalMovesHighlighted) { ColorSelectableCardsAsDefault(); return; }
+        if (!_areLegalMovesHighlighted || StateMachine.CurrentState is State.Mulligan) { ColorSelectableCardsAsDefault(); return; }
         KarmaGameManager karmaGameManager = KarmaGameManager.Instance;
 
         foreach (SelectableCard cardObject in SelectableCardObjects)
@@ -298,14 +304,19 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public Task EnterMulligan()
     {
-        // TODO
-        throw new NotImplementedException();
+        ConfirmSelectionButton.gameObject.SetActive(true);
+        ClearSelectionButton.gameObject.SetActive(true);
+        FinishMulliganButton.gameObject.SetActive(true);
+        TryColorLegalCards();
+        return Task.CompletedTask;
     }
 
     public Task ExitMulligan()
     {
-        // TODO
-        throw new NotImplementedException();
+        ConfirmSelectionButton.gameObject.SetActive(false);
+        ClearSelectionButton.gameObject.SetActive(false);
+        FinishMulliganButton.gameObject.SetActive(false);
+        return Task.CompletedTask;
     }
 
     public Task EnterPickingActionUpdateUI()
@@ -504,6 +515,15 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
+    public void SwapHandWithKarmaUp(int handIndex, int karmaUpIndex)
+    {
+        SelectableCard handCardObject = CardsInHand[handIndex];
+        SelectableCard karmaUpCardObject = CardsInKarmaUp[karmaUpIndex];
+        (handCardObject.transform.position, karmaUpCardObject.transform.position) = (karmaUpCardObject.transform.position, handCardObject.transform.position);
+        (handCardObject.transform.rotation, karmaUpCardObject.transform.rotation) = (karmaUpCardObject.transform.rotation, handCardObject.transform.rotation);
+        (CardsInHand[handIndex], CardsInKarmaUp[karmaUpIndex]) = (CardsInKarmaUp[karmaUpIndex], CardsInHand[handIndex]);
+    }
+
     public List<SelectableCard> PopSelectedCardsFromSelection()
     {
         List<SelectableCard> cardObjects = CardSelector.CardObjects.ToList<SelectableCard>();
@@ -652,5 +672,35 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
             PlayerProperties playerProperties = firstHit.transform.parent.gameObject.GetComponent<PlayerProperties>();
             return playerProperties;
         }
+    }
+
+    public Task AttemptMulliganSwap(IBoard board)
+    {
+        if (CardSelector.Count != 2) { return Task.CompletedTask; }
+        List<SelectableCard> selectedCards = CardSelector.CardObjects.ToList();
+        SelectableCard card1 = selectedCards[0];
+        SelectableCard card2 = selectedCards[1];
+
+        bool isCard1InHand = CardsInHand.Contains(card1);
+        bool isCard2InHand = CardsInHand.Contains(card2);
+        if (isCard1InHand && isCard2InHand || (!isCard1InHand && !isCard2InHand)) { return Task.CompletedTask; }
+
+        int handIndex;
+        int karmaUpIndex;
+        if (isCard1InHand)
+        {
+            handIndex = CardsInHand.IndexOf(card1);
+            karmaUpIndex = CardsInKarmaUp.IndexOf(card2);
+        }
+        else
+        {
+            handIndex = CardsInHand.IndexOf(card2);
+            karmaUpIndex = CardsInKarmaUp.IndexOf(card1);
+        }
+
+        CardSelector.Remove(card1);
+        CardSelector.Remove(card2);
+        board.Players[Index].SwapHandWithKarmaUp(handIndex, karmaUpIndex);
+        return Task.CompletedTask;
     }
 }

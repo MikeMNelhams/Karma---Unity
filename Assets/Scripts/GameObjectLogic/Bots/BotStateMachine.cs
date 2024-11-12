@@ -26,8 +26,8 @@ namespace StateMachines
                 Transitions = new Dictionary<StateTransition<State, Command>, StateTransitionResult<State>>()
             {
                 {
-                    new StateTransition<State, Command>(State.Null, Command.Mulligan),
-                    new StateTransitionResult<State>(State.Mulligan) // TODO implement
+                    new StateTransition<State, Command>(State.Null, Command.MulliganStarted),
+                    new StateTransitionResult<State>(State.Mulligan)
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.TurnEnded),
@@ -44,6 +44,18 @@ namespace StateMachines
                 {
                     new StateTransition<State, Command>(State.Null, Command.HasNoCards),
                     new StateTransitionResult<State>(State.PotentialWinner)
+                },
+                {
+                    new StateTransition<State, Command>(State.Mulligan, Command.TurnStarted),
+                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener> { EnterMulligan })
+                },
+                {
+                    new StateTransition<State, Command>(State.Mulligan, Command.TurnEnded),
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.HideUI })
+                },
+                {
+                    new StateTransition<State, Command>(State.Mulligan, Command.MulliganEnded),
+                    new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.EnterPickingActionUpdateUI })
                 },
                 {
                     new StateTransition<State, Command>(State.PickingAction, Command.TurnEnded),
@@ -111,6 +123,30 @@ namespace StateMachines
             async Task Delay()
             {
                 await Task.Delay((int)(_bot.DelaySeconds * 1000));
+            }
+
+            async Task EnterMulligan()
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    if (!_bot.WantsToMulligan(_board))
+                    {
+                        await _playerProperties.FinishMulliganButton.onClick?.Invoke();
+                        return;
+                    }
+
+                    int handIndex = _bot.MulliganHandIndex(_board);
+                    int karmaUpIndex = _bot.MulliganKarmaUpIndex(_board);
+
+                    SelectableCard handCard = _playerProperties.CardsInHand[handIndex];
+                    SelectableCard karmaUpCard = _playerProperties.CardsInKarmaUp[karmaUpIndex];
+
+                    _playerProperties.TryToggleCardSelect(handCard);
+                    _playerProperties.TryToggleCardSelect(karmaUpCard);
+
+                    await _playerProperties.AttemptMulliganSwap(_board);
+                    await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
+                }
             }
 
             async Task EnterPickingAction()

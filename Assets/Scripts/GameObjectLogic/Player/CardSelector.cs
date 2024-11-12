@@ -75,6 +75,8 @@ public class CardSelector
         _selectionValues = new();
     }
 
+    public int Count { get { return CardObjects.Count; } }
+
     void PrintSelectedCards()
     {
         Debug.Log("Selected: " + _selection);

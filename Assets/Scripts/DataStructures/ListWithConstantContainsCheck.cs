@@ -100,6 +100,19 @@ namespace DataStructures
             return _valueIndices[item];
         }
 
+        public T Pop(int index)
+        {
+            T item = _orderedValues[index];
+            _orderedValues.RemoveAt(index);
+            for (int i = index; i < _orderedValues.Count; i++)
+            {
+                T item2 = _orderedValues[i];
+                _valueIndices[item2] -= 1;
+            }
+            _valueIndices.Remove(item);
+            return item;
+        }
+
         public bool Remove(T item)
         {
             int index = IndexOf(item);

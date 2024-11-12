@@ -11,7 +11,8 @@ namespace StateMachines
         {
             TurnStarted,
             TurnEnded,
-            Mulligan,
+            MulliganStarted,
+            MulliganEnded,
             GameEnded,
             CardGiveAwayComboPlayed,
             CardGiveAwayIndexSelected,

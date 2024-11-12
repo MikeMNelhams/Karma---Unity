@@ -16,8 +16,8 @@ namespace StateMachines
                 Transitions = new Dictionary<StateTransition<State, Command>, StateTransitionResult<State>>
             {
                 {
-                    new StateTransition<State, Command>(State.Null, Command.Mulligan),
-                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener>{ playerProperties.EnterMulligan })
+                    new StateTransition<State, Command>(State.Null, Command.MulliganStarted),
+                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener>{ playerProperties.DisableCamera, playerProperties.EnterMulligan })
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.TurnStarted),
@@ -36,11 +36,15 @@ namespace StateMachines
                     new StateTransitionResult<State>(State.PotentialWinner, new List<StateTransitionListener> { playerProperties.DisableCamera })
                 },
                 {
-                    new StateTransition<State, Command>(State.Mulligan, Command.TurnEnded),
-                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.HideUI })
+                    new StateTransition<State, Command>(State.Mulligan, Command.TurnStarted),
+                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener> { playerProperties.EnableCamera })
                 },
                 {
-                    new StateTransition<State, Command>(State.Mulligan, Command.TurnStarted),
+                    new StateTransition<State, Command>(State.Mulligan, Command.TurnEnded),
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.DisableCamera, playerProperties.HideUI })
+                },
+                {
+                    new StateTransition<State, Command>(State.Mulligan, Command.MulliganEnded),
                     new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.EnterPickingActionUpdateUI })
                 },
                 {
@@ -90,6 +94,10 @@ namespace StateMachines
                 {
                     new StateTransition<State, Command>(State.WaitingForTurn, Command.GameEnded),
                     new StateTransitionResult<State>(State.GameOver)
+                },
+                {
+                    new StateTransition<State, Command>(State.WaitingForTurn, Command.MulliganStarted),
+                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener> { playerProperties.EnterMulligan, playerProperties.EnableCamera })
                 },
                 {
                     new StateTransition<State, Command>(State.VotingForWinner, Command.GameEnded),
