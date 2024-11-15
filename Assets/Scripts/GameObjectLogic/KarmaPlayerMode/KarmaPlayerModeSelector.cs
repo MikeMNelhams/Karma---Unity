@@ -1,7 +1,7 @@
-using KarmaLogic.Board;
-using System.Collections;
+using KarmaLogic.BasicBoard;
 using System.Collections.Generic;
 using UnityEngine;
+using KarmaPlayerMode.Singleplayer;
 
 namespace KarmaPlayerMode
 {
@@ -9,13 +9,26 @@ namespace KarmaPlayerMode
     public class KarmaPlayerModeSelector
     {
         [SerializeField] PlayerMode _mode;
+        [SerializeField] BasicBoardParams _basicBoardParams;
+        [SerializeField] List<KarmaPlayerStartInfo> _playersStartInfo;
+        [SerializeField] int _basicBoardPresetSelected = -1;
 
-        public KarmaPlayerMode Mode(KarmaPlayerStartInfo[] startInfo, IBoard board, List<PlayerProperties> playerProperties, int turnLimit = 100)
+        public KarmaPlayerMode Mode()
         {
+            if (_basicBoardPresetSelected != -1)
+            {
+                return _mode switch
+                {
+                    PlayerMode.Singleplayer => new KarmaSingleplayer(_playersStartInfo, _basicBoardPresetSelected),
+                    PlayerMode.Multiplayer => new KarmaMultiplayer(_playersStartInfo, _basicBoardPresetSelected),
+                    _ => throw new KarmaPlayerModeException("Invalid starting conditions!"),
+                };
+            }
+
             return _mode switch
             {
-                PlayerMode.Singleplayer => new KarmaSingleplayer(startInfo, board, playerProperties, turnLimit),
-                PlayerMode.Multiplayer => new KarmaMultiplayer(startInfo, board, playerProperties),
+                PlayerMode.Singleplayer => new KarmaSingleplayer(_playersStartInfo, _basicBoardParams),
+                PlayerMode.Multiplayer => new KarmaMultiplayer(_playersStartInfo, _basicBoardParams),
                 _ => throw new KarmaPlayerModeException("Invalid starting conditions!"),
             };
         }

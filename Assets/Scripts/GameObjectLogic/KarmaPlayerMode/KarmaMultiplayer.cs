@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using KarmaLogic.Board;
+using KarmaLogic.BasicBoard;
 using KarmaLogic.Cards;
 using StateMachines.CharacterStateMachines;
 
@@ -10,8 +10,9 @@ namespace KarmaPlayerMode
 {
     public class KarmaMultiplayer : KarmaPlayerMode
     {
-        public KarmaMultiplayer(KarmaPlayerStartInfo[] startInfo, IBoard board, List<PlayerProperties> playerProperties) : base(startInfo, board, playerProperties) 
-        { 
+        public KarmaMultiplayer(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null) : base(playerStartInfo, basicBoardParams) { }
+        public KarmaMultiplayer(List<KarmaPlayerStartInfo> playerStartInfo, int basicBoardPreset) : base(playerStartInfo, basicBoardPreset)
+        {
         }
 
         public override int NumberOfActivePlayers { get => throw new NotImplementedException(); }
@@ -21,12 +22,12 @@ namespace KarmaPlayerMode
             throw new NotImplementedException();
         }
 
-        public override void IfDebugModeDisableStartingPlayerMovement()
+        public override void IfPlayableDisableStartingPlayerMovement()
         {
             throw new NotImplementedException();
         }
 
-        public override void IfDebugModeEnableCurrentPlayerMovement()
+        public override void IfPlayableEnableCurrentPlayerMovement()
         {
             throw new NotImplementedException();
         }
@@ -86,6 +87,11 @@ namespace KarmaPlayerMode
             }
 
             await Task.WhenAll(tasks);
+        }
+
+        protected override List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets()
+        {
+            throw new NotImplementedException();
         }
     }
 }

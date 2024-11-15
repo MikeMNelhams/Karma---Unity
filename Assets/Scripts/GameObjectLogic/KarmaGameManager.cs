@@ -28,7 +28,6 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] PlayTableProperties _playTable;
 
     [Header("Gameplay Settings")]
-    [SerializeField] KarmaPlayerStartInfo[] _playersStartInfo;
 
     [SerializeField] int _whichPlayerStarts = 0;
 
@@ -83,14 +82,17 @@ public class KarmaGameManager : MonoBehaviour
         List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
         List<int> burnCardValues = new() { };
 
-        Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
         // Board = BoardTestFactory.BotJokerCombo();
         //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        //int numberOfPlayers = _playersStartInfo.Length;
         //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
 
+        SelectedKarmaPlayerMode = _playerModeSelector.Mode();
+
+        Board = SelectedKarmaPlayerMode.Board;
+        PlayersProperties = SelectedKarmaPlayerMode.PlayersProperties;
+
+        RegisterPlayerBoardListeners(SelectedKarmaPlayerMode.PlayersStartInfo);
         RegisterBoardEvents();
-        CreatePlayerObjects(_playersStartInfo);
         CreatePlayerCardObjectsFromBoard();
         
         _playTable.CreateCardObjectPilesFromBoard(Board);
@@ -119,46 +121,24 @@ public class KarmaGameManager : MonoBehaviour
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
 
-    void CreatePlayerObjects(KarmaPlayerStartInfo[] playersStartInfo)
+    public GameObject InstantiatePlayer(List<KarmaPlayerStartInfo> playersStartInfo, int playerIndex)
     {
-        PlayersProperties = new ();
-        int botNameIndex = 0;
+        Vector3 tableDirection = _playTable.centre - playersStartInfo[playerIndex].startPosition;
+        tableDirection.y = 0;
+        return Instantiate(_playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
+    }
 
-        for (int playerIndex = 0; playerIndex < playersStartInfo.Length; playerIndex++)
+    void RegisterPlayerBoardListeners(List<KarmaPlayerStartInfo> playersStartInfo)
+    {
+        for (int playerIndex = 0; playerIndex < playersStartInfo.Count; playerIndex++)
         {
-            Vector3 tableDirection = _playTable.centre - playersStartInfo[playerIndex].startPosition;
-            tableDirection.y = 0;
-
-            GameObject player = Instantiate(_playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
-            PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
-            player.name = "Player " + playerIndex;
-            playerProperties.Index = playerIndex;
+            PlayerProperties playerProperties = PlayersProperties[playerIndex];
             playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
             playerProperties.RegisterTargetPickUpPlayPileEventListener(AttemptGiveAwayPlayPile);
             playerProperties.SetHandSorter(BoardPlayerHandSorter);
             Board.Players[playerIndex].RegisterOnSwapHandWithPlayableEvent(playerProperties.SwapHandWithKarmaUp);
             Board.Players[playerIndex].Hand.RegisterHandOrderChangeEvent(playerProperties.SortHand);
-            PlayersProperties.Add(playerProperties);
-
-            if (playersStartInfo[playerIndex].isPlayableCharacter) 
-            { 
-                playerProperties.StateMachine = new PlayerStateMachine(playerProperties);
-            }
-            else 
-            {
-                string botName = "Bot " + botNameIndex;
-                IntegrationTestBot bot = new (botName, 0.1f);
-                playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
-                playerProperties.name = botName;
-                playerProperties.DisableCamera();
-                botNameIndex++;
-            } 
         }
-
-        SelectedKarmaPlayerMode = _playerModeSelector.Mode(_playersStartInfo, Board, PlayersProperties);
-
-        SelectedKarmaPlayerMode.SetupPlayerActionStates();
-        SelectedKarmaPlayerMode.SetupPlayerMovementControllers();
     }
 
     void CreatePlayerCardObjectsFromBoard()
@@ -167,7 +147,7 @@ public class KarmaGameManager : MonoBehaviour
         {
             PlayerProperties playerProperties = PlayersProperties[i];
             playerProperties.InstantiatePlayerHandFan(Board.Players[i].Hand);
-            if (!_playersStartInfo[i].isPlayableCharacter ) { PlayersProperties[i].TurnOffLegalMoveHints(); }
+            if (!SelectedKarmaPlayerMode.PlayersStartInfo[i].isPlayableCharacter ) { PlayersProperties[i].TurnOffLegalMoveHints(); }
             Player player = Board.Players[i];
             if (i >= _playTable.boardHolders.Count) { break; }
             if (_playTable.boardHolders[i] == null) { continue; }
@@ -342,7 +322,7 @@ public class KarmaGameManager : MonoBehaviour
 
         if (!Board.CurrentPlayer.HasCards) { await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards); }
 
-        if (_playersStartInfo[board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfDebugModeEnableCurrentPlayerMovement(); }
+        if (SelectedKarmaPlayerMode.PlayersStartInfo[board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfPlayableEnableCurrentPlayerMovement(); }
         if (SelectedKarmaPlayerMode.PlayerJokerCounts.Keys.Contains(Board.CurrentPlayerIndex))
         {
             PlayersProperties[board.CurrentPlayerIndex].RegisterVoteForTargetEventListener(SelectedKarmaPlayerMode.TriggerVoteForPlayer);
@@ -407,7 +387,7 @@ public class KarmaGameManager : MonoBehaviour
 
     void StepToNextPlayer()
     {
-        if (_playersStartInfo[Board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfDebugModeDisableStartingPlayerMovement(); }
+        if (SelectedKarmaPlayerMode.PlayersStartInfo[Board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfPlayableDisableStartingPlayerMovement(); }
         Board.StepPlayerIndex(1);
         print("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
         Board.StartTurn();

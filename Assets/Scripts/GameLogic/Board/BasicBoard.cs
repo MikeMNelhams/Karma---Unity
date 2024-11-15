@@ -74,6 +74,32 @@ namespace KarmaLogic
                     effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed, boardPrinter);
             }
 
+            public BasicBoard(BasicBoardParams basicBoardParams, IBoardPrinter boardPrinter = null)
+            {
+                List<Player> players = new ();
+
+                foreach (BasicBoardPlayerParams basicBoardPlayerParams in basicBoardParams.PlayerCardValues)
+                {
+                    List<List<int>> playerMatrix = new () 
+                    { 
+                        basicBoardPlayerParams.HandValues, 
+                        basicBoardPlayerParams.KarmaUpValues, 
+                        basicBoardPlayerParams.KarmaDownValues 
+                    };
+
+                    players.Add(new Player(playerMatrix));
+                }
+                // TODO Suits matrix as field + property on basicBoardParams.
+                CardPile drawPile = new (basicBoardParams.DrawPileValues, CardSuit.Hearts);
+                CardPile burnPile = new (basicBoardParams.BurnPileValues, CardSuit.Hearts);
+                PlayCardPile playPile = new(basicBoardParams.PlayPileValues, CardSuit.Hearts);
+
+                SetInitParams(players, drawPile, burnPile, playPile, basicBoardParams.BoardTurnOrder, 
+                    basicBoardParams.BoardPlayOrder, basicBoardParams.HandsAreFlipped, basicBoardParams.EffectMultiplier, 
+                    basicBoardParams.WhoStarts, basicBoardParams.HasBurnedThisTurn, basicBoardParams.TurnsPlayed,
+                    boardPrinter);
+            }
+
             private void SetInitParams(List<Player> players, CardPile drawPile, CardPile burnPile, PlayCardPile playPile,
                 BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
                 bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,

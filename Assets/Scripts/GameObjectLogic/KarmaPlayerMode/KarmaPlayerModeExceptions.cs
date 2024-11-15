@@ -9,5 +9,10 @@ namespace KarmaPlayerMode
     {
         public KarmaPlayerModeException(string message) : base(message) { }
     }
+
+    public class BoardPresetException : Exception
+    {
+        public BoardPresetException(string message) : base(message) { }
+    }
 }
 

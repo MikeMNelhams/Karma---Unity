@@ -9,9 +9,12 @@ namespace KarmaLogic
     {
         public class GameWonException : Exception
         {
-            public GameWonException(string message) : base(message) { }
+            public Dictionary<int, int> GameRanks { get; protected set; }
+                
+            protected GameWonException(string message) : base(message) { }
             public GameWonException(Dictionary<int, int> gameRanks)
             {
+                GameRanks = gameRanks;
                 string message = "Overall Rankings: ";
 
                 foreach (KeyValuePair<int, int> kvp in gameRanks)
@@ -24,9 +27,14 @@ namespace KarmaLogic
 
         public class GameTurnLimitExceededException : Exception
         {
-            public GameTurnLimitExceededException(string message) : base(message) { }
+            public Dictionary<int, int> GameRanks { get; protected set; }
+            public int TurnLimit { get; protected set; }
+
+            protected GameTurnLimitExceededException(string message) : base(message) { }
             public GameTurnLimitExceededException(Dictionary<int, int> gameRanks, int turnLimit)
             {
+                GameRanks = gameRanks;
+                TurnLimit = turnLimit;
                 string message = "Max turn limit of " + turnLimit + " has been hit!\nGame rankings: ";
 
                 foreach (KeyValuePair<int, int> kvp in gameRanks)

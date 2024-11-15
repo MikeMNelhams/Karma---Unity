@@ -8,44 +8,104 @@ using KarmaLogic.GameExceptions;
 using KarmaLogic.Players;
 using StateMachines.CharacterStateMachines;
 using UnityEngine;
+using KarmaLogic.BasicBoard;
 
 namespace KarmaPlayerMode
 {
     [System.Serializable]
     public abstract class KarmaPlayerMode
     {
-
-        public KarmaPlayerStartInfo[] PlayersStartInfo { get; protected set; }
         public int TurnLimit { get; protected set; }
         public IBoard Board { get; protected set; }
         public List<PlayerProperties> PlayersProperties { get; protected set; }
+        public List<KarmaPlayerStartInfo> PlayersStartInfo { get; protected set; }
+        protected abstract List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets();
+        protected List<KarmaPlayModeBoardPreset<BasicBoard>> BasicBoardPresets { get; set; }
         public abstract int NumberOfActivePlayers { get; }
-        
+
+        public int NumberOfPlayersFinishedMulligan { get; protected set; }
+
         public Dictionary<int, int> VotesForWinners { get; protected set; }
         public Dictionary<int, int> PlayerJokerCounts { get; protected set; }
         public Dictionary<int, int> GameRanks { get; protected set; }
-        public HashSet<int> ValidPlayerIndicesForVoting { get; protected set; }
-        public int NumberOfPlayersFinishedMulligan { get; protected set; }
+        public HashSet<int> ValidPlayerIndicesForVoting { get; protected set; }   
 
-        public KarmaPlayerMode(KarmaPlayerStartInfo[] playersStartInfo, IBoard board, List<PlayerProperties> playersProperties, int turnLimit = 100)
+        public KarmaPlayerMode(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null)
         {
-            PlayersStartInfo = playersStartInfo;
-            Board = board;
-            PlayersProperties = playersProperties;
-            TurnLimit = turnLimit;
+            BasicBoardPresets = GetBasicBoardPresets();
+            basicBoardParams ??= new BasicBoardParams();
+            Board = new BasicBoard(basicBoardParams);
+            PlayersStartInfo = playerStartInfo;
+            CreatePlayerObjects();
+            TurnLimit = basicBoardParams.TurnLimit;
+
             NumberOfPlayersFinishedMulligan = 0;
-            DeclareGameInfo();
+            BasicBoardPresets = new ();
+            DeclareGameRankingsInfo();
+
+            SetupPlayerActionStates();
+            SetupPlayerMovementControllers();
 
             CheckIfGameTurnTimerExceeded();
             InitializeGameRanks();
         }
 
-        protected void DeclareGameInfo()
+        public KarmaPlayerMode(List<KarmaPlayerStartInfo> playerStartInfo, int basicBoardPresetIndex)
+        {
+            BasicBoardPresets = GetBasicBoardPresets();
+            TurnLimit = BasicBoardPresetTurnLimit(basicBoardPresetIndex);
+
+            Board = BasicBoardPreset(basicBoardPresetIndex);
+            PlayersStartInfo = playerStartInfo;
+            CreatePlayerObjects();
+            
+            NumberOfPlayersFinishedMulligan = 0;
+            BasicBoardPresets = new();
+            DeclareGameRankingsInfo();
+
+            SetupPlayerActionStates();
+            SetupPlayerMovementControllers();
+
+            CheckIfGameTurnTimerExceeded();
+            InitializeGameRanks();
+        }
+
+        protected void DeclareGameRankingsInfo()
         {
             VotesForWinners = new Dictionary<int, int>();
             PlayerJokerCounts = new Dictionary<int, int>();
             GameRanks = new Dictionary<int, int>();
             ValidPlayerIndicesForVoting = new HashSet<int>();
+        }
+
+        void CreatePlayerObjects()
+        {
+            PlayersProperties = new();
+            int botNameIndex = 0;
+
+            for (int playerIndex = 0; playerIndex < PlayersStartInfo.Count; playerIndex++)
+            {
+                GameObject player = KarmaGameManager.Instance.InstantiatePlayer(PlayersStartInfo, playerIndex);
+
+                PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
+                player.name = "Player " + playerIndex;
+                playerProperties.Index = playerIndex;
+                PlayersProperties.Add(playerProperties);
+
+                if (PlayersStartInfo[playerIndex].isPlayableCharacter)
+                {
+                    playerProperties.StateMachine = new PlayerStateMachine(playerProperties);
+                }
+                else
+                {
+                    string botName = "Bot " + botNameIndex;
+                    IntegrationTestBot bot = new(botName, 0.1f);
+                    playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
+                    playerProperties.name = botName;
+                    playerProperties.DisableCamera();
+                    botNameIndex++;
+                }
+            }
         }
 
         public abstract void SetupPlayerActionStateForBasicStart();
@@ -56,13 +116,30 @@ namespace KarmaPlayerMode
 
         public abstract void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null);
 
-        public abstract void IfDebugModeDisableStartingPlayerMovement();
+        public abstract void IfPlayableDisableStartingPlayerMovement();
 
-        public abstract void IfDebugModeEnableCurrentPlayerMovement();
+        public abstract void IfPlayableEnableCurrentPlayerMovement();
 
         public abstract Task VoteForWinners();
 
         public abstract Task TriggerFinishMulligan(int playerIndex);
+
+        public BasicBoard BasicBoardPreset(int presetIndex)
+        {
+            if (IsValidBoardPresetIndex(presetIndex)) { throw new BoardPresetException("Invalid preset index!"); }
+            return BasicBoardPresets[presetIndex].Board;
+        }
+
+        public int BasicBoardPresetTurnLimit(int presetIndex)
+        {
+            if (IsValidBoardPresetIndex(presetIndex)) { throw new BoardPresetException("Invalid preset index!"); }
+            return BasicBoardPresets[presetIndex].TurnLimit;
+        }
+
+        bool IsValidBoardPresetIndex(int presetIndex)
+        {
+            return presetIndex < 0 || presetIndex >= BasicBoardPresets.Count;
+        }
 
         public void SetupPlayerActionStates()
         {
