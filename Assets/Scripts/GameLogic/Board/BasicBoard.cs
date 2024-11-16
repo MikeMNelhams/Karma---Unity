@@ -1,7 +1,7 @@
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
 using KarmaLogic.CardCombos;
-using StateMachines;
+using StateMachine;
 using KarmaLogic.Board;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Board.BoardPrinters;

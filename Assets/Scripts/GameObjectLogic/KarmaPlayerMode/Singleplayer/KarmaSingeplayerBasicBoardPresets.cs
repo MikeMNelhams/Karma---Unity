@@ -58,6 +58,14 @@ namespace KarmaPlayerMode
 
             public override int TurnLimit => 100;
         }
+
+        public class TestScenario1 : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestScenario1() : base() { }
+
+            public override BasicBoard Board => BoardTestFactory.BotTestScenario1();
+            public override int TurnLimit => 100;
+        }
     }
 }
 

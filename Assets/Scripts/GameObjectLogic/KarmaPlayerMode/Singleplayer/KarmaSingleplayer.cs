@@ -1,6 +1,6 @@
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
-using StateMachines.CharacterStateMachines;
+using StateMachine.CharacterStateMachines;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
@@ -174,7 +174,8 @@ namespace KarmaPlayerMode
                     new TestStartJokerCombo(),
                     new TestStartQueenCombo(),
                     new TestStartVoting(),
-                    new TestStartVoting2()
+                    new TestStartVoting2(),
+                    new TestScenario1()
                 };
 
                 return presets;

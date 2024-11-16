@@ -1,6 +1,6 @@
 using System;
 
-namespace StateMachines
+namespace StateMachine
 {
     public class StateTransition<S, C> : IEquatable<StateTransition<S, C>>
     {

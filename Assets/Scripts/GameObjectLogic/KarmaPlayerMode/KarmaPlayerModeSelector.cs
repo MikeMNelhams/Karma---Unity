@@ -2,6 +2,7 @@ using KarmaLogic.BasicBoard;
 using System.Collections.Generic;
 using UnityEngine;
 using KarmaPlayerMode.Singleplayer;
+using KarmaPlayerMode.Multiplayer;
 
 namespace KarmaPlayerMode
 {
@@ -31,6 +32,11 @@ namespace KarmaPlayerMode
                 PlayerMode.Multiplayer => new KarmaMultiplayer(_playersStartInfo, _basicBoardParams),
                 _ => throw new KarmaPlayerModeException("Invalid starting conditions!"),
             };
+        }
+
+        public void SetBoardPresetIndex(int presetIndex)
+        {
+            _basicBoardPresetSelected = presetIndex;
         }
     }
 

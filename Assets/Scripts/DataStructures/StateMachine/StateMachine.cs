@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StateMachines
+namespace StateMachine
 {
     public abstract class StateMachine<S, C>
     {

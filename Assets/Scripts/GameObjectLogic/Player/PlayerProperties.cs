@@ -11,8 +11,8 @@ using CardVisibility;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Threading.Tasks;
-using StateMachines;
-using StateMachines.CharacterStateMachines;
+using StateMachine;
+using StateMachine.CharacterStateMachines;
 using TMPro;
 
 public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler

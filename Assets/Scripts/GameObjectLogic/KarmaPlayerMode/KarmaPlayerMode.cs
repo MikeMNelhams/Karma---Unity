@@ -6,7 +6,7 @@ using KarmaLogic.Board;
 using KarmaLogic.Cards;
 using KarmaLogic.GameExceptions;
 using KarmaLogic.Players;
-using StateMachines.CharacterStateMachines;
+using StateMachine.CharacterStateMachines;
 using UnityEngine;
 using KarmaLogic.BasicBoard;
 
@@ -83,6 +83,8 @@ namespace KarmaPlayerMode
             PlayersProperties = new();
             int botNameIndex = 0;
 
+            float botDelay = KarmaGameManager.Instance.GlobalBotDelayInSeconds;
+
             for (int playerIndex = 0; playerIndex < PlayersStartInfo.Count; playerIndex++)
             {
                 GameObject player = KarmaGameManager.Instance.InstantiatePlayer(PlayersStartInfo, playerIndex);
@@ -99,7 +101,7 @@ namespace KarmaPlayerMode
                 else
                 {
                     string botName = "Bot " + botNameIndex;
-                    IntegrationTestBot bot = new(botName, 0.1f);
+                    IntegrationTestBot bot = new(botName, botDelay);
                     playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                     playerProperties.name = botName;
                     playerProperties.DisableCamera();

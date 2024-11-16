@@ -2,7 +2,7 @@ using KarmaLogic.Board;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace StateMachines
+namespace StateMachine
 {
     namespace CharacterStateMachines
     {

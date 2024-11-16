@@ -7,7 +7,7 @@ using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
 using KarmaLogic.CardCombos;
-using StateMachines.CharacterStateMachines;
+using StateMachine.CharacterStateMachines;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,14 +29,15 @@ public class KarmaGameManager : MonoBehaviour
 
     [Header("Gameplay Settings")]
 
-    [SerializeField] int _whichPlayerStarts = 0;
-
+    [SerializeField][Range(0.001f, 30.0f)] float _globalBotDelayInSeconds = 0.1f;
     [SerializeField] KarmaPlayerModeSelector _playerModeSelector;
     public KarmaPlayerMode.KarmaPlayerMode SelectedKarmaPlayerMode { get; private set; }
 
-    public List<PlayerProperties> PlayersProperties { get; protected set; }
+    public float GlobalBotDelayInSeconds { get => _globalBotDelayInSeconds; }
 
+    public List<PlayerProperties> PlayersProperties { get; protected set; }
     public IBoard Board { get; protected set; }
+
     public PickupPlayPile PickUpAction { get; set; } = new ();
     public PlayCardsCombo PlayCardsComboAction { get; set; } = new ();
 
@@ -67,25 +68,9 @@ public class KarmaGameManager : MonoBehaviour
         _currentPlayerArrowHandler = new ArrowHandler(_currentPlayerArrow);
         _playOrderArrowHandler = new ArrowHandler(_playOrderArrow);
     }
-
-    void Start()
+    
+    public void BeginGame()
     {
-        List<List<List<int>>> playerCardValues = new()
-        {
-            new() { new() { 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 12, 13, 14, 15}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
-            new() { new() { 2, 5, 12, 12 }, new() { 3, 3, 3}, new() { } },
-            new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-            new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
-        };
-
-        List<int> drawCardValues = new() { 10, 11, 12};
-        List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
-        List<int> burnCardValues = new() { };
-
-        // Board = BoardTestFactory.BotJokerCombo();
-        //Board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, whoStarts: _whichPlayerStarts);
-        //Board = BoardFactory.RandomStart(numberOfPlayers, numberOfJokers: 1, whoStarts: _whichPlayerStarts);
-
         SelectedKarmaPlayerMode = _playerModeSelector.Mode();
 
         Board = SelectedKarmaPlayerMode.Board;
@@ -94,13 +79,13 @@ public class KarmaGameManager : MonoBehaviour
         RegisterPlayerBoardListeners(SelectedKarmaPlayerMode.PlayersStartInfo);
         RegisterBoardEvents();
         CreatePlayerCardObjectsFromBoard();
-        
+
         _playTable.CreateCardObjectPilesFromBoard(Board);
 
         AssignButtonEvents();
         _currentPlayerArrowHandler.SetArrowVisibility(true);
         _playOrderArrowHandler.SetArrowVisibility(true);
-        
+
         Board.StartTurn();
     }
 
@@ -126,6 +111,14 @@ public class KarmaGameManager : MonoBehaviour
         Vector3 tableDirection = _playTable.centre - playersStartInfo[playerIndex].startPosition;
         tableDirection.y = 0;
         return Instantiate(_playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
+    }
+
+    public GameObject InstantiateCard(Card card, Vector3 cardPosition, Quaternion cardRotation, GameObject parent)
+    {
+        GameObject cardObject = Instantiate(_cardPrefab, cardPosition, cardRotation, parent.transform);
+        CardObject cardFrontBackRenderer = cardObject.GetComponent<CardObject>();
+        cardFrontBackRenderer.SetCard(card);
+        return cardObject;
     }
 
     void RegisterPlayerBoardListeners(List<KarmaPlayerStartInfo> playersStartInfo)
@@ -160,13 +153,11 @@ public class KarmaGameManager : MonoBehaviour
             playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<SelectableCard>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown, i));
         }   
     }
-
-    public GameObject InstantiateCard(Card card, Vector3 cardPosition, Quaternion cardRotation, GameObject parent)
+    
+    public void SetSelectedBoardPreset(int presetIndex)
     {
-        GameObject cardObject = Instantiate(_cardPrefab, cardPosition, cardRotation, parent.transform);
-        CardObject cardFrontBackRenderer = cardObject.GetComponent<CardObject>();
-        cardFrontBackRenderer.SetCard(card);
-        return cardObject;
+        // Used for unit testing. Must be called BEFORE Start()
+        _playerModeSelector.SetBoardPresetIndex(presetIndex);
     }
 
     public void IfWinnerVoteOrEndGame(IBoard board)
