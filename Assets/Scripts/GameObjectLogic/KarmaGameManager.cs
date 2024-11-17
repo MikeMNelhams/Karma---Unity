@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using KarmaLogic.GameExceptions;
 using KarmaLogic.BasicBoard;
 using KarmaLogic.Board;
 using KarmaLogic.Board.BoardEvents;
@@ -33,7 +32,7 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] KarmaPlayerModeSelector _playerModeSelector;
     public KarmaPlayerMode.KarmaPlayerMode SelectedKarmaPlayerMode { get; private set; }
 
-    public float GlobalBotDelayInSeconds { get => _globalBotDelayInSeconds; }
+    public float GlobalBotDelayInSeconds { get => _globalBotDelayInSeconds; set => _globalBotDelayInSeconds = value; }
 
     public List<PlayerProperties> PlayersProperties { get; protected set; }
     public IBoard Board { get; protected set; }
@@ -295,6 +294,8 @@ public class KarmaGameManager : MonoBehaviour
 
     async void StartTurn(IBoard board)
     {
+        if (SelectedKarmaPlayerMode.IsGameOver) { return; }
+
         RotatePlayOrderArrow();
         if (PlayersProperties[board.CurrentPlayerIndex].StateMachine.CurrentState is not State.Mulligan) { MoveCurrentPlayerArrow(); }
         
@@ -378,6 +379,8 @@ public class KarmaGameManager : MonoBehaviour
 
     void StepToNextPlayer()
     {
+        if (SelectedKarmaPlayerMode.IsGameOver) { return; }
+
         if (SelectedKarmaPlayerMode.PlayersStartInfo[Board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfPlayableDisableStartingPlayerMovement(); }
         Board.StepPlayerIndex(1);
         print("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
@@ -386,6 +389,8 @@ public class KarmaGameManager : MonoBehaviour
 
     void PlayTurnAgain()
     {
+        if (SelectedKarmaPlayerMode.IsGameOver) { return; }
+
         Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
         Board.StartTurn();
     }

@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "GameLogicScripts",
         "DataStructures",
-        "GameObjectLogic"
+        "GameObjectLogic",
+        "UIScripts"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

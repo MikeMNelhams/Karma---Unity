@@ -6,14 +6,14 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using UnityEngine.SceneManagement;
 
-public class BotVotingTest1 : MonoBehaviour
+public class BotVotingTest2 : MonoBehaviour
 {
     [UnitySetUp]
     public IEnumerator LoadKGM()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
         SceneManager.LoadScene("Main Scene");
-        
+
         yield return null;
     }
 
@@ -21,7 +21,7 @@ public class BotVotingTest1 : MonoBehaviour
     public IEnumerator TestVotesCorrectly()
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
-        KarmaGameManager.Instance.SetSelectedBoardPreset(3);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(4);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
@@ -29,12 +29,12 @@ public class BotVotingTest1 : MonoBehaviour
         {
             { 1, 0 },
             { 3, 1 },
-            { 2, 2 },
-            { 0, 3 }
+            { 0, 2 },
+            { 2, 3 }
         };
 
         yield return new WaitForSeconds(2);
-        
+
         Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
         UnityEngine.Debug.Log("Game ranks: " + gameRanks);
 

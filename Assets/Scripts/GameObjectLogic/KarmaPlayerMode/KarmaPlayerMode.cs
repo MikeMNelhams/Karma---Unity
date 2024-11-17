@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Linq;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
-using KarmaLogic.GameExceptions;
 using KarmaLogic.Players;
 using StateMachine.CharacterStateMachines;
 using UnityEngine;
@@ -28,7 +27,10 @@ namespace KarmaPlayerMode
         public Dictionary<int, int> VotesForWinners { get; protected set; }
         public Dictionary<int, int> PlayerJokerCounts { get; protected set; }
         public Dictionary<int, int> GameRanks { get; protected set; }
-        public HashSet<int> ValidPlayerIndicesForVoting { get; protected set; }   
+        public HashSet<int> ValidPlayerIndicesForVoting { get; protected set; }
+
+        public bool IsGameOver { get; protected set; }
+        public bool IsGameWon { get; protected set; }
 
         public KarmaPlayerMode(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null)
         {
@@ -76,6 +78,8 @@ namespace KarmaPlayerMode
             PlayerJokerCounts = new Dictionary<int, int>();
             GameRanks = new Dictionary<int, int>();
             ValidPlayerIndicesForVoting = new HashSet<int>();
+            IsGameOver = false;
+            IsGameWon = false;
         }
 
         void CreatePlayerObjects()
@@ -176,7 +180,8 @@ namespace KarmaPlayerMode
 
             if (IsGameWonWithoutVoting)
             {
-                throw new GameWonException(GameRanks);
+                IsGameOver = true;
+                IsGameWon = true;
             }
         }
 
@@ -190,7 +195,10 @@ namespace KarmaPlayerMode
             if (totalVotes == totalAvailableVotesForWinners)
             {
                 DecideWinners();
-                throw new GameWonException(GameRanks);
+                IsGameOver = true;
+                IsGameWon = true;
+                UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
+                return;
             }
             await PlayersProperties[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
             EnableNextPlayableCamera(voteTargetIndex, IsWaitingTurn);
@@ -201,7 +209,8 @@ namespace KarmaPlayerMode
         {
             if (Board.TurnsPlayed >= TurnLimit)
             {
-                throw new GameTurnLimitExceededException(GameRanks, TurnLimit);
+                IsGameOver = true;
+                UnityEngine.Debug.LogWarning("Game has finished by turn limit exceeded. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
             }
         }
 

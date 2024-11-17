@@ -5,11 +5,13 @@ using UnityEngine.EventSystems;
 
 public class MenuUIManager : MonoBehaviour
 {
-    private static MenuUIManager _instance;
+    static MenuUIManager _instance;
     public static MenuUIManager Instance { get { return _instance; } }
 
     [SerializeField] GameObject _rootObject;
     [SerializeField] Camera _menuCamera;
+
+    public Camera MenuCamera { get { return _menuCamera; } }
 
     [Header("UIPages")]
 
