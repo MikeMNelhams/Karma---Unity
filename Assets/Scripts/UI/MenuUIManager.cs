@@ -10,6 +10,7 @@ public class MenuUIManager : MonoBehaviour
 
     [SerializeField] GameObject _rootObject;
     [SerializeField] Camera _menuCamera;
+    [SerializeField] EventSystem _eventSystem;
 
     public Camera MenuCamera { get { return _menuCamera; } }
 
@@ -29,7 +30,7 @@ public class MenuUIManager : MonoBehaviour
         else
         {
             _instance = this;
-        }
+        }   
     }
 
     void Start()
@@ -47,7 +48,7 @@ public class MenuUIManager : MonoBehaviour
 
     void OnCancel()
     {
-        if (_rootObject.activeSelf && _rootObject.activeInHierarchy && _pageStack.Count != 0)
+        if (_rootObject.activeSelf && _rootObject.activeInHierarchy && _pageStack.Count > 1)
         {
             PopPage();
         }
@@ -95,7 +96,7 @@ public class MenuUIManager : MonoBehaviour
 
         if (_pageStack.Count == 0)
         {
-            _menuCamera.enabled = false;
+            SwitchOffMenuCamera();
             return;
         }
 
@@ -118,5 +119,10 @@ public class MenuUIManager : MonoBehaviour
     public void SetMenuCamera(Camera camera)
     {
         _menuCamera = camera;
+    }
+
+    void SwitchOffMenuCamera()
+    {
+        _menuCamera.enabled = false;
     }
 }
