@@ -31,6 +31,18 @@ public class HoverToolTipHandler : MonoBehaviour
 
     void ShowTip(string tip, Vector2 mousePosition)
     {
+        if (mousePosition.x + tipWindow.sizeDelta.x < Screen.width)
+        {
+            ShowTipRight(tip, mousePosition);
+        }
+        else 
+        { 
+            ShowTipLeft(tip, mousePosition);
+        }
+    }
+
+    void ShowTipRight(string tip, Vector2 mousePosition)
+    {
         tipText.text = tip;
         float x = Math.Min(_maxTipWidth, tipText.preferredWidth);
         tipWindow.sizeDelta = new Vector2(x, tipText.preferredHeight);
@@ -38,6 +50,18 @@ public class HoverToolTipHandler : MonoBehaviour
         tipWindow.gameObject.SetActive(true);
 
         tipWindow.transform.position = new Vector2(mousePosition.x + tipWindow.sizeDelta.x / 2, mousePosition.y + tipWindow.sizeDelta.y / 2);
+        tipText.transform.position = new Vector2(tipWindow.transform.position.x, mousePosition.y + tipWindow.sizeDelta.y / 2);
+    }
+
+    void ShowTipLeft(string tip, Vector2 mousePosition)
+    {
+        tipText.text = tip;
+        float x = Math.Min(_maxTipWidth, tipText.preferredWidth);
+        tipWindow.sizeDelta = new Vector2(x, tipText.preferredHeight);
+
+        tipWindow.gameObject.SetActive(true);
+
+        tipWindow.transform.position = new Vector2(mousePosition.x - tipWindow.sizeDelta.x / 2, mousePosition.y + tipWindow.sizeDelta.y / 2);
         tipText.transform.position = new Vector2(tipWindow.transform.position.x, mousePosition.y + tipWindow.sizeDelta.y / 2);
     }
 

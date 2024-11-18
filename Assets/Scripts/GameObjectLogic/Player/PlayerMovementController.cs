@@ -50,7 +50,7 @@ public class PlayerMovementController : MonoBehaviour
         if (IsRotating) 
         { 
             Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.Locked;
             RotateHead();  // Otherwise it will incorrect by 1 frame.
         }
         else 
