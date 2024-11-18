@@ -31,39 +31,28 @@ public class HoverToolTipHandler : MonoBehaviour
 
     void ShowTip(string tip, Vector2 mousePosition)
     {
-        if (mousePosition.x + tipWindow.sizeDelta.x < Screen.width)
+        float windowX = mousePosition.x + tipWindow.sizeDelta.x / 2;
+        if (windowX >= Screen.width)
         {
-            ShowTipRight(tip, mousePosition);
+            windowX = mousePosition.x - tipWindow.sizeDelta.x / 2;
         }
-        else 
-        { 
-            ShowTipLeft(tip, mousePosition);
-        }
-    }
 
-    void ShowTipRight(string tip, Vector2 mousePosition)
-    {
+        float windowY = mousePosition.y + tipWindow.sizeDelta.y / 2;
+        if (windowY >= Screen.height)
+        {
+            windowY = mousePosition.y - tipWindow.sizeDelta.y / 2;
+        }
+
         tipText.text = tip;
         float x = Math.Min(_maxTipWidth, tipText.preferredWidth);
         tipWindow.sizeDelta = new Vector2(x, tipText.preferredHeight);
 
         tipWindow.gameObject.SetActive(true);
 
-        tipWindow.transform.position = new Vector2(mousePosition.x + tipWindow.sizeDelta.x / 2, mousePosition.y + tipWindow.sizeDelta.y / 2);
-        tipText.transform.position = new Vector2(tipWindow.transform.position.x, mousePosition.y + tipWindow.sizeDelta.y / 2);
+        tipWindow.transform.position = new Vector2(windowX, windowY);
+        tipText.transform.position = new Vector2(tipWindow.transform.position.x, tipWindow.transform.position.y);
     }
 
-    void ShowTipLeft(string tip, Vector2 mousePosition)
-    {
-        tipText.text = tip;
-        float x = Math.Min(_maxTipWidth, tipText.preferredWidth);
-        tipWindow.sizeDelta = new Vector2(x, tipText.preferredHeight);
-
-        tipWindow.gameObject.SetActive(true);
-
-        tipWindow.transform.position = new Vector2(mousePosition.x - tipWindow.sizeDelta.x / 2, mousePosition.y + tipWindow.sizeDelta.y / 2);
-        tipText.transform.position = new Vector2(tipWindow.transform.position.x, mousePosition.y + tipWindow.sizeDelta.y / 2);
-    }
 
     void HideTip()
     {
