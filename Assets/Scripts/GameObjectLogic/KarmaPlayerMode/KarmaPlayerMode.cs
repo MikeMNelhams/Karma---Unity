@@ -8,6 +8,7 @@ using KarmaLogic.Players;
 using StateMachine.CharacterStateMachines;
 using UnityEngine;
 using KarmaLogic.BasicBoard;
+using KarmaLogic.Bots;
 
 namespace KarmaPlayerMode
 {
@@ -105,7 +106,7 @@ namespace KarmaPlayerMode
                 else
                 {
                     string botName = "Bot " + botNameIndex;
-                    IntegrationTestBot bot = new(botName, botDelay);
+                    IntegrationTestBot bot = new (botName, botDelay);
                     playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                     playerProperties.name = botName;
                     playerProperties.DisableCamera();

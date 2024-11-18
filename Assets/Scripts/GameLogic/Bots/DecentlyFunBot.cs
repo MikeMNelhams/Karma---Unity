@@ -8,16 +8,17 @@ using KarmaLogic.CardCombos;
 using System.Linq;
 using KarmaLogic.BasicBoard;
 using DataStructures;
+using System;
 
 namespace KarmaLogic.Bots
 {
-    public class IntegrationTestBot : IBot
+    public class DecentlyFunBot : IBot
     {
         public string Name { get; protected set; }
         public float DelaySeconds { get; protected set; }
         protected List<BoardPlayerAction> _knownActions = new();
 
-        public IntegrationTestBot(string name, float delay)
+        public DecentlyFunBot(string name, float delay)
         {
             Name = name;
             DelaySeconds = delay;
@@ -51,7 +52,62 @@ namespace KarmaLogic.Bots
         public FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
         {
             LegalCombos legalCombos = board.CurrentLegalCombos;
-            return legalCombos.First();
+            if (legalCombos.CardValues.Contains(CardValue.JOKER))
+            {
+                return LargestCombo(legalCombos, (x) => (x.Contains(CardValue.JOKER)));
+            }
+
+            if (legalCombos.CardValues.Contains(CardValue.TEN))
+            {
+                return LargestCombo(legalCombos, (x) => (x.Contains(CardValue.TEN)));
+            }
+
+            FrozenMultiSet<CardValue> largestCombo = LargestCombo(legalCombos);
+            if (largestCombo.TotalCount >= 4) { return largestCombo; }
+
+            if (legalCombos.CardValues.Contains(CardValue.QUEEN))
+            {
+                return LargestCombo(legalCombos, (x) => (x.Contains(CardValue.QUEEN)));
+            }
+
+            return largestCombo;
+        }
+
+        FrozenMultiSet<CardValue> LargestCombo(LegalCombos legalCombos, Func<FrozenMultiSet<CardValue>, bool> comboRequirement = null)
+        {
+            // Assumes that at least ONE combo matches the given requirement!
+            List<FrozenMultiSet<CardValue>> combos = legalCombos.Combos.ToList();
+
+            int maxIndex = -1;
+            int maxValue = 0;
+
+            if (comboRequirement != null)
+            {
+                for (int i = 0; i < combos.Count; i++)
+                {
+                    FrozenMultiSet<CardValue> combo = combos[i];
+                    int count = combo.TotalCount;
+                    if (count > maxValue && comboRequirement(combo))
+                    {
+                        maxValue = count;
+                        maxIndex = i;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < combos.Count; i++)
+                {
+                    int count = combos[i].TotalCount;
+                    if (count > maxValue)
+                    {
+                        maxValue = count;
+                        maxIndex = i;
+                    }
+                }
+            }
+
+            return combos[maxIndex];
         }
 
         public int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices)
@@ -69,12 +125,30 @@ namespace KarmaLogic.Bots
 
         public int MulliganHandIndex(IBoard board)
         {
-            throw new System.NotImplementedException();
+            CardsList hand = board.CurrentPlayer.Hand;
+            for (int i = 0; i < hand.Count; i++)
+            {
+                if (hand[i].Value != CardValue.JOKER)
+                {
+                    return i;
+                }
+            }
+
+            throw new Exception("DecentlyFunBot should only be doing mulligan to rotate karmaUp jokers to their hand, but their entire hand is jokers!");
         }
 
         public int MulliganKarmaUpIndex(IBoard board)
         {
-            throw new System.NotImplementedException();
+            CardsList karmaUp = board.CurrentPlayer.KarmaUp;
+            for (int i = 0; i < karmaUp.Count; i++)
+            {
+                if (karmaUp[i].Value == CardValue.JOKER)
+                {
+                    return i;
+                }
+            }
+
+            throw new Exception("DecentlyFunBot should only be doing mulligan to rotate karmaUp jokers to their hand, but their karmaUp has no jokers!");
         }
 
         public BoardTurnOrder PreferredStartDirection(IBoard board)
@@ -86,8 +160,7 @@ namespace KarmaLogic.Bots
         {
             foreach (BoardPlayerAction action in _knownActions)
             {
-                // If can play Joker, play it
-                if (board.CurrentLegalActions.Contains(_knownActions[1]) && board.CurrentLegalCombos.Contains(new FrozenMultiSet<CardValue>() { CardValue.JOKER }))
+                if (board.CurrentLegalActions.Contains(_knownActions[1]))
                 {
                     return _knownActions[1];
                 }
@@ -111,7 +184,8 @@ namespace KarmaLogic.Bots
 
         public bool WantsToMulligan(IBoard board)
         {
-            return false;
+            bool handIsNotOnlyJokers = board.CurrentPlayer.Hand.CardValues.Where(x => x == CardValue.JOKER).Count() != board.CurrentPlayer.Hand.Count;
+            return board.CurrentPlayer.KarmaUp.CardValues.Contains(CardValue.JOKER) && handIsNotOnlyJokers;
         }
 
         HashSet<int> OtherPlayerIndices(IBoard board)

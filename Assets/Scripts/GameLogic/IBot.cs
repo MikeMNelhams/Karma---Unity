@@ -13,7 +13,6 @@ namespace KarmaLogic
         {
             public string Name { get; }
             public float DelaySeconds { get; }
-            public bool IsReady(IBoard board);
             public BoardPlayerAction SelectAction(IBoard board);
             public FrozenMultiSet<CardValue> ComboToPlay(IBoard board);
             public int CardGiveAwayIndex(IBoard board);

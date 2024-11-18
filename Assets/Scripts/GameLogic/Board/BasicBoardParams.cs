@@ -55,7 +55,7 @@ namespace KarmaLogic.BasicBoard
             _turnOrder = turnOrder;
             _playOrder = playOrder;
             _handsAreFlipped = handsAreFlipped;
-            _effectMultiplier = effectMultiplier;
+            _effectMultiplier = Mathf.Min(effectMultiplier, 1);
             _whoStarts = whoStarts;
             _hasBurnedThisTurn = hasBurnedThisTurn;
             _turnsPlayed = turnsPlayed;

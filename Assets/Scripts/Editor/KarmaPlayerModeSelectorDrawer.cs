@@ -38,9 +38,10 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
         this._selected = EditorGUILayout.Popup("Player Mode", property.FindPropertyRelative("_mode").intValue, _playerModeOptions);
         this._useBoardPresets = EditorGUILayout.Toggle("Use board presets?", _useBoardPresets);
 
+        DrawPlayerStartInfoProperty(property);
+
         if (_useBoardPresets)
         {
-            DrawPlayerStartInfoProperty(property);
             this._presetSelected = EditorGUILayout.Popup("Board Preset", property.FindPropertyRelative("_basicBoardPresetSelected").intValue, _presetOptionsSingleplayer);
             property.FindPropertyRelative("_basicBoardPresetSelected").intValue = _presetSelected;
         }

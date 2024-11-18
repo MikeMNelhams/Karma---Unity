@@ -1228,18 +1228,21 @@ MonoBehaviour:
   _playerModeSelector:
     _mode: 0
     _basicBoardParams:
-      _playerCardValues: []
-      _drawPileValues: 
-      _burnPileValues: 
-      _playPileValues: 
+      _playerCardValues:
+      - _handValues: 
+        _karmaUpValues: 
+        _karmaDownValues: 
+      _drawPileValues: 00000000
+      _burnPileValues: 00000000
+      _playPileValues: 00000000
       _turnOrder: 1
       _playOrder: 0
       _handsAreFlipped: 0
-      _effectMultiplier: 0
+      _effectMultiplier: 1
       _whoStarts: 0
       _hasBurnedThisTurn: 0
       _turnsPlayed: 0
-      _turnLimit: 0
+      _turnLimit: 100
     _playersStartInfo:
     - startPosition: {x: 0, y: 0, z: 0}
       isPlayableCharacter: 0
