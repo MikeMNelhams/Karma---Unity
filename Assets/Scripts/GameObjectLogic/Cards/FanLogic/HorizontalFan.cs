@@ -45,13 +45,13 @@ namespace FanHandlers
             return new Tuple<Vector3, Quaternion> (cardPosition, cardRotation);
         }
 
-        public override void TransformCardsIntoFan(IList<SelectableCard> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null )
+        public override void TransformCardsIntoFan(IList<SelectableCardObject> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null )
         {
             if (cards.Count == 0) { return; }
 
             if (fanPhysicsInfo != null) { fanPhysicsInfo = FanPhysicsInfo.HorizontalFan; }
 
-            SelectableCard cardObject = cards[0];
+            SelectableCardObject cardObject = cards[0];
             Tuple<Vector3, Quaternion> cardPositionAndRotation = RelativeCardTransformInFan(0, cards.Count, fanPhysicsInfo);
 
             Vector3 cardPosition = cardPositionAndRotation.Item1;

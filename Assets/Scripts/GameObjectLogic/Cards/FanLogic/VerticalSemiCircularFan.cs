@@ -65,12 +65,12 @@ namespace FanHandlers
             return ((_maxCardsPerRow * 2 + rowNumber) * (rowNumber + 1)) / 2;
         }
 
-        public override void TransformCardsIntoFan(IList<SelectableCard> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null)
+        public override void TransformCardsIntoFan(IList<SelectableCardObject> cards, bool isFlipped, FanPhysicsInfo fanPhysicsInfo = null)
         {
             if (cards.Count == 0) { return; }
             if (fanPhysicsInfo != null) { fanPhysicsInfo = FanPhysicsInfo.VerticalSemiCircularFan; }
 
-            SelectableCard cardObject = cards[0];
+            SelectableCardObject cardObject = cards[0];
 
             Tuple<Vector3, Quaternion> cardPositionAndRotation = RelativeCardPositionAndRotationInFan(0, cards.Count, fanPhysicsInfo);
             Vector3 cardPosition = cardPositionAndRotation.Item1;

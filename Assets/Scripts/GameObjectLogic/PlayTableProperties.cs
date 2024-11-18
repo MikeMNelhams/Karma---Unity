@@ -30,31 +30,31 @@ public class PlayTableProperties : MonoBehaviour
         playPileHandler.CreatePile(board.PlayPile);
     }
 
-    public void MoveCardsToTopOfPlayPile(List<SelectableCard> cardObjects)
+    public void MoveCardsToTopOfPlayPile(List<SelectableCardObject> cardObjects)
     {
         playPileHandler.MoveCardsToTopOfPile(cardObjects);
     }
 
-    public List<SelectableCard> DrawCards(int numberOfCards)
+    public List<SelectableCardObject> DrawCards(int numberOfCards)
     {
         return drawPileHandler.PopCardsFromTop(numberOfCards);
     }
 
-    public List<SelectableCard> PopAllFromPlayPile()
+    public List<SelectableCardObject> PopAllFromPlayPile()
     {
         return playPileHandler.PopAllCards();
     }
 
     public void MoveEntirePlayPileToBurnPile()
     {
-        List<SelectableCard> cardObjects = playPileHandler.PopAllCards();
+        List<SelectableCardObject> cardObjects = playPileHandler.PopAllCards();
         Debug.Log("Burning " + cardObjects.Count + " many cards");
         burnPileHandler.MoveCardsToTopOfPile(cardObjects);
     }
 
     public void MoveTopCardsFromPlayPileToBurnPile(int numberOfCards)
     {
-        List<SelectableCard> cardObjects = playPileHandler.PopCardsFromTop(numberOfCards);
+        List<SelectableCardObject> cardObjects = playPileHandler.PopCardsFromTop(numberOfCards);
         burnPileHandler.MoveCardsToTopOfPile(cardObjects);
     }
 }

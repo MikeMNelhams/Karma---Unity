@@ -136,8 +136,8 @@ namespace StateMachine.CharacterStateMachines
                 int handIndex = _bot.MulliganHandIndex(_board);
                 int karmaUpIndex = _bot.MulliganKarmaUpIndex(_board);
 
-                SelectableCard handCard = _playerProperties.CardsInHand[handIndex];
-                SelectableCard karmaUpCard = _playerProperties.CardsInKarmaUp[karmaUpIndex];
+                SelectableCardObject handCard = _playerProperties.CardsInHand[handIndex];
+                SelectableCardObject karmaUpCard = _playerProperties.CardsInKarmaUp[karmaUpIndex];
 
                 _playerProperties.TryToggleCardSelect(handCard);
                 _playerProperties.TryToggleCardSelect(karmaUpCard);
@@ -161,7 +161,7 @@ namespace StateMachine.CharacterStateMachines
             FrozenMultiSet<CardValue> selectedCombo = _bot.ComboToPlay(_board);
             MultiSet<CardValue> combo = new();
 
-            foreach (SelectableCard cardObject in _playerProperties.SelectableCardObjects)
+            foreach (SelectableCardObject cardObject in _playerProperties.SelectableCardObjects)
             {
                 CardValue cardValue = cardObject.CurrentCard.Value;
                 if (!selectedCombo.Contains(cardValue)) { continue; }
@@ -177,7 +177,7 @@ namespace StateMachine.CharacterStateMachines
         async Task EnterCardGiveAwaySelection()
         {
             int cardGiveAwayIndex = _bot.CardGiveAwayIndex(_board);
-            SelectableCard selectedGiveawayCard = _playerProperties.SelectableCardObjects[cardGiveAwayIndex];
+            SelectableCardObject selectedGiveawayCard = _playerProperties.SelectableCardObjects[cardGiveAwayIndex];
             _playerProperties.TryToggleCardSelect(selectedGiveawayCard);
             await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
         }

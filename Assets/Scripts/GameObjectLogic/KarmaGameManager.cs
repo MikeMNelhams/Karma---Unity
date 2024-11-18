@@ -148,8 +148,8 @@ public class KarmaGameManager : MonoBehaviour
             KarmaUpPilesHandler karmaUpPilesHandler = boardHolder.GetComponent<KarmaUpPilesHandler>();
             KarmaDownPilesHandler karmaDownPilesHandler = boardHolder.GetComponent<KarmaDownPilesHandler>();
             
-            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<SelectableCard>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp, i));
-            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<SelectableCard>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown, i));
+            playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<SelectableCardObject>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp, i));
+            playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<SelectableCardObject>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown, i));
         }   
     }
     
@@ -188,24 +188,24 @@ public class KarmaGameManager : MonoBehaviour
 
     void RotateHands(int numberOfRotations, IBoard board)
     {
-        List<ListWithConstantContainsCheck<SelectableCard>> beginHands = new();
+        List<ListWithConstantContainsCheck<SelectableCardObject>> beginHands = new();
 
         for (int i = 0; i < board.Players.Count; i++)
         {
             PlayerProperties playerProperties = PlayersProperties[i];
-            ListWithConstantContainsCheck<SelectableCard> hand = playerProperties.CardsInHand;
+            ListWithConstantContainsCheck<SelectableCardObject> hand = playerProperties.CardsInHand;
             beginHands.Add(hand);
         }
 
-        Deque<ListWithConstantContainsCheck<SelectableCard>> hands = new (beginHands);
+        Deque<ListWithConstantContainsCheck<SelectableCardObject>> hands = new (beginHands);
 
         hands.Rotate(numberOfRotations);
         
         for (int i = 0; i < board.Players.Count; i++)
         {
-            ListWithConstantContainsCheck<SelectableCard> hand = hands[i];
+            ListWithConstantContainsCheck<SelectableCardObject> hand = hands[i];
             PlayerProperties playerProperties = PlayersProperties[i];
-            foreach (SelectableCard cardObject in hand)
+            foreach (SelectableCardObject cardObject in hand)
             {
                 playerProperties.ParentCardToThis(cardObject);
             }
@@ -259,13 +259,13 @@ public class KarmaGameManager : MonoBehaviour
 
     void MoveCardsFromSelectionToPlayPile(int playerIndex)
     {
-        List<SelectableCard> cardObjects = PlayersProperties[playerIndex].PopSelectedCardsFromSelection();
+        List<SelectableCardObject> cardObjects = PlayersProperties[playerIndex].PopSelectedCardsFromSelection();
         _playTable.MoveCardsToTopOfPlayPile(cardObjects);
     }
 
     void DrawCards(int numberOfCards, int playerIndex)
     {
-        List<SelectableCard> cardsDrawn = _playTable.DrawCards(numberOfCards);
+        List<SelectableCardObject> cardsDrawn = _playTable.DrawCards(numberOfCards);
         PlayersProperties[playerIndex].AddCardObjectsToHand(cardsDrawn);
     }
 
@@ -446,7 +446,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         PickUpAction.Apply(Board, playerProperties.CardSelector.Selection);
-        List<SelectableCard> playPileCards = _playTable.PopAllFromPlayPile();
+        List<SelectableCardObject> playPileCards = _playTable.PopAllFromPlayPile();
         PlayersProperties[playerIndex].AddCardObjectsToHand(playPileCards);
         Board.EndTurn();
         return Task.CompletedTask;
@@ -530,11 +530,11 @@ public class KarmaGameManager : MonoBehaviour
         if (validCardValues.Count == 0) { return; }
 
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
-        HashSet<SelectableCard> selectedCards = playerProperties.CardSelector.CardObjects;
+        HashSet<SelectableCardObject> selectedCards = playerProperties.CardSelector.CardObjects;
 
         if (selectedCards.Count != 1) { return; }
 
-        SelectableCard selectedCard = selectedCards.First();
+        SelectableCardObject selectedCard = selectedCards.First();
         if (!validCardValues.Contains(selectedCard.CurrentCard.Value)) { return; }
 
         playerProperties.PickedUpCard = selectedCard;
@@ -600,7 +600,7 @@ public class KarmaGameManager : MonoBehaviour
         return cardPositions;
     }
 
-    public void ColorLegalCard(SelectableCard cardObject, CardSelector cardSelector)
+    public void ColorLegalCard(SelectableCardObject cardObject, CardSelector cardSelector)
     {
         LegalCombos legalCombos = Board.CurrentLegalCombos;
 

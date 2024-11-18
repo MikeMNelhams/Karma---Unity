@@ -55,13 +55,13 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public int Index { get; set; } = -1;
 
-    public ListWithConstantContainsCheck<SelectableCard> CardsInHand { get; set; }
+    public ListWithConstantContainsCheck<SelectableCardObject> CardsInHand { get; set; }
     
-    public ListWithConstantContainsCheck<SelectableCard> CardsInKarmaUp { get; set; }
+    public ListWithConstantContainsCheck<SelectableCardObject> CardsInKarmaUp { get; set; }
 
-    public ListWithConstantContainsCheck<SelectableCard> CardsInKarmaDown { get; set; }
+    public ListWithConstantContainsCheck<SelectableCardObject> CardsInKarmaDown { get; set; }
     
-    public SelectableCard PickedUpCard { get; set; }
+    public SelectableCardObject PickedUpCard { get; set; }
 
     public delegate void OnLeftClickRayCastListener(int giverIndex, int targetIndex);
     public delegate Task OnLeftClickRayCastAwaitableListener(int giverIndex, int targetIndex);
@@ -172,7 +172,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    public void TryToggleCardSelect(SelectableCard cardObject)
+    public void TryToggleCardSelect(SelectableCardObject cardObject)
     {
         if (!cardObject.IsOwnedBy(Index)) { return; }
         if (StateMachine.CurrentState is not State.Mulligan && !IsCardSelectable(cardObject)) { return; }
@@ -235,7 +235,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    public ListWithConstantContainsCheck<SelectableCard> SelectableCardObjects
+    public ListWithConstantContainsCheck<SelectableCardObject> SelectableCardObjects
     {
         get
         {
@@ -244,12 +244,12 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
                 PlayingFrom.Hand => CardsInHand,
                 PlayingFrom.KarmaUp => CardsInKarmaUp,
                 PlayingFrom.KarmaDown => CardsInKarmaDown,
-                _ => new ListWithConstantContainsCheck<SelectableCard>(),
+                _ => new ListWithConstantContainsCheck<SelectableCardObject>(),
             };
         }
     }
 
-    public bool IsCardSelectable(SelectableCard card)
+    public bool IsCardSelectable(SelectableCardObject card)
     {
         if (card == null) { throw new NullReferenceException(); }
         return SelectableCardObjects.Contains(card);
@@ -257,7 +257,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void InstantiatePlayerHandFan(Hand hand)
     {
-        ListWithConstantContainsCheck<SelectableCard> cardObjects = new();
+        ListWithConstantContainsCheck<SelectableCardObject> cardObjects = new();
         KarmaGameManager gameManager = KarmaGameManager.Instance;
 
         foreach (Card card in hand)
@@ -276,7 +276,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         if (!_areLegalMovesHighlighted || StateMachine.CurrentState is State.Mulligan) { ColorSelectableCardsAsDefault(); return; }
         KarmaGameManager karmaGameManager = KarmaGameManager.Instance;
 
-        foreach (SelectableCard cardObject in SelectableCardObjects)
+        foreach (SelectableCardObject cardObject in SelectableCardObjects)
         {
             karmaGameManager.ColorLegalCard(cardObject, CardSelector);
         }
@@ -284,7 +284,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void ColorSelectableCardsAsDefault()
     {
-        foreach (SelectableCard cardObject in SelectableCardObjects)
+        foreach (SelectableCardObject cardObject in SelectableCardObjects)
         {
             cardObject.ResetCardBorder();
         }
@@ -415,25 +415,25 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         _handSorter = handSorter;
     }
 
-    public void AddCardObjectsToHand(List<SelectableCard> cardsToAdd)
+    public void AddCardObjectsToHand(List<SelectableCardObject> cardsToAdd)
     {
         print("Player index: " + Index + " is receiving the playPile!!!");
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
-        if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<SelectableCard>(cardsToAdd)); return; }
+        if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<SelectableCardObject>(cardsToAdd)); return; }
 
-        ListWithConstantContainsCheck<SelectableCard> combinedHandCardObjects = CardsInHand;
+        ListWithConstantContainsCheck<SelectableCardObject> combinedHandCardObjects = CardsInHand;
         combinedHandCardObjects.AddRange(cardsToAdd);
 
-        foreach (SelectableCard cardObject in cardsToAdd)
+        foreach (SelectableCardObject cardObject in cardsToAdd)
         {
             ParentCardToThis(cardObject);
         }
 
         Dictionary<Card, List<int>> cardPositions = _handSorter(Index);
 
-        SelectableCard[] handCorrectOrder = new CardObject[n];
-        foreach (SelectableCard cardObject in combinedHandCardObjects)
+        SelectableCardObject[] handCorrectOrder = new CardObject[n];
+        foreach (SelectableCardObject cardObject in combinedHandCardObjects)
         {
             int position = cardPositions[cardObject.CurrentCard].Last();
             handCorrectOrder[position] = cardObject;
@@ -441,7 +441,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
             positions.RemoveAt(positions.Count - 1);
         }
 
-        ListWithConstantContainsCheck<SelectableCard> finalHandCardObjects = new();
+        ListWithConstantContainsCheck<SelectableCardObject> finalHandCardObjects = new();
         for (int i = 0; i < handCorrectOrder.Length; i++)
         {
             if (handCorrectOrder[i] != null)
@@ -455,7 +455,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void SortHand(int[] sortOrder)
     {
-        ListWithConstantContainsCheck<SelectableCard> sortedHand = new();
+        ListWithConstantContainsCheck<SelectableCardObject> sortedHand = new();
         for (int i = 0; i < sortOrder.Length; i++)
         {
             sortedHand.Add(CardsInHand[sortOrder[i]]);
@@ -464,7 +464,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         UpdateHand(sortedHand);
     }
 
-    public void UpdateHand(ListWithConstantContainsCheck<SelectableCard> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
+    public void UpdateHand(ListWithConstantContainsCheck<SelectableCardObject> cardObjects, FanPhysicsInfo fanPhysicsInfo = null)
     {
         CardsInHand = cardObjects;
         TryColorLegalCards();
@@ -482,7 +482,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public void TurnOffLegalMoveHints()
     {
         _areLegalMovesHighlighted = false;
-        foreach (SelectableCard cardObject in SelectableCardObjects)
+        foreach (SelectableCardObject cardObject in SelectableCardObjects)
         {
             cardObject.ResetCardBorder();
         }
@@ -509,7 +509,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     void FlipKarmaDownCardsUp()
     {
         IsKarmaDownFlippedUp = true;
-        foreach (SelectableCard cardObject in CardsInKarmaDown)
+        foreach (SelectableCardObject cardObject in CardsInKarmaDown)
         {
             cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
         }
@@ -517,17 +517,17 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void SwapHandWithKarmaUp(int handIndex, int karmaUpIndex)
     {
-        SelectableCard handCardObject = CardsInHand[handIndex];
-        SelectableCard karmaUpCardObject = CardsInKarmaUp[karmaUpIndex];
+        SelectableCardObject handCardObject = CardsInHand[handIndex];
+        SelectableCardObject karmaUpCardObject = CardsInKarmaUp[karmaUpIndex];
         (handCardObject.transform.position, karmaUpCardObject.transform.position) = (karmaUpCardObject.transform.position, handCardObject.transform.position);
         (handCardObject.transform.rotation, karmaUpCardObject.transform.rotation) = (karmaUpCardObject.transform.rotation, handCardObject.transform.rotation);
         (CardsInHand[handIndex], CardsInKarmaUp[karmaUpIndex]) = (CardsInKarmaUp[karmaUpIndex], CardsInHand[handIndex]);
     }
 
-    public List<SelectableCard> PopSelectedCardsFromSelection()
+    public List<SelectableCardObject> PopSelectedCardsFromSelection()
     {
-        List<SelectableCard> cardObjects = CardSelector.CardObjects.ToList<SelectableCard>();
-        foreach (SelectableCard cardObject in cardObjects)
+        List<SelectableCardObject> cardObjects = CardSelector.CardObjects.ToList<SelectableCardObject>();
+        foreach (SelectableCardObject cardObject in cardObjects)
         {
             cardObject.DisableSelectShader();
             CardSelector.Remove(cardObject);
@@ -542,7 +542,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         return cardObjects;
     }
 
-    public void ParentCardToThis(SelectableCard cardObject)
+    public void ParentCardToThis(SelectableCardObject cardObject)
     {
         cardObject.SetParent(this, _cardHolder.transform);
     }
@@ -550,7 +550,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
-        AddCardObjectsToHand(new List<SelectableCard>() { giverPlayerProperties.PickedUpCard });
+        AddCardObjectsToHand(new List<SelectableCardObject>() { giverPlayerProperties.PickedUpCard });
         giverPlayerProperties.PickedUpCard = null;
         giverPlayerProperties.UpdateHand();
         TryColorLegalCards();
@@ -677,9 +677,9 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public Task AttemptMulliganSwap(IBoard board)
     {
         if (CardSelector.Count != 2) { return Task.CompletedTask; }
-        List<SelectableCard> selectedCards = CardSelector.CardObjects.ToList();
-        SelectableCard card1 = selectedCards[0];
-        SelectableCard card2 = selectedCards[1];
+        List<SelectableCardObject> selectedCards = CardSelector.CardObjects.ToList();
+        SelectableCardObject card1 = selectedCards[0];
+        SelectableCardObject card2 = selectedCards[1];
 
         bool isCard1InHand = CardsInHand.Contains(card1);
         bool isCard2InHand = CardsInHand.Contains(card2);

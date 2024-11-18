@@ -21,7 +21,7 @@ public class KarmaDownPilesHandler : MonoBehaviour, ICardVisibilityHandler
         return KarmaGameManager.Instance.PlayersProperties[observerPlayerIndex].Index == OwnerIndex;
     }
 
-    public List<SelectableCard> CreateKarmaDownCards(CardsList karmaDown, int ownerIndex)
+    public List<SelectableCardObject> CreateKarmaDownCards(CardsList karmaDown, int ownerIndex)
     {
         float width = _debugCube.localScale.x;
         float left = -width / 2 + _leftOffset * width;
@@ -41,14 +41,14 @@ public class KarmaDownPilesHandler : MonoBehaviour, ICardVisibilityHandler
         KarmaGameManager gameManager = KarmaGameManager.Instance;
 
         int j = 0;
-        List<SelectableCard> cardObjects = new();
+        List<SelectableCardObject> cardObjects = new();
         foreach (Card card in karmaDown)
         {
             float x = left + karmaDownOffset + j * xStepSize;
             Vector3 cardPosition = transform.TransformPoint(new Vector3(x, -halfHeight, 0));
             Quaternion cardRotation = Quaternion.Euler(90, -transform.rotation.eulerAngles.y, 0);
             GameObject cardGameObject = gameManager.InstantiateCard(card, cardPosition, cardRotation, gameObject);
-            SelectableCard cardObject = cardGameObject.GetComponent<SelectableCard>();
+            SelectableCardObject cardObject = cardGameObject.GetComponent<SelectableCardObject>();
             cardObject.SetParent(this);
             cardObjects.Add(cardObject);
             j++;

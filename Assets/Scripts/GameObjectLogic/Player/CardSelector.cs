@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CardSelector
 {
-    public HashSet<SelectableCard> CardObjects { get; set; }
+    public HashSet<SelectableCardObject> CardObjects { get; set; }
     protected FrozenMultiSet<Card> _selection;
     protected FrozenMultiSet<CardValue> _selectionValues;
     public CardsList Selection
@@ -28,12 +28,12 @@ public class CardSelector
 
     public CardSelector()
     {
-        CardObjects = new HashSet<SelectableCard>();
+        CardObjects = new HashSet<SelectableCardObject>();
         _selection = new();
         _selectionValues = new();
     }
 
-    public void Add(SelectableCard cardObject)
+    public void Add(SelectableCardObject cardObject)
     {
         Card card = cardObject.CurrentCard;
         CardObjects.Add(cardObject);
@@ -41,7 +41,7 @@ public class CardSelector
         _selectionValues.Add(card.Value);
     }
 
-    public void Remove(SelectableCard cardObject)
+    public void Remove(SelectableCardObject cardObject)
     {
         Card card = cardObject.CurrentCard;
         if (!CardObjects.Contains(cardObject)) { return; }
@@ -51,7 +51,7 @@ public class CardSelector
         _selectionValues.Remove(card.Value);
     }
 
-    public void Toggle(SelectableCard cardObject)
+    public void Toggle(SelectableCardObject cardObject)
     {
         if (CardObjects.Contains(cardObject))
         {
@@ -66,7 +66,7 @@ public class CardSelector
 
     public void Clear()
     {
-        foreach (SelectableCard cardObject in CardObjects)
+        foreach (SelectableCardObject cardObject in CardObjects)
         {
             cardObject.DisableSelectShader();
         }

@@ -3,7 +3,7 @@ using CardVisibility;
 using UnityEngine;
 using System;
 
-public abstract class SelectableCard : MonoBehaviour, ICardVisibilityHandler
+public abstract class SelectableCardObject : MonoBehaviour, ICardVisibilityHandler
 {
     public Card CurrentCard { get; set; }
     protected ICardVisibilityHandler _cardVisibilityHandler;
