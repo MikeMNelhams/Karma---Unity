@@ -1252,7 +1252,7 @@ MonoBehaviour:
       isPlayableCharacter: 0
     - startPosition: {x: -2.5, y: 0, z: 2.5}
       isPlayableCharacter: 0
-    _basicBoardPresetSelected: 0
+    _basicBoardPresetSelected: 5
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
@@ -3047,7 +3047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
+  m_SendPointerHoverToParent: 0
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}

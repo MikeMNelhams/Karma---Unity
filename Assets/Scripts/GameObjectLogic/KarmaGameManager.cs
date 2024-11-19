@@ -515,6 +515,7 @@ public class KarmaGameManager : MonoBehaviour
 
     async Task AttemptToSelectCardForGiveAway(int playerIndex)
     {
+        if (PlayersProperties[playerIndex].CardSelector.Count > 1) { return; }
         print("Attempting to give away card selection: " + PlayersProperties[playerIndex].CardSelector.CardObjects.First());
         Player player = Board.Players[playerIndex];
         HashSet<int> jokerIndices = new();
@@ -543,7 +544,7 @@ public class KarmaGameManager : MonoBehaviour
         playerProperties.PickedUpCard.ResetCardBorder();
         playerProperties.PickedUpCard.DisableSelectShader();
 
-        await playerProperties.StateMachine.MoveNext(Command.CardGiveAwayIndexSelected);
+        await playerProperties.ProcessStateCommand(Command.CardGiveAwayIndexSelected);
     }
 
     async void AttemptGiveAwayPickedUpCard(int giverIndex, int targetIndex)

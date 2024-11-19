@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
 using DataStructures;
 using CardVisibility;
 using UnityEngine.EventSystems;
-using System.Collections;
 using System.Threading.Tasks;
 using StateMachine;
 using StateMachine.CharacterStateMachines;
@@ -80,7 +80,9 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public bool IsToolTipsEnabled { get; set; } = true;
 
     RaycastHit[] _hits;
+    bool _isPlayableCharacter;
     bool _isLeftButtonMouseDown = false;
+    bool _isRightButtonMouseDown = false;
     Vector2 _mousePosition;
     bool _areLegalMovesHighlighted = true;
 
@@ -97,6 +99,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void Update()
     {
+
         if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1)) { return; }
 
         if (Input.GetMouseButtonDown(0))
@@ -108,16 +111,30 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
         if (Input.GetMouseButtonDown(1))
         {
-            TogglePlayerMovementListeners();
+            _isRightButtonMouseDown = true;
             return;
         }
     }
 
     void FixedUpdate()
     {
-        if (!_isLeftButtonMouseDown) { return; }
-        if (StateMachine.CurrentState is not State.WaitingForTurn) { TrySelectCardObject(); }
-        _isLeftButtonMouseDown = false;
+        if (!_isLeftButtonMouseDown && !_isRightButtonMouseDown) { return; }
+        if (_isLeftButtonMouseDown)
+        {
+            if (StateMachine.CurrentState is not State.WaitingForTurn)
+            {
+                TrySelectCardObject();
+            }
+            _isLeftButtonMouseDown = false;
+        }
+        if (_isRightButtonMouseDown)
+        {
+            if (KarmaGameManager.Instance.Board.CurrentPlayerIndex == Index)
+            {
+                TogglePlayerMovementListeners();
+            }
+            _isRightButtonMouseDown = false;
+        }
     }
 
     void TrySelectCardObject()
@@ -170,6 +187,8 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
                 _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
         }
+        print("Is rotating: " + _playerMovementController.IsRotating);
+        print("Mouse state: " + Cursor.lockState);
     }
 
     public void TryToggleCardSelect(SelectableCardObject cardObject)
@@ -384,6 +403,10 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         HideUI();
         _playerMovementController.SetRotating(true);
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
+
+        print("Is rotating: " + _playerMovementController.IsRotating);
+        print("Mouse state: " + Cursor.lockState);
+        //TogglePlayerMovementListeners();
         return Task.CompletedTask;
     }
 
