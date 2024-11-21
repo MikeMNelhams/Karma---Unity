@@ -107,7 +107,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public GameObject InstantiatePlayer(List<KarmaPlayerStartInfo> playersStartInfo, int playerIndex)
     {
-        Vector3 tableDirection = _playTable.centre - playersStartInfo[playerIndex].startPosition;
+        Vector3 tableDirection = _playTable.Centre - playersStartInfo[playerIndex].startPosition;
         tableDirection.y = 0;
         return Instantiate(_playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
     }
@@ -141,9 +141,9 @@ public class KarmaGameManager : MonoBehaviour
             playerProperties.InstantiatePlayerHandFan(Board.Players[i].Hand);
             if (!SelectedKarmaPlayerMode.PlayersStartInfo[i].isPlayableCharacter ) { PlayersProperties[i].TurnOffLegalMoveHints(); }
             Player player = Board.Players[i];
-            if (i >= _playTable.boardHolders.Count) { break; }
-            if (_playTable.boardHolders[i] == null) { continue; }
-            GameObject boardHolder = _playTable.boardHolders[i];
+            if (i > _playTable.KarmaUpDownHolders.Count) { throw new Exception("Invalid board setup, number of KarmaUpDownHolders must = number of players!"); }
+            if (_playTable.KarmaUpDownHolders[i] == null) { throw new NullReferenceException("KarmaUpDown for player: " + i + " is null!"); }
+            GameObject boardHolder = _playTable.KarmaUpDownHolders[i];
 
             KarmaUpPilesHandler karmaUpPilesHandler = boardHolder.GetComponent<KarmaUpPilesHandler>();
             KarmaDownPilesHandler karmaDownPilesHandler = boardHolder.GetComponent<KarmaDownPilesHandler>();

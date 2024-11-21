@@ -20,7 +20,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -42,7 +42,7 @@ public class LegalCardCombosTests
             playCardValues = new() { };
             burnCardValues = new() { };
 
-            board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+            board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
             board.StartTurn();
 
@@ -67,7 +67,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -99,7 +99,7 @@ public class LegalCardCombosTests
             List<int> playCardValues = new() { i };
             List<int> burnCardValues = new() { };
 
-            BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+            BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
             board.StartTurn();
 
@@ -126,7 +126,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -161,7 +161,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 2 };  // It's impossible for 2 to be on the board when going downwards, but it allows for testing this case easily.
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
 
         board.StartTurn();
 
@@ -196,7 +196,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -227,7 +227,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
 
         board.StartTurn();
 
@@ -258,7 +258,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -293,7 +293,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -326,7 +326,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -352,7 +352,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
 
         board.StartTurn();
 
@@ -378,7 +378,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -411,7 +411,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -438,7 +438,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -464,7 +464,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
 
         board.StartTurn();
 
@@ -490,7 +490,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -521,7 +521,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14, 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
 
         board.StartTurn();
 
@@ -547,7 +547,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 9 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
 
         board.StartTurn();
 
@@ -577,7 +577,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -607,7 +607,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -643,7 +643,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -676,7 +676,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -709,7 +709,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new (playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -735,7 +735,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -768,7 +768,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -807,7 +807,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -833,7 +833,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -864,7 +864,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN);
 
         board.StartTurn();
 
@@ -887,7 +887,7 @@ public class LegalCardCombosTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 

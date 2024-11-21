@@ -10,7 +10,7 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override BasicBoard Board => BoardFactory.RandomStart(4);
+            public override BasicBoard Board => new (4);
 
             public override int TurnLimit => 200;
         }

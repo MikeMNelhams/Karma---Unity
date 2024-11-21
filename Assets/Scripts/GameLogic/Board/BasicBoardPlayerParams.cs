@@ -7,10 +7,10 @@ namespace KarmaLogic.BasicBoard
     [System.Serializable]
     public class BasicBoardPlayerParams
     {
-        [SerializeField] List<int> _handValues;
-        [SerializeField] List<int> _karmaUpValues;
-        [SerializeField] List<int> _karmaDownValues;
-        [SerializeField] bool _isPlayableCharacter;
+        [SerializeField] protected List<int> _handValues;
+        [SerializeField] protected List<int> _karmaUpValues;
+        [SerializeField] protected List<int> _karmaDownValues;
+        [SerializeField] protected bool _isPlayableCharacter;
 
         public List<int> HandValues { get { return _handValues; } }
         public List<int> KarmaUpValues { get { return _karmaUpValues; } }
@@ -43,8 +43,8 @@ namespace KarmaLogic.BasicBoard
             if (playerCardValues.Count != 3) { throw new NotSupportedException("Invalid number of player card values!"); }
 
             _handValues.AddRange(playerCardValues[0]);
-            _handValues.AddRange(playerCardValues[1]);
-            _handValues.AddRange(playerCardValues[2]);
+            _karmaUpValues.AddRange(playerCardValues[1]);
+            _karmaDownValues.AddRange(playerCardValues[2]);
         }
     }
 }

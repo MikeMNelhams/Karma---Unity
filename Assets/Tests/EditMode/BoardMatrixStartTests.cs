@@ -21,7 +21,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         Assert.AreEqual(0, board.PlayPile.Count);
         Assert.AreEqual(new PlayCardPile(), board.PlayPile);
         Assert.AreEqual(0, board.DrawPile.Count);
@@ -51,7 +51,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         Assert.AreEqual(0, board.PlayPile.Count);
         Assert.AreEqual(new PlayCardPile(), board.PlayPile);
         Assert.AreEqual(0, board.DrawPile.Count);
@@ -94,7 +94,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         Assert.AreEqual(0, board.PlayPile.Count);
         Assert.AreEqual(new PlayCardPile(), board.PlayPile);
         Assert.AreEqual(0, board.DrawPile.Count);
@@ -139,7 +139,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { 11, 12, 13, 14};
         List<int> burnCardValues = new() { 15, 15, 15};
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         // 6 cards should be drawn! (3 per player)
         Assert.AreEqual(new CardPile(new List<int>() { 2, 3, 4 }, CardSuit.DebugDefault), board.DrawPile);

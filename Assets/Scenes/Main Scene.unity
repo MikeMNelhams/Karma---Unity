@@ -1246,14 +1246,14 @@ MonoBehaviour:
       _turnLimit: 100
     _playersStartInfo:
     - startPosition: {x: 0, y: 0, z: 0}
-      isPlayableCharacter: 1
+      isPlayableCharacter: 0
     - startPosition: {x: 2.5, y: 0, z: 2.5}
-      isPlayableCharacter: 1
+      isPlayableCharacter: 0
     - startPosition: {x: 0, y: 0, z: 5}
-      isPlayableCharacter: 1
+      isPlayableCharacter: 0
     - startPosition: {x: -2.5, y: 0, z: 2.5}
-      isPlayableCharacter: 1
-    _basicBoardPresetSelected: 5
+      isPlayableCharacter: 0
+    _basicBoardPresetSelected: 1
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
@@ -2480,15 +2480,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1c5f807062a7540a2e7aee873fbdb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centre: {x: 0.0624, y: 1.6583, z: 2.6942}
-  boardHolders:
+  _centre: {x: 0.0624, y: 1.6583, z: 2.6942}
+  _drawPileHandler: {fileID: 651445642}
+  _burnPileHandler: {fileID: 375781343}
+  _playPileHandler: {fileID: 1822421501}
+  _boardHolders:
   - {fileID: 1390589445}
   - {fileID: 1274854924}
   - {fileID: 1279859051}
   - {fileID: 1533858436}
-  drawPile: {fileID: 651445637}
-  burnPile: {fileID: 375781341}
-  playPile: {fileID: 1822421500}
 --- !u!1 &1604268373
 GameObject:
   m_ObjectHideFlags: 0

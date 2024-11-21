@@ -21,7 +21,7 @@ public class LegalMovesTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -42,7 +42,7 @@ public class LegalMovesTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -66,7 +66,7 @@ public class LegalMovesTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -90,7 +90,7 @@ public class LegalMovesTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -113,7 +113,7 @@ public class LegalMovesTests
         List<int> playCardValues = new() { 14, 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -137,7 +137,7 @@ public class LegalMovesTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 

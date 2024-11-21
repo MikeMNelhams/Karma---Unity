@@ -20,7 +20,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -42,7 +42,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 15, 2, 3, 4, 5 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -64,7 +64,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 15, 2, 3, 4, 14 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -89,7 +89,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 15, 2, 3, 4, 14 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 
@@ -114,7 +114,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 2, 3, 4, 11 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoard board = BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
 
         board.StartTurn();
 

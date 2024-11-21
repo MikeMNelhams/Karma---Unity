@@ -29,7 +29,7 @@ public class BotQueenComboTest : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameOver);
-        Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
+        Assert.IsFalse(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
 
         yield return null;
     }
