@@ -611,7 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pileDebugCube: {fileID: 799685259}
-  _isFaceUp: 0
+  _isFaceUp: 1
   _cardPileMode: 1
 --- !u!1 &452895063
 GameObject:
@@ -1246,14 +1246,14 @@ MonoBehaviour:
       _turnLimit: 100
     _playersStartInfo:
     - startPosition: {x: 0, y: 0, z: 0}
-      isPlayableCharacter: 0
+      isPlayableCharacter: 1
     - startPosition: {x: 2.5, y: 0, z: 2.5}
-      isPlayableCharacter: 0
+      isPlayableCharacter: 1
     - startPosition: {x: 0, y: 0, z: 5}
-      isPlayableCharacter: 0
+      isPlayableCharacter: 1
     - startPosition: {x: -2.5, y: 0, z: 2.5}
-      isPlayableCharacter: 0
-    _basicBoardPresetSelected: 1
+      isPlayableCharacter: 1
+    _basicBoardPresetSelected: 5
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}

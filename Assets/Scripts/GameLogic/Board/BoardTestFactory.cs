@@ -123,7 +123,7 @@ namespace KarmaLogic
 
                 List<int> drawCardValues = new() { 10, 11, 12 };
                 List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
-                List<int> burnCardValues = new() { };
+                List<int> burnCardValues = new() { 5, 6 };
 
                 return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
             }
