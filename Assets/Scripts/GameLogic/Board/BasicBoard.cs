@@ -74,7 +74,7 @@ namespace KarmaLogic
                     effectMultiplier, whoStarts, hasBurnedThisTurn, turnsPlayed, boardPrinter);
             }
 
-            public BasicBoard(BasicBoardParams basicBoardParams, IBoardPrinter boardPrinter = null)
+            public BasicBoard(BasicBoardParams basicBoardParams, IBoardPrinter boardPrinter = null, CardSuit cardSuit = null)
             {
                 List<Player> players = new ();
 
@@ -89,10 +89,13 @@ namespace KarmaLogic
 
                     players.Add(new Player(playerMatrix));
                 }
-                // TODO Suits matrix as field + property on basicBoardParams.
-                CardPile drawPile = new (basicBoardParams.DrawPileValues, CardSuit.Hearts);
-                CardPile burnPile = new (basicBoardParams.BurnPileValues, CardSuit.Hearts);
-                PlayCardPile playPile = new(basicBoardParams.PlayPileValues, CardSuit.Hearts);
+
+                CardSuit suit = cardSuit;
+                suit ??= CardSuit.Hearts;
+
+                CardPile drawPile = new (basicBoardParams.DrawPileValues, suit);
+                CardPile burnPile = new (basicBoardParams.BurnPileValues, suit);
+                PlayCardPile playPile = new(basicBoardParams.PlayPileValues, suit);
 
                 SetInitParams(players, drawPile, burnPile, playPile, basicBoardParams.BoardTurnOrder, 
                     basicBoardParams.BoardPlayOrder, basicBoardParams.HandsAreFlipped, basicBoardParams.EffectMultiplier, 
@@ -106,6 +109,12 @@ namespace KarmaLogic
                 bool hasBurnedThisTurn = false, int turnsPlayed = 0, IBoardPrinter boardPrinter = null)
             {
                 Players = players;
+
+                foreach (Player player in players)
+                {
+                    player.Hand.Sort();
+                }
+
                 DrawPile = drawPile;
                 BurnPile = burnPile;
                 PlayPile = playPile;
@@ -287,6 +296,7 @@ namespace KarmaLogic
                 int jokerCount = PlayPile.CountValue(CardValue.JOKER);
                 if (willBurnDueToMinimumRunFour || jokerCount > 0) 
                 {
+                    // Sometimes jokers can be played from the burn pile, then require re-burning.
                     Burn(jokerCount);
                 }
 

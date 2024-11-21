@@ -80,7 +80,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public bool IsToolTipsEnabled { get; set; } = true;
 
     RaycastHit[] _hits;
-    bool _isPlayableCharacter;
     bool _isLeftButtonMouseDown = false;
     bool _isRightButtonMouseDown = false;
     Vector2 _mousePosition;

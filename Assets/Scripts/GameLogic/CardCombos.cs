@@ -226,6 +226,23 @@ namespace KarmaLogic
             public CardCombo_JOKER(CardsList cards, Dictionary<CardValue, int> counts) : base(cards, counts) { }
             public override void Apply(IBoard board)
             {
+                // When all of the aces are burned, Joker combos become value of aces, but Joker effect
+                //if (board.CardValuesInPlayCounts[CardValue.ACE] == 0) 
+                //{
+                //    int numberOfRepeats = Cards.Count * board.EffectMultiplier;
+                //    if (((uint)(numberOfRepeats) & 0b1) == 0b0)
+                //    {
+                //        board.FlipHands();
+                //        board.FlipHands();
+                //        TriggerOnFinishApplyComboListeners();
+                //        return;
+                //    }
+
+                //    board.FlipHands();
+                //    TriggerOnFinishApplyComboListeners();
+                //    return;
+                //}
+
                 board.Burn(Cards.Count);
                 if (board.PlayPile.Count == 0) { return; }
 

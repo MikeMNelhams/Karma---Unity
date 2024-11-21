@@ -18,11 +18,18 @@ namespace KarmaLogic
                     new() { new() { }, new() { }, new() { } }
                 };
 
+                List<BasicBoardPlayerParams> players = new();
+                
+                foreach (List<List<int>> playerValues in playerCardValues)
+                {
+                    players.Add(new BasicBoardPlayerParams(playerValues, false));
+                }
+
                 List<int> drawCardValues = new() { };
                 List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
                 List<int> burnCardValues = new() { };
 
-                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
+                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
             }
 
             public static BasicBoard BotQueenCombo()
@@ -35,11 +42,18 @@ namespace KarmaLogic
                     new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
                 };
 
+                List<BasicBoardPlayerParams> players = new();
+
+                foreach (List<List<int>> playerValues in playerCardValues)
+                {
+                    players.Add(new BasicBoardPlayerParams(playerValues, false));
+                }
+
                 List<int> drawCardValues = new() { 7, 6, 5, 4, 4 };
                 List<int> playCardValues = new() { };
                 List<int> burnCardValues = new() { };
 
-                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
+                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
             }
 
             public static BasicBoard BotJokerCombo()
@@ -52,11 +66,18 @@ namespace KarmaLogic
                     new() { new() { }, new() { }, new() { } }
                 };
 
+                List<BasicBoardPlayerParams> players = new();
+
+                foreach (List<List<int>> playerValues in playerCardValues)
+                {
+                    players.Add(new BasicBoardPlayerParams(playerValues, false));
+                }
+
                 List<int> drawCardValues = new() { };
                 List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
                 List<int> burnCardValues = new() { };
 
-                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
+                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
             }
 
             public static BasicBoard BotVotingTestBoard2()
@@ -69,11 +90,18 @@ namespace KarmaLogic
                     new() { new() { }, new() { }, new() { } }
                 };
 
+                List<BasicBoardPlayerParams> players = new();
+
+                foreach (List<List<int>> playerValues in playerCardValues)
+                {
+                    players.Add(new BasicBoardPlayerParams(playerValues, false));
+                }
+
                 List<int> drawCardValues = new() { };
                 List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
                 List<int> burnCardValues = new() { };
 
-                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
+                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
             }
 
             public static BasicBoard BotTestScenario1()
@@ -86,11 +114,18 @@ namespace KarmaLogic
                     new() { new() { 2, 4, 5, 12, 10 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
                 };
 
+                List<BasicBoardPlayerParams> players = new();
+
+                foreach (List<List<int>> playerValues in playerCardValues)
+                {
+                    players.Add(new BasicBoardPlayerParams(playerValues, false));
+                }
+
                 List<int> drawCardValues = new() { 10, 11, 12 };
                 List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
                 List<int> burnCardValues = new() { };
 
-                return BoardFactory.MatrixStart(playerCardValues, drawCardValues, playCardValues, burnCardValues, 0);
+                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
             }
         }
     }

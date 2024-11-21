@@ -7,7 +7,6 @@ namespace KarmaLogic.BasicBoard
     [System.Serializable]
     public class BasicBoardParams
     {
-        // TODO FINISH THIS + CUSTOM EDITOR :/
         [SerializeField] List<BasicBoardPlayerParams> _playerCardValues;
         [SerializeField] List<int> _drawPileValues;
         [SerializeField] List<int> _burnPileValues;

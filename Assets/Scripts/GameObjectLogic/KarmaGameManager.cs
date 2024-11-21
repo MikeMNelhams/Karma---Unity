@@ -379,6 +379,7 @@ public class KarmaGameManager : MonoBehaviour
 
     void StepToNextPlayer()
     {
+        print("Is game over: " + SelectedKarmaPlayerMode.IsGameOver);
         if (SelectedKarmaPlayerMode.IsGameOver) { return; }
 
         if (SelectedKarmaPlayerMode.PlayersStartInfo[Board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfPlayableDisableStartingPlayerMovement(); }

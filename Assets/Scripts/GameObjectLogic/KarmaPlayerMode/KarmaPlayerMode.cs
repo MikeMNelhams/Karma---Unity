@@ -183,6 +183,7 @@ namespace KarmaPlayerMode
             {
                 IsGameOver = true;
                 IsGameWon = true;
+                UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
             }
         }
 
