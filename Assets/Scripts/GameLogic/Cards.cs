@@ -12,8 +12,9 @@ namespace KarmaLogic
     {
         public class CardsList : IList<Card>
         {
+            protected static System.Random RNG = new();
+
             protected List<Card> _cards;
-            protected static System.Random rng = new();
 
             public CardsList()
             {
@@ -203,7 +204,7 @@ namespace KarmaLogic
                 while (n > 1)
                 {
                     n--;
-                    int k = rng.Next(n + 1);
+                    int k = RNG.Next(n + 1);
                     (_cards[n], _cards[k]) = (_cards[k], _cards[n]);
                     (indices[n], indices[k]) = (indices[k], indices[n]);
                 }

@@ -5,10 +5,14 @@ namespace KarmaLogic
 {
     namespace Cards
     {
+        [System.Serializable]
         public class Card : IEquatable<Card>, IComparable<Card>
         {
-            public CardSuit Suit { get; }
-            public CardValue Value { get; }
+            [SerializeField] CardSuit _suit;
+            [SerializeField] CardValue _value;
+
+            public CardSuit Suit { get => _suit; set => _suit = value; }
+            public CardValue Value { get => _value; set => _value = value; }
 
             public Card(CardSuit suit, CardValue value)
             {

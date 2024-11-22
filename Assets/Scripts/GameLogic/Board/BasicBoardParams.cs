@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using KarmaLogic.Board;
+using KarmaLogic.Cards;
 
 namespace KarmaLogic.BasicBoard
 {
     [System.Serializable]
     public class BasicBoardParams
     {
-        [SerializeField] List<BasicBoardPlayerParams> _playerCardValues;
-        [SerializeField] List<int> _drawPileValues;
-        [SerializeField] List<int> _burnPileValues;
-        [SerializeField] List<int> _playPileValues;
+        [SerializeField] List<BasicBoardPlayerParams> _playersParams;
+        [SerializeField] List<Card> _drawPileCards;
+        [SerializeField] List<Card> _burnPileCards;
+        [SerializeField] List<Card> _playPileCards;
 
         [SerializeField] BoardTurnOrder _turnOrder = BoardTurnOrder.RIGHT;
         [SerializeField] BoardPlayOrder _playOrder;
@@ -21,10 +22,7 @@ namespace KarmaLogic.BasicBoard
         [SerializeField] int _turnsPlayed;
         [SerializeField] int _turnLimit;
 
-        public List<BasicBoardPlayerParams> PlayerCardValues {  get { return _playerCardValues; } }
-        public List<int> DrawPileValues { get { return _drawPileValues; } }
-        public List<int> BurnPileValues { get { return _burnPileValues; } }
-        public List<int> PlayPileValues { get { return _playPileValues; } }
+        public List<BasicBoardPlayerParams> PlayersParams {  get { return _playersParams; } }
         public BoardTurnOrder BoardTurnOrder { get { return _turnOrder; } }
         public BoardPlayOrder BoardPlayOrder { get { return _playOrder; } }
         public bool HandsAreFlipped { get {  return _handsAreFlipped; } }
@@ -35,21 +33,28 @@ namespace KarmaLogic.BasicBoard
 
         public int TurnLimit { get { return _turnLimit; } }
 
-        public BasicBoardParams(List<BasicBoardPlayerParams> playersCardValues = null, List<int> drawPileValues = null,
+        public List<Card> DrawPileCards { get => _drawPileCards; }
+        public List<Card> PlayPileCards { get => _playPileCards; }
+        public List<Card> BurnPileCards { get => _burnPileCards; }
+
+        public BasicBoardParams(List<BasicBoardPlayerParams> playersParams = null, List<int> drawPileValues = null,
             List<int> playPileValues = null, List<int> burnPileValues = null, 
             BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
             bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
-            bool hasBurnedThisTurn = false, int turnsPlayed = 0)
+            bool hasBurnedThisTurn = false, int turnsPlayed = 0, CardSuit suit = null)
         {
-            _playerCardValues = new List<BasicBoardPlayerParams>();
-            _drawPileValues = new List<int>();
-            _burnPileValues = new List<int>();
-            _playPileValues = new List<int>();
+            _playersParams = new List<BasicBoardPlayerParams>();
+            _drawPileCards = new List<Card>();
+            _playPileCards = new List<Card>();
+            _burnPileCards = new List<Card>();
 
-            if (playersCardValues != null) { _playerCardValues.AddRange(playersCardValues); }
-            if (drawPileValues != null) { _drawPileValues.AddRange(drawPileValues); }
-            if (burnPileValues != null) { _burnPileValues.AddRange(burnPileValues); }
-            if (playPileValues != null) { _playPileValues.AddRange(playPileValues); }
+            CardSuit defaultSuit = suit;
+            defaultSuit ??= CardSuit.DebugDefault;
+
+            if (playersParams != null) { _playersParams.AddRange(playersParams); }
+            if (drawPileValues != null) { _drawPileCards.AddRange(CardsFromValues(drawPileValues, defaultSuit)); }
+            if (playPileValues != null) { _playPileCards.AddRange(CardsFromValues(playPileValues, defaultSuit)); }
+            if (burnPileValues != null) { _burnPileCards.AddRange(CardsFromValues(burnPileValues, defaultSuit)); }
 
             _turnOrder = turnOrder;
             _playOrder = playOrder;
@@ -60,28 +65,31 @@ namespace KarmaLogic.BasicBoard
             _turnsPlayed = turnsPlayed;
         }
 
-        public BasicBoardParams(List<List<List<int>>> playersCardValues, List<int> drawPileValues = null,
+        public BasicBoardParams(List<List<List<int>>> playersParams, List<int> drawPileValues = null,
             List<int> playPileValues = null, List<int> burnPileValues = null,
             BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
             bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
-            bool hasBurnedThisTurn = false, int turnsPlayed = 0)
+            bool hasBurnedThisTurn = false, int turnsPlayed = 0, CardSuit suit = null)
         {
-            _playerCardValues = new List<BasicBoardPlayerParams>();
-            _drawPileValues = new List<int>();
-            _burnPileValues = new List<int>();
-            _playPileValues = new List<int>();
+            _playersParams = new List<BasicBoardPlayerParams>();
+            _drawPileCards = new List<Card>();
+            _playPileCards = new List<Card>();
+            _burnPileCards = new List<Card>();
 
             List<BasicBoardPlayerParams> playerParams = new();
 
-            foreach (List<List<int>> playerCardValues in playersCardValues)
+            foreach (List<List<int>> playerCardValues in playersParams)
             {
                 playerParams.Add(new BasicBoardPlayerParams(playerCardValues, isPlayableCharacter: false));
             }
 
-            if (playersCardValues != null) { _playerCardValues.AddRange(playerParams); }
-            if (drawPileValues != null) { _drawPileValues.AddRange(drawPileValues); }
-            if (burnPileValues != null) { _burnPileValues.AddRange(burnPileValues); }
-            if (playPileValues != null) { _playPileValues.AddRange(playPileValues); }
+            CardSuit defaultSuit = suit;
+            defaultSuit ??= CardSuit.DebugDefault;
+
+            if (playersParams != null) { _playersParams.AddRange(playerParams); }
+            if (drawPileValues != null) { _drawPileCards.AddRange(CardsFromValues(drawPileValues, defaultSuit)); }
+            if (playPileValues != null) { _playPileCards.AddRange(CardsFromValues(playPileValues, defaultSuit)); }
+            if (burnPileValues != null) { _burnPileCards.AddRange(CardsFromValues(burnPileValues, defaultSuit)); }
 
             _turnOrder = turnOrder;
             _playOrder = playOrder;
@@ -90,6 +98,17 @@ namespace KarmaLogic.BasicBoard
             _whoStarts = whoStarts;
             _hasBurnedThisTurn = hasBurnedThisTurn;
             _turnsPlayed = turnsPlayed;
+        }
+
+        List<Card> CardsFromValues(List<int> values, CardSuit suit)
+        {
+            List<Card> cards = new ();
+
+            foreach (int value in values)
+            {
+                cards.Add(new Card(suit, (CardValue) value));
+            }
+            return cards;
         }
     }
 }

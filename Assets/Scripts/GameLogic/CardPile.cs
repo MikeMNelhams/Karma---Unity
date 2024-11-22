@@ -39,6 +39,8 @@ namespace KarmaLogic
         {
             public List<bool> Visibles { get; protected set; }
             public PlayCardPile() : base() { Visibles = CheckVisibles(); }
+            public PlayCardPile(List<Card> cards) : base(cards) { Visibles = CheckVisibles(); }
+            public PlayCardPile(CardsList cards) : base(cards.ToList()) { Visibles = CheckVisibles(); }
             public PlayCardPile(List<int> cardValues, CardSuit suit) : base(cardValues, suit) { Visibles = CheckVisibles(); }
 
 #nullable enable
@@ -153,7 +155,7 @@ namespace KarmaLogic
                 while (n > 1)
                 {
                     n--;
-                    int k = rng.Next(n + 1);
+                    int k = RNG.Next(n + 1);
                     (_cards[n], _cards[k]) = (_cards[k], _cards[n]);
                     (Visibles[n], Visibles[k]) = (Visibles[k], Visibles[n]);
                     (indices[n], indices[k]) = (indices[k], indices[n]);

@@ -221,7 +221,7 @@ namespace KarmaPlayerMode
 
         public bool IsPlayableCharacter(int playerIndex)
         {
-            return BoardParams.PlayerCardValues[playerIndex].IsPlayableCharacter;
+            return BoardParams.PlayersParams[playerIndex].IsPlayableCharacter;
         }
 
         protected bool IsMulliganFinished

@@ -18,7 +18,7 @@ namespace KarmaLogic
     {
         public class BasicBoard : IBoard
         {
-            public static BoardPrinterDebug boardPrinterDefault = new();
+            public static BoardPrinterDebug BoardPrinterDefault = new();
 
             public List<Player> Players { get; set; }
             public CardPile DrawPile { get; protected set; }
@@ -50,28 +50,18 @@ namespace KarmaLogic
             HashSet<BoardPlayerAction> _allActions;
             HashSet<int> _potentialWinnerIndices;
 
-            public BasicBoard(BasicBoardParams basicBoardParams, IBoardPrinter boardPrinter = null, CardSuit cardSuit = null)
+            public BasicBoard(BasicBoardParams basicBoardParams, IBoardPrinter boardPrinter = null)
             {
-                List<Player> players = new ();
+                List<Player> players = new();
 
-                foreach (BasicBoardPlayerParams basicBoardPlayerParams in basicBoardParams.PlayerCardValues)
+                foreach (BasicBoardPlayerParams playerParams in basicBoardParams.PlayersParams)
                 {
-                    List<List<int>> playerMatrix = new () 
-                    { 
-                        basicBoardPlayerParams.HandValues, 
-                        basicBoardPlayerParams.KarmaUpValues, 
-                        basicBoardPlayerParams.KarmaDownValues 
-                        
-                    };
-                    players.Add(new Player(playerMatrix));
+                    players.Add(playerParams.ToPlayer());
                 }
 
-                CardSuit suit = cardSuit;
-                suit ??= CardSuit.Hearts;
-
-                CardPile drawPile = new (basicBoardParams.DrawPileValues, suit);
-                CardPile burnPile = new (basicBoardParams.BurnPileValues, suit);
-                PlayCardPile playPile = new(basicBoardParams.PlayPileValues, suit);
+                CardPile drawPile = new (basicBoardParams.DrawPileCards);
+                PlayCardPile playPile = new (basicBoardParams.PlayPileCards);
+                CardPile burnPile = new(basicBoardParams.BurnPileCards);
 
                 SetInitParams(players, drawPile, burnPile, playPile, basicBoardParams.BoardTurnOrder, 
                     basicBoardParams.BoardPlayOrder, basicBoardParams.HandsAreFlipped, basicBoardParams.EffectMultiplier, 
@@ -109,7 +99,7 @@ namespace KarmaLogic
                 CardValuesTotalCounts = CountCardValuesTotal(CardValuesInPlayCounts);
                 StartingPlayerStartedPlayingFrom = Players[whoStarts].PlayingFrom;
 
-                BoardPrinter = boardPrinter is null ? boardPrinterDefault : boardPrinter;
+                BoardPrinter = boardPrinter is null ? BoardPrinterDefault : boardPrinter;
                 ComboHistory = new List<CardCombo>();
                 ComboFactory = new CardComboFactory();
                 EventSystem = new BoardEventSystem();

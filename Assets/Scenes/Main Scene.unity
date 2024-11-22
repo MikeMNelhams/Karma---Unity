@@ -1224,18 +1224,19 @@ MonoBehaviour:
   _currentPlayerArrow: {fileID: 1984063095}
   _playOrderArrow: {fileID: 863761617}
   _playTable: {fileID: 1598284356}
-  _globalBotDelayInSeconds: 30
+  _globalBotDelayInSeconds: 0.001
   _playerModeSelector:
     _mode: 0
     _basicBoardParams:
-      _playerCardValues:
-      - _handValues: 
-        _karmaUpValues: 
-        _karmaDownValues: 
-        _isPlayableCharacter: 0
-      _drawPileValues: 00000000
-      _burnPileValues: 00000000
-      _playPileValues: 00000000
+      _playersParams: []
+      _drawPileCards:
+      - _suit:
+          _color: 0
+          _name: Hearts
+          _shorthand: 
+        _value: 8
+      _burnPileCards: []
+      _playPileCards: []
       _turnOrder: 1
       _playOrder: 0
       _handsAreFlipped: 0
