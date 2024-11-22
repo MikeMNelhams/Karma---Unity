@@ -24,7 +24,7 @@ public class CardObject : SelectableCardObject, IEquatable<CardObject>
         string assetsPath = Application.dataPath;
         string cardName = Enum.GetName(typeof(CardValue), card.Value);
         cardName = cardName[0].ToString().ToUpper() + cardName[1..].ToLower();
-        string resourcePath = assetsPath + "/Resources/Cards/" + card.Suit._name + "/" + cardName + ".png";
+        string resourcePath = assetsPath + "/Resources/Cards/" + card.Suit.Name + "/" + cardName + ".png";
         if (File.Exists(resourcePath))
         {
             // Image file exists - load bytes into texture

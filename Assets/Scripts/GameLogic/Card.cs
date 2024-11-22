@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace KarmaLogic
@@ -70,34 +71,48 @@ namespace KarmaLogic
         [System.Serializable]
         public class CardSuit : IEquatable<CardSuit>
         {
-            public static readonly CardSuit Hearts = new(CardColor.RED, "Hearts", "\u2665");
-            public static readonly CardSuit Diamonds = new(CardColor.RED, "Diamonds", "\u2666");
-            public static readonly CardSuit Clubs = new(CardColor.BLACK, "Clubs", "\u2663");
-            public static readonly CardSuit Spades = new(CardColor.BLACK, "Spades", "\u2660");
+            // TODO Switch from tuple to a class!
+            static readonly Dictionary<CardSuitType, Tuple<CardColor, string, string>> _suitDataMap = new()
+            {
+                {CardSuitType.HEARTS, new (CardColor.RED, "Hearts", "\u2665") },
+                {CardSuitType.DIAMONDS, new (CardColor.RED, "Diamonds", "\u2666") },
+                {CardSuitType.CLUBS, new (CardColor.BLACK, "Clubs", "\u2663") },
+                {CardSuitType.SPADES, new (CardColor.BLACK, "Spades", "\u2660") }
+            };
+
+            public static readonly CardSuit Hearts = new (CardSuitType.HEARTS);
+            public static readonly CardSuit Diamonds = new(CardSuitType.DIAMONDS);
+            public static readonly CardSuit Clubs = new (CardSuitType.CLUBS);
+            public static readonly CardSuit Spades = new(CardSuitType.SPADES);
 
             public static readonly CardSuit DebugDefault = Hearts;
 
-            [SerializeField] public CardColor _color;
-            [SerializeField] public string _name;
-            [SerializeField] protected string _shorthand;
+            [SerializeField] protected CardSuitType _suit;
 
-            public CardSuit(CardColor color, string name, string shorthand)
+            public CardColor Color {get; private set;}
+            public string Name { get; private set;}
+            protected string Shorthand { get; private set;}
+
+            public CardSuit(CardSuitType suit)
             {
-                _color = color;
-                _name = name;
-                _shorthand = shorthand;
+                _suit = suit;
+
+                Tuple<CardColor, string, string> cardSuitData = _suitDataMap[suit];
+                Color = cardSuitData.Item1;
+                Name = cardSuitData.Item2;
+                Shorthand = cardSuitData.Item3;
             }
 
             public override string ToString()
             {
-                return _shorthand;
+                return Shorthand;
             }
 
             public bool Equals(CardSuit other)
             {
                 if (other is null) { return false; }
                 if (ReferenceEquals(this, other)) { return true; }
-                return _shorthand == other._shorthand;
+                return Shorthand == other.Shorthand;
             }
         }
 
@@ -124,6 +139,14 @@ namespace KarmaLogic
         {
             RED = 0,
             BLACK = 1
+        }
+
+        public enum CardSuitType : byte
+        {
+            HEARTS,
+            DIAMONDS,
+            CLUBS,
+            SPADES
         }
     }
 }

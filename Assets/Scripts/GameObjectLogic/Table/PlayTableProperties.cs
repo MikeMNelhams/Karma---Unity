@@ -1,23 +1,24 @@
 using KarmaLogic.Board;
+using PlayTable;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayTableProperties : MonoBehaviour
 {
     [SerializeField] Vector3 _centre;
-    
+
     [SerializeField] CardObjectPileHandler _drawPileHandler;
     [SerializeField] CardObjectPileHandler _burnPileHandler;
     [SerializeField] CardObjectPileHandler _playPileHandler;
-
-    [SerializeField] List<GameObject> _boardHolders;
+    [SerializeField] CirclularTable _tableGeometry;
 
     public Vector3 Centre { get => _centre; }
 
-    public List<GameObject> KarmaUpDownHolders { get => _boardHolders; }
     public GameObject DrawPile { get => _drawPileHandler.gameObject; }
     public GameObject BurnPile { get => _burnPileHandler.gameObject; }
     public GameObject PlayPile { get => _playPileHandler.gameObject; }
+    public CirclularTable TableGeometry { get => _tableGeometry; }
 
     public void CreateCardObjectPilesFromBoard(IBoard board)
     {

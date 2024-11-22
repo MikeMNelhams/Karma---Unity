@@ -14,11 +14,11 @@ namespace KarmaPlayerMode
         public class KarmaSingleplayer : KarmaPlayerMode
         {
 
-            public KarmaSingleplayer(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null) : base(playerStartInfo, basicBoardParams)
+            public KarmaSingleplayer(BasicBoardParams basicBoardParams = null) : base(basicBoardParams)
             {
             }
 
-            public KarmaSingleplayer(List<KarmaPlayerStartInfo> playerStartInfo, int basicBoardPreset) : base(playerStartInfo, basicBoardPreset)
+            public KarmaSingleplayer(int basicBoardPreset) : base(basicBoardPreset)
             {
             }
 
@@ -84,7 +84,6 @@ namespace KarmaPlayerMode
                 for (int i = 0; i < Board.Players.Count; i++)
                 {
                     PlayerProperties playerProperties = PlayersProperties[i];
-                    UnityEngine.Debug.Log(PlayersStartInfo[i]);
                     if (!IsPlayableCharacter(i)) { continue; }
                     if (IsGameWonWithVoting) { playerProperties.EnablePlayerMovement(); }
                 }

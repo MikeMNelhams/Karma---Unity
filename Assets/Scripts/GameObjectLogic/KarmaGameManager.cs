@@ -18,13 +18,21 @@ public class KarmaGameManager : MonoBehaviour
     private static KarmaGameManager _instance;
     public static KarmaGameManager Instance { get { return _instance; } }
 
-    public GameObject _cardPrefab;
-    public GameObject _playerPrefab;
     MeshRenderer _cardPrefabRenderer;
 
+    [Header("Prefabs")]
+    [SerializeField] GameObject _cardPrefab;
+    [SerializeField] GameObject _playerPrefab;
+    [SerializeField] GameObject _playerKarmaBoardHolderPrefab;
+
+    public GameObject PlayerKarmaBoardHolder { get => _playerKarmaBoardHolderPrefab; }
+
+    [Header("Scene objects")]
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] GameObject _playOrderArrow;
-    [SerializeField] PlayTableProperties _playTable;
+    [SerializeField] PlayTableProperties _playTableProperties;
+
+    public PlayTableProperties PlayTableProperties { get => _playTableProperties; }
 
     [Header("Gameplay Settings")]
 
@@ -75,11 +83,11 @@ public class KarmaGameManager : MonoBehaviour
         Board = SelectedKarmaPlayerMode.Board;
         PlayersProperties = SelectedKarmaPlayerMode.PlayersProperties;
 
-        RegisterPlayerBoardListeners(SelectedKarmaPlayerMode.PlayersStartInfo);
+        RegisterPlayerBoardListeners();
         RegisterBoardEvents();
         CreatePlayerCardObjectsFromBoard();
 
-        _playTable.CreateCardObjectPilesFromBoard(Board);
+        _playTableProperties.CreateCardObjectPilesFromBoard(Board);
 
         AssignButtonEvents();
         _currentPlayerArrowHandler.SetArrowVisibility(true);
@@ -105,11 +113,17 @@ public class KarmaGameManager : MonoBehaviour
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
 
-    public GameObject InstantiatePlayer(List<KarmaPlayerStartInfo> playersStartInfo, int playerIndex)
+    public GameObject InstantiatePlayer(Vector3 position)
     {
-        Vector3 tableDirection = _playTable.Centre - playersStartInfo[playerIndex].startPosition;
+        Vector3 tableDirection = _playTableProperties.Centre - position;
         tableDirection.y = 0;
-        return Instantiate(_playerPrefab, playersStartInfo[playerIndex].startPosition, Quaternion.LookRotation(tableDirection));
+        return Instantiate(_playerPrefab, position, Quaternion.LookRotation(tableDirection));
+    }
+
+    public PlayerKarmaBoardHolderProperties InstantiatePlayerKarmaBoardHolder(Vector3 position, Quaternion rotation)
+    {
+        GameObject karmaBoardHolder = Instantiate(_playerKarmaBoardHolderPrefab, position, rotation);
+        return karmaBoardHolder.GetComponent<PlayerKarmaBoardHolderProperties>();
     }
 
     public GameObject InstantiateCard(Card card, Vector3 cardPosition, Quaternion cardRotation, GameObject parent)
@@ -120,9 +134,9 @@ public class KarmaGameManager : MonoBehaviour
         return cardObject;
     }
 
-    void RegisterPlayerBoardListeners(List<KarmaPlayerStartInfo> playersStartInfo)
+    void RegisterPlayerBoardListeners()
     {
-        for (int playerIndex = 0; playerIndex < playersStartInfo.Count; playerIndex++)
+        for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
         {
             PlayerProperties playerProperties = PlayersProperties[playerIndex];
             playerProperties.RegisterPickedUpCardOnClickEventListener(AttemptGiveAwayPickedUpCard);
@@ -141,12 +155,12 @@ public class KarmaGameManager : MonoBehaviour
             playerProperties.InstantiatePlayerHandFan(Board.Players[i].Hand);
             if (!SelectedKarmaPlayerMode.IsPlayableCharacter(i)) { PlayersProperties[i].TurnOffLegalMoveHints(); }
             Player player = Board.Players[i];
-            if (i > _playTable.KarmaUpDownHolders.Count) { throw new Exception("Invalid board setup, number of KarmaUpDownHolders must = number of players!"); }
-            if (_playTable.KarmaUpDownHolders[i] == null) { throw new NullReferenceException("KarmaUpDown for player: " + i + " is null!"); }
-            GameObject boardHolder = _playTable.KarmaUpDownHolders[i];
+            if (i > SelectedKarmaPlayerMode.PlayersBoardHolderProperties.Count) { throw new Exception("Invalid board setup, number of KarmaUpDownHolders must = number of players!"); }
+            if (SelectedKarmaPlayerMode.PlayersBoardHolderProperties[i] == null) { throw new NullReferenceException("KarmaUpDown for player: " + i + " is null!"); }
+            PlayerKarmaBoardHolderProperties boardHolderProperties = SelectedKarmaPlayerMode.PlayersBoardHolderProperties[i];
 
-            KarmaUpPilesHandler karmaUpPilesHandler = boardHolder.GetComponent<KarmaUpPilesHandler>();
-            KarmaDownPilesHandler karmaDownPilesHandler = boardHolder.GetComponent<KarmaDownPilesHandler>();
+            KarmaUpPilesHandler karmaUpPilesHandler = boardHolderProperties.UpPilesHandler;
+            KarmaDownPilesHandler karmaDownPilesHandler = boardHolderProperties.DownPilesHandler;
             
             playerProperties.CardsInKarmaUp = new ListWithConstantContainsCheck<SelectableCardObject>(karmaUpPilesHandler.CreateKarmaUpCards(player.KarmaUp, i));
             playerProperties.CardsInKarmaDown = new ListWithConstantContainsCheck<SelectableCardObject>(karmaDownPilesHandler.CreateKarmaDownCards(player.KarmaDown, i));
@@ -228,11 +242,11 @@ public class KarmaGameManager : MonoBehaviour
 
         if (jokerCount == 0)
         {
-            _playTable.MoveEntirePlayPileToBurnPile();
+            _playTableProperties.MoveEntirePlayPileToBurnPile();
             return;
         }
         
-        _playTable.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
+        _playTableProperties.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
     }
 
     void RotatePlayOrderArrow()
@@ -252,7 +266,7 @@ public class KarmaGameManager : MonoBehaviour
         PlayerProperties playerProperties = PlayersProperties[Board.CurrentPlayerIndex];
 
         Vector3 playerPosition = playerProperties.transform.position;
-        Vector3 tablePosition = _playTable.transform.position;
+        Vector3 tablePosition = _playTableProperties.transform.position;
 
         _currentPlayerArrowHandler.MoveArrow(playerPosition, tablePosition);
     }
@@ -260,12 +274,12 @@ public class KarmaGameManager : MonoBehaviour
     void MoveCardsFromSelectionToPlayPile(int playerIndex)
     {
         List<SelectableCardObject> cardObjects = PlayersProperties[playerIndex].PopSelectedCardsFromSelection();
-        _playTable.MoveCardsToTopOfPlayPile(cardObjects);
+        _playTableProperties.MoveCardsToTopOfPlayPile(cardObjects);
     }
 
     void DrawCards(int numberOfCards, int playerIndex)
     {
-        List<SelectableCardObject> cardsDrawn = _playTable.DrawCards(numberOfCards);
+        List<SelectableCardObject> cardsDrawn = _playTableProperties.DrawCards(numberOfCards);
         PlayersProperties[playerIndex].AddCardObjectsToHand(cardsDrawn);
     }
 
@@ -446,7 +460,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayerProperties playerProperties = PlayersProperties[playerIndex];
         PickUpAction.Apply(Board, playerProperties.CardSelector.Selection);
-        List<SelectableCardObject> playPileCards = _playTable.PopAllFromPlayPile();
+        List<SelectableCardObject> playPileCards = _playTableProperties.PopAllFromPlayPile();
         PlayersProperties[playerIndex].AddCardObjectsToHand(playPileCards);
         Board.EndTurn();
         return Task.CompletedTask;
@@ -577,7 +591,7 @@ public class KarmaGameManager : MonoBehaviour
         print(giverIndex + " is giving away PLAY PILE (board) to player: " + targetIndex);
         Board.Players[targetIndex].Pickup(Board.PlayPile); // TODO Register this at the beginning!
 
-        PlayersProperties[targetIndex].AddCardObjectsToHand(_playTable.PopAllFromPlayPile());
+        PlayersProperties[targetIndex].AddCardObjectsToHand(_playTableProperties.PopAllFromPlayPile());
 
         giver.PlayPileGiveAwayHandler = null;
 

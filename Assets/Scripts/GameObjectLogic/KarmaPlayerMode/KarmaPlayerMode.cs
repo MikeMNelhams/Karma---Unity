@@ -9,6 +9,7 @@ using StateMachine.CharacterStateMachines;
 using UnityEngine;
 using KarmaLogic.BasicBoard;
 using KarmaLogic.Bots;
+using PlayTable;
 
 namespace KarmaPlayerMode
 {
@@ -18,7 +19,8 @@ namespace KarmaPlayerMode
         public int TurnLimit { get; protected set; }
         public IBoard Board { get; protected set; }
         public List<PlayerProperties> PlayersProperties { get; protected set; }
-        public List<KarmaPlayerStartInfo> PlayersStartInfo { get; protected set; }
+        public List<PlayerKarmaBoardHolderProperties> PlayersBoardHolderProperties { get; protected set; }
+
         protected abstract List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets();
         protected List<KarmaPlayModeBoardPreset<BasicBoard>> BasicBoardPresets { get; set; }
         public BasicBoardParams BoardParams { get; protected set; }
@@ -34,12 +36,11 @@ namespace KarmaPlayerMode
         public bool IsGameOver { get; protected set; }
         public bool IsGameWon { get; protected set; }
 
-        public KarmaPlayerMode(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null)
+        public KarmaPlayerMode(BasicBoardParams basicBoardParams = null)
         {
             BasicBoardPresets = GetBasicBoardPresets();
             BoardParams ??= new BasicBoardParams();
             Board = new BasicBoard(BoardParams);
-            PlayersStartInfo = playerStartInfo;
             CreatePlayerObjects();
             TurnLimit = basicBoardParams.TurnLimit;
 
@@ -54,14 +55,13 @@ namespace KarmaPlayerMode
             InitializeGameRanks();
         }
 
-        public KarmaPlayerMode(List<KarmaPlayerStartInfo> playerStartInfo, int basicBoardPresetIndex)
+        public KarmaPlayerMode(int basicBoardPresetIndex)
         {
             BasicBoardPresets = GetBasicBoardPresets();
             TurnLimit = BasicBoardPresetTurnLimit(basicBoardPresetIndex);
 
             BoardParams = BasicBoardPreset(basicBoardPresetIndex);
             Board = new BasicBoard(BoardParams);
-            PlayersStartInfo = playerStartInfo;
             CreatePlayerObjects();
             
             NumberOfPlayersFinishedMulligan = 0;
@@ -88,13 +88,20 @@ namespace KarmaPlayerMode
         void CreatePlayerObjects()
         {
             PlayersProperties = new();
+            PlayersBoardHolderProperties = new();
             int botNameIndex = 0;
 
             float botDelay = KarmaGameManager.Instance.GlobalBotDelayInSeconds;
 
-            for (int playerIndex = 0; playerIndex < PlayersStartInfo.Count; playerIndex++)
+            CirclularTable tableGeometry = KarmaGameManager.Instance.PlayTableProperties.TableGeometry;
+            Vector3[] playerStartPositions = tableGeometry.PlayerPositions(Board.Players.Count);
+
+            Vector3[] holderStartPositions = tableGeometry.PlayerKarmaPositions(Board.Players.Count);
+            Quaternion[] holderStartRotations = tableGeometry.PlayerKarmaRotations(Board.Players.Count, holderStartPositions);
+
+            for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
             {
-                GameObject player = KarmaGameManager.Instance.InstantiatePlayer(PlayersStartInfo, playerIndex);
+                GameObject player = KarmaGameManager.Instance.InstantiatePlayer(playerStartPositions[playerIndex]);
 
                 PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
                 player.name = "Player " + playerIndex;
@@ -114,7 +121,17 @@ namespace KarmaPlayerMode
                     playerProperties.DisableCamera();
                     botNameIndex++;
                 }
+
+                PlayerKarmaBoardHolderProperties holderProperties = KarmaGameManager.Instance.
+                    InstantiatePlayerKarmaBoardHolder(holderStartPositions[playerIndex],
+                    holderStartRotations[playerIndex]);
+
+                holderProperties.name = playerProperties.name + " karmaBoard";
+                holderProperties.gameObject.transform.position += new Vector3(0, holderProperties.HolderCuboidRenderer.bounds.extents.y / 2, 0);
+                PlayersBoardHolderProperties.Add(holderProperties);
             }
+
+
         }
 
         public abstract void SetupPlayerActionStateForBasicStart();

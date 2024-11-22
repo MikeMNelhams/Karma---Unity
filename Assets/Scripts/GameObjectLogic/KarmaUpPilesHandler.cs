@@ -9,6 +9,8 @@ public class KarmaUpPilesHandler : MonoBehaviour, ICardVisibilityHandler
     [SerializeField] float _leftOffset = 0.1f;
     [SerializeField] float _rightOffset = 0.1f;
 
+    public Transform DebugCube { get => _debugCube; }
+
     public int OwnerIndex { get; protected set; }
 
     public bool IsVisible(int observerPlayerIndex)

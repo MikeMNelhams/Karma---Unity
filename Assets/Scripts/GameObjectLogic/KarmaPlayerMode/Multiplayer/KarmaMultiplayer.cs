@@ -12,8 +12,8 @@ namespace KarmaPlayerMode
     {
         public class KarmaMultiplayer : KarmaPlayerMode
         {
-            public KarmaMultiplayer(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null) : base(playerStartInfo, basicBoardParams) { }
-            public KarmaMultiplayer(List<KarmaPlayerStartInfo> playerStartInfo, int basicBoardPreset) : base(playerStartInfo, basicBoardPreset)
+            public KarmaMultiplayer(BasicBoardParams basicBoardParams = null) : base(basicBoardParams) { }
+            public KarmaMultiplayer(int basicBoardPreset) : base(basicBoardPreset)
             {
             }
 
