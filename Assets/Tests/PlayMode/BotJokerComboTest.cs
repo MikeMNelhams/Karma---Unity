@@ -19,7 +19,7 @@ public class BotJokerComboTest : MonoBehaviour
     public IEnumerator TestVotesCorrectly()
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
-        KarmaGameManager.Instance.SetSelectedBoardPreset(2);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(1);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();

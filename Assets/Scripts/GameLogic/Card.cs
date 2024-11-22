@@ -63,6 +63,7 @@ namespace KarmaLogic
             public static bool operator <=(Card x, Card y) => x.Value <= y.Value;
         }
 
+        [System.Serializable]
         public class CardSuit : IEquatable<CardSuit>
         {
             public static readonly CardSuit Hearts = new(CardColor.RED, "Hearts", "\u2665");
@@ -72,9 +73,9 @@ namespace KarmaLogic
 
             public static readonly CardSuit DebugDefault = Hearts;
 
-            public readonly CardColor _color;
-            public readonly string _name;
-            readonly string _shorthand;
+            [SerializeField] public CardColor _color;
+            [SerializeField] public string _name;
+            [SerializeField] protected string _shorthand;
 
             public CardSuit(CardColor color, string name, string shorthand)
             {

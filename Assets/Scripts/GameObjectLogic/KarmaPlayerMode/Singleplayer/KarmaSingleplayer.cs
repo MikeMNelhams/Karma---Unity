@@ -85,7 +85,7 @@ namespace KarmaPlayerMode
                 {
                     PlayerProperties playerProperties = PlayersProperties[i];
                     UnityEngine.Debug.Log(PlayersStartInfo[i]);
-                    if (!PlayersStartInfo[i].isPlayableCharacter) { continue; }
+                    if (!IsPlayableCharacter(i)) { continue; }
                     if (IsGameWonWithVoting) { playerProperties.EnablePlayerMovement(); }
                 }
 
@@ -98,7 +98,7 @@ namespace KarmaPlayerMode
 
                 for (int playerIndex = playerCameraDisabledIndex + 1; playerIndex < Board.Players.Count; playerIndex++)
                 {
-                    if (!PlayersStartInfo[playerIndex].isPlayableCharacter) { continue; }
+                    if (!IsPlayableCharacter(playerIndex)) { continue; }
                     if (stateRequirement != null && !stateRequirement(PlayersProperties[playerIndex].StateMachine.CurrentState)) { continue; }
                     PlayersProperties[playerIndex].EnableCamera();
                     return;
@@ -106,7 +106,7 @@ namespace KarmaPlayerMode
 
                 for (int playerIndex = 0; playerIndex < playerCameraDisabledIndex; playerIndex++)
                 {
-                    if (!PlayersStartInfo[playerIndex].isPlayableCharacter) { continue; }
+                    if (!IsPlayableCharacter(playerIndex)) { continue; }
                     if (stateRequirement != null && !stateRequirement(PlayersProperties[playerIndex].StateMachine.CurrentState)) { continue; }
                     PlayersProperties[playerIndex].EnableCamera();
                     return;
@@ -152,7 +152,7 @@ namespace KarmaPlayerMode
 
             public override void IfPlayableDisableStartingPlayerMovement()
             {
-                if (PlayersStartInfo[Board.PlayerIndexWhoStartedTurn].isPlayableCharacter)
+                if (IsPlayableCharacter(Board.PlayerIndexWhoStartedTurn))
                 {
                     PlayersProperties[Board.PlayerIndexWhoStartedTurn].DisablePlayerMovement();
                 }
@@ -160,7 +160,7 @@ namespace KarmaPlayerMode
 
             public override void IfPlayableEnableCurrentPlayerMovement()
             {
-                if (PlayersStartInfo[Board.PlayerIndexWhoStartedTurn].isPlayableCharacter)
+                if (IsPlayableCharacter(Board.PlayerIndexWhoStartedTurn))
                 {
                     PlayersProperties[Board.PlayerIndexWhoStartedTurn].EnablePlayerMovement();
                 }
@@ -170,7 +170,6 @@ namespace KarmaPlayerMode
             {
                 List<KarmaPlayModeBoardPreset<BasicBoard>> presets = new()
                 {
-                    new RandomStart4Player(),
                     new TestStartQueenCombo(),
                     new TestStartJokerCombo(),
                     new TestStartVoting(),

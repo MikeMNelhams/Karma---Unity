@@ -20,7 +20,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -50,7 +52,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -83,7 +87,8 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -115,7 +120,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -147,7 +154,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -179,7 +188,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 4 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -213,7 +224,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 3, 4 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -249,7 +262,8 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 5 };
         List<int> burnCardValues = new() { 2 };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, effectMultiplier: 2, whoStarts: 1);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, effectMultiplier: 2, whoStarts: 1);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -289,7 +303,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 6 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -322,8 +338,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
-
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
         board.StartTurn();
 
         CardsList cards = new(new List<int>() { 11 }, CardSuit.DebugDefault);
@@ -355,7 +372,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 8 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -390,7 +409,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 9 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -430,7 +451,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 10 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -467,7 +490,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 2, 11 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -500,7 +525,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 12 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -530,7 +557,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 12 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -559,7 +588,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 13 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -593,7 +624,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 13 };
         List<int> burnCardValues = new() { 2, 7 };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -630,7 +663,9 @@ public class CardComboJackTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 

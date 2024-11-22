@@ -18,7 +18,9 @@ public class CardComboKingTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -49,7 +51,9 @@ public class CardComboKingTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { 2, 7 };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -83,7 +87,9 @@ public class CardComboKingTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { 11, 2 };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -117,7 +123,8 @@ public class CardComboKingTests
         List<int> playCardValues = new() { 13, 13};
         List<int> burnCardValues = new() { 13 };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -145,7 +152,8 @@ public class CardComboKingTests
         List<int> playCardValues = new() {  };
         List<int> burnCardValues = new() { 13, 13 };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 

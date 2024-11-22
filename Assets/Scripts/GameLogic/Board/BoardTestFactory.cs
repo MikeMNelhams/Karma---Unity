@@ -8,7 +8,7 @@ namespace KarmaLogic
     {
         public class BoardTestFactory
         {
-            public static BasicBoard BotVotingTestBoard()
+            public static BasicBoardParams BotVotingTestBoard()
             {
                 List<List<List<int>>> playerCardValues = new()
                 {
@@ -29,10 +29,10 @@ namespace KarmaLogic
                 List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
                 List<int> burnCardValues = new() { };
 
-                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
+                return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
             }
 
-            public static BasicBoard BotQueenCombo()
+            public static BasicBoardParams BotQueenCombo()
             {
                 List<List<List<int>>> playerCardValues = new()
                 {
@@ -53,10 +53,10 @@ namespace KarmaLogic
                 List<int> playCardValues = new() { };
                 List<int> burnCardValues = new() { };
 
-                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
+                return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
             }
 
-            public static BasicBoard BotJokerCombo()
+            public static BasicBoardParams BotJokerCombo()
             {
                 List<List<List<int>>> playerCardValues = new()
                 {
@@ -77,10 +77,10 @@ namespace KarmaLogic
                 List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
                 List<int> burnCardValues = new() { };
 
-                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
+                return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
             }
 
-            public static BasicBoard BotVotingTestBoard2()
+            public static BasicBoardParams BotVotingTestBoard2()
             {
                 List<List<List<int>>> playerCardValues = new()
                 {
@@ -101,10 +101,10 @@ namespace KarmaLogic
                 List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
                 List<int> burnCardValues = new() { };
 
-                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
+                return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
             }
 
-            public static BasicBoard BotTestScenario1()
+            public static BasicBoardParams BotTestScenario1()
             {
                 List<List<List<int>>> playerCardValues = new()
                 {
@@ -125,7 +125,7 @@ namespace KarmaLogic
                 List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
                 List<int> burnCardValues = new() { 5, 6 };
 
-                return new BasicBoard(new BasicBoardParams(players, drawCardValues, burnCardValues, playCardValues));
+                return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
             }
         }
     }

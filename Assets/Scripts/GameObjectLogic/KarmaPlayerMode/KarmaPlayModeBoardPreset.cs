@@ -1,3 +1,4 @@
+using KarmaLogic.BasicBoard;
 using KarmaLogic.Board;
 
 namespace KarmaPlayerMode
@@ -9,7 +10,7 @@ namespace KarmaPlayerMode
 
         }
 
-        public abstract IBoard Board { get; }
+        public abstract BasicBoardParams BoardParams { get; }
         public abstract int TurnLimit { get; }
     }
 }

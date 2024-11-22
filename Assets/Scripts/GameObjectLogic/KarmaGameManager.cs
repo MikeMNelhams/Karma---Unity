@@ -139,7 +139,7 @@ public class KarmaGameManager : MonoBehaviour
         {
             PlayerProperties playerProperties = PlayersProperties[i];
             playerProperties.InstantiatePlayerHandFan(Board.Players[i].Hand);
-            if (!SelectedKarmaPlayerMode.PlayersStartInfo[i].isPlayableCharacter ) { PlayersProperties[i].TurnOffLegalMoveHints(); }
+            if (!SelectedKarmaPlayerMode.IsPlayableCharacter(i)) { PlayersProperties[i].TurnOffLegalMoveHints(); }
             Player player = Board.Players[i];
             if (i > _playTable.KarmaUpDownHolders.Count) { throw new Exception("Invalid board setup, number of KarmaUpDownHolders must = number of players!"); }
             if (_playTable.KarmaUpDownHolders[i] == null) { throw new NullReferenceException("KarmaUpDown for player: " + i + " is null!"); }
@@ -312,9 +312,9 @@ public class KarmaGameManager : MonoBehaviour
             return;
         }
 
-        if (!Board.CurrentPlayer.HasCards) { await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards); }
+        if (!Board.CurrentPlayer.HasCards) { await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards); return; }
 
-        if (SelectedKarmaPlayerMode.PlayersStartInfo[board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfPlayableEnableCurrentPlayerMovement(); }
+        if (SelectedKarmaPlayerMode.IsPlayableCharacter(board.CurrentPlayerIndex)) { SelectedKarmaPlayerMode.IfPlayableEnableCurrentPlayerMovement(); }
         if (SelectedKarmaPlayerMode.PlayerJokerCounts.Keys.Contains(Board.CurrentPlayerIndex))
         {
             PlayersProperties[board.CurrentPlayerIndex].RegisterVoteForTargetEventListener(SelectedKarmaPlayerMode.TriggerVoteForPlayer);
@@ -379,10 +379,9 @@ public class KarmaGameManager : MonoBehaviour
 
     void StepToNextPlayer()
     {
-        print("Is game over: " + SelectedKarmaPlayerMode.IsGameOver);
         if (SelectedKarmaPlayerMode.IsGameOver) { return; }
 
-        if (SelectedKarmaPlayerMode.PlayersStartInfo[Board.CurrentPlayerIndex].isPlayableCharacter) { SelectedKarmaPlayerMode.IfPlayableDisableStartingPlayerMovement(); }
+        if (SelectedKarmaPlayerMode.IsPlayableCharacter(Board.CurrentPlayerIndex)) { SelectedKarmaPlayerMode.IfPlayableDisableStartingPlayerMovement(); }
         Board.StepPlayerIndex(1);
         print("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
         Board.StartTurn();

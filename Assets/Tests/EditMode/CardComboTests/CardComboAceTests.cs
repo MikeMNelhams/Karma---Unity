@@ -18,7 +18,9 @@ public class CardComboAceTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT);
+        BasicBoard board = new (boardParams);
 
         board.StartTurn();
 
@@ -44,7 +46,9 @@ public class CardComboAceTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, boardPlayOrder: BoardPlayOrder.DOWN, boardTurnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+            playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -70,7 +74,8 @@ public class CardComboAceTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -94,7 +99,8 @@ public class CardComboAceTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -118,7 +124,8 @@ public class CardComboAceTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 

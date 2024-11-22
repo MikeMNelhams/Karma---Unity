@@ -35,8 +35,8 @@ namespace KarmaLogic.BasicBoard
 
         public int TurnLimit { get { return _turnLimit; } }
 
-        public BasicBoardParams(List<BasicBoardPlayerParams> playerCardValues = null, List<int> drawPileValues = null, 
-            List<int> burnPileValues = null, List<int> playPileValues = null, 
+        public BasicBoardParams(List<BasicBoardPlayerParams> playersCardValues = null, List<int> drawPileValues = null,
+            List<int> playPileValues = null, List<int> burnPileValues = null, 
             BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
             bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
             bool hasBurnedThisTurn = false, int turnsPlayed = 0)
@@ -46,7 +46,7 @@ namespace KarmaLogic.BasicBoard
             _burnPileValues = new List<int>();
             _playPileValues = new List<int>();
 
-            if (playerCardValues != null) { _playerCardValues.AddRange(playerCardValues); }
+            if (playersCardValues != null) { _playerCardValues.AddRange(playersCardValues); }
             if (drawPileValues != null) { _drawPileValues.AddRange(drawPileValues); }
             if (burnPileValues != null) { _burnPileValues.AddRange(burnPileValues); }
             if (playPileValues != null) { _playPileValues.AddRange(playPileValues); }
@@ -54,7 +54,39 @@ namespace KarmaLogic.BasicBoard
             _turnOrder = turnOrder;
             _playOrder = playOrder;
             _handsAreFlipped = handsAreFlipped;
-            _effectMultiplier = Mathf.Min(effectMultiplier, 1);
+            _effectMultiplier = Mathf.Max(effectMultiplier, 1);
+            _whoStarts = whoStarts;
+            _hasBurnedThisTurn = hasBurnedThisTurn;
+            _turnsPlayed = turnsPlayed;
+        }
+
+        public BasicBoardParams(List<List<List<int>>> playersCardValues, List<int> drawPileValues = null,
+            List<int> playPileValues = null, List<int> burnPileValues = null,
+            BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, BoardPlayOrder playOrder = BoardPlayOrder.UP,
+            bool handsAreFlipped = false, int effectMultiplier = 1, int whoStarts = 0,
+            bool hasBurnedThisTurn = false, int turnsPlayed = 0)
+        {
+            _playerCardValues = new List<BasicBoardPlayerParams>();
+            _drawPileValues = new List<int>();
+            _burnPileValues = new List<int>();
+            _playPileValues = new List<int>();
+
+            List<BasicBoardPlayerParams> playerParams = new();
+
+            foreach (List<List<int>> playerCardValues in playersCardValues)
+            {
+                playerParams.Add(new BasicBoardPlayerParams(playerCardValues, isPlayableCharacter: false));
+            }
+
+            if (playersCardValues != null) { _playerCardValues.AddRange(playerParams); }
+            if (drawPileValues != null) { _drawPileValues.AddRange(drawPileValues); }
+            if (burnPileValues != null) { _burnPileValues.AddRange(burnPileValues); }
+            if (playPileValues != null) { _playPileValues.AddRange(playPileValues); }
+
+            _turnOrder = turnOrder;
+            _playOrder = playOrder;
+            _handsAreFlipped = handsAreFlipped;
+            _effectMultiplier = Mathf.Max(effectMultiplier, 1);
             _whoStarts = whoStarts;
             _hasBurnedThisTurn = hasBurnedThisTurn;
             _turnsPlayed = turnsPlayed;

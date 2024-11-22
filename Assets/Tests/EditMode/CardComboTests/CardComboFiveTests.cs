@@ -23,7 +23,8 @@ public class CardComboFiveTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -66,7 +67,8 @@ public class CardComboFiveTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -101,7 +103,8 @@ public class CardComboFiveTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -136,7 +139,8 @@ public class CardComboFiveTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 

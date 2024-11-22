@@ -4,12 +4,10 @@ using UnityEngine;
 [Serializable]
 public class KarmaPlayerStartInfo
 {
-    public Vector3 startPosition;
-    public bool isPlayableCharacter;
+    [SerializeField] public Vector3 startPosition;
 
-    public KarmaPlayerStartInfo(Vector3 startPosition, bool isPlayableCharacter)
+    public KarmaPlayerStartInfo(Vector3 startPosition)
     {
         this.startPosition = startPosition;
-        this.isPlayableCharacter = isPlayableCharacter;
     }
 }

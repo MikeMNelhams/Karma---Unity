@@ -21,7 +21,7 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
 
     int _presetSelected = 0;
     protected bool _presetSelectedChanged = false;
-    protected string[] _presetOptionsSingleplayer = new string[6] { "RandomStart4Player", "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting", "TestStartVoting2", "TestScenarioFullHand"};
+    protected string[] _presetOptionsSingleplayer = new string[5] { "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting", "TestStartVoting2", "TestScenarioFullHand"};
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {

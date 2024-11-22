@@ -23,7 +23,8 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
         
@@ -47,7 +48,8 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -71,7 +73,8 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -98,7 +101,8 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -125,7 +129,8 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
@@ -152,7 +157,8 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoard board = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoard board = new(boardParams);
 
         board.StartTurn();
 

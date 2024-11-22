@@ -21,6 +21,7 @@ namespace KarmaPlayerMode
         public List<KarmaPlayerStartInfo> PlayersStartInfo { get; protected set; }
         protected abstract List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets();
         protected List<KarmaPlayModeBoardPreset<BasicBoard>> BasicBoardPresets { get; set; }
+        public BasicBoardParams BoardParams { get; protected set; }
         public abstract int NumberOfActivePlayers { get; }
 
         public int NumberOfPlayersFinishedMulligan { get; protected set; }
@@ -36,8 +37,8 @@ namespace KarmaPlayerMode
         public KarmaPlayerMode(List<KarmaPlayerStartInfo> playerStartInfo, BasicBoardParams basicBoardParams = null)
         {
             BasicBoardPresets = GetBasicBoardPresets();
-            basicBoardParams ??= new BasicBoardParams();
-            Board = new BasicBoard(basicBoardParams);
+            BoardParams ??= new BasicBoardParams();
+            Board = new BasicBoard(BoardParams);
             PlayersStartInfo = playerStartInfo;
             CreatePlayerObjects();
             TurnLimit = basicBoardParams.TurnLimit;
@@ -58,7 +59,8 @@ namespace KarmaPlayerMode
             BasicBoardPresets = GetBasicBoardPresets();
             TurnLimit = BasicBoardPresetTurnLimit(basicBoardPresetIndex);
 
-            Board = BasicBoardPreset(basicBoardPresetIndex);
+            BoardParams = BasicBoardPreset(basicBoardPresetIndex);
+            Board = new BasicBoard(BoardParams);
             PlayersStartInfo = playerStartInfo;
             CreatePlayerObjects();
             
@@ -99,7 +101,7 @@ namespace KarmaPlayerMode
                 playerProperties.Index = playerIndex;
                 PlayersProperties.Add(playerProperties);
 
-                if (PlayersStartInfo[playerIndex].isPlayableCharacter)
+                if (IsPlayableCharacter(playerIndex))
                 {
                     playerProperties.StateMachine = new PlayerStateMachine(playerProperties);
                 }
@@ -131,10 +133,10 @@ namespace KarmaPlayerMode
 
         public abstract Task TriggerFinishMulligan(int playerIndex);
 
-        public BasicBoard BasicBoardPreset(int presetIndex)
+        public BasicBoardParams BasicBoardPreset(int presetIndex)
         {
             if (IsValidBoardPresetIndex(presetIndex)) { throw new BoardPresetException("Invalid preset index!"); }
-            return BasicBoardPresets[presetIndex].Board;
+            return BasicBoardPresets[presetIndex].BoardParams;
         }
 
         public int BasicBoardPresetTurnLimit(int presetIndex)
@@ -193,7 +195,7 @@ namespace KarmaPlayerMode
             if (!VotesForWinners.ContainsKey(voteTargetIndex)) { VotesForWinners[voteTargetIndex] = 0; }
             VotesForWinners[voteTargetIndex] += PlayerJokerCounts[votingPlayerIndex];
             int totalVotes = Enumerable.Sum(VotesForWinners.Values);
-            UnityEngine.Debug.Log("There are " + totalVotes + " out of " + totalAvailableVotesForWinners);
+            UnityEngine.Debug.Log("There are " + totalVotes + " votes out of " + totalAvailableVotesForWinners);
             if (totalVotes == totalAvailableVotesForWinners)
             {
                 DecideWinners();
@@ -212,8 +214,14 @@ namespace KarmaPlayerMode
             if (Board.TurnsPlayed >= TurnLimit)
             {
                 IsGameOver = true;
+                IsGameWon = false;
                 UnityEngine.Debug.LogWarning("Game has finished by turn limit exceeded. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
             }
+        }
+
+        public bool IsPlayableCharacter(int playerIndex)
+        {
+            return BoardParams.PlayerCardValues[playerIndex].IsPlayableCharacter;
         }
 
         protected bool IsMulliganFinished

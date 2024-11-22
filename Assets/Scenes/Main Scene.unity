@@ -1224,7 +1224,7 @@ MonoBehaviour:
   _currentPlayerArrow: {fileID: 1984063095}
   _playOrderArrow: {fileID: 863761617}
   _playTable: {fileID: 1598284356}
-  _globalBotDelayInSeconds: 0.001
+  _globalBotDelayInSeconds: 30
   _playerModeSelector:
     _mode: 0
     _basicBoardParams:
@@ -1246,13 +1246,9 @@ MonoBehaviour:
       _turnLimit: 100
     _playersStartInfo:
     - startPosition: {x: 0, y: 0, z: 0}
-      isPlayableCharacter: 0
     - startPosition: {x: 2.5, y: 0, z: 2.5}
-      isPlayableCharacter: 0
     - startPosition: {x: 0, y: 0, z: 5}
-      isPlayableCharacter: 0
     - startPosition: {x: -2.5, y: 0, z: 2.5}
-      isPlayableCharacter: 0
     _basicBoardPresetSelected: 1
 --- !u!1 &863761617 stripped
 GameObject:

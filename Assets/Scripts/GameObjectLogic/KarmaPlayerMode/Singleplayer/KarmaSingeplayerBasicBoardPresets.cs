@@ -4,24 +4,13 @@ namespace KarmaPlayerMode
 {
     namespace Singleplayer
     {
-        public class RandomStart4Player : KarmaPlayModeBoardPreset<BasicBoard>
-        {
-            public RandomStart4Player() : base()
-            {
-            }
-
-            public override BasicBoard Board => new (4);
-
-            public override int TurnLimit => 200;
-        }
-
         public class TestStartQueenCombo : KarmaPlayModeBoardPreset<BasicBoard>
         {
             public TestStartQueenCombo() : base()
             {
             }
 
-            public override BasicBoard Board => BoardTestFactory.BotQueenCombo();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotQueenCombo();
 
             public override int TurnLimit => 100 ;
         }
@@ -32,7 +21,7 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override BasicBoard Board => BoardTestFactory.BotJokerCombo();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotJokerCombo();
 
             public override int TurnLimit => 100;
         }
@@ -43,7 +32,7 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override BasicBoard Board => BoardTestFactory.BotVotingTestBoard();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotVotingTestBoard();
 
             public override int TurnLimit => 100;
         }
@@ -54,7 +43,7 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override BasicBoard Board => BoardTestFactory.BotVotingTestBoard2();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotVotingTestBoard2();
 
             public override int TurnLimit => 100;
         }
@@ -63,7 +52,7 @@ namespace KarmaPlayerMode
         {
             public TestScenarioFullHand() : base() { }
 
-            public override BasicBoard Board => BoardTestFactory.BotTestScenario1();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestScenario1();
             public override int TurnLimit => 100;
         }
     }
