@@ -21,6 +21,7 @@ public class BotVotingTest2 : MonoBehaviour
     public IEnumerator TestVotesCorrectly()
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
+        KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
         KarmaGameManager.Instance.SetSelectedBoardPreset(3);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 

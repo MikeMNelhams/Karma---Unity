@@ -1121,7 +1121,38 @@ MonoBehaviour:
   _playerModeSelector:
     _mode: 0
     _basicBoardParams:
-      _playersParams: []
+      _playersParams:
+      - _handCards:
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 2
+          _suit:
+            _suit: 0
+        _karmaUpCards: []
+        _karmaDownCards: []
+        _isPlayableCharacter: 1
+      - _handCards:
+        - _value: 3
+          _suit:
+            _suit: 0
+        _karmaUpCards: []
+        _karmaDownCards: []
+        _isPlayableCharacter: 1
+      - _handCards:
+        - _value: 4
+          _suit:
+            _suit: 0
+        _karmaUpCards: []
+        _karmaDownCards: []
+        _isPlayableCharacter: 1
+      - _handCards:
+        - _value: 8
+          _suit:
+            _suit: 0
+        _karmaUpCards: []
+        _karmaDownCards: []
+        _isPlayableCharacter: 1
       _drawPileCards:
       - _value: 4
         _suit:

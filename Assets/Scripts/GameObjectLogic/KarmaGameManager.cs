@@ -173,6 +173,11 @@ public class KarmaGameManager : MonoBehaviour
         _playerModeSelector.SetBoardPresetIndex(presetIndex);
     }
 
+    public void SetIsUsingBoardPresets(bool isUsingPresets)
+    {
+        _playerModeSelector.SetIsUsingBoardPresets(isUsingPresets);
+    }
+
     public void IfWinnerVoteOrEndGame(IBoard board)
     {
         SelectedKarmaPlayerMode.IfWinnerVoteOrEndGame();

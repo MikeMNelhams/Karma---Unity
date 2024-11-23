@@ -9,7 +9,7 @@ namespace KarmaLogic
         [System.Serializable]
         public class Card : IEquatable<Card>, IComparable<Card>
         {
-            [SerializeField] CardValue _value;
+            [SerializeField] CardValue _value = CardValue.TWO;
             [SerializeField] CardSuit _suit;
 
             public CardSuit Suit { get => _suit; set => _suit = value; }

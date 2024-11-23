@@ -39,6 +39,7 @@ namespace KarmaPlayerMode
         public KarmaPlayerMode(BasicBoardParams basicBoardParams = null)
         {
             BasicBoardPresets = GetBasicBoardPresets();
+            BoardParams = basicBoardParams;
             BoardParams ??= new BasicBoardParams();
             Board = new BasicBoard(BoardParams);
             CreatePlayerObjects();

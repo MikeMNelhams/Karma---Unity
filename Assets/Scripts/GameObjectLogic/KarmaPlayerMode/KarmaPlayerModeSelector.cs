@@ -16,7 +16,9 @@ namespace KarmaPlayerMode
 
         public KarmaPlayerMode Mode()
         {
-            if (_basicBoardPresetSelected != -1)
+            UnityEngine.Debug.Log("Using a board preset?: " + _useBasicBoardPreset);
+
+            if (_useBasicBoardPreset)
             {
                 return _mode switch
                 {
@@ -37,6 +39,11 @@ namespace KarmaPlayerMode
         public void SetBoardPresetIndex(int presetIndex)
         {
             _basicBoardPresetSelected = presetIndex;
+        }
+
+        public void SetIsUsingBoardPresets(bool isUsingBoardPresets)
+        {
+            _useBasicBoardPreset = isUsingBoardPresets;
         }
     }
 

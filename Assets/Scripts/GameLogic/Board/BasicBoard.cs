@@ -54,11 +54,16 @@ namespace KarmaLogic
             {
                 List<Player> players = new();
 
+                if (basicBoardParams.PlayersParams.Count == 0) 
+                { 
+                    throw new NullReferenceException("No players are given, cannot play a game without players!"); 
+                }
+
                 foreach (BasicBoardPlayerParams playerParams in basicBoardParams.PlayersParams)
                 {
                     players.Add(playerParams.ToPlayer());
                 }
-
+                
                 CardPile drawPile = new (basicBoardParams.DrawPileCards);
                 PlayCardPile playPile = new (basicBoardParams.PlayPileCards);
                 CardPile burnPile = new(basicBoardParams.BurnPileCards);
@@ -76,7 +81,7 @@ namespace KarmaLogic
             {
                 Players = players;
 
-                foreach (Player player in players)
+                foreach (Player player in Players)
                 {
                     player.Hand.Sort();
                 }

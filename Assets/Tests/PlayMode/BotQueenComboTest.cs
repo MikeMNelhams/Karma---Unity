@@ -21,7 +21,8 @@ public class BotQueenComboTest : MonoBehaviour
     public IEnumerator TestVotesCorrectly()
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
-        KarmaGameManager.Instance.SetSelectedBoardPreset(1);
+        KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(0);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
