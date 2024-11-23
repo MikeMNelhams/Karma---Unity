@@ -115,7 +115,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public GameObject InstantiatePlayer(Vector3 position)
     {
-        Vector3 tableDirection = _playTableProperties.Centre - position;
+        Vector3 tableDirection = _playTableProperties.TableGeometry.Centre - position;
         tableDirection.y = 0;
         return Instantiate(_playerPrefab, position, Quaternion.LookRotation(tableDirection));
     }

@@ -1124,11 +1124,11 @@ MonoBehaviour:
       _playersParams: []
       _drawPileCards:
       - _suit:
-          _suit: 0
-        _value: 8
+          _suit: 1
+        _value: 3
       - _suit:
           _suit: 0
-        _value: 8
+        _value: 3
       _burnPileCards: []
       _playPileCards: []
       _turnOrder: 1
@@ -1897,7 +1897,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b1c5f807062a7540a2e7aee873fbdb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _centre: {x: 0.0624, y: 1.6583, z: 2.6942}
   _drawPileHandler: {fileID: 651445642}
   _burnPileHandler: {fileID: 375781343}
   _playPileHandler: {fileID: 1822421501}

@@ -6,14 +6,10 @@ using UnityEngine;
 
 public class PlayTableProperties : MonoBehaviour
 {
-    [SerializeField] Vector3 _centre;
-
     [SerializeField] CardObjectPileHandler _drawPileHandler;
     [SerializeField] CardObjectPileHandler _burnPileHandler;
     [SerializeField] CardObjectPileHandler _playPileHandler;
     [SerializeField] CirclularTable _tableGeometry;
-
-    public Vector3 Centre { get => _centre; }
 
     public GameObject DrawPile { get => _drawPileHandler.gameObject; }
     public GameObject BurnPile { get => _burnPileHandler.gameObject; }

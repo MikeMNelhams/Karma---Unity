@@ -68,55 +68,6 @@ namespace KarmaLogic
             public static bool operator <=(Card x, Card y) => x.Value <= y.Value;
         }
 
-        [System.Serializable]
-        public class CardSuit : IEquatable<CardSuit>
-        {
-            // TODO Switch from tuple to a class!
-            static readonly Dictionary<CardSuitType, Tuple<CardColor, string, string>> _suitDataMap = new()
-            {
-                {CardSuitType.HEARTS, new (CardColor.RED, "Hearts", "\u2665") },
-                {CardSuitType.DIAMONDS, new (CardColor.RED, "Diamonds", "\u2666") },
-                {CardSuitType.CLUBS, new (CardColor.BLACK, "Clubs", "\u2663") },
-                {CardSuitType.SPADES, new (CardColor.BLACK, "Spades", "\u2660") }
-            };
-
-            public static readonly CardSuit Hearts = new (CardSuitType.HEARTS);
-            public static readonly CardSuit Diamonds = new(CardSuitType.DIAMONDS);
-            public static readonly CardSuit Clubs = new (CardSuitType.CLUBS);
-            public static readonly CardSuit Spades = new(CardSuitType.SPADES);
-
-            public static readonly CardSuit DebugDefault = Hearts;
-
-            [SerializeField] protected CardSuitType _suit;
-
-            public CardColor Color {get; private set;}
-            public string Name { get; private set;}
-            protected string Shorthand { get; private set;}
-
-            public CardSuit(CardSuitType suit)
-            {
-                _suit = suit;
-
-                Tuple<CardColor, string, string> cardSuitData = _suitDataMap[suit];
-                Color = cardSuitData.Item1;
-                Name = cardSuitData.Item2;
-                Shorthand = cardSuitData.Item3;
-            }
-
-            public override string ToString()
-            {
-                return Shorthand;
-            }
-
-            public bool Equals(CardSuit other)
-            {
-                if (other is null) { return false; }
-                if (ReferenceEquals(this, other)) { return true; }
-                return Shorthand == other.Shorthand;
-            }
-        }
-
-
         public enum CardValue : byte
         {
             TWO = 2,
@@ -133,20 +84,6 @@ namespace KarmaLogic
             KING = 13,
             ACE = 14,
             JOKER = 15
-        }
-
-        public enum CardColor : byte
-        {
-            RED = 0,
-            BLACK = 1
-        }
-
-        public enum CardSuitType : byte
-        {
-            HEARTS,
-            DIAMONDS,
-            CLUBS,
-            SPADES
         }
     }
 }

@@ -9,6 +9,8 @@ namespace PlayTable
         [SerializeField] float _radius;
         [SerializeField] float _tabletopHeight;
 
+        public Vector3 Centre { get => _centre; }
+
         public Vector3[] PlayerPositions(int numberOfPlayers, float distanceFromTable = 0.5f)
         {
             Vector3 forward = new (_radius + distanceFromTable, 0, 0);
