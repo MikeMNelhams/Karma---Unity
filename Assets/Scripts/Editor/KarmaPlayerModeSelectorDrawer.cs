@@ -36,12 +36,16 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
         // TODO ask for: which player starts INT FIELD 0 <= x <= Player count.
 
         this._selected = EditorGUILayout.Popup("Player Mode", property.FindPropertyRelative("_mode").intValue, _playerModeOptions);
-        this._useBoardPresets = EditorGUILayout.Toggle("Use board presets?", _useBoardPresets);
+        this._useBoardPresets = EditorGUILayout.Toggle("Use board presets?", property.FindPropertyRelative("_useBasicBoardPreset").boolValue);
 
         if (_useBoardPresets)
         {
             this._presetSelected = EditorGUILayout.Popup("Board Preset", property.FindPropertyRelative("_basicBoardPresetSelected").intValue, _presetOptionsSingleplayer);
             property.FindPropertyRelative("_basicBoardPresetSelected").intValue = _presetSelected;
+        }
+        else
+        {
+            SetSingleplayerBoardCustom(property);
         }
 
         if (EditorGUI.EndChangeCheck())
@@ -53,19 +57,18 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
             }
 
             _useBoardPresetsChanged = useBoardPresetBefore != _useBoardPresets;
+
+            if (_useBoardPresetsChanged)
+            {
+                property.FindPropertyRelative("_useBasicBoardPreset").boolValue = _useBoardPresets;
+            }
+
             _presetSelectedChanged = presetSelectedBefore != _presetSelected;
         }
 
         bool isSinglePlayer = (PlayerMode)_selected == PlayerMode.Singleplayer;
 
         if (!isSinglePlayer) { EditorGUI.EndProperty();  return; }
-
-        if ((_useBoardPresetsChanged || _selectedChanged) && !_useBoardPresets)
-        {
-            SetSingleplayerBoardCustom(property);
-            EditorGUI.EndProperty();
-            return;
-        }
 
         EditorGUI.EndProperty();
     }

@@ -42,7 +42,7 @@ public class CardComboJokerTests
         PlayCardPile expectedPlayPile = new(new List<int>() { 2, 3, 4, 5 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
 
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.JOKER), board.BurnPile[0]);
+        Assert.AreEqual(new Card(CardValue.JOKER, CardSuit.DebugDefault), board.BurnPile[0]);
     }
 
     [Test]
@@ -78,7 +78,7 @@ public class CardComboJokerTests
         Assert.AreEqual(1, board.BurnPile.Count);
         Assert.AreEqual(0, board.PlayPile.Count);
 
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.JOKER), board.BurnPile[0]);
+        Assert.AreEqual(new Card(CardValue.JOKER, CardSuit.DebugDefault), board.BurnPile[0]);
     }
 
     [Test]
@@ -117,7 +117,7 @@ public class CardComboJokerTests
         PlayCardPile expectedBurnPile = new(new List<int>() { 15, 15, 15}, CardSuit.DebugDefault);
         Assert.AreEqual(expectedBurnPile, board.BurnPile);
 
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardValue.ACE, CardSuit.DebugDefault), board.PlayPile[0]);
     }
 
     [Test]
@@ -156,7 +156,7 @@ public class CardComboJokerTests
         PlayCardPile expectedBurnPile = new(new List<int>() { 15, 15, 6, 15 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedBurnPile, board.BurnPile);
 
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardValue.ACE, CardSuit.DebugDefault), board.PlayPile[0]);
     }
 
     [Test]
@@ -195,6 +195,6 @@ public class CardComboJokerTests
         PlayCardPile expectedBurnPile = new(new List<int>() { 15 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedBurnPile, board.BurnPile);
 
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardValue.ACE, CardSuit.DebugDefault), board.PlayPile[0]);
     }
 }

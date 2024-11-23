@@ -1123,12 +1123,12 @@ MonoBehaviour:
     _basicBoardParams:
       _playersParams: []
       _drawPileCards:
-      - _suit:
+      - _value: 4
+        _suit:
           _suit: 1
-        _value: 3
-      - _suit:
+      - _value: 3
+        _suit:
           _suit: 0
-        _value: 3
       _burnPileCards: []
       _playPileCards: []
       _turnOrder: 1
@@ -1139,6 +1139,7 @@ MonoBehaviour:
       _hasBurnedThisTurn: 0
       _turnsPlayed: 0
       _turnLimit: 100
+    _useBasicBoardPreset: 0
     _basicBoardPresetSelected: 4
 --- !u!1 &863761617 stripped
 GameObject:

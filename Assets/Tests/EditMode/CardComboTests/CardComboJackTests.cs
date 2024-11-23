@@ -37,7 +37,7 @@ public class CardComboJackTests
         Assert.AreEqual(0, board.DrawPile.Count);
         Assert.AreEqual(0, board.BurnPile.Count);
         Assert.AreEqual(1, board.PlayPile.Count);
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.JACK), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardValue.JACK, CardSuit.DebugDefault), board.PlayPile[0]);
     }
 
     [Test]
@@ -245,7 +245,7 @@ public class CardComboJackTests
         PlayCardPile expectedPlayPile = new(new List<int>() { 3, 4, 11, 11, 6, 11 }, CardSuit.DebugDefault);
         Assert.AreEqual(expectedPlayPile, board.PlayPile);
 
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.THREE), board.PlayPile.VisibleTopCard);
+        Assert.AreEqual(new Card(CardValue.THREE, CardSuit.DebugDefault), board.PlayPile.VisibleTopCard);
     }
 
     [Test]

@@ -37,7 +37,7 @@ namespace KarmaLogic
                 _cards = new List<Card>();
                 for (int i=0; i < cardValues.Count; i++)
                 {
-                    Card card = new (suit, (CardValue)cardValues[i]);
+                    Card card = new((CardValue)cardValues[i], suit);
                     _cards.Add(card);
                 }
             }

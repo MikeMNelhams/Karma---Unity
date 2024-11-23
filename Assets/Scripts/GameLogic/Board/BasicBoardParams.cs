@@ -106,7 +106,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (int value in values)
             {
-                cards.Add(new Card(suit, (CardValue) value));
+                cards.Add(new Card((CardValue)value, suit));
             }
             return cards;
         }

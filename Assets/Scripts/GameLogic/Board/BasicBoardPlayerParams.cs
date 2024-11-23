@@ -57,6 +57,14 @@ namespace KarmaLogic.BasicBoard
             _karmaDownCards.AddRange(CardsFromValues(playerCardValues[2], defaultSuit));
         }
 
+        public BasicBoardPlayerParams(List<Card> handCards, List<Card> karmaUpCards, List<Card> karmaDownCards, bool isPlayableCharacter = false)
+        {
+            _handCards = handCards;
+            _karmaUpCards = karmaUpCards;
+            _karmaDownCards = karmaDownCards;
+            _isPlayableCharacter = isPlayableCharacter;
+        }
+
         public Player ToPlayer()
         {
             return new Player(new Hand(_handCards), new CardsList(_karmaDownCards), new CardsList(_karmaUpCards));
@@ -68,7 +76,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (int value in values)
             {
-                cards.Add(new Card(suit, (CardValue)value));
+                cards.Add(new Card((CardValue)value, suit));
             }
             return cards;
         }

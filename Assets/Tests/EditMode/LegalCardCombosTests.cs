@@ -139,7 +139,7 @@ public class LegalCardCombosTests
 
         Assert.AreEqual(BoardPlayOrder.UP, board.PlayOrder);
         Assert.AreEqual(1, board.PlayPile.Count);
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.ACE), board.PlayPile.VisibleTopCard);
+        Assert.AreEqual(new Card(CardValue.ACE, CardSuit.DebugDefault), board.PlayPile.VisibleTopCard);
 
         Assert.AreEqual(0, predictedLegalCombos.Count);
 
@@ -175,7 +175,7 @@ public class LegalCardCombosTests
 
         Assert.AreEqual(BoardPlayOrder.DOWN, board.PlayOrder);
         Assert.AreEqual(1, board.PlayPile.Count);
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.TWO), board.PlayPile.VisibleTopCard);
+        Assert.AreEqual(new Card(CardValue.TWO, CardSuit.DebugDefault), board.PlayPile.VisibleTopCard);
 
         Assert.AreEqual(0, predictedLegalCombos.Count);
 

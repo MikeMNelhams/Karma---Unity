@@ -36,7 +36,7 @@ public class CardComboKingTests
         Assert.AreEqual(0, board.DrawPile.Count);
         Assert.AreEqual(0, board.BurnPile.Count);
         Assert.AreEqual(1, board.PlayPile.Count);
-        Assert.AreEqual(new Card(CardSuit.DebugDefault, CardValue.KING), board.PlayPile[0]);
+        Assert.AreEqual(new Card(CardValue.KING, CardSuit.DebugDefault), board.PlayPile[0]);
     }
 
     [Test]

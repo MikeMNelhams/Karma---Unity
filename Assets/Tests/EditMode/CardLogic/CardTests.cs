@@ -11,8 +11,8 @@ public class CardTests
     [Test]
     public void DifferentSuitCardsAreNotEqual()
     {
-        Card card1 = new (CardSuit.Hearts, CardValue.TWO);
-        Card card2 = new (CardSuit.Diamonds, CardValue.TWO);
+        Card card1 = new(CardValue.TWO, CardSuit.Hearts);
+        Card card2 = new(CardValue.TWO, CardSuit.Diamonds);
 
         Assert.AreNotEqual(card1, card2);
     }
@@ -20,8 +20,8 @@ public class CardTests
     [Test]
     public void DictionaryHashingDifferentSuitCards()
     {
-        Card card1 = new(CardSuit.Hearts, CardValue.TWO);
-        Card card2 = new(CardSuit.Diamonds, CardValue.TWO);
+        Card card1 = new(CardValue.TWO, CardSuit.Hearts);
+        Card card2 = new(CardValue.TWO, CardSuit.Diamonds);
 
         Dictionary<Card, int> _dictionary = new()
         {
@@ -35,8 +35,8 @@ public class CardTests
     [Test]
     public void FrozenMultiSetHashingDifferentSuitCards()
     {
-        Card card1 = new(CardSuit.Hearts, CardValue.TWO);
-        Card card2 = new(CardSuit.Diamonds, CardValue.TWO);
+        Card card1 = new(CardValue.TWO, CardSuit.Hearts);
+        Card card2 = new(CardValue.TWO, CardSuit.Diamonds);
 
         FrozenMultiSet<Card> frozenMultiSet = new()
         {

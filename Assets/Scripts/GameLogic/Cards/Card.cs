@@ -9,13 +9,13 @@ namespace KarmaLogic
         [System.Serializable]
         public class Card : IEquatable<Card>, IComparable<Card>
         {
-            [SerializeField] CardSuit _suit;
             [SerializeField] CardValue _value;
+            [SerializeField] CardSuit _suit;
 
             public CardSuit Suit { get => _suit; set => _suit = value; }
             public CardValue Value { get => _value; set => _value = value; }
 
-            public Card(CardSuit suit, CardValue value)
+            public Card(CardValue value, CardSuit suit)
             {
                 Suit = suit;
                 Value = value;
@@ -57,7 +57,7 @@ namespace KarmaLogic
 
             public Card Copy()
             {
-                return new Card(Suit, Value);
+                return new Card(Value, Suit);
             }
 
             public static bool operator ==(Card x, Card y) => x.Equals(y);
