@@ -65,6 +65,14 @@ namespace KarmaLogic.BasicBoard
             _isPlayableCharacter = isPlayableCharacter;
         }
 
+        public BasicBoardPlayerParams(Player player, bool isPlayableCharacter = false)
+        {
+            _handCards = player.Hand.ToList();
+            _karmaUpCards = player.KarmaUp.ToList();
+            _karmaDownCards = player.KarmaDown.ToList();
+            _isPlayableCharacter = isPlayableCharacter;
+        }
+
         public Player ToPlayer()
         {
             return new Player(new Hand(_handCards), new CardsList(_karmaDownCards), new CardsList(_karmaUpCards));

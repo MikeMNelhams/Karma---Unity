@@ -340,6 +340,11 @@ namespace KarmaLogic
                 }
                 return newCardsList;
             }
+
+            public List<Card> ToList()
+            {
+                return new List<Card>(_cards);
+            }
         }
     }
 }

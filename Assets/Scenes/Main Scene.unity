@@ -1125,42 +1125,48 @@ MonoBehaviour:
       - _handCards:
         - _value: 2
           _suit:
-            _suit: 0
+            _suit: 2
         - _value: 2
           _suit:
-            _suit: 0
+            _suit: 3
         _karmaUpCards: []
         _karmaDownCards: []
         _isPlayableCharacter: 1
       - _handCards:
         - _value: 3
           _suit:
-            _suit: 0
+            _suit: 1
         _karmaUpCards: []
         _karmaDownCards: []
         _isPlayableCharacter: 1
       - _handCards:
         - _value: 4
           _suit:
-            _suit: 0
+            _suit: 2
         _karmaUpCards: []
         _karmaDownCards: []
         _isPlayableCharacter: 1
       - _handCards:
         - _value: 8
           _suit:
-            _suit: 0
+            _suit: 3
         _karmaUpCards: []
         _karmaDownCards: []
         _isPlayableCharacter: 1
       _drawPileCards:
       - _value: 4
         _suit:
-          _suit: 1
+          _suit: 2
       - _value: 3
         _suit:
-          _suit: 0
-      _burnPileCards: []
+          _suit: 3
+      _burnPileCards:
+      - _value: 14
+        _suit:
+          _suit: 2
+      - _value: 13
+        _suit:
+          _suit: 1
       _playPileCards: []
       _turnOrder: 1
       _playOrder: 0
@@ -1170,8 +1176,8 @@ MonoBehaviour:
       _hasBurnedThisTurn: 0
       _turnsPlayed: 0
       _turnLimit: 100
-    _useBasicBoardPreset: 0
-    _basicBoardPresetSelected: 4
+    _useBasicBoardPreset: 1
+    _basicBoardPresetSelected: 5
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}

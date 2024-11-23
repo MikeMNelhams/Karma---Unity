@@ -138,6 +138,12 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void TrySelectCardObject()
     {
+        bool isOverUI = EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null;
+        if (isOverUI) 
+        { 
+            return; 
+        }
+
         int numberOfHits = Physics.RaycastNonAlloc(_playerCamera.ScreenPointToRay(_mousePosition), _hits, _rayCastCutoff);
 
         if (numberOfHits == 1) { return; }
@@ -186,8 +192,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
                 _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
         }
-        print("Is rotating: " + _playerMovementController.IsRotating);
-        print("Mouse state: " + Cursor.lockState);
     }
 
     public void TryToggleCardSelect(SelectableCardObject cardObject)

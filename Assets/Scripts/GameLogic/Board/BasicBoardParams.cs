@@ -100,6 +100,30 @@ namespace KarmaLogic.BasicBoard
             _turnsPlayed = turnsPlayed;
         }
 
+        public BasicBoardParams(List<BasicBoardPlayerParams> playersParams, List<Card> drawPileCards, 
+            List<Card> playPileCards, List<Card> burnPileCards, BoardTurnOrder turnOrder = BoardTurnOrder.RIGHT, 
+            BoardPlayOrder playOrder = BoardPlayOrder.UP, bool handsAreFlipped = false, int effectMultiplier = 1, 
+            int whoStarts = 0, bool hasBurnedThisTurn = false, int turnsPlayed = 0)
+        {
+            _playersParams = new List<BasicBoardPlayerParams>();
+            _drawPileCards = new List<Card>();
+            _playPileCards = new List<Card>();
+            _burnPileCards = new List<Card>();
+
+            if (playersParams != null) { _playersParams.AddRange(playersParams); }
+            if (drawPileCards != null) { _drawPileCards.AddRange(drawPileCards); }
+            if (playPileCards != null) { _playPileCards.AddRange(playPileCards); }
+            if (burnPileCards != null) { _burnPileCards.AddRange(burnPileCards); }
+
+            _turnOrder = turnOrder;
+            _playOrder = playOrder;
+            _handsAreFlipped = handsAreFlipped;
+            _effectMultiplier = Mathf.Max(effectMultiplier, 1);
+            _whoStarts = whoStarts;
+            _hasBurnedThisTurn = hasBurnedThisTurn;
+            _turnsPlayed = turnsPlayed;
+        }
+
         List<Card> CardsFromValues(List<int> values, CardSuit suit)
         {
             List<Card> cards = new ();

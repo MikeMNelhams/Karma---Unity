@@ -173,7 +173,8 @@ namespace KarmaPlayerMode
                     new TestStartJokerCombo(),
                     new TestStartVoting(),
                     new TestStartVoting2(),
-                    new TestScenarioFullHand()
+                    new TestScenarioFullHand(),
+                    new PlayRandomStart()
                 };
 
                 return presets;
