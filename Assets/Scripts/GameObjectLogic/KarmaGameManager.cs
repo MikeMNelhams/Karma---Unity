@@ -175,6 +175,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public void SetIsUsingBoardPresets(bool isUsingPresets)
     {
+        // Used for unit testing. Must be called BEFORE Start()
         _playerModeSelector.SetIsUsingBoardPresets(isUsingPresets);
     }
 
@@ -620,7 +621,18 @@ public class KarmaGameManager : MonoBehaviour
         return cardPositions;
     }
 
-    public void ColorLegalCard(SelectableCardObject cardObject, CardSelector cardSelector)
+    public void ColorLegalGiveableCard(SelectableCardObject cardObject, CardSelector cardSelector)
+    {
+        if (cardObject.CurrentCard.Value == CardValue.JOKER)
+        {
+            cardObject.ColorCardBorder(Color.red);
+            return;
+        }
+
+        cardObject.ColorCardBorder(Color.green);
+    }
+
+    public void ColorLegalPlayableCard(SelectableCardObject cardObject, CardSelector cardSelector)
     {
         LegalCombos legalCombos = Board.CurrentLegalCombos;
 

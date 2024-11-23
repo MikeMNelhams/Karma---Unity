@@ -829,8 +829,8 @@ MonoBehaviour:
   _clearSelectionButton: {fileID: 8164165656496719736}
   _pickupPlayPileButton: {fileID: 2758722993043286609}
   _finishMulliganButton: {fileID: 2337694861556475930}
-  nextPlayerLeftArrow: {fileID: 3381463859126228450}
-  nextPlayerRightArrow: {fileID: 1238892279136908032}
+  _nextPlayerLeftArrow: {fileID: 3381463859126228450}
+  _nextPlayerRightArrow: {fileID: 1238892279136908032}
   _hoverTipHandler: {fileID: 7348956982852587095}
   _currentStateTextBox: {fileID: 3258214636898215741}
 --- !u!114 &3514090609769126189

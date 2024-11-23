@@ -39,8 +39,8 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     [SerializeField] ButtonAwaitable _finishMulliganButton;
 
     [Header("Player UI other")]
-    [SerializeField] Image nextPlayerLeftArrow;
-    [SerializeField] Image nextPlayerRightArrow;
+    [SerializeField] Image _nextPlayerLeftArrow;
+    [SerializeField] Image _nextPlayerRightArrow;
 
     [SerializeField] HoverToolTipHandler _hoverTipHandler;
 
@@ -230,8 +230,8 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         ClearSelectionButton.gameObject.SetActive(false);
         PickupPlayPileButton.gameObject.SetActive(false);
         FinishMulliganButton.gameObject.SetActive(false);
-        nextPlayerLeftArrow.gameObject.SetActive(false);
-        nextPlayerRightArrow.gameObject.SetActive(false);
+        _nextPlayerLeftArrow.gameObject.SetActive(false);
+        _nextPlayerRightArrow.gameObject.SetActive(false);
         return Task.CompletedTask;
     }
 
@@ -298,9 +298,19 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         if (!_areLegalMovesHighlighted || StateMachine.CurrentState is State.Mulligan) { ColorSelectableCardsAsDefault(); return; }
         KarmaGameManager karmaGameManager = KarmaGameManager.Instance;
 
-        foreach (SelectableCardObject cardObject in SelectableCardObjects)
+        if (StateMachine.CurrentState is not State.SelectingCardGiveAwayIndex)
         {
-            karmaGameManager.ColorLegalCard(cardObject, CardSelector);
+            foreach (SelectableCardObject cardObject in SelectableCardObjects)
+            {
+                karmaGameManager.ColorLegalPlayableCard(cardObject, CardSelector);
+            }
+        }
+        else
+        {
+            foreach (SelectableCardObject cardObject in SelectableCardObjects)
+            {
+                karmaGameManager.ColorLegalGiveableCard(cardObject, CardSelector);
+            }
         }
     }
 
@@ -357,11 +367,11 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
         if (gameManager.Board.TurnOrder == BoardTurnOrder.RIGHT)
         {
-            nextPlayerRightArrow.gameObject.SetActive(true);
+            _nextPlayerRightArrow.gameObject.SetActive(true);
         }
         if (gameManager.Board.TurnOrder == BoardTurnOrder.LEFT)
         {
-            nextPlayerLeftArrow.gameObject.SetActive(true);
+            _nextPlayerLeftArrow.gameObject.SetActive(true);
         }
         TryColorLegalCards();
         return Task.CompletedTask;
