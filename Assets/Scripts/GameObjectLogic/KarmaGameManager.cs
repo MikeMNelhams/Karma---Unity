@@ -458,7 +458,12 @@ public class KarmaGameManager : MonoBehaviour
     async Task TriggerClearSelection(int playerIndex)
     {
         State state = PlayersProperties[playerIndex].StateMachine.CurrentState;
-        if (state is State.PickingAction || state is State.SelectingCardGiveAwayIndex) { await AttemptClearCardSelection(playerIndex); return; }
+        print("State when clear: " + state);
+        if (state is State.Mulligan || state is State.PickingAction || state is State.SelectingCardGiveAwayIndex) 
+        { 
+            await AttemptClearCardSelection(playerIndex); 
+            return; 
+        }
         throw new NotImplementedException();
     }
 

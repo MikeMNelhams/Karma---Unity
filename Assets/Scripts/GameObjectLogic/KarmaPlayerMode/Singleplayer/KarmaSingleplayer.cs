@@ -174,6 +174,7 @@ namespace KarmaPlayerMode
                     new TestStartVoting(),
                     new TestStartVoting2(),
                     new TestScenarioFullHand(),
+                    new TestRandomStart(),
                     new PlayRandomStart()
                 };
 

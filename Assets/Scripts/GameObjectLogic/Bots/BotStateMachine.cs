@@ -55,6 +55,10 @@ namespace StateMachine.CharacterStateMachines
                 new StateTransition<State, Command>(State.Mulligan, Command.MulliganEnded),
                 new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.EnterPickingActionUpdateUI })
             },
+            { 
+                new StateTransition<State, Command>(State.PickingAction, Command.TurnStarted),
+                new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ Delay, EnterPickingAction })
+            },
             {
                 new StateTransition<State, Command>(State.PickingAction, Command.TurnEnded),
                 new StateTransitionResult<State>(State.WaitingForTurn)
