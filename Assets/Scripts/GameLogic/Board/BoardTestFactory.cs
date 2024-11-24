@@ -224,6 +224,54 @@ namespace KarmaLogic.BasicBoard
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
         }
 
+        public static BasicBoardParams BotTestQueenComboLastCardToWin()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 2, 2, 2 }, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                new() { new() { }, new() { }, new() { 12 } },
+                new() { new() { 2, 2, 2 }, new() { 2, 2, 2 }, new() { } },
+                new() { new() { 2, 2, 2 }, new() { 2, 2, 2 }, new() { } }
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { 2, 2, 2, 2, 2, 2, 2 };
+            List<int> burnCardValues = new() { };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
+        }
+
+        public static BasicBoardParams BotTestQueenComboLastCardWithJokerInPlay()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 2, 2, 2 }, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                new() { new() { }, new() { }, new() { 12 } },
+                new() { new() { 2, 2, 2 }, new() { 2, 15, 2 }, new() { 3 } },
+                new() { new() { 2, 2, 2 }, new() { 15, 2, 2 }, new() { } }
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { 2, 2, 2, 2, 2, 2, 2 };
+            List<int> burnCardValues = new() { };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
+        }
+
         public static BasicBoardParams BotTestRandomStart(int numberOfPlayers, int numberOfJokers=1, int whoStarts=0)
         {
             List<CardSuit> cardSuits = new()

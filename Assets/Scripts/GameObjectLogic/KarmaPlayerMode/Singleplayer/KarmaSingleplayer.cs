@@ -198,9 +198,11 @@ namespace KarmaPlayerMode
                     new TestLeftHandRotate(),                      // 5
                     new TestGameWonNoVoting(),                     // 6 
                     new TestPotentialWinnerIsSkippedInUnwonGame(), // 7 
-                    new TestMultipleSeparateCardGiveaways(),       // 8 No more deterministic test cases past this point!
-                    new TestRandomStart(),                         // 9 
-                    new PlayRandomStart()                          // 10
+                    new TestMultipleSeparateCardGiveaways(),       // 8
+                    new TestQueenComboLastCardToWin(),             // 9 
+                    new TestQueenComboLastCardWithJokerInPlay(),   // 10 No more deterministic test cases past this point!
+                    new TestRandomStart(),                         // 11 
+                    new PlayRandomStart()                          // 12
                 };
 
                 return presets;

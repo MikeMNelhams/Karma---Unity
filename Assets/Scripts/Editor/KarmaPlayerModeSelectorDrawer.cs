@@ -21,12 +21,13 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
 
     int _presetSelected = 0;
     protected bool _presetSelectedChanged = false;
-    protected string[] _presetOptionsSingleplayer = new string[11] 
+    protected string[] _presetOptionsSingleplayer = new string[13] 
     { 
         "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting", 
         "TestStartVoting2", "TestScenarioFullHand", "TestLeftwardsHandRotate", 
-        "TestGameWonNoVote", "TestPotentialWinnerIsSkippedInUnwonGame", "TestMultipleSeparateCardGiveaways", 
-        "TestRandomStart", "RandomStart4"
+        "TestGameWonNoVote", "TestPotentialWinnerIsSkippedInUnwonGame", "TestMultipleSeparateCardGiveaways",
+        "TestQueenComboLastCardToWin", "TestQueenComboLastCardWithJokerInPlay", "TestRandomStart", 
+        "RandomStart4"
     };
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

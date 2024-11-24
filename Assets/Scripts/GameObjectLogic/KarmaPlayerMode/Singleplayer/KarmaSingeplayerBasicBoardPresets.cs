@@ -92,6 +92,24 @@ namespace KarmaPlayerMode
             public override int TurnLimit => 100;
         }
 
+        public class TestQueenComboLastCardToWin : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestQueenComboLastCardToWin() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestQueenComboLastCardToWin();
+
+            public override int TurnLimit => 100;
+        }
+
+        public class TestQueenComboLastCardWithJokerInPlay : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestQueenComboLastCardWithJokerInPlay() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestQueenComboLastCardWithJokerInPlay();
+
+            public override int TurnLimit => 50;
+        }
+
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
         {
 
