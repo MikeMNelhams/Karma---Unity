@@ -128,6 +128,15 @@ namespace KarmaPlayerMode
             public override int TurnLimit => 100;
         }
 
+        public class TestJokerAsAceLastCardToWin : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestJokerAsAceLastCardToWin() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestJokerAsAceLastCardToWin();
+
+            public override int TurnLimit => 100;
+        }
+
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
         {
 
