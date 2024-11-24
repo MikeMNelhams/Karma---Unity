@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using UnityEngine.SceneManagement;
 
-public class BotQueenComboTest : MonoBehaviour
+public class BotTestMultipleSeparateCardGiveaways : MonoBehaviour
 {
     [UnitySetUp]
     public IEnumerator LoadKGM()
@@ -22,15 +22,30 @@ public class BotQueenComboTest : MonoBehaviour
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
-        KarmaGameManager.Instance.SetSelectedBoardPreset(0);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(8);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
+        Dictionary<int, int> gameRanksExpected = new()
+        {
+            { 1, 0 },
+            { 3, 1 },
+            { 2, 2 },
+            { 0, 3 }
+        };
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
+
+        Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
+        UnityEngine.Debug.Log("Game ranks: " + gameRanks);
 
         Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameOver);
-        Assert.IsFalse(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
+        Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
+        Assert.IsTrue(gameRanks.Count != 0);
+
+        CollectionAssert.AreEqual(gameRanksExpected.Keys, gameRanks.Keys);
+        Dictionary<int, int> difference = gameRanksExpected.Where(x => gameRanks[x.Key] != x.Value).ToDictionary(x => x.Key, x => x.Value);
+        Assert.IsTrue(difference.Count == 0);
 
         yield return null;
     }

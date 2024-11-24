@@ -83,6 +83,15 @@ namespace KarmaPlayerMode
             public override int TurnLimit => 100;
         }
 
+        public class TestMultipleSeparateCardGiveaways : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestMultipleSeparateCardGiveaways() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestMultipleSeparateCardGiveaways();
+
+            public override int TurnLimit => 100;
+        }
+
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
         {
 

@@ -16,7 +16,7 @@ public class BotJokerComboTest : MonoBehaviour
     }
 
     [UnityTest]
-    public IEnumerator TestVotesCorrectly()
+    public IEnumerator TestMain()
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
