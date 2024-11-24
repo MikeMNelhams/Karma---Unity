@@ -169,13 +169,14 @@ namespace KarmaPlayerMode
             {
                 List<KarmaPlayModeBoardPreset<BasicBoard>> presets = new()
                 {
-                    new TestStartQueenCombo(),
-                    new TestStartJokerCombo(),
-                    new TestStartVoting(),
-                    new TestStartVoting2(),
-                    new TestScenarioFullHand(),
-                    new TestRandomStart(),
-                    new PlayRandomStart()
+                    new TestStartQueenCombo(),   // 0
+                    new TestStartJokerCombo(),   // 1
+                    new TestStartVoting(),       // 2
+                    new TestStartVoting2(),      // 3
+                    new TestScenarioFullHand(),  // 4
+                    new TestLeftHandRotate(),    // 5
+                    new TestRandomStart(),       // 6
+                    new PlayRandomStart()        // 7
                 };
 
                 return presets;

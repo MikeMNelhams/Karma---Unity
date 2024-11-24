@@ -104,7 +104,7 @@ namespace KarmaLogic.BasicBoard
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
         }
 
-        public static BasicBoardParams BotTestScenario1()
+        public static BasicBoardParams BotTestFullHand()
         {
             List<List<List<int>>> playerCardValues = new()
             {
@@ -126,6 +126,30 @@ namespace KarmaLogic.BasicBoard
             List<int> burnCardValues = new() { 5, 6 };
 
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
+        }
+
+        public static BasicBoardParams BotTestLeftHandRotate()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 5, 6, 7}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                new() { new() { 2, 2, 2 }, new() { 3, 3, 3}, new() { } },
+                new() { new() { 3, 3, 3 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+                new() { new() { 4, 4, 4 }, new() { 12, 11, 8 }, new() { 10, 13, 9 } }
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { 10, 11, 12 };
+            List<int> playCardValues = new() { };
+            List<int> burnCardValues = new() { 5, 6 };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues, Board.BoardTurnOrder.LEFT);
         }
 
         public static BasicBoardParams BotTestRandomStart(int numberOfPlayers, int numberOfJokers=1, int whoStarts=0)

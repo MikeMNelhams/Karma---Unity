@@ -453,7 +453,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void AddCardObjectsToHand(List<SelectableCardObject> cardsToAdd)
     {
-        print("Player index: " + Index + " is receiving the playPile!!!");
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
         if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<SelectableCardObject>(cardsToAdd)); return; }

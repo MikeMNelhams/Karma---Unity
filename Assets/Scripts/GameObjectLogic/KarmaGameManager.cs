@@ -200,10 +200,9 @@ public class KarmaGameManager : MonoBehaviour
 
     public void RotateHandsInTurnOrder(int numberOfRotations, IBoard board) 
     {
-        int k = numberOfRotations % board.Players.Count;
-        if (k == 0) { return; }
+        if (numberOfRotations == 0) { return; }
         DeselectAllCards();
-        RotateHands(k * ((int) board.TurnOrder), board);
+        RotateHands(numberOfRotations, board);
         return;
     }
 
@@ -341,7 +340,14 @@ public class KarmaGameManager : MonoBehaviour
             await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.VotingStarted);
             return;
         }
-        await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
+
+        if (Board.CurrentLegalActions.Count > 0)
+        {
+            await PlayersProperties[Board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
+            return;
+        }
+
+        Board.EndTurn();
     }
 
     async void NextTurn(IBoard board)
@@ -369,7 +375,7 @@ public class KarmaGameManager : MonoBehaviour
 
         if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
         {
-            await PlayersProperties[board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
+            //StartCurrentPlayersTurnIfValid();
             PlayTurnAgain();
             return;
         }
@@ -393,8 +399,6 @@ public class KarmaGameManager : MonoBehaviour
 
         StepToNextPlayer();
         return;
-
-        throw new NotImplementedException("Impossible game state: player is in unknown state at the end of the turn: " + activePlayerState);
     }
 
     void StepToNextPlayer()

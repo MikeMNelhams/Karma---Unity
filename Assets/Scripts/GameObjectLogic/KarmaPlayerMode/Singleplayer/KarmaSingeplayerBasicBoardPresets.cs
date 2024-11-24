@@ -52,8 +52,17 @@ namespace KarmaPlayerMode
         {
             public TestScenarioFullHand() : base() { }
 
-            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestScenario1();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestFullHand();
             public override int TurnLimit => 100;
+        }
+
+        public class TestLeftHandRotate : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestLeftHandRotate() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestLeftHandRotate();
+
+            public override int TurnLimit => 20;
         }
 
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
