@@ -603,9 +603,16 @@ public class KarmaGameManager : MonoBehaviour
         Player giver = Board.Players[giverIndex];
         giver.PlayPileGiveAwayHandler.GiveAway(targetIndex);
         print(giverIndex + " is giving away PLAY PILE (board) to player: " + targetIndex);
-        Board.Players[targetIndex].Pickup(Board.PlayPile); // TODO Register this at the beginning!
+        Board.Players[targetIndex].Pickup(Board.PlayPile); // TODO Register this at the beginning to guarantee parity!
 
-        PlayersProperties[targetIndex].AddCardObjectsToHand(_playTableProperties.PopAllFromPlayPile());
+        List<SelectableCardObject> playPileCardObjects = _playTableProperties.PopAllFromPlayPile();
+
+        foreach (SelectableCardObject cardObject in playPileCardObjects)
+        {
+            print("Player: " + targetIndex + " is receiving play pile card: " + cardObject);
+        }
+
+        PlayersProperties[targetIndex].AddCardObjectsToHand(playPileCardObjects);
 
         giver.PlayPileGiveAwayHandler = null;
 

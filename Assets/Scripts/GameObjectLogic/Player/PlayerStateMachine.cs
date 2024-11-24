@@ -105,7 +105,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.PotentialWinner, Command.GotJokered),
-                    new StateTransitionResult<State>(State.WaitingForTurn)
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener> { playerProperties.HideUI })
                 },
                 {
                     new StateTransition<State, Command>(State.PotentialWinner, Command.GameEnded),

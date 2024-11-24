@@ -119,6 +119,15 @@ namespace KarmaPlayerMode
             public override int TurnLimit => 100;
         }
 
+        public class TestGettingJokered : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestGettingJokered() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestGettingJokered();
+
+            public override int TurnLimit => 100;
+        }
+
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
         {
 

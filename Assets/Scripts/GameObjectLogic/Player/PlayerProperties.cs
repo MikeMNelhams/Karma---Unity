@@ -455,7 +455,12 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     {
         if (cardsToAdd.Count == 0) { return; }
         int n = cardsToAdd.Count + CardsInHand.Count;
-        if (n == 1) { UpdateHand(new ListWithConstantContainsCheck<SelectableCardObject>(cardsToAdd)); return; }
+        if (n == 1) 
+        {
+            ParentCardToThis(cardsToAdd[0]); 
+            UpdateHand(new ListWithConstantContainsCheck<SelectableCardObject>(cardsToAdd)); 
+            return; 
+        }
 
         ListWithConstantContainsCheck<SelectableCardObject> combinedHandCardObjects = CardsInHand;
         combinedHandCardObjects.AddRange(cardsToAdd);
