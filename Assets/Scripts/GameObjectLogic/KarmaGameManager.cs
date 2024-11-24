@@ -93,6 +93,7 @@ public class KarmaGameManager : MonoBehaviour
         _currentPlayerArrowHandler.SetArrowVisibility(true);
         _playOrderArrowHandler.SetArrowVisibility(true);
 
+        MoveCurrentPlayerArrow();
         Board.StartTurn();
     }
 
@@ -272,9 +273,8 @@ public class KarmaGameManager : MonoBehaviour
         PlayerProperties playerProperties = PlayersProperties[Board.CurrentPlayerIndex];
 
         Vector3 playerPosition = playerProperties.transform.position;
-        Vector3 tablePosition = _playTableProperties.transform.position;
 
-        _currentPlayerArrowHandler.MoveArrow(playerPosition, tablePosition);
+        _currentPlayerArrowHandler.MoveArrow(playerPosition, _playTableProperties.TableGeometry.Centre);
     }
 
     void MoveCardsFromSelectionToPlayPile(int playerIndex)
