@@ -97,6 +97,7 @@ public class KarmaGameManager : MonoBehaviour
         _playOrderArrowHandler.SetArrowVisibility(true);
         _turnsSkipped = 0;
 
+        FlipAnyNecessaryKarmaDownToUp();
         MoveCurrentPlayerArrow();
         Board.StartTurn();
     }
@@ -278,6 +279,20 @@ public class KarmaGameManager : MonoBehaviour
         Vector3 playerPosition = playerProperties.transform.position;
 
         _currentPlayerArrowHandler.MoveArrow(playerPosition, _playTableProperties.TableGeometry.Centre);
+    }
+
+    void FlipAnyNecessaryKarmaDownToUp()
+    {
+        int i = 0;
+        foreach (PlayerProperties playerProperties in PlayersProperties)
+        {
+            print("Player: " + i + " selectin from: " + playerProperties.SelectingFrom);
+            if (playerProperties.SelectingFrom == PlayingFrom.KarmaDown)
+            {
+                playerProperties.FlipKarmaDownCardsUp();
+            }
+            i++;
+        }
     }
 
     void MoveCardsFromSelectionToPlayPile(int playerIndex)

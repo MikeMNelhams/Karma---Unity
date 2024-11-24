@@ -1168,7 +1168,10 @@ MonoBehaviour:
         _isPlayableCharacter: 0
       - _handCards: []
         _karmaUpCards: []
-        _karmaDownCards: []
+        _karmaDownCards:
+        - _value: 3
+          _suit:
+            _suit: 0
         _isPlayableCharacter: 0
       - _handCards:
         - _value: 4

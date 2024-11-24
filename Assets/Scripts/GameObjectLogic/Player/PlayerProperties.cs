@@ -547,7 +547,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         _fanHandler.FlipFan(CardsInHand);
     }
 
-    void FlipKarmaDownCardsUp()
+    public void FlipKarmaDownCardsUp()
     {
         IsKarmaDownFlippedUp = true;
         foreach (SelectableCardObject cardObject in CardsInKarmaDown)
