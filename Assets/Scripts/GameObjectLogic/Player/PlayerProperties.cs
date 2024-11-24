@@ -552,7 +552,8 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         IsKarmaDownFlippedUp = true;
         foreach (SelectableCardObject cardObject in CardsInKarmaDown)
         {
-            cardObject.transform.rotation = Quaternion.Euler(-90, -transform.rotation.eulerAngles.y, 0);
+
+            cardObject.transform.rotation *= Quaternion.AngleAxis(180, cardObject.transform.forward);
         }
     }
 

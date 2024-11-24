@@ -53,8 +53,6 @@ namespace PlayTable
         {
             Quaternion[] rotations = new Quaternion[numberOfPlayers];
 
-            float stepSize = -360.0f / numberOfPlayers;
-
             for (int i = 0; i < numberOfPlayers; i++)
             {
                 Vector3 lookDirection = _centre - positions[i];

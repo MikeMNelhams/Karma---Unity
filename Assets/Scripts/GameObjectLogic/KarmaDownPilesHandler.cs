@@ -46,7 +46,7 @@ public class KarmaDownPilesHandler : MonoBehaviour, ICardVisibilityHandler
         {
             float x = left + karmaDownOffset + j * xStepSize;
             Vector3 cardPosition = transform.TransformPoint(new Vector3(x, -halfHeight, 0));
-            Quaternion cardRotation = Quaternion.Euler(90, -transform.rotation.eulerAngles.y, 0);
+            Quaternion cardRotation = transform.rotation * Quaternion.Euler(90, 0, 0);
             GameObject cardGameObject = gameManager.InstantiateCard(card, cardPosition, cardRotation, gameObject);
             SelectableCardObject cardObject = cardGameObject.GetComponent<SelectableCardObject>();
             cardObject.SetParent(this);

@@ -24,7 +24,8 @@ namespace KarmaPlayerMode
         protected abstract List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets();
         protected List<KarmaPlayModeBoardPreset<BasicBoard>> BasicBoardPresets { get; set; }
         public BasicBoardParams BoardParams { get; protected set; }
-        public abstract int NumberOfActivePlayers { get; }
+        public int NumberOfActivePlayers { get; protected set; }
+        public int NumberOfPlayersToMulligan { get; protected set; }
 
         public int NumberOfPlayersFinishedMulligan { get; protected set; }
 
@@ -134,7 +135,8 @@ namespace KarmaPlayerMode
                 PlayersBoardHolderProperties.Add(holderProperties);
             }
 
-
+            UpdateActivePlayersCount();
+            UpdateNumberOfPlayersToMulligan();
         }
 
         public abstract void SetupPlayerActionStateForBasicStart();
@@ -231,8 +233,8 @@ namespace KarmaPlayerMode
             get
             {
                 UnityEngine.Debug.Log("Number of mulligan finished players: " + NumberOfPlayersFinishedMulligan);
-                UnityEngine.Debug.Log("Number of total players: " + Board.Players.Count);
-                return NumberOfPlayersFinishedMulligan == Board.Players.Count;
+                UnityEngine.Debug.Log("Number of total players: " + NumberOfPlayersToMulligan);
+                return NumberOfPlayersFinishedMulligan == NumberOfPlayersToMulligan;
             }
         }
 
@@ -337,6 +339,26 @@ namespace KarmaPlayerMode
             IsGameOverDueToNoLegalActions = true;
             UnityEngine.Debug.LogWarning("Game has been ended early, as no legal actions can be made on the board" + 
                 string.Join(Environment.NewLine, GameRanks));
+        }
+
+        void UpdateActivePlayersCount()
+        {
+            NumberOfActivePlayers = 0;
+
+            foreach (BasicBoardPlayerParams playerParams in BoardParams.PlayersParams)
+            {
+                if (playerParams.IsPlayableCharacter) { NumberOfActivePlayers++; }
+            }
+        }
+
+        void UpdateNumberOfPlayersToMulligan()
+        {
+            NumberOfPlayersToMulligan = Board.Players.Count;
+
+            foreach (Player player in Board.Players)
+            {
+                if (!player.HasCards) { NumberOfPlayersToMulligan--; }
+            }
         }
     }
 }

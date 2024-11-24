@@ -22,8 +22,6 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override int NumberOfActivePlayers { get => 1; }
-
             public override async void SetupPlayerActionStateForBasicStart()
             {
                 // TODO the Command.HasNoCards and Command.TurnEnded can all be Task.WhenAll() awaited for minor startup performance improvement (might save a frame or two)

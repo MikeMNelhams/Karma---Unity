@@ -17,8 +17,6 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override int NumberOfActivePlayers { get => throw new NotImplementedException(); }
-
             public override void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null)
             {
                 throw new NotImplementedException();
