@@ -543,6 +543,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     public void FlipHand()
     {
+        if (CardsInHand == null || CardsInHand.Count == 0) { return; }
         _fanHandler.FlipFan(CardsInHand);
     }
 

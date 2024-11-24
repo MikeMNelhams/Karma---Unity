@@ -205,9 +205,10 @@ namespace KarmaPlayerMode
                     new TestValidJokerAsLastCardToWin(),           // 11
                     new TestGettingJokered(),                      // 12
                     new TestJokerAsAceLastCardToWin(),             // 13
-                    new TestAllPlayersNoActionsGameEnds(),         // 14 No more deterministic test cases past this point!
-                    new TestRandomStart(),                         // 15 
-                    new PlayRandomStart()                          // 16
+                    new TestAllPlayersNoActionsGameEnds(),         // 14
+                    new TestAceNoHandDoesNotCrash(),               // 15 No more deterministic test cases past this point!
+                    new TestRandomStart(),                         // 16 
+                    new PlayRandomStart()                          // 17
                 };
 
                 return presets;

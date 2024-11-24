@@ -146,6 +146,15 @@ namespace KarmaPlayerMode
             public override int TurnLimit => 100;
         }
 
+        public class TestAceNoHandDoesNotCrash : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestAceNoHandDoesNotCrash() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestAceNoHandDoesNotCrash();
+
+            public override int TurnLimit => 100;
+        }
+
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
         {
 
