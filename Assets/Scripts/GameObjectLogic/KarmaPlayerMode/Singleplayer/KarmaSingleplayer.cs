@@ -101,6 +101,7 @@ namespace KarmaPlayerMode
                 if (totalVotes == totalAvailableVotesForWinners)
                 {
                     DecideWinners();
+                        
                     IsGameOver = true;
                     IsGameWon = true;
                     UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
@@ -203,9 +204,10 @@ namespace KarmaPlayerMode
                     new TestQueenComboLastCardWithJokerInPlay(),   // 10
                     new TestValidJokerAsLastCardToWin(),           // 11
                     new TestGettingJokered(),                      // 12
-                    new TestJokerAsAceLastCardToWin(),             // 13 No more deterministic test cases past this point!
-                    new TestRandomStart(),                         // 14 
-                    new PlayRandomStart()                          // 15
+                    new TestJokerAsAceLastCardToWin(),             // 13
+                    new TestAllPlayersNoActionsGameEnds(),         // 14 No more deterministic test cases past this point!
+                    new TestRandomStart(),                         // 15 
+                    new PlayRandomStart()                          // 16
                 };
 
                 return presets;

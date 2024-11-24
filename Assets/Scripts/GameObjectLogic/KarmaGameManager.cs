@@ -18,6 +18,8 @@ public class KarmaGameManager : MonoBehaviour
     private static KarmaGameManager _instance;
     public static KarmaGameManager Instance { get { return _instance; } }
 
+    public static System.Random RNG = new(); // Uniform, system default. Not thread-safe. Great pseudo-random. Volatile in-memory.
+
     MeshRenderer _cardPrefabRenderer;
 
     [Header("Prefabs")]
@@ -38,6 +40,7 @@ public class KarmaGameManager : MonoBehaviour
 
     [SerializeField][Range(0.001f, 30.0f)] float _globalBotDelayInSeconds = 0.1f;
     [SerializeField] KarmaPlayerModeSelector _playerModeSelector;
+
     public KarmaPlayerMode.KarmaPlayerMode SelectedKarmaPlayerMode { get; private set; }
 
     public float GlobalBotDelayInSeconds { get => _globalBotDelayInSeconds; set => _globalBotDelayInSeconds = value; }
@@ -53,7 +56,7 @@ public class KarmaGameManager : MonoBehaviour
     ArrowHandler _currentPlayerArrowHandler;
     ArrowHandler _playOrderArrowHandler;
 
-    public static System.Random RNG = new(); // Uniform, system default. Not thread-safe. Great pseudo-random. Volatile in-memory.
+    int _turnsSkipped = 0;
 
     void Awake()
     {
@@ -92,6 +95,7 @@ public class KarmaGameManager : MonoBehaviour
         AssignButtonEvents();
         _currentPlayerArrowHandler.SetArrowVisibility(true);
         _playOrderArrowHandler.SetArrowVisibility(true);
+        _turnsSkipped = 0;
 
         MoveCurrentPlayerArrow();
         Board.StartTurn();
@@ -343,7 +347,15 @@ public class KarmaGameManager : MonoBehaviour
 
         if (Board.CurrentLegalActions.Count > 0)
         {
+            _turnsSkipped = 0;
             await PlayersProperties[Board.CurrentPlayerIndex].ProcessStateCommand(Command.TurnStarted);
+            return;
+        }
+
+        _turnsSkipped += 1;
+        if (_turnsSkipped == Board.Players.Count)
+        {
+            SelectedKarmaPlayerMode.EndGameEarlyDueToNoLegalActions();
             return;
         }
 

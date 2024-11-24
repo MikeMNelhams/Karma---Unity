@@ -35,6 +35,7 @@ namespace KarmaPlayerMode
 
         public bool IsGameOver { get; protected set; }
         public bool IsGameWon { get; protected set; }
+        public bool IsGameOverDueToNoLegalActions { get; protected set; }
 
         public KarmaPlayerMode(BasicBoardParams basicBoardParams = null)
         {
@@ -84,6 +85,7 @@ namespace KarmaPlayerMode
             ValidPlayerIndicesForVoting = new HashSet<int>();
             IsGameOver = false;
             IsGameWon = false;
+            IsGameOverDueToNoLegalActions = false;
         }
 
         void CreatePlayerObjects()
@@ -302,30 +304,39 @@ namespace KarmaPlayerMode
 
         protected void DecideWinners()
         {
-            if (VotesForWinners.Count > 0)
+            if (VotesForWinners.Count == 0) { return; }
+
+            int mostVotes = Enumerable.Max(VotesForWinners.Values);
+            List<int> mostVotedPlayerIndices = new();
+            foreach (int playerIndex in VotesForWinners.Keys)
             {
-                int mostVotes = Enumerable.Max(VotesForWinners.Values);
-                List<int> mostVotedPlayerIndices = new();
-                foreach (int playerIndex in VotesForWinners.Keys)
+                if (VotesForWinners[playerIndex] == mostVotes)
                 {
-                    if (VotesForWinners[playerIndex] == mostVotes)
-                    {
-                        mostVotedPlayerIndices.Add(playerIndex);
-                    }
+                    mostVotedPlayerIndices.Add(playerIndex);
                 }
-                HashSet<int> loserIndices = new();
-                loserIndices.UnionWith(Enumerable.Range(0, Board.Players.Count));
-                loserIndices.ExceptWith(mostVotedPlayerIndices);
-                foreach (int playerIndex in loserIndices)
-                {
-                    GameRanks[playerIndex]++;
-                }
+            }
+            HashSet<int> loserIndices = new();
+            loserIndices.UnionWith(Enumerable.Range(0, Board.Players.Count));
+            loserIndices.ExceptWith(mostVotedPlayerIndices);
+            foreach (int playerIndex in loserIndices)
+            {
+                GameRanks[playerIndex]++;
             }
         }
 
         protected bool IsWaitingTurn(State state)
         {
             return state == State.WaitingForTurn;
+        }
+
+        public void EndGameEarlyDueToNoLegalActions()
+        {
+            UpdateGameRanks();
+            IsGameOver = true;
+            IsGameWon = false;
+            IsGameOverDueToNoLegalActions = true;
+            UnityEngine.Debug.LogWarning("Game has been ended early, as no legal actions can be made on the board" + 
+                string.Join(Environment.NewLine, GameRanks));
         }
     }
 }

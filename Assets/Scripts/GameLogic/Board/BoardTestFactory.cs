@@ -344,6 +344,30 @@ namespace KarmaLogic.BasicBoard
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
         }
 
+        public static BasicBoardParams BotTestAllPlayersNoActionsGameEnds()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 15 }, new() { }, new() { 14, 15 } },
+                new() { new() { }, new() { }, new() { } },
+                new() { new() { 15 }, new() { 2, 2, 3 }, new() { 3 } },
+                new() { new() { 15 }, new() { 2, 2, 7 }, new() { } }
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { };
+            List<int> burnCardValues = new() { };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
+        }
+
         public static BasicBoardParams BotTestRandomStart(int numberOfPlayers, int numberOfJokers=1, int whoStarts=0)
         {
             List<CardSuit> cardSuits = new()
