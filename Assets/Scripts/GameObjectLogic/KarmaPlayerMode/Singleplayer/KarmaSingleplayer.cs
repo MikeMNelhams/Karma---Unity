@@ -200,9 +200,10 @@ namespace KarmaPlayerMode
                     new TestPotentialWinnerIsSkippedInUnwonGame(), // 7 
                     new TestMultipleSeparateCardGiveaways(),       // 8
                     new TestQueenComboLastCardToWin(),             // 9 
-                    new TestQueenComboLastCardWithJokerInPlay(),   // 10 No more deterministic test cases past this point!
-                    new TestRandomStart(),                         // 11 
-                    new PlayRandomStart()                          // 12
+                    new TestQueenComboLastCardWithJokerInPlay(),   // 10
+                    new TestValidJokerAsLastCardToWin(),           // 11 No more deterministic test cases past this point!
+                    new TestRandomStart(),                         // 12 
+                    new PlayRandomStart()                          // 13
                 };
 
                 return presets;
