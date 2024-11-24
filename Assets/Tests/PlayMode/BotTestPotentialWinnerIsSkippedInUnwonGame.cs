@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using UnityEngine.SceneManagement;
 
-public class BotLeftHandRotateTest : MonoBehaviour
+public class BotTestPotentialWinnerIsSkippedInUnwonGame : MonoBehaviour
 {
     [UnitySetUp]
     public IEnumerator LoadKGM()
@@ -22,16 +22,16 @@ public class BotLeftHandRotateTest : MonoBehaviour
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
-        KarmaGameManager.Instance.SetSelectedBoardPreset(5);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(7);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
         Dictionary<int, int> gameRanksExpected = new()
         {
-            { 0, 0 },
-            { 2, 0 },
+            { 3, 0 },
             { 1, 1 },
-            { 3, 2 }
+            { 2, 2 },
+            { 0, 3 }
         };
 
         yield return new WaitForSeconds(2);

@@ -76,6 +76,11 @@ namespace KarmaPlayerMode
                 throw new NotImplementedException();
             }
 
+            public override void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
+            {
+                throw new NotImplementedException();
+            }
+
             public override async Task VoteForWinners()
             {
                 List<Task> tasks = new();

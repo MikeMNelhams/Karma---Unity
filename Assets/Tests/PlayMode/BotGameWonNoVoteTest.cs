@@ -6,7 +6,7 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using UnityEngine.SceneManagement;
 
-public class BotLeftHandRotateTest : MonoBehaviour
+public class BotGameWonNoVoteTest : MonoBehaviour
 {
     [UnitySetUp]
     public IEnumerator LoadKGM()
@@ -22,16 +22,16 @@ public class BotLeftHandRotateTest : MonoBehaviour
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
-        KarmaGameManager.Instance.SetSelectedBoardPreset(5);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(6);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
         Dictionary<int, int> gameRanksExpected = new()
         {
-            { 0, 0 },
-            { 2, 0 },
+            { 3, 0 },
             { 1, 1 },
-            { 3, 2 }
+            { 2, 2 },
+            { 0, 3 }
         };
 
         yield return new WaitForSeconds(2);
@@ -40,7 +40,7 @@ public class BotLeftHandRotateTest : MonoBehaviour
         UnityEngine.Debug.Log("Game ranks: " + gameRanks);
 
         Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameOver);
-        Assert.IsFalse(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
+        Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
         Assert.IsTrue(gameRanks.Count != 0);
 
         CollectionAssert.AreEqual(gameRanksExpected.Keys, gameRanks.Keys);

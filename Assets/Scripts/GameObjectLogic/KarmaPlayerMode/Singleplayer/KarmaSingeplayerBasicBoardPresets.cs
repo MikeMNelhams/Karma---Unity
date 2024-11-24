@@ -32,7 +32,7 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override BasicBoardParams BoardParams => BoardTestFactory.BotVotingTestBoard();
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotVotingTestBoard1();
 
             public override int TurnLimit => 100;
         }
@@ -63,6 +63,24 @@ namespace KarmaPlayerMode
             public override BasicBoardParams BoardParams => BoardTestFactory.BotTestLeftHandRotate();
 
             public override int TurnLimit => 20;
+        }
+
+        public class TestGameWonNoVoting : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestGameWonNoVoting() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestGameWonNoVote();
+
+            public override int TurnLimit => 100;
+        }
+
+        public class TestPotentialWinnerIsSkippedInUnwonGame : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public TestPotentialWinnerIsSkippedInUnwonGame() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardTestFactory.BotTestPotentialWinnerIsSkippedInUnwonGame();
+
+            public override int TurnLimit => 100;
         }
 
         public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>

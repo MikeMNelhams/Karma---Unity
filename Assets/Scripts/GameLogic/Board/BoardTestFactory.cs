@@ -8,30 +8,6 @@ namespace KarmaLogic.BasicBoard
 {
     public class BoardTestFactory
     {
-        public static BasicBoardParams BotVotingTestBoard()
-        {
-            List<List<List<int>>> playerCardValues = new()
-            {
-                new() { new() { 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 12, 13, 14, 15}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
-                new() { new() { }, new() {}, new() { } },
-                new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
-                new() { new() { }, new() { }, new() { } }
-            };
-
-            List<BasicBoardPlayerParams> players = new();
-                
-            foreach (List<List<int>> playerValues in playerCardValues)
-            {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
-            }
-
-            List<int> drawCardValues = new() { };
-            List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
-            List<int> burnCardValues = new() { };
-
-            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
-        }
-
         public static BasicBoardParams BotQueenCombo()
         {
             List<List<List<int>>> playerCardValues = new()
@@ -75,6 +51,30 @@ namespace KarmaLogic.BasicBoard
 
             List<int> drawCardValues = new() { };
             List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
+            List<int> burnCardValues = new() { };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
+        }
+
+        public static BasicBoardParams BotVotingTestBoard1()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 12, 13, 14, 15}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                new() { new() { }, new() {}, new() { } },
+                new() { new() { 2, 4, 5, 12, 15 }, new() { 6, 7, 2 }, new() { 2, 13, 9 } },
+                new() { new() { }, new() { }, new() { } }
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 7 };
             List<int> burnCardValues = new() { };
 
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
@@ -150,6 +150,54 @@ namespace KarmaLogic.BasicBoard
             List<int> burnCardValues = new() { 5, 6 };
 
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues, Board.BoardTurnOrder.LEFT);
+        }
+
+        public static BasicBoardParams BotTestGameWonNoVote()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 2, 3, 4}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                new() { new() { 3, 4, 5}, new() { }, new() { } },
+                new() { new() { 2, 4, 5, 12}, new() { }, new() { 2, 13, 9 } },
+                new() { new() { }, new() { }, new() { } }
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { 2, 3, 4, 6, 14 };
+            List<int> burnCardValues = new() { };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
+        }
+
+        public static BasicBoardParams BotTestPotentialWinnerIsSkippedInUnwonGame()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 2, 3, 4}, new() { 2, 2, 2 }, new() { 3, 3, 3 } },
+                new() { new() { 3, 4, 5}, new() { }, new() { 15 } },
+                new() { new() { 2, 4, 5}, new() { }, new() { } },
+                new() { new() { }, new() { }, new() { } } // Should be skipped
+            };
+
+            List<BasicBoardPlayerParams> players = new();
+
+            foreach (List<List<int>> playerValues in playerCardValues)
+            {
+                players.Add(new BasicBoardPlayerParams(playerValues, false));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { 2, 3, 4, 6, 14, 2, 3 };
+            List<int> burnCardValues = new() { };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
         }
 
         public static BasicBoardParams BotTestRandomStart(int numberOfPlayers, int numberOfJokers=1, int whoStarts=0)

@@ -91,6 +91,26 @@ namespace KarmaPlayerMode
                 PlayersProperties[Board.CurrentPlayerIndex].EnablePlayerMovement();
             }
 
+            public override async void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
+            {
+                int totalAvailableVotesForWinners = Enumerable.Sum(PlayerJokerCounts.Values);
+                if (!VotesForWinners.ContainsKey(voteTargetIndex)) { VotesForWinners[voteTargetIndex] = 0; }
+                VotesForWinners[voteTargetIndex] += PlayerJokerCounts[votingPlayerIndex];
+                int totalVotes = Enumerable.Sum(VotesForWinners.Values);
+                UnityEngine.Debug.Log("There are " + totalVotes + " votes out of " + totalAvailableVotesForWinners);
+                if (totalVotes == totalAvailableVotesForWinners)
+                {
+                    DecideWinners();
+                    IsGameOver = true;
+                    IsGameWon = true;
+                    UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
+                    return;
+                }
+                await PlayersProperties[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
+                EnableNextPlayableCamera(voteTargetIndex, IsWaitingTurn);
+                Board.EndTurn();
+            }
+
             public override void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null)
             {
                 if (NumberOfActivePlayers <= 1) { return; }
@@ -133,6 +153,7 @@ namespace KarmaPlayerMode
                 NumberOfPlayersFinishedMulligan++;
                 if (!IsMulliganFinished)
                 {
+                    EnableNextPlayableCamera(playerIndex, IsWaitingTurn);
                     Board.StepPlayerIndex(1);
                     await PlayersProperties[Board.CurrentPlayerIndex].ProcessStateCommand(Command.MulliganStarted);
                     Board.StartTurn();
@@ -169,14 +190,16 @@ namespace KarmaPlayerMode
             {
                 List<KarmaPlayModeBoardPreset<BasicBoard>> presets = new()
                 {
-                    new TestStartQueenCombo(),   // 0
-                    new TestStartJokerCombo(),   // 1
-                    new TestStartVoting(),       // 2
-                    new TestStartVoting2(),      // 3
-                    new TestScenarioFullHand(),  // 4
-                    new TestLeftHandRotate(),    // 5
-                    new TestRandomStart(),       // 6
-                    new PlayRandomStart()        // 7
+                    new TestStartQueenCombo(),                     // 0
+                    new TestStartJokerCombo(),                     // 1
+                    new TestStartVoting(),                         // 2
+                    new TestStartVoting2(),                        // 3
+                    new TestScenarioFullHand(),                    // 4
+                    new TestLeftHandRotate(),                      // 5
+                    new TestGameWonNoVoting(),                     // 6 
+                    new TestPotentialWinnerIsSkippedInUnwonGame(), // 7 No more deterministic test cases past this point!
+                    new TestRandomStart(),                         // 8 
+                    new PlayRandomStart()                          // 9
                 };
 
                 return presets;

@@ -207,25 +207,7 @@ namespace KarmaPlayerMode
             }
         }
 
-        public async void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
-        {
-            int totalAvailableVotesForWinners = Enumerable.Sum(PlayerJokerCounts.Values);
-            if (!VotesForWinners.ContainsKey(voteTargetIndex)) { VotesForWinners[voteTargetIndex] = 0; }
-            VotesForWinners[voteTargetIndex] += PlayerJokerCounts[votingPlayerIndex];
-            int totalVotes = Enumerable.Sum(VotesForWinners.Values);
-            UnityEngine.Debug.Log("There are " + totalVotes + " votes out of " + totalAvailableVotesForWinners);
-            if (totalVotes == totalAvailableVotesForWinners)
-            {
-                DecideWinners();
-                IsGameOver = true;
-                IsGameWon = true;
-                UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
-                return;
-            }
-            await PlayersProperties[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
-            EnableNextPlayableCamera(voteTargetIndex, IsWaitingTurn);
-            Board.EndTurn();
-        }
+        public abstract void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex);
 
         public void CheckIfGameTurnTimerExceeded()
         {

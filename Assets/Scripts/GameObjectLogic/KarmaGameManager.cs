@@ -375,14 +375,13 @@ public class KarmaGameManager : MonoBehaviour
 
         if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
         {
-            //StartCurrentPlayersTurnIfValid();
             PlayTurnAgain();
             return;
         }
 
         if (board.HasBurnedThisTurn && board.Players[board.CurrentPlayerIndex].HasCards)
         {
-            print("BURN BABY BURN!");
+            print("WE BURNED. LET'S GO AGAIN!");
             PlayTurnAgain();
             return;
         }
