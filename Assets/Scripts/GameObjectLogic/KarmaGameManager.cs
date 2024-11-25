@@ -304,6 +304,7 @@ public class KarmaGameManager : MonoBehaviour
     void DrawCards(int numberOfCards, int playerIndex)
     {
         List<SelectableCardObject> cardsDrawn = _playTableProperties.DrawCards(numberOfCards);
+        AudioManager.Instance.PlayCardPickup();
         PlayersProperties[playerIndex].AddCardObjectsToHand(cardsDrawn);
     }
 
