@@ -314,14 +314,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    void ColorSelectableCardsAsDefault()
-    {
-        foreach (SelectableCardObject cardObject in SelectableCardObjects)
-        {
-            cardObject.ResetCardBorder();
-        }
-    }
-
     public async Task ProcessStateCommand(Command command)
     {
         await StateMachine.MoveNext(command);
@@ -403,12 +395,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         ConfirmSelectionButton.gameObject.SetActive(true);
         ClearSelectionButton.gameObject.SetActive(true);
         return Task.CompletedTask;
-    }
-
-    public void ExitCardGiveAwaySelection()
-    {
-        ConfirmSelectionButton.gameObject.SetActive(false);
-        ClearSelectionButton.gameObject.SetActive(false);
     }
 
     public Task EnterCardGiveAwayPlayerIndexSelection()
@@ -744,5 +730,13 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         CardSelector.Remove(card2);
         board.Players[Index].SwapHandWithKarmaUp(handIndex, karmaUpIndex);
         return Task.CompletedTask;
+    }
+
+    void ColorSelectableCardsAsDefault()
+    {
+        foreach (SelectableCardObject cardObject in SelectableCardObjects)
+        {
+            cardObject.ResetCardBorder();
+        }
     }
 }

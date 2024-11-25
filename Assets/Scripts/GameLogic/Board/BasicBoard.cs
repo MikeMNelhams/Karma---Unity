@@ -218,7 +218,6 @@ namespace KarmaLogic
                 Player giver = Players[giverIndex];
                 Player receiver = Players[receiverIndex];
                 receiver.ReceiveCard(card, giver);
-                //DrawUntilFull(giverIndex); // For some reason THIS doesn't work??
             }
 
             public void StartTurn()

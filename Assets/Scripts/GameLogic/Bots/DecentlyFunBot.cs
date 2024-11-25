@@ -12,21 +12,17 @@ using System;
 
 namespace KarmaLogic.Bots
 {
-    public class DecentlyFunBot : IBot
+    public class DecentlyFunBot : BotBase
     {
-        public string Name { get; protected set; }
-        public float DelaySeconds { get; protected set; }
         protected List<BoardPlayerAction> _knownActions = new();
 
-        public DecentlyFunBot(string name, float delay)
+        public DecentlyFunBot(string name, float delay) : base(name, delay)
         {
-            Name = name;
-            DelaySeconds = delay;
             _knownActions.Add(new PickupPlayPile());
             _knownActions.Add(new PlayCardsCombo());
         }
 
-        public int CardGiveAwayIndex(IBoard board)
+        public override int CardGiveAwayIndex(IBoard board)
         {
             CardsList playableCards = board.CurrentPlayer.PlayableCards;
             List<CardValue> cardValues = playableCards.CardValues;
@@ -42,14 +38,14 @@ namespace KarmaLogic.Bots
             return legalIndices.First();
         }
 
-        public int CardPlayerGiveAwayIndex(IBoard board, HashSet<int> excludedPlayerIndices)
+        public override int CardPlayerGiveAwayIndex(IBoard board, HashSet<int> excludedPlayerIndices)
         {
             HashSet<int> legalIndices = OtherPlayerIndices(board);
             legalIndices.ExceptWith(excludedPlayerIndices);
             return legalIndices.First();
         }
 
-        public FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
+        public override FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
         {
             LegalCombos legalCombos = board.CurrentLegalCombos;
             if (legalCombos.CardValues.Contains(CardValue.JOKER))
@@ -71,6 +67,84 @@ namespace KarmaLogic.Bots
             }
 
             return largestCombo;
+        }
+
+        public override int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices)
+        {
+            HashSet<int> potentialWinnerIndices = board.PotentialWinnerIndices;
+            potentialWinnerIndices.ExceptWith(excludedPlayerIndices);
+            if (potentialWinnerIndices.Count > 0)
+            {
+                return potentialWinnerIndices.ToList<int>()[0];
+            }
+            HashSet<int> otherPlayerIndices = OtherPlayerIndices(board);
+            otherPlayerIndices.ExceptWith(excludedPlayerIndices);
+            return otherPlayerIndices.ToList<int>()[0];
+        }
+
+        public override int MulliganHandIndex(IBoard board)
+        {
+            CardsList hand = board.CurrentPlayer.Hand;
+            for (int i = 0; i < hand.Count; i++)
+            {
+                if (hand[i].Value != CardValue.JOKER)
+                {
+                    return i;
+                }
+            }
+
+            throw new Exception("DecentlyFunBot should only be doing mulligan to rotate karmaUp jokers to their hand, but their entire hand is jokers!");
+        }
+
+        public override int MulliganKarmaUpIndex(IBoard board)
+        {
+            CardsList karmaUp = board.CurrentPlayer.KarmaUp;
+            for (int i = 0; i < karmaUp.Count; i++)
+            {
+                if (karmaUp[i].Value == CardValue.JOKER)
+                {
+                    return i;
+                }
+            }
+
+            throw new Exception("DecentlyFunBot should only be doing mulligan to rotate karmaUp jokers to their hand, but their karmaUp has no jokers!");
+        }
+
+        public override BoardTurnOrder PreferredStartDirection(IBoard board)
+        {
+            return BoardTurnOrder.RIGHT;
+        }
+
+        public override BoardPlayerAction SelectAction(IBoard board)
+        {
+            foreach (BoardPlayerAction action in _knownActions)
+            {
+                if (board.CurrentLegalActions.Contains(_knownActions[1]))
+                {
+                    return _knownActions[1];
+                }
+
+                if (board.CurrentLegalActions.Contains(action))
+                {
+                    return action;
+                }
+            }
+
+            throw new NoValidBoardPlayerActionsException();
+        }
+
+        public override int VoteForWinnerIndex(IBoard board, HashSet<int> excludedPlayerIndices)
+        {
+            HashSet<int> potentialWinners = board.PotentialWinnerIndices;
+            potentialWinners.ExceptWith(excludedPlayerIndices);
+            List<int> potentialWinnerIndices = potentialWinners.ToList<int>();
+            return potentialWinnerIndices[0];
+        }
+
+        public override bool WantsToMulligan(IBoard board)
+        {
+            bool handIsNotOnlyJokers = board.CurrentPlayer.Hand.CardValues.Where(x => x == CardValue.JOKER).Count() != board.CurrentPlayer.Hand.Count;
+            return board.CurrentPlayer.KarmaUp.CardValues.Contains(CardValue.JOKER) && handIsNotOnlyJokers;
         }
 
         FrozenMultiSet<CardValue> LargestCombo(LegalCombos legalCombos, Func<FrozenMultiSet<CardValue>, bool> comboRequirement = null)
@@ -108,84 +182,6 @@ namespace KarmaLogic.Bots
             }
 
             return combos[maxIndex];
-        }
-
-        public int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices)
-        {
-            HashSet<int> potentialWinnerIndices = board.PotentialWinnerIndices;
-            potentialWinnerIndices.ExceptWith(excludedPlayerIndices);
-            if (potentialWinnerIndices.Count > 0)
-            {
-                return potentialWinnerIndices.ToList<int>()[0];
-            }
-            HashSet<int> otherPlayerIndices = OtherPlayerIndices(board);
-            otherPlayerIndices.ExceptWith(excludedPlayerIndices);
-            return otherPlayerIndices.ToList<int>()[0];
-        }
-
-        public int MulliganHandIndex(IBoard board)
-        {
-            CardsList hand = board.CurrentPlayer.Hand;
-            for (int i = 0; i < hand.Count; i++)
-            {
-                if (hand[i].Value != CardValue.JOKER)
-                {
-                    return i;
-                }
-            }
-
-            throw new Exception("DecentlyFunBot should only be doing mulligan to rotate karmaUp jokers to their hand, but their entire hand is jokers!");
-        }
-
-        public int MulliganKarmaUpIndex(IBoard board)
-        {
-            CardsList karmaUp = board.CurrentPlayer.KarmaUp;
-            for (int i = 0; i < karmaUp.Count; i++)
-            {
-                if (karmaUp[i].Value == CardValue.JOKER)
-                {
-                    return i;
-                }
-            }
-
-            throw new Exception("DecentlyFunBot should only be doing mulligan to rotate karmaUp jokers to their hand, but their karmaUp has no jokers!");
-        }
-
-        public BoardTurnOrder PreferredStartDirection(IBoard board)
-        {
-            return BoardTurnOrder.RIGHT;
-        }
-
-        public BoardPlayerAction SelectAction(IBoard board)
-        {
-            foreach (BoardPlayerAction action in _knownActions)
-            {
-                if (board.CurrentLegalActions.Contains(_knownActions[1]))
-                {
-                    return _knownActions[1];
-                }
-
-                if (board.CurrentLegalActions.Contains(action))
-                {
-                    return action;
-                }
-            }
-
-            throw new NoValidBoardPlayerActionsException();
-        }
-
-        public int VoteForWinnerIndex(IBoard board, HashSet<int> excludedPlayerIndices)
-        {
-            HashSet<int> potentialWinners = board.PotentialWinnerIndices;
-            potentialWinners.ExceptWith(excludedPlayerIndices);
-            List<int> potentialWinnerIndices = potentialWinners.ToList<int>();
-            return potentialWinnerIndices[0];
-        }
-
-        public bool WantsToMulligan(IBoard board)
-        {
-            bool handIsNotOnlyJokers = board.CurrentPlayer.Hand.CardValues.Where(x => x == CardValue.JOKER).Count() != board.CurrentPlayer.Hand.Count;
-            return board.CurrentPlayer.KarmaUp.CardValues.Contains(CardValue.JOKER) && handIsNotOnlyJokers;
         }
 
         HashSet<int> OtherPlayerIndices(IBoard board)

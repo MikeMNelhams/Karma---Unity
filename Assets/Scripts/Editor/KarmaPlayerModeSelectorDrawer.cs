@@ -21,14 +21,15 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
 
     int _presetSelected = 0;
     protected bool _presetSelectedChanged = false;
-    protected string[] _presetOptionsSingleplayer = new string[18] 
+    protected string[] _presetOptionsSingleplayer = new string[19] 
     { 
         "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting", 
         "TestStartVoting2", "TestScenarioFullHand", "TestLeftwardsHandRotate", 
         "TestGameWonNoVote", "TestPotentialWinnerIsSkippedInUnwonGame", "TestMultipleSeparateCardGiveaways",
         "TestQueenComboLastCardToWin", "TestQueenComboLastCardWithJokerInPlay", "TestValidJokerAsLastCardToWin", 
         "TestGettingJokered", "TestJokerAsAceLastCardToWin", "TestAllPlayersNoActionsGameEnds", 
-        "TestAceNoHandDoesNotCrash", "TestRandomStart", "RandomStart4"
+        "TestAceNoHandDoesNotCrash", "TestRandomStart", "PlayRandomStart4Playable",
+        "DefaultSingleplayer"
     };
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -40,8 +41,6 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
         bool useBoardPresetBefore = _useBoardPresets;
 
         EditorGUI.BeginChangeCheck();
-
-        // TODO ask for: which player starts INT FIELD 0 <= x <= Player count.
 
         this._selected = EditorGUILayout.Popup("Player Mode", property.FindPropertyRelative("_mode").intValue, _playerModeOptions);
         this._useBoardPresets = EditorGUILayout.Toggle("Use board presets?", property.FindPropertyRelative("_useBasicBoardPreset").boolValue);

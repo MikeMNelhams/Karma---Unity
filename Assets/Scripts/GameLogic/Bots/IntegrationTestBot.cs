@@ -11,21 +11,17 @@ using DataStructures;
 
 namespace KarmaLogic.Bots
 {
-    public class IntegrationTestBot : IBot
+    public class IntegrationTestBot : BotBase
     {
-        public string Name { get; protected set; }
-        public float DelaySeconds { get; protected set; }
         protected List<BoardPlayerAction> _knownActions = new();
 
-        public IntegrationTestBot(string name, float delay)
+        public IntegrationTestBot(string name, float delay) : base(name, delay)
         {
-            Name = name;
-            DelaySeconds = delay;
             _knownActions.Add(new PickupPlayPile());
             _knownActions.Add(new PlayCardsCombo());
         }
 
-        public int CardGiveAwayIndex(IBoard board)
+        public override int CardGiveAwayIndex(IBoard board)
         {
             CardsList playableCards = board.CurrentPlayer.PlayableCards;
             List<CardValue> cardValues = playableCards.CardValues;
@@ -41,20 +37,20 @@ namespace KarmaLogic.Bots
             return legalIndices.First();
         }
 
-        public int CardPlayerGiveAwayIndex(IBoard board, HashSet<int> excludedPlayerIndices)
+        public override int CardPlayerGiveAwayIndex(IBoard board, HashSet<int> excludedPlayerIndices)
         {
             HashSet<int> legalIndices = OtherPlayerIndices(board);
             legalIndices.ExceptWith(excludedPlayerIndices);
             return legalIndices.First();
         }
 
-        public FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
+        public override FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
         {
             LegalCombos legalCombos = board.CurrentLegalCombos;
             return legalCombos.First();
         }
 
-        public int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices)
+        public override int JokerTargetIndex(IBoard board, HashSet<int> excludedPlayerIndices)
         {
             HashSet<int> potentialWinnerIndices = board.PotentialWinnerIndices;
             potentialWinnerIndices.ExceptWith(excludedPlayerIndices);
@@ -67,22 +63,22 @@ namespace KarmaLogic.Bots
             return otherPlayerIndices.ToList<int>()[0];
         }
 
-        public int MulliganHandIndex(IBoard board)
+        public override int MulliganHandIndex(IBoard board)
         {
             throw new System.NotImplementedException();
         }
 
-        public int MulliganKarmaUpIndex(IBoard board)
+        public override int MulliganKarmaUpIndex(IBoard board)
         {
             throw new System.NotImplementedException();
         }
 
-        public BoardTurnOrder PreferredStartDirection(IBoard board)
+        public override BoardTurnOrder PreferredStartDirection(IBoard board)
         {
             return BoardTurnOrder.RIGHT;
         }
 
-        public BoardPlayerAction SelectAction(IBoard board)
+        public override BoardPlayerAction SelectAction(IBoard board)
         {
             foreach (BoardPlayerAction action in _knownActions)
             {
@@ -101,7 +97,7 @@ namespace KarmaLogic.Bots
             throw new NoValidBoardPlayerActionsException();
         }
 
-        public int VoteForWinnerIndex(IBoard board, HashSet<int> excludedPlayerIndices)
+        public override int VoteForWinnerIndex(IBoard board, HashSet<int> excludedPlayerIndices)
         {
             HashSet<int> potentialWinners = board.PotentialWinnerIndices;
             potentialWinners.ExceptWith(excludedPlayerIndices);
@@ -109,7 +105,7 @@ namespace KarmaLogic.Bots
             return potentialWinnerIndices[0];
         }
 
-        public bool WantsToMulligan(IBoard board)
+        public override bool WantsToMulligan(IBoard board)
         {
             return false;
         }

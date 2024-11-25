@@ -12,10 +12,10 @@ namespace StateMachine.CharacterStateMachines
     public class BotStateMachine : StateMachine<State, Command>
     {
         protected IBoard _board;
-        protected IBot _bot;
+        protected BotBase _bot;
         protected PlayerProperties _playerProperties;
 
-        public BotStateMachine(IBot bot, PlayerProperties playerProperties, IBoard board)
+        public BotStateMachine(BotBase bot, PlayerProperties playerProperties, IBoard board)
         {
             _board = board;
             _bot = bot;

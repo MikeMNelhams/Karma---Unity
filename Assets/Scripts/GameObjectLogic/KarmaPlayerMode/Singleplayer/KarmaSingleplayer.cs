@@ -24,8 +24,6 @@ namespace KarmaPlayerMode
 
             public override async void SetupPlayerActionStateForBasicStart()
             {
-                // TODO the Command.HasNoCards and Command.TurnEnded can all be Task.WhenAll() awaited for minor startup performance improvement (might save a frame or two)
-
                 for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
                 {
                     PlayerProperties playerProperties = PlayersProperties[playerIndex];
@@ -110,7 +108,7 @@ namespace KarmaPlayerMode
                 Board.EndTurn();
             }
 
-            public override void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null)
+            public void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null)
             {
                 if (NumberOfActivePlayers <= 1) { return; }
 
@@ -206,7 +204,8 @@ namespace KarmaPlayerMode
                     new TestAllPlayersNoActionsGameEnds(),         // 14
                     new TestAceNoHandDoesNotCrash(),               // 15 No more deterministic test cases past this point!
                     new TestRandomStart(),                         // 16 
-                    new PlayRandomStart()                          // 17
+                    new PlayRandomStartFourPlayable(),             // 17
+                    new PlayRandomStartDefault()                   // 18
                 };
 
                 return presets;

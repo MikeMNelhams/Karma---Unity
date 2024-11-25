@@ -145,8 +145,6 @@ namespace KarmaPlayerMode
 
         public abstract void SetupPlayerMovementControllers();
 
-        public abstract void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null);
-
         public abstract void IfPlayableDisableStartingPlayerMovement();
 
         public abstract void IfPlayableEnableCurrentPlayerMovement();

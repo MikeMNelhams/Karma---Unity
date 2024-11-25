@@ -17,11 +17,6 @@ namespace KarmaPlayerMode
             {
             }
 
-            public override void EnableNextPlayableCamera(int playerCameraDisabledIndex, Func<State, bool> stateRequirement = null)
-            {
-                throw new NotImplementedException();
-            }
-
             public override void IfPlayableDisableStartingPlayerMovement()
             {
                 throw new NotImplementedException();

@@ -629,8 +629,8 @@ public class KarmaGameManager : MonoBehaviour
         if (targetIndex == giverIndex) { return; }
         Player giver = Board.Players[giverIndex];
         giver.PlayPileGiveAwayHandler.GiveAway(targetIndex);
-        print(giverIndex + " is giving away PLAY PILE (board) to player: " + targetIndex);
-        Board.Players[targetIndex].Pickup(Board.PlayPile); // TODO Register this at the beginning to guarantee parity!
+        print(giverIndex + " is forcing pickup of PLAY PILE (board) to player: " + targetIndex);
+        TargetPickupPlayPile(giverIndex, targetIndex);
 
         List<SelectableCardObject> playPileCardObjects = _playTableProperties.PopAllFromPlayPile();
 
@@ -647,6 +647,12 @@ public class KarmaGameManager : MonoBehaviour
         await PlayersProperties[giverIndex].StateMachine.MoveNext(Command.TurnEnded);
         Board.EndTurn();
         return;
+    }
+
+    void TargetPickupPlayPile(int giverIndex, int targetIndex)
+    {
+        if (targetIndex == giverIndex) { return; }
+        Board.Players[targetIndex].Pickup(Board.PlayPile);
     }
 
     Dictionary<Card, List<int>> BoardPlayerHandSorter(int playerIndex)

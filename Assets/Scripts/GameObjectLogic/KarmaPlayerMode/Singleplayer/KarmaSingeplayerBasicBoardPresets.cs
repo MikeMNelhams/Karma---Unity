@@ -164,13 +164,22 @@ namespace KarmaPlayerMode
             public override int TurnLimit => 100;
         }
 
-        public class PlayRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
+        public class PlayRandomStartFourPlayable : KarmaPlayModeBoardPreset<BasicBoard>
         {
-            public PlayRandomStart() : base() { }
+            public PlayRandomStartFourPlayable() : base() { }
 
-            public override BasicBoardParams BoardParams => BoardFactory.RandomStart(4);
+            public override BasicBoardParams BoardParams => BoardFactory.RandomStartAllPlayable(4);
 
             public override int TurnLimit => 1000;
+        }
+
+        public class PlayRandomStartDefault : KarmaPlayModeBoardPreset<BasicBoard>
+        {
+            public PlayRandomStartDefault() : base() { }
+
+            public override BasicBoardParams BoardParams => BoardFactory.RandomStartSingleplayerDefault();
+
+            public override int TurnLimit => 100;
         }
     }
 }
