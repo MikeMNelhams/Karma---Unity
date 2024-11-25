@@ -11,9 +11,9 @@ public class PlayTableProperties : MonoBehaviour
     [SerializeField] CardObjectPileHandler _playPileHandler;
     [SerializeField] CirclularTable _tableGeometry;
 
-    public GameObject DrawPile { get => _drawPileHandler.gameObject; }
-    public GameObject BurnPile { get => _burnPileHandler.gameObject; }
-    public GameObject PlayPile { get => _playPileHandler.gameObject; }
+    public CardObjectPileHandler DrawPile { get => _drawPileHandler; }
+    public CardObjectPileHandler BurnPile { get => _burnPileHandler; }
+    public CardObjectPileHandler PlayPile { get => _playPileHandler; }
     public CirclularTable TableGeometry { get => _tableGeometry; }
 
     public void CreateCardObjectPilesFromBoard(IBoard board)

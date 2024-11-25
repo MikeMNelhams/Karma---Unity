@@ -23,7 +23,6 @@ namespace UserInterface.Menu
 
         Coroutine _animationCoroutine;
 
-
         public void Enter()
         {
             switch (_entryMode)

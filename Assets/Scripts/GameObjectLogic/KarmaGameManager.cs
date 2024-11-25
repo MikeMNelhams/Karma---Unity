@@ -27,8 +27,6 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] GameObject _playerPrefab;
     [SerializeField] GameObject _playerKarmaBoardHolderPrefab;
 
-    public GameObject PlayerKarmaBoardHolder { get => _playerKarmaBoardHolderPrefab; }
-
     [Header("Scene objects")]
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] GameObject _playOrderArrow;
@@ -100,6 +98,17 @@ public class KarmaGameManager : MonoBehaviour
         FlipAnyNecessaryKarmaDownToUp();
         MoveCurrentPlayerArrow();
         Board.StartTurn();
+    }
+
+    [ContextMenu("End Current Game")]
+    public void EndCurrentGame()
+    {
+        _currentPlayerArrowHandler.SetArrowVisibility(false);
+        _playOrderArrowHandler.SetArrowVisibility(false);
+        _playTableProperties.DrawPile.DestroyCards();
+        _playTableProperties.PlayPile.DestroyCards();
+        _playTableProperties.BurnPile.DestroyCards();
+        SelectedKarmaPlayerMode.EndGame();
     }
 
     void RegisterBoardEvents()

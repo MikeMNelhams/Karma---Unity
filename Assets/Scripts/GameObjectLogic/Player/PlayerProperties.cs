@@ -136,6 +136,25 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
+    public void Destroy()
+    {
+        if (PickedUpCard != null) { Destroy(PickedUpCard); }
+        foreach (SelectableCardObject card in CardsInHand)
+        {
+            Destroy(card);
+        }
+        foreach (SelectableCardObject card in CardsInKarmaUp)
+        {
+            Destroy(card);
+        }
+        foreach (SelectableCardObject card in CardsInKarmaDown)
+        {
+            Destroy(card);
+        }
+
+        Destroy(gameObject);
+    }
+
     void TrySelectCardObject()
     {
         bool isOverUI = EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null;
@@ -359,11 +378,15 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
         if (gameManager.Board.TurnOrder == BoardTurnOrder.RIGHT)
         {
+            // TODO swap this with registering a on flipTurnOrder event to Board.EventSystem() when the player is created!!
             _nextPlayerRightArrow.gameObject.SetActive(true);
+            _nextPlayerLeftArrow.gameObject.SetActive(false);
         }
         if (gameManager.Board.TurnOrder == BoardTurnOrder.LEFT)
         {
+            // TODO swap this with registering a on flipTurnOrder event to Board.EventSystem() when the player is created!!
             _nextPlayerLeftArrow.gameObject.SetActive(true);
+            _nextPlayerRightArrow.gameObject.SetActive(false);
         }
         TryColorLegalCards();
         return Task.CompletedTask;

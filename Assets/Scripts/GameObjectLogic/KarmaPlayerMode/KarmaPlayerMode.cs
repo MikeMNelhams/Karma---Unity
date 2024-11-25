@@ -335,8 +335,36 @@ namespace KarmaPlayerMode
             IsGameOver = true;
             IsGameWon = false;
             IsGameOverDueToNoLegalActions = true;
-            UnityEngine.Debug.LogWarning("Game has been ended early, as no legal actions can be made on the board" + 
+            UnityEngine.Debug.LogWarning("Game has been ended early, as no legal actions can be made on the board.\nGame Ranks:\n" + 
                 string.Join(Environment.NewLine, GameRanks));
+        }
+        
+        public void EndGame()
+        {
+            UpdateGameRanks();
+            IsGameOver = true;
+            IsGameWon = false;
+            UnityEngine.Debug.LogWarning("Game has been exited. Game Ranks:\n" +
+                string.Join(Environment.NewLine, GameRanks));
+
+            DestroyBoardHolders();
+            DestroyPlayers();
+        }
+
+        void DestroyBoardHolders()
+        {
+            foreach (PlayerKarmaBoardHolderProperties playerBoardHolderProperties in PlayersBoardHolderProperties)
+            {
+                playerBoardHolderProperties.Destroy();
+            }
+        }
+
+        void DestroyPlayers()
+        {
+            foreach (PlayerProperties playerProperties in PlayersProperties)
+            {
+                playerProperties.Destroy();
+            }
         }
 
         void UpdateActivePlayersCount()

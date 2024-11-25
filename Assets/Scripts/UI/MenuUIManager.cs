@@ -19,6 +19,8 @@ public class MenuUIManager : MonoBehaviour
     [SerializeField] Page _startPage;
     [SerializeField] GameObject _firstFocusItem;
 
+    [SerializeField] Page _escapePage;
+
     readonly Stack<Page> _pageStack = new ();
 
     void Awake()
@@ -48,10 +50,19 @@ public class MenuUIManager : MonoBehaviour
 
     void OnCancel()
     {
-        if (_rootObject.activeSelf && _rootObject.activeInHierarchy && _pageStack.Count > 1)
+        if (!_rootObject.activeSelf || !_rootObject.activeInHierarchy)
+        {
+            return;
+        } 
+        print("Page stack count: " + _pageStack.Count);
+        if (_pageStack.Count > 1)
         {
             PopPage();
+            return;
         }
+        
+        if (_pageStack.Count == 1 && _pageStack.Peek() == _startPage) { return; }
+        PushPage(_escapePage);
     }
 
     public bool IsPageInStack(Page page)
@@ -67,7 +78,9 @@ public class MenuUIManager : MonoBehaviour
     public void PushPage(Page page)
     {
         if (!_menuCamera.enabled) { _menuCamera.enabled = true; }
+        if (!page.gameObject.activeSelf) { page.gameObject.SetActive(true); }
 
+        print("Pushing page: " + page.name + " is enabled?: " + page.enabled + " is active?: " + page.gameObject.activeSelf);
         page.Enter();
 
         if (_pageStack.Count > 0)
@@ -104,6 +117,8 @@ public class MenuUIManager : MonoBehaviour
 
         if (newPage.ExitOnNewPagePush)
         {
+
+            if (!newPage.gameObject.activeSelf) { newPage.gameObject.SetActive(true); }
             newPage.Enter();
         }
     }
@@ -114,6 +129,12 @@ public class MenuUIManager : MonoBehaviour
         {
             PopPage();
         }
+    }
+
+    public void ReturnToStartPage()
+    {
+        PopAllPages();
+        PushPage(_startPage);
     }
 
     public void SetMenuCamera(Camera camera)

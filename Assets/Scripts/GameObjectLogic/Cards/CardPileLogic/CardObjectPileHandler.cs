@@ -80,6 +80,16 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         return removedCardObjects;
     }
 
+    public void DestroyCards()
+    {
+        foreach (SelectableCardObject cardObject in CardObjects)
+        {
+            Destroy(cardObject.gameObject);
+        }
+
+        CardObjects.Clear();
+    }
+
     Quaternion CardRotation()
     {
         Quaternion faceRotation = _isFaceUp ? Quaternion.Euler(-90, 0, 0) : Quaternion.Euler(90, 0, 0);
