@@ -770,8 +770,9 @@ GameObject:
   - component: {fileID: 452895067}
   - component: {fileID: 452895066}
   - component: {fileID: 452895064}
+  - component: {fileID: 452895068}
   m_Layer: 0
-  m_Name: MenuCamera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -887,6 +888,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &452895068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452895063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1 &651445637
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,6 +1277,8 @@ MonoBehaviour:
   _cardPrefab: {fileID: 7301702206139819914, guid: 075ad698ae2478d4a81bc0dfa54a1dac, type: 3}
   _playerPrefab: {fileID: 2410296296573889902, guid: 75e9c81ac68b69545bddd1eab9beb352, type: 3}
   _playerKarmaBoardHolderPrefab: {fileID: 4926457181011015983, guid: 054cf7406b5ac714bbffa66abc4166c1, type: 3}
+  _camera: {fileID: 452895066}
+  _cameraRaycaster: {fileID: 452895068}
   _currentPlayerArrow: {fileID: 1984063095}
   _playOrderArrow: {fileID: 863761617}
   _playTableProperties: {fileID: 1598284356}

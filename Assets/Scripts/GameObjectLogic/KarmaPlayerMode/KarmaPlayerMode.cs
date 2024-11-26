@@ -122,7 +122,7 @@ namespace KarmaPlayerMode
                     IntegrationTestBot bot = new (botName, botDelay);
                     playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
                     playerProperties.name = botName;
-                    playerProperties.DisableCamera();
+                    playerProperties.DisconnectCamera();
                     botNameIndex++;
                 }
 

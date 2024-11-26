@@ -17,7 +17,7 @@ namespace StateMachine
             {
                 {
                     new StateTransition<State, Command>(State.Null, Command.MulliganStarted),
-                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener>{ playerProperties.DisableCamera, playerProperties.EnterMulligan })
+                    new StateTransitionResult<State>(State.Mulligan, new List<StateTransitionListener>{ playerProperties.DisconnectCamera, playerProperties.EnterMulligan })
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.TurnStarted),
@@ -25,7 +25,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.TurnEnded),
-                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener> { playerProperties.DisableCamera })
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener> { playerProperties.DisconnectCamera })
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.VotingStarted),
@@ -33,7 +33,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.Null, Command.HasNoCards),
-                    new StateTransitionResult<State>(State.PotentialWinner, new List<StateTransitionListener> { playerProperties.DisableCamera })
+                    new StateTransitionResult<State>(State.PotentialWinner, new List<StateTransitionListener> { playerProperties.DisconnectCamera })
                 },
                 {
                     new StateTransition<State, Command>(State.Mulligan, Command.TurnStarted),
@@ -41,7 +41,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.Mulligan, Command.TurnEnded),
-                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.DisableCamera, playerProperties.HideUI })
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.DisconnectCamera, playerProperties.HideUI })
                 },
                 {
                     new StateTransition<State, Command>(State.Mulligan, Command.MulliganEnded),
@@ -57,11 +57,11 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.PickingAction, Command.TurnEnded),
-                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitPickingActionUpdateUI, playerProperties.DisableCamera})
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitPickingActionUpdateUI, playerProperties.DisconnectCamera})
                 },
                 {
                     new StateTransition<State, Command>(State.PickingAction, Command.HasNoCards),
-                    new StateTransitionResult<State>(State.PotentialWinner, new List<StateTransitionListener> {playerProperties.ExitPickingActionUpdateUI, playerProperties.DisableCamera})
+                    new StateTransitionResult<State>(State.PotentialWinner, new List<StateTransitionListener> {playerProperties.ExitPickingActionUpdateUI, playerProperties.DisconnectCamera})
                 },
                 {
                     new StateTransition<State, Command>(State.SelectingCardGiveAwayIndex, Command.CardGiveAwayIndexSelected),
@@ -73,7 +73,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
-                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitCardGiveAwayPlayerIndexSelection, playerProperties.DisableCamera})
+                    new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitCardGiveAwayPlayerIndexSelection, playerProperties.DisconnectCamera})
                 },
                 {
                     new StateTransition<State, Command>(State.SelectingPlayPileGiveAwayPlayerIndex, Command.TurnEnded),
@@ -101,7 +101,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.VotingForWinner, Command.GameEnded),
-                    new StateTransitionResult<State>(State.GameOver, new List<StateTransitionListener> { playerProperties.DisableCamera, playerProperties.ExitVotingForWinner })
+                    new StateTransitionResult<State>(State.GameOver, new List<StateTransitionListener> { playerProperties.DisconnectCamera, playerProperties.ExitVotingForWinner })
                 },
                 {
                     new StateTransition<State, Command>(State.PotentialWinner, Command.GotJokered),
@@ -109,7 +109,7 @@ namespace StateMachine
                 },
                 {
                     new StateTransition<State, Command>(State.PotentialWinner, Command.GameEnded),
-                    new StateTransitionResult<State>(State.GameOver, new List<StateTransitionListener> {playerProperties.DisableCamera, playerProperties.ExitVotingForWinner})
+                    new StateTransitionResult<State>(State.GameOver, new List<StateTransitionListener> {playerProperties.DisconnectCamera, playerProperties.ExitVotingForWinner})
                 }
             };
                 CurrentState = State.Null;

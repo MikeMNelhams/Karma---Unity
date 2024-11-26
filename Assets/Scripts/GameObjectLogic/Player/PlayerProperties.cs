@@ -20,13 +20,17 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] FanHandler _fanHandler;
 
-    [SerializeField] Camera _playerCamera;
-    [SerializeField] PhysicsRaycaster _playerCameraPhysicsRaycaster;
     [SerializeField] Canvas _playerCanvas;
     [SerializeField] GameObject _cardHolder;
      
     [SerializeField] float _rayCastCutoff = 30f;
-    
+
+    Camera _camera;
+    PhysicsRaycaster _cameraPhysicsRaycaster;
+
+    public Camera Camera { get => _camera; }
+    public PhysicsRaycaster CameraRaycaster { get => _cameraPhysicsRaycaster; }
+
     public ButtonAwaitable PickupPlayPileButton { get => _pickupPlayPileButton; }
     public ButtonAwaitable ConfirmSelectionButton { get => _confirmSelectionButton; }
     public ButtonAwaitable ClearSelectionButton { get => _clearSelectionButton; }
@@ -98,13 +102,12 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void Update()
     {
-
         if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1)) { return; }
 
         if (Input.GetMouseButtonDown(0))
         {
-            _isLeftButtonMouseDown = true;
             _mousePosition = Input.mousePosition;
+            _isLeftButtonMouseDown = true;
             return;
         }
 
@@ -117,10 +120,13 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void FixedUpdate()
     {
+        if (_camera == null) { return; }
         if (!_isLeftButtonMouseDown && !_isRightButtonMouseDown) { return; }
         if (_isLeftButtonMouseDown)
         {
-            if (StateMachine.CurrentState is not State.WaitingForTurn)
+            if (StateMachine.CurrentState is not State.WaitingForTurn 
+                && StateMachine.CurrentState is not State.Null 
+                && StateMachine.CurrentState is not State.GameOver)
             {
                 TrySelectCardObject();
             }
@@ -157,13 +163,18 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
     void TrySelectCardObject()
     {
+        if (_camera == null)
+        {
+            return;
+        }
+
         bool isOverUI = EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null;
         if (isOverUI) 
         { 
             return; 
         }
 
-        int numberOfHits = Physics.RaycastNonAlloc(_playerCamera.ScreenPointToRay(_mousePosition), _hits, _rayCastCutoff);
+        int numberOfHits = Physics.RaycastNonAlloc(_camera.ScreenPointToRay(_mousePosition), _hits, _rayCastCutoff);
 
         if (numberOfHits == 1) { return; }
         System.Array.Sort(_hits, (a, b) => (a.distance.CompareTo(b.distance)));
@@ -226,20 +237,29 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public Task EnableCamera()
     {
         print("Enabling camera for player: " + Index);
-        _playerCamera.enabled = true;
-        _playerCamera.tag = "MainCamera";
-        _playerCameraPhysicsRaycaster.enabled = true;
+
+        _camera = KarmaGameManager.Instance.CameraMain;
+        _camera.transform.position = _playerMovementController.PlayerHead.transform.position;
+
+        _cameraPhysicsRaycaster = KarmaGameManager.Instance.CameraRaycaster;
+
+        _camera.gameObject.transform.SetParent(_playerMovementController.PlayerHead.transform);
+        _camera.enabled = true;
+        _cameraPhysicsRaycaster.enabled = true;
         _playerCanvas.enabled = true;
         return Task.CompletedTask;
     }
 
-    public Task DisableCamera()
+    public Task DisconnectCamera()
     {
-        print("Disabling camera for player: " + Index);
-        _playerCamera.tag = "Untagged";
-        _playerCamera.enabled = false;
-        _playerCameraPhysicsRaycaster.enabled = false;
         _playerCanvas.enabled = false;
+
+        print("Disconnecting camera for: " + name);
+        if (_camera == null) { return Task.CompletedTask; }
+
+        _camera.gameObject.transform.SetParent(null);
+        _camera = null;
+        _cameraPhysicsRaycaster = null;
         return Task.CompletedTask;
     }
 
@@ -624,20 +644,20 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
         _targetPlayerProperties = TargetPlayerInFrontOfPlayer;
         float distanceFromHolder = 0.75f;
-        Vector3 cardPosition = _playerCamera.transform.position + _playerCamera.transform.forward * distanceFromHolder;
+        Vector3 cardPosition = _camera.transform.position + _camera.transform.forward * distanceFromHolder;
         
         PickedUpCard.transform.position = cardPosition;
 
         Quaternion cardRotation;
         if (_targetPlayerProperties != null)
         {
-            Quaternion lookDirection = Quaternion.LookRotation(cardPosition - _playerCamera.transform.position);
+            Quaternion lookDirection = Quaternion.LookRotation(cardPosition - _camera.transform.position);
             cardRotation = lookDirection; // Quaternion.Euler(90, 180, 0) *
             cardRotation *= Quaternion.Euler(75, 180, 0);
         }
         else
         {
-            cardRotation = Quaternion.LookRotation(_playerCamera.transform.position - cardPosition);
+            cardRotation = Quaternion.LookRotation(_camera.transform.position - cardPosition);
         }
 
         PickedUpCard.transform.rotation = cardRotation;
@@ -716,7 +736,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     {
         get
         {
-            Physics.Raycast(_playerCamera.transform.position, _playerCamera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
+            Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit firstHit, _rayCastCutoff, _layerAsLayerMask);
 
             if (firstHit.transform == null) { return null; }
             if (firstHit.transform.parent == null) { return null; }

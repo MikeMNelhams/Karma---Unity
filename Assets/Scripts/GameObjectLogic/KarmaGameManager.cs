@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataStructures;
 using KarmaPlayerMode;
+using UnityEngine.EventSystems;
 
 public class KarmaGameManager : MonoBehaviour
 {
@@ -28,14 +29,19 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] GameObject _playerKarmaBoardHolderPrefab;
 
     [Header("Scene objects")]
+    [SerializeField] Camera _camera;
+    [SerializeField] PhysicsRaycaster _cameraRaycaster;
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] GameObject _playOrderArrow;
     [SerializeField] PlayTableProperties _playTableProperties;
 
+    public Camera CameraMain {  get { return _camera; } }
+    public PhysicsRaycaster CameraRaycaster { get { return _cameraRaycaster; } }
     public PlayTableProperties PlayTableProperties { get => _playTableProperties; }
 
-    [Header("Gameplay Settings")]
+    Vector3 _startingCameraPosition;
 
+    [Header("Gameplay Settings")]
     [SerializeField][Range(0.001f, 30.0f)] float _globalBotDelayInSeconds = 0.1f;
     [SerializeField] KarmaPlayerModeSelector _playerModeSelector;
 
@@ -69,6 +75,7 @@ public class KarmaGameManager : MonoBehaviour
 
         InitialiseHandlers();
         _cardPrefabRenderer = _cardPrefab.GetComponent<MeshRenderer>();
+        _startingCameraPosition = _camera.transform.position;
     }
 
     void InitialiseHandlers()
@@ -101,13 +108,19 @@ public class KarmaGameManager : MonoBehaviour
     }
 
     [ContextMenu("End Current Game")]
-    public void EndCurrentGame()
+    public async void EndCurrentGame()
     {
         _currentPlayerArrowHandler.SetArrowVisibility(false);
         _playOrderArrowHandler.SetArrowVisibility(false);
         _playTableProperties.DrawPile.DestroyCards();
         _playTableProperties.PlayPile.DestroyCards();
         _playTableProperties.BurnPile.DestroyCards();
+
+        _camera.transform.position = _startingCameraPosition;
+        _camera = PlayersProperties[Board.CurrentPlayerIndex].Camera;
+        _cameraRaycaster = PlayersProperties[Board.CurrentPlayerIndex].CameraRaycaster;
+        await PlayersProperties[Board.CurrentPlayerIndex].DisconnectCamera();
+
         SelectedKarmaPlayerMode.EndGame();
     }
 
@@ -295,7 +308,6 @@ public class KarmaGameManager : MonoBehaviour
         int i = 0;
         foreach (PlayerProperties playerProperties in PlayersProperties)
         {
-            print("Player: " + i + " selectin from: " + playerProperties.SelectingFrom);
             if (playerProperties.SelectingFrom == PlayingFrom.KarmaDown)
             {
                 playerProperties.FlipKarmaDownCardsUp();
@@ -498,7 +510,7 @@ public class KarmaGameManager : MonoBehaviour
     async Task TriggerClearSelection(int playerIndex)
     {
         State state = PlayersProperties[playerIndex].StateMachine.CurrentState;
-        print("State when clear: " + state);
+        
         if (state is State.Mulligan || state is State.PickingAction || state is State.SelectingCardGiveAwayIndex) 
         { 
             await AttemptClearCardSelection(playerIndex); 

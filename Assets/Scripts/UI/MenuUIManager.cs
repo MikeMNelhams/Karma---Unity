@@ -54,7 +54,7 @@ public class MenuUIManager : MonoBehaviour
         {
             return;
         } 
-        print("Page stack count: " + _pageStack.Count);
+
         if (_pageStack.Count > 1)
         {
             PopPage();
@@ -62,6 +62,7 @@ public class MenuUIManager : MonoBehaviour
         }
         
         if (_pageStack.Count == 1 && _pageStack.Peek() == _startPage) { return; }
+
         PushPage(_escapePage);
     }
 
@@ -109,7 +110,6 @@ public class MenuUIManager : MonoBehaviour
 
         if (_pageStack.Count == 0)
         {
-            SwitchOffMenuCamera();
             return;
         }
 
@@ -140,10 +140,5 @@ public class MenuUIManager : MonoBehaviour
     public void SetMenuCamera(Camera camera)
     {
         _menuCamera = camera;
-    }
-
-    void SwitchOffMenuCamera()
-    {
-        _menuCamera.enabled = false;
     }
 }

@@ -11,6 +11,8 @@ public class PlayerMovementController : MonoBehaviour
 
     [SerializeField] float _lookSensitivity = 1f;
 
+    public GameObject PlayerHead { get => _playerHead.gameObject; }
+
     public delegate void PlayerRotationEventListener();
     public event PlayerRotationEventListener PlayerRotationEvent;
 
