@@ -35,7 +35,10 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         {
             Card card = pile[i];
             Tuple<Vector3, Quaternion> positionAndRotation = CardPositionAndRotation(i, _cardPositionAndRotationParams);
-            GameObject cardObject = gameManager.InstantiateCard(card, positionAndRotation.Item1, positionAndRotation.Item2, gameObject);
+            GameObject cardGameObject = gameManager.InstantiateCard(card, positionAndRotation.Item1, positionAndRotation.Item2, gameObject);
+            CardObject cardObject = cardGameObject.GetComponent<CardObject>();
+
+            cardObject.SetParent(this, this.transform);
 
             CardObjects.Add(cardObject.GetComponent<CardObject>());
         }

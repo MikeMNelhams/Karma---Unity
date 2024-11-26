@@ -93,6 +93,7 @@ public class KarmaGameManager : MonoBehaviour
 
         RegisterPlayerBoardListeners();
         RegisterBoardEvents();
+
         CreatePlayerCardObjectsFromBoard();
 
         _playTableProperties.CreateCardObjectPilesFromBoard(Board);
@@ -230,6 +231,10 @@ public class KarmaGameManager : MonoBehaviour
         if (numberOfRotations == 0) { return; }
         DeselectAllCards();
         RotateHands(numberOfRotations, board);
+        foreach (PlayerProperties playerProperties in PlayersProperties)
+        {
+            playerProperties.TryColorLegalCards();
+        }
         return;
     }
 
