@@ -32,13 +32,13 @@ public class HoverToolTipHandler : MonoBehaviour
     void ShowTip(string tip, Vector2 mousePosition)
     {
         float windowX = mousePosition.x + tipWindow.sizeDelta.x / 2;
-        if (windowX >= Screen.width)
+        if (mousePosition.x + tipWindow.sizeDelta.x >= Screen.width)
         {
             windowX = mousePosition.x - tipWindow.sizeDelta.x / 2;
         }
 
         float windowY = mousePosition.y + tipWindow.sizeDelta.y / 2;
-        if (windowY >= Screen.height)
+        if (mousePosition.y + tipWindow.sizeDelta.y >= Screen.height)
         {
             windowY = mousePosition.y - tipWindow.sizeDelta.y / 2;
         }

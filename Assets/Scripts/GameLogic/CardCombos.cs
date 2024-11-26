@@ -208,8 +208,6 @@ namespace KarmaLogic
             public override void Apply(IBoard board)
             {
                 int numberOfRepeats = Cards.Count * board.EffectMultiplier;
-
-                UnityEngine.Debug.LogWarning("Ace played w/ " + numberOfRepeats + " repeats");
                 if (((uint)(numberOfRepeats) & 0b1) == 0b0)
                 {
                     board.FlipHands();
