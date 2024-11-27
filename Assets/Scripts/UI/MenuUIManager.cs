@@ -48,7 +48,7 @@ public class MenuUIManager : MonoBehaviour
         }
     }
 
-    void OnCancel()
+    public void OnCancel()
     {
         if (!_rootObject.activeSelf || !_rootObject.activeInHierarchy)
         {
@@ -62,6 +62,7 @@ public class MenuUIManager : MonoBehaviour
         }
         
         if (_pageStack.Count == 1 && _pageStack.Peek() == _startPage) { return; }
+        if (_pageStack.Count == 1 && _pageStack.Peek() == _escapePage) { PopPage(); return; }
 
         PushPage(_escapePage);
     }
@@ -81,7 +82,6 @@ public class MenuUIManager : MonoBehaviour
         if (!_menuCamera.enabled) { _menuCamera.enabled = true; }
         if (!page.gameObject.activeSelf) { page.gameObject.SetActive(true); }
 
-        print("Pushing page: " + page.name + " is enabled?: " + page.enabled + " is active?: " + page.gameObject.activeSelf);
         page.Enter();
 
         if (_pageStack.Count > 0)

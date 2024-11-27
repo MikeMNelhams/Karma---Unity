@@ -26,26 +26,10 @@ public class BotTestAceAndFive : MonoBehaviour
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
-        //Dictionary<int, int> gameRanksExpected = new()
-        //{
-        //    { 1, 0 },
-        //    { 0, 1 },
-        //    { 3, 2 },
-        //    { 2, 3 }
-        //};
 
         yield return new WaitForSeconds(2);
 
-        //Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
-        //UnityEngine.Debug.Log("Game ranks: " + gameRanks);
-
-        //Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameOver);
-        //Assert.IsFalse(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameWon);
-        //Assert.IsTrue(gameRanks.Count != 0);
-
-        //CollectionAssert.AreEqual(gameRanksExpected.Keys, gameRanks.Keys);
-        //Dictionary<int, int> difference = gameRanksExpected.Where(x => gameRanks[x.Key] != x.Value).ToDictionary(x => x.Key, x => x.Value);
-        //Assert.IsTrue(difference.Count == 0);
+        Assert.IsTrue(KarmaGameManager.Instance.SelectedKarmaPlayerMode.IsGameOver);
 
         yield return null;
     }
