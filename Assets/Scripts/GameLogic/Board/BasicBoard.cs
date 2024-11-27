@@ -192,9 +192,10 @@ namespace KarmaLogic
                 {
                     hands.Rotate((int)TurnOrder);
                     EventSystem.TriggerHandsRotatedEventListener((int)TurnOrder, this);
+
                     for (int j = 0; j < Players.Count; j++)
                     {
-                        Players[j].Hand = hands[j];
+                        Players[j].Hand.SetHandCards(hands[j]);
                     }
                 }     
             }

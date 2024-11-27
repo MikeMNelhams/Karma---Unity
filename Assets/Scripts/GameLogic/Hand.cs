@@ -11,6 +11,8 @@ namespace KarmaLogic
             public delegate void OnHandOrderChange(int[] indices);
             event OnHandOrderChange HandOrderChangeEvent;
 
+            public List<Card> CardsT { get => _cards; }
+
             public Hand() : base() { }
 
             public Hand(Card card) : base(card) { }
@@ -21,7 +23,7 @@ namespace KarmaLogic
 
             public Hand(CardsList cards)
             {
-                this._cards = cards.ToList<Card>();
+                _cards = cards.ToList<Card>();
             }
 
             public override void Add(Card item)
@@ -59,6 +61,11 @@ namespace KarmaLogic
                 }
 
                 return "Hand[" + listString + "]";
+            }
+
+            public void SetHandCards(Hand other)
+            {
+                _cards = other._cards;
             }
 
             public override int[] Sort()

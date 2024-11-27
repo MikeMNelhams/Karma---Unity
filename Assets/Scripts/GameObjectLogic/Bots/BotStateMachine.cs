@@ -159,12 +159,11 @@ namespace StateMachine.CharacterStateMachines
                 throw new InvalidBoardPlayerActionException(selectedAction);
             }
             UnityEngine.Debug.Log("Bot selected action: " + selectedAction);
-            // The button methods NEED to be awaited. May have to create an entirely custom button class :(
+
             if (selectedAction is PickupPlayPile) { await _playerProperties.PickupPlayPileButton.onClick?.Invoke(); return; }
             if (selectedAction is not PlayCardsCombo) { throw new InvalidBoardPlayerActionException(selectedAction); }
             FrozenMultiSet<CardValue> selectedCombo = _bot.ComboToPlay(_board);
             MultiSet<CardValue> combo = new();
-
             foreach (SelectableCardObject cardObject in _playerProperties.SelectableCardObjects)
             {
                 CardValue cardValue = cardObject.CurrentCard.Value;
@@ -175,7 +174,7 @@ namespace StateMachine.CharacterStateMachines
                 _playerProperties.TryToggleCardSelect(cardObject);
             }
 
-            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke(); // The button methods NEED to be awaited. May have to create an entirely custom button class :(
+            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
         }
 
         async Task EnterCardGiveAwaySelection()

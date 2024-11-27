@@ -397,9 +397,9 @@ namespace KarmaLogic.BasicBoard
             List<List<List<int>>> playerCardValues = new()
             {
                 new() { new() { 14 }, new() { 2, 2, 2 }, new() { 14, 15 } },
-                new() { new() { 2, 5, 6 }, new() { 11, 12, 13 }, new() { 5, 4, 11 } },
+                new() { new() { 2, 2, 2 }, new() { 2, 12, 13 }, new() { 5, 4, 2 } },
                 new() { new() { 5, 14 }, new() { 9, 3, 14 }, new() { 6, 6, 6 } },
-                new() { new() { 2, 10, 11 }, new() { 2, 4, 4 }, new() { 13, 13, 13 } }
+                new() { new() { 2, 2, 2 }, new() { 2, 4, 4 }, new() { 13, 13, 13 } }
             };
 
             List<BasicBoardPlayerParams> players = new();

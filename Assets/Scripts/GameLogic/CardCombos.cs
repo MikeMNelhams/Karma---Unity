@@ -49,9 +49,10 @@ namespace KarmaLogic
                     List<Hand> startHands = new();
                     foreach (Player player in board.Players)
                     {
-                        startHands.Add(player.Hand);
+                        startHands.Add(new Hand(player.Hand));
                     }
                     Deque<Hand> hands = new(startHands);
+
                     int numberOfRepeats = Cards.Count * board.EffectMultiplier;
 
                     if (numberOfRepeats < board.Players.Count)
@@ -143,8 +144,9 @@ namespace KarmaLogic
                     if (cardBelowCombo.Value != CardValue.THREE && cardBelowCombo.Value != CardValue.JACK) { board.EffectMultiplier = 1; }
 
                     CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
-                    board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(TriggerOnFinishApplyComboListeners);
+                    //board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(TriggerOnFinishApplyComboListeners);
                     board.PlayCards(cardsToReplay, false);
+                    TriggerOnFinishApplyComboListeners();
                 }
             }
 
@@ -216,6 +218,14 @@ namespace KarmaLogic
                     return;
                 }
 
+                string handsMessage = " Player hands pre-flip: [";
+
+                foreach (Player player in board.Players)
+                {
+                    handsMessage += player.Hand + ", ";
+                }
+
+                UnityEngine.Debug.Log(handsMessage + "]");
                 board.FlipHands();
                 TriggerOnFinishApplyComboListeners();
             }
