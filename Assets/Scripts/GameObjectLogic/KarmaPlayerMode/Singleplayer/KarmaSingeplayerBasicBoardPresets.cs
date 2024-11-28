@@ -188,7 +188,7 @@ namespace KarmaPlayerMode
 
             public override BasicBoardParams BoardParams => BoardFactory.RandomStartSingleplayerDefault();
 
-            public override int TurnLimit => 100;
+            public override int TurnLimit => 1_000;
         }
     }
 }

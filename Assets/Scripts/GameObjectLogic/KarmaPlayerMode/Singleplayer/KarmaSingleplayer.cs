@@ -112,6 +112,8 @@ namespace KarmaPlayerMode
             {
                 if (NumberOfActivePlayers <= 1) { return; }
 
+                UnityEngine.Debug.LogError("Should be IMPOSSIBLE to get here from Singleplayer!");
+
                 for (int playerIndex = playerCameraDisabledIndex + 1; playerIndex < Board.Players.Count; playerIndex++)
                 {
                     if (!IsPlayableCharacter(playerIndex)) { continue; }

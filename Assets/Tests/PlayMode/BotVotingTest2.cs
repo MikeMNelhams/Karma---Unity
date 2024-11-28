@@ -34,7 +34,7 @@ public class BotVotingTest2 : MonoBehaviour
             { 2, 3 }
         };
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
         UnityEngine.Debug.Log("Game ranks: " + gameRanks);

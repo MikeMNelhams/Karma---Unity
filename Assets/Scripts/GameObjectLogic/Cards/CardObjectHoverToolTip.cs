@@ -16,9 +16,11 @@ public class CardObjectHoverToolTip : HoverToolTip
         }
 
         // We need the index of the player with the camera. 
-        // Maybe swap this to a getComponent on the camera, rather than going -> parent -> parent
+        // Maybe swap this to a getComponent on the camera itself, rather than going -> parent -> parent -> get component
 
         Camera playerCamera = eventData.enterEventCamera;
+        if (playerCamera.gameObject.transform.parent == null) { Debug.Break(); return; }
+
         PlayerProperties observerPlayerProperties = playerCamera.gameObject.transform.parent.parent.GetComponent<PlayerProperties>();
         if (!observerPlayerProperties.IsToolTipsEnabled) { return; }
 

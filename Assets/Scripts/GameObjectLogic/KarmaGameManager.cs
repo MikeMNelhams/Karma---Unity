@@ -229,11 +229,15 @@ public class KarmaGameManager : MonoBehaviour
     public void RotateHandsInTurnOrder(int numberOfRotations, IBoard board) 
     {
         if (numberOfRotations == 0) { return; }
+
+        PlayingFrom[] playingFromAtStart = new PlayingFrom[board.Players.Count];
+
         DeselectAllCards();
         RotateHands(numberOfRotations, board);
-        foreach (PlayerProperties playerProperties in PlayersProperties)
+        for (int i = 0; i < board.Players.Count; i++)
         {
-            playerProperties.TryColorLegalCards();
+            PlayersProperties[i].TryColorLegalCards();
+            PlayersProperties[i].IfChangedToHandSelectionResetPreviousLegalHints(playingFromAtStart[i]);
         }
         return;
     }

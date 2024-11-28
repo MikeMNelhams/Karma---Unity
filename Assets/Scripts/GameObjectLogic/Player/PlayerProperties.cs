@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using StateMachine;
 using StateMachine.CharacterStateMachines;
 using TMPro;
+using System.Collections;
 
 public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 {
@@ -445,10 +446,6 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         HideUI();
         _playerMovementController.SetRotating(true);
         _playerMovementController.RegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
-
-        print("Is rotating: " + _playerMovementController.IsRotating);
-        print("Mouse state: " + Cursor.lockState);
-        //TogglePlayerMovementListeners();
         return Task.CompletedTask;
     }
 
@@ -483,12 +480,18 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     public void AddCardObjectsToHand(List<SelectableCardObject> cardsToAdd)
     {
         if (cardsToAdd.Count == 0) { return; }
+
+        PlayingFrom selectingFromAtStart = SelectingFrom;
+
         int n = cardsToAdd.Count + CardsInHand.Count;
-        if (n == 1) 
+        if (n == 1)
         {
-            ParentCardToThis(cardsToAdd[0]); 
-            UpdateHand(new ListWithConstantContainsCheck<SelectableCardObject>(cardsToAdd)); 
-            return; 
+
+            ParentCardToThis(cardsToAdd[0]);
+            UpdateHand(new ListWithConstantContainsCheck<SelectableCardObject>(cardsToAdd));
+
+            IfChangedToHandSelectionResetPreviousLegalHints(selectingFromAtStart);
+            return;
         }
 
         ListWithConstantContainsCheck<SelectableCardObject> combinedHandCardObjects = CardsInHand;
@@ -520,6 +523,33 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         }
 
         UpdateHand(finalHandCardObjects);
+        IfChangedToHandSelectionResetPreviousLegalHints(selectingFromAtStart);
+    }
+
+    public void IfChangedToHandSelectionResetPreviousLegalHints(PlayingFrom selectingFromAtStart)
+    {
+        if (_areLegalMovesHighlighted && selectingFromAtStart != SelectingFrom)
+        {
+            switch (selectingFromAtStart)
+            {
+                case PlayingFrom.KarmaUp:
+                    ColorCardBordersDefault(CardsInKarmaUp);
+                    break;
+                case PlayingFrom.KarmaDown:
+                    ColorCardBordersDefault(CardsInKarmaDown);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    void ColorCardBordersDefault(IEnumerable cardObjects)
+    {
+        foreach (SelectableCardObject cardObject in cardObjects)
+        {
+            cardObject.ResetCardBorder();
+        }
     }
 
     public void SortHand(int[] sortOrder)
