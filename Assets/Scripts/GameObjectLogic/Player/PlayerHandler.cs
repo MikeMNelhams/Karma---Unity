@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using KarmaLogic.Board;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
@@ -52,6 +51,8 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 
     [SerializeField] TextMeshProUGUI _currentStateTextBox;
 
+    CardLegalityHinter CardLegalityHinter { get; set; }
+
     public HoverToolTipHandler HoverTipHandler { get => _hoverTipHandler; }
     public StateMachine<State, Command> StateMachine { get; set; }
     public CardSelector CardSelector { get; protected set; }
@@ -89,7 +90,6 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
     bool _isLeftButtonMouseDown = false;
     bool _isRightButtonMouseDown = false;
     Vector2 _mousePosition;
-    bool _areLegalMovesHighlighted = true;
 
     void Awake()
     {
@@ -336,23 +336,10 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 
     public void TryColorLegalCards()
     {
-        if (!_areLegalMovesHighlighted || StateMachine.CurrentState is State.Mulligan) { ColorSelectableCardsAsDefault(); return; }
-        KarmaGameManager karmaGameManager = KarmaGameManager.Instance;
+        if (CardLegalityHinter == null) { throw new NullReferenceException("Card legality hinter was used, but not set!"); }
+        if (!CardLegalityHinter.AreLegalHintsEnabled) { return; }
 
-        if (StateMachine.CurrentState is not State.SelectingCardGiveAwayIndex)
-        {
-            foreach (SelectableCardObject cardObject in SelectableCardObjects)
-            {
-                karmaGameManager.ColorLegalPlayableCard(cardObject, CardSelector);
-            }
-        }
-        else
-        {
-            foreach (SelectableCardObject cardObject in SelectableCardObjects)
-            {
-                karmaGameManager.ColorLegalGiveableCard(cardObject, CardSelector);
-            }
-        }
+        CardLegalityHinter.LegalHint();
     }
 
     public async Task ProcessStateCommand(Command command)
@@ -529,27 +516,19 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 
     public void IfChangedToHandSelectionResetPreviousLegalHints(PlayingFrom selectingFromAtStart)
     {
-        if (_areLegalMovesHighlighted && selectingFromAtStart != SelectingFrom)
+        if (CardLegalityHinter.AreLegalHintsEnabled && selectingFromAtStart != SelectingFrom)
         {
             switch (selectingFromAtStart)
             {
                 case PlayingFrom.KarmaUp:
-                    ColorCardBordersDefault(CardsInKarmaUp);
+                    CardLegalityHinter.LegalHintDefaults(CardsInKarmaUp);
                     break;
                 case PlayingFrom.KarmaDown:
-                    ColorCardBordersDefault(CardsInKarmaDown);
+                    CardLegalityHinter.LegalHintDefaults(CardsInKarmaDown);
                     break;
                 default:
                     break;
             }
-        }
-    }
-
-    void ColorCardBordersDefault(IEnumerable cardObjects)
-    {
-        foreach (SelectableCardObject cardObject in cardObjects)
-        {
-            cardObject.ResetCardBorder();
         }
     }
 
@@ -581,17 +560,14 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
     [ContextMenu("Turn Off Legal Move Hints")]
     public void TurnOffLegalMoveHints()
     {
-        _areLegalMovesHighlighted = false;
-        foreach (SelectableCardObject cardObject in SelectableCardObjects)
-        {
-            cardObject.ResetCardBorder();
-        }
+        CardLegalityHinter.AreLegalHintsEnabled = false;
+        CardLegalityHinter.ResetAllLegalHints();
     }
 
     [ContextMenu("Turn On Legal Move Hints")]
     public void TurnOnLegalMoveHints()
     {
-        _areLegalMovesHighlighted = true;
+        CardLegalityHinter.AreLegalHintsEnabled = true;
         TryColorLegalCards();
     }
 
@@ -806,11 +782,8 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         return Task.CompletedTask;
     }
 
-    void ColorSelectableCardsAsDefault()
+    public void SetCardLegalityHinter(bool areLegalHintsEnabled)
     {
-        foreach (SelectableCardObject cardObject in SelectableCardObjects)
-        {
-            cardObject.ResetCardBorder();
-        }
+        CardLegalityHinter = new CardLegalityHinter(this, areLegalHintsEnabled);
     }
 }

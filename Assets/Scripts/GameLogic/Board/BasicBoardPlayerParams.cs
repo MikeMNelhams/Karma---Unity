@@ -13,19 +13,23 @@ namespace KarmaLogic.BasicBoard
         [SerializeField] protected List<Card> _karmaUpCards;
         [SerializeField] protected List<Card> _karmaDownCards;
         [SerializeField] protected bool _isPlayableCharacter;
+        [SerializeField] protected bool _areLegalHintsEnabled;
 
         public List<Card> HandCards { get => _handCards; }
-        public List<Card> KarmaUpCards { get { return _karmaUpCards; } }
-        public List<Card> KarmaDownCards { get { return _karmaDownCards; } }
-        public bool IsPlayableCharacter { get { return _isPlayableCharacter; } }
+        public List<Card> KarmaUpCards { get => _karmaUpCards; }
+        public List<Card> KarmaDownCards { get => _karmaDownCards; }
+        public bool IsPlayableCharacter { get => _isPlayableCharacter; }
+        public bool AreLegalHintsEnabled { get => _areLegalHintsEnabled; }
 
-        public BasicBoardPlayerParams(List<int> handValues = null, List<int> karmaUpValues = null, 
-            List<int> karmaDownValues = null, bool isPlayableCharacter = false, CardSuit suit = null)
+        public BasicBoardPlayerParams(List<int> handValues = null, List<int> karmaUpValues = null,
+            List<int> karmaDownValues = null, CardSuit suit = null, bool isPlayableCharacter = false, 
+            bool areLegalHintsEnabled = true)
         {
             _handCards = new List<Card>();
             _karmaUpCards = new List<Card>();
             _karmaDownCards = new List<Card>();
             _isPlayableCharacter = isPlayableCharacter;
+            _areLegalHintsEnabled = areLegalHintsEnabled;
 
             CardSuit defaultSuit = suit;
             defaultSuit ??= CardSuit.DebugDefault;
@@ -37,13 +41,14 @@ namespace KarmaLogic.BasicBoard
             if (karmaDownValues != null) { _karmaDownCards.AddRange(CardsFromValues(karmaDownValues, defaultSuit)); }
         }
 
-        public BasicBoardPlayerParams(List<List<int>> playerCardValues = null, bool isPlayableCharacter = false, 
-            CardSuit suit = null)
+        public BasicBoardPlayerParams(List<List<int>> playerCardValues = null, CardSuit suit = null,
+            bool isPlayableCharacter = false, bool areLegalHintsEnabled = true)
         {
             _handCards = new List<Card>();
             _karmaUpCards = new List<Card>();
             _karmaDownCards = new List<Card>();
             _isPlayableCharacter = isPlayableCharacter;
+            _areLegalHintsEnabled = areLegalHintsEnabled;
 
             if (playerCardValues == null) { return; }
 
@@ -57,20 +62,23 @@ namespace KarmaLogic.BasicBoard
             _karmaDownCards.AddRange(CardsFromValues(playerCardValues[2], defaultSuit));
         }
 
-        public BasicBoardPlayerParams(List<Card> handCards, List<Card> karmaUpCards, List<Card> karmaDownCards, bool isPlayableCharacter = false)
+        public BasicBoardPlayerParams(List<Card> handCards, List<Card> karmaUpCards, List<Card> karmaDownCards, 
+            bool isPlayableCharacter = false, bool areLegalHintsEnabled = true)
         {
             _handCards = handCards;
             _karmaUpCards = karmaUpCards;
             _karmaDownCards = karmaDownCards;
             _isPlayableCharacter = isPlayableCharacter;
+            _areLegalHintsEnabled = areLegalHintsEnabled;
         }
 
-        public BasicBoardPlayerParams(Player player, bool isPlayableCharacter = false)
+        public BasicBoardPlayerParams(Player player, bool isPlayableCharacter = false, bool areLegalHintsEnabled = true)
         {
             _handCards = player.Hand.ToList();
             _karmaUpCards = player.KarmaUp.ToList();
             _karmaDownCards = player.KarmaDown.ToList();
             _isPlayableCharacter = isPlayableCharacter;
+            _areLegalHintsEnabled = areLegalHintsEnabled;
         }
 
         public Player ToPlayer()
@@ -86,6 +94,7 @@ namespace KarmaLogic.BasicBoard
             {
                 cards.Add(new Card((CardValue)value, suit));
             }
+
             return cards;
         }
     }

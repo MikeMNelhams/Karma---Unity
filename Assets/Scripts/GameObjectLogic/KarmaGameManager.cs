@@ -5,7 +5,6 @@ using KarmaLogic.Board;
 using KarmaLogic.Board.BoardEvents;
 using KarmaLogic.Players;
 using KarmaLogic.Cards;
-using KarmaLogic.CardCombos;
 using StateMachine.CharacterStateMachines;
 using System;
 using System.Linq;
@@ -698,50 +697,6 @@ public class KarmaGameManager : MonoBehaviour
         }
 
         return cardPositions;
-    }
-
-    public void ColorLegalGiveableCard(SelectableCardObject cardObject, CardSelector cardSelector)
-    {
-        if (cardObject.CurrentCard.Value == CardValue.JOKER)
-        {
-            cardObject.ColorCardBorder(Color.red);
-            return;
-        }
-
-        cardObject.ColorCardBorder(Color.green);
-    }
-
-    public void ColorLegalPlayableCard(SelectableCardObject cardObject, CardSelector cardSelector)
-    {
-        LegalCombos legalCombos = Board.CurrentLegalCombos;
-
-        FrozenMultiSet<CardValue> combinedSelection = new();
-        FrozenMultiSet<CardValue> selectionCardValues = cardSelector.SelectionCardValues;
-
-        foreach (CardValue cardValue in selectionCardValues)
-        {
-            combinedSelection.Add(cardValue, selectionCardValues[cardValue]);
-        }
-
-        if (!cardSelector.CardObjects.Contains(cardObject))
-        {
-            combinedSelection.Add(cardObject.CurrentCard.Value);
-        }
-
-        if (legalCombos.IsLegal(combinedSelection))
-        {
-            cardObject.ColorCardBorder(Color.green);
-            return;
-        }
-
-        if (legalCombos.IsSubsetLegal(combinedSelection))
-        {
-            cardObject.ColorCardBorder(Color.blue);
-            return;
-        }
-
-        cardObject.ColorCardBorder(Color.red);
-        return;
     }
 
     public Bounds CardBounds

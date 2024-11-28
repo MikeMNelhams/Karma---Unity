@@ -110,6 +110,7 @@ namespace KarmaPlayerMode
                 PlayerHandler playerHandler = player.GetComponent<PlayerHandler>();
                 player.name = "Player " + playerIndex;
                 playerHandler.Index = playerIndex;
+                playerHandler.SetCardLegalityHinter(AreLegalHintsEnabled(playerIndex));
                 PlayerHandlers.Add(playerHandler);
 
                 if (IsPlayableCharacter(playerIndex))
@@ -225,6 +226,11 @@ namespace KarmaPlayerMode
         public bool IsPlayableCharacter(int playerIndex)
         {
             return BoardParams.PlayersParams[playerIndex].IsPlayableCharacter;
+        }
+
+        bool AreLegalHintsEnabled(int playerIndex)
+        {
+            return BoardParams.PlayersParams[playerIndex].AreLegalHintsEnabled;
         }
 
         protected bool IsMulliganFinished

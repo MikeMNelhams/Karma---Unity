@@ -22,7 +22,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { 7, 6, 5, 4, 4 };
@@ -46,7 +46,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -70,7 +70,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -94,7 +94,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -118,7 +118,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { 10, 11, 12 };
@@ -142,7 +142,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { 10, 11, 12 };
@@ -166,7 +166,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -190,7 +190,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -214,7 +214,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { 12 };
@@ -238,7 +238,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -262,7 +262,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -286,7 +286,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -310,7 +310,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -334,7 +334,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -358,7 +358,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -382,7 +382,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
@@ -406,7 +406,7 @@ namespace KarmaLogic.BasicBoard
 
             foreach (List<List<int>> playerValues in playerCardValues)
             {
-                players.Add(new BasicBoardPlayerParams(playerValues, false));
+                players.Add(new BasicBoardPlayerParams(playerValues, isPlayableCharacter: false));
             }
 
             List<int> drawCardValues = new() { };
