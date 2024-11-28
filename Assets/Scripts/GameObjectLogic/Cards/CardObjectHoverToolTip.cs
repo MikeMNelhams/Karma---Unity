@@ -21,7 +21,7 @@ public class CardObjectHoverToolTip : HoverToolTip
         Camera playerCamera = eventData.enterEventCamera;
         if (playerCamera.gameObject.transform.parent == null) { Debug.Break(); return; }
 
-        PlayerProperties observerPlayerProperties = playerCamera.gameObject.transform.parent.parent.GetComponent<PlayerProperties>();
+        PlayerHandler observerPlayerProperties = playerCamera.gameObject.transform.parent.parent.GetComponent<PlayerHandler>();
         if (!observerPlayerProperties.IsToolTipsEnabled) { return; }
 
         if (_cardObject.IsVisible(observerPlayerProperties.Index))

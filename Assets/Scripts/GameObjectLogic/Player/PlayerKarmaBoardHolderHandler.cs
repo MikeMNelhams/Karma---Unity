@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerKarmaBoardHolderProperties : MonoBehaviour
+public class PlayerKarmaBoardHolderHandler : MonoBehaviour
 {
     [SerializeField] KarmaUpPilesHandler _upPilesHandler;
     [SerializeField] KarmaDownPilesHandler _downPilesHandler;

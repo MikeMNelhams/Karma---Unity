@@ -13,12 +13,12 @@ public class KarmaDownPilesHandler : MonoBehaviour, ICardVisibilityHandler
 
     public bool IsVisible(int observerPlayerIndex)
     {
-        return KarmaGameManager.Instance.PlayersProperties[observerPlayerIndex].IsKarmaDownFlippedUp;
+        return KarmaGameManager.Instance.PlayerHandlers[observerPlayerIndex].IsKarmaDownFlippedUp;
     }
 
     public bool IsOwnedBy(int observerPlayerIndex)
     {
-        return KarmaGameManager.Instance.PlayersProperties[observerPlayerIndex].Index == OwnerIndex;
+        return KarmaGameManager.Instance.PlayerHandlers[observerPlayerIndex].Index == OwnerIndex;
     }
 
     public List<SelectableCardObject> CreateKarmaDownCards(CardsList karmaDown, int ownerIndex)

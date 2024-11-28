@@ -20,7 +20,7 @@ public class KarmaUpPilesHandler : MonoBehaviour, ICardVisibilityHandler
 
     public bool IsOwnedBy(int observerPlayerIndex)
     {
-        return KarmaGameManager.Instance.PlayersProperties[observerPlayerIndex].Index == OwnerIndex;
+        return KarmaGameManager.Instance.PlayerHandlers[observerPlayerIndex].Index == OwnerIndex;
     }
 
     public List<SelectableCardObject> CreateKarmaUpCards(CardsList karmaUp, int ownerIndex)

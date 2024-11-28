@@ -218,14 +218,6 @@ namespace KarmaLogic
                     return;
                 }
 
-                string handsMessage = " Player hands pre-flip: [";
-
-                foreach (Player player in board.Players)
-                {
-                    handsMessage += player.Hand + ", ";
-                }
-
-                UnityEngine.Debug.Log(handsMessage + "]");
                 board.FlipHands();
                 TriggerOnFinishApplyComboListeners();
             }

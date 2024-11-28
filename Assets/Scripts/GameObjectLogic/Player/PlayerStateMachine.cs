@@ -8,9 +8,9 @@ namespace StateMachine
     {
         public class PlayerStateMachine : StateMachine<State, Command>
         {
-            protected PlayerProperties _playerProperties;
+            protected PlayerHandler _playerProperties;
 
-            public PlayerStateMachine(PlayerProperties playerProperties)
+            public PlayerStateMachine(PlayerHandler playerProperties)
             {
                 _playerProperties = playerProperties;
                 Transitions = new Dictionary<StateTransition<State, Command>, StateTransitionResult<State>>
@@ -115,7 +115,7 @@ namespace StateMachine
                 CurrentState = State.Null;
             }
 
-            public PlayerStateMachine(State startState, PlayerProperties playerProperties) : this(playerProperties) { CurrentState = startState; }
+            public PlayerStateMachine(State startState, PlayerHandler playerProperties) : this(playerProperties) { CurrentState = startState; }
         }
     }
 }

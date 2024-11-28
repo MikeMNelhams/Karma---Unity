@@ -16,7 +16,8 @@ using StateMachine.CharacterStateMachines;
 using TMPro;
 using System.Collections;
 
-public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
+[RequireComponent(typeof(PlayerMovementController))]
+public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 {
     [SerializeField] PlayerMovementController _playerMovementController;
     [SerializeField] FanHandler _fanHandler;
@@ -79,7 +80,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
     CardSorter _handSorter;
 
     int _layerAsLayerMask;
-    PlayerProperties _targetPlayerProperties;
+    PlayerHandler _targetPlayerProperties;
 
     public bool IsKarmaDownFlippedUp { get; protected set; } = false;
     public bool IsToolTipsEnabled { get; set; } = true;
@@ -648,7 +649,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         cardObject.SetParent(this, _cardHolder.transform);
     }
 
-    public void ReceivePickedUpCard(PlayerProperties giverPlayerProperties)
+    public void ReceivePickedUpCard(PlayerHandler giverPlayerProperties)
     {
         if (giverPlayerProperties.PickedUpCard == null) { throw new NullReferenceException();  }
         AddCardObjectsToHand(new List<SelectableCardObject>() { giverPlayerProperties.PickedUpCard });
@@ -762,7 +763,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
         return observerPlayerIndex == Index;
     }
 
-    public PlayerProperties TargetPlayerInFrontOfPlayer
+    public PlayerHandler TargetPlayerInFrontOfPlayer
     {
         get
         {
@@ -770,7 +771,7 @@ public class PlayerProperties : MonoBehaviour, ICardVisibilityHandler
 
             if (firstHit.transform == null) { return null; }
             if (firstHit.transform.parent == null) { return null; }
-            PlayerProperties playerProperties = firstHit.transform.parent.gameObject.GetComponent<PlayerProperties>();
+            PlayerHandler playerProperties = firstHit.transform.parent.gameObject.GetComponent<PlayerHandler>();
             return playerProperties;
         }
     }

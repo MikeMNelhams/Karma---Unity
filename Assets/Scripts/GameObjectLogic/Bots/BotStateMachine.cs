@@ -13,9 +13,9 @@ namespace StateMachine.CharacterStateMachines
     {
         protected IBoard _board;
         protected BotBase _bot;
-        protected PlayerProperties _playerProperties;
+        protected PlayerHandler _playerProperties;
 
-        public BotStateMachine(BotBase bot, PlayerProperties playerProperties, IBoard board)
+        public BotStateMachine(BotBase bot, PlayerHandler playerProperties, IBoard board)
         {
             _board = board;
             _bot = bot;

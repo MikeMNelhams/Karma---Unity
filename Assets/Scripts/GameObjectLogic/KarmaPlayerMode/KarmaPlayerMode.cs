@@ -18,8 +18,8 @@ namespace KarmaPlayerMode
     {
         public int TurnLimit { get; protected set; }
         public IBoard Board { get; protected set; }
-        public List<PlayerProperties> PlayersProperties { get; protected set; }
-        public List<PlayerKarmaBoardHolderProperties> PlayersBoardHolderProperties { get; protected set; }
+        public List<PlayerHandler> PlayerHandlers { get; protected set; }
+        public List<PlayerKarmaBoardHolderHandler> PlayersBoardHolderHandlers { get; protected set; }
 
         protected abstract List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets();
         protected List<KarmaPlayModeBoardPreset<BasicBoard>> BasicBoardPresets { get; set; }
@@ -91,8 +91,8 @@ namespace KarmaPlayerMode
 
         void CreatePlayerObjects()
         {
-            PlayersProperties = new();
-            PlayersBoardHolderProperties = new();
+            PlayerHandlers = new();
+            PlayersBoardHolderHandlers = new();
             int botNameIndex = 0;
 
             float botDelay = KarmaGameManager.Instance.GlobalBotDelayInSeconds;
@@ -107,33 +107,33 @@ namespace KarmaPlayerMode
             {
                 GameObject player = KarmaGameManager.Instance.InstantiatePlayer(playerStartPositions[playerIndex]);
 
-                PlayerProperties playerProperties = player.GetComponent<PlayerProperties>();
+                PlayerHandler playerHandler = player.GetComponent<PlayerHandler>();
                 player.name = "Player " + playerIndex;
-                playerProperties.Index = playerIndex;
-                PlayersProperties.Add(playerProperties);
+                playerHandler.Index = playerIndex;
+                PlayerHandlers.Add(playerHandler);
 
                 if (IsPlayableCharacter(playerIndex))
                 {
-                    playerProperties.StateMachine = new PlayerStateMachine(playerProperties);
+                    playerHandler.StateMachine = new PlayerStateMachine(playerHandler);
                 }
                 else
                 {
                     string botName = "Bot " + botNameIndex;
                     IntegrationTestBot bot = new (botName, botDelay);
-                    playerProperties.StateMachine = new BotStateMachine(bot, playerProperties, Board);
-                    playerProperties.name = botName;
-                    playerProperties.HoverTipHandler.enabled = false;
-                    playerProperties.DisconnectCamera();
+                    playerHandler.StateMachine = new BotStateMachine(bot, playerHandler, Board);
+                    playerHandler.name = botName;
+                    playerHandler.HoverTipHandler.enabled = false;
+                    playerHandler.DisconnectCamera();
                     botNameIndex++;
                 }
 
-                PlayerKarmaBoardHolderProperties holderProperties = KarmaGameManager.Instance.
+                PlayerKarmaBoardHolderHandler boardHolderHandler = KarmaGameManager.Instance.
                     InstantiatePlayerKarmaBoardHolder(holderStartPositions[playerIndex],
                     holderStartRotations[playerIndex]);
 
-                holderProperties.name = playerProperties.name + " karmaBoard";
-                holderProperties.gameObject.transform.position += new Vector3(0, holderProperties.HolderCuboidRenderer.bounds.extents.y / 2, 0);
-                PlayersBoardHolderProperties.Add(holderProperties);
+                boardHolderHandler.name = playerHandler.name + " karmaBoard";
+                boardHolderHandler.gameObject.transform.position += new Vector3(0, boardHolderHandler.HolderCuboidRenderer.bounds.extents.y / 2, 0);
+                PlayersBoardHolderHandlers.Add(boardHolderHandler);
             }
 
             UpdateActivePlayersCount();
@@ -354,17 +354,17 @@ namespace KarmaPlayerMode
 
         void DestroyBoardHolders()
         {
-            foreach (PlayerKarmaBoardHolderProperties playerBoardHolderProperties in PlayersBoardHolderProperties)
+            foreach (PlayerKarmaBoardHolderHandler playerBoardHolderHandler in PlayersBoardHolderHandlers)
             {
-                playerBoardHolderProperties.Destroy();
+                playerBoardHolderHandler.Destroy();
             }
         }
 
         void DestroyPlayers()
         {
-            foreach (PlayerProperties playerProperties in PlayersProperties)
+            foreach (PlayerHandler playerHandler in PlayerHandlers)
             {
-                playerProperties.Destroy();
+                playerHandler.Destroy();
             }
         }
 

@@ -26,7 +26,7 @@ namespace KarmaPlayerMode
             {
                 for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
                 {
-                    PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                    PlayerHandler playerProperties = PlayerHandlers[playerIndex];
                     if (!Board.Players[playerIndex].HasCards)
                     {
                         await playerProperties.ProcessStateCommand(Command.HasNoCards);
@@ -40,7 +40,7 @@ namespace KarmaPlayerMode
             {
                 for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
                 {
-                    PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                    PlayerHandler playerProperties = PlayerHandlers[playerIndex];
                     if (!Board.Players[playerIndex].HasCards)
                     {
                         await playerProperties.ProcessStateCommand(Command.HasNoCards);
@@ -58,7 +58,7 @@ namespace KarmaPlayerMode
 
                 for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
                 {
-                    PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                    PlayerHandler playerProperties = PlayerHandlers[playerIndex];
                     bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
 
                     if (!playerHasVotes) { continue; }
@@ -79,12 +79,12 @@ namespace KarmaPlayerMode
             {
                 for (int i = 0; i < Board.Players.Count; i++)
                 {
-                    PlayerProperties playerProperties = PlayersProperties[i];
+                    PlayerHandler playerProperties = PlayerHandlers[i];
                     if (!IsPlayableCharacter(i)) { continue; }
                     if (IsGameWonWithVoting) { playerProperties.EnablePlayerMovement(); }
                 }
 
-                PlayersProperties[Board.CurrentPlayerIndex].EnablePlayerMovement();
+                PlayerHandlers[Board.CurrentPlayerIndex].EnablePlayerMovement();
             }
 
             public override async void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex)
@@ -103,7 +103,7 @@ namespace KarmaPlayerMode
                     UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
                     return;
                 }
-                await PlayersProperties[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
+                await PlayerHandlers[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
                 EnableNextPlayableCamera(voteTargetIndex, IsWaitingTurn);
                 Board.EndTurn();
             }
@@ -117,16 +117,16 @@ namespace KarmaPlayerMode
                 for (int playerIndex = playerCameraDisabledIndex + 1; playerIndex < Board.Players.Count; playerIndex++)
                 {
                     if (!IsPlayableCharacter(playerIndex)) { continue; }
-                    if (stateRequirement != null && !stateRequirement(PlayersProperties[playerIndex].StateMachine.CurrentState)) { continue; }
-                    PlayersProperties[playerIndex].EnableCamera();
+                    if (stateRequirement != null && !stateRequirement(PlayerHandlers[playerIndex].StateMachine.CurrentState)) { continue; }
+                    PlayerHandlers[playerIndex].EnableCamera();
                     return;
                 }
 
                 for (int playerIndex = 0; playerIndex < playerCameraDisabledIndex; playerIndex++)
                 {
                     if (!IsPlayableCharacter(playerIndex)) { continue; }
-                    if (stateRequirement != null && !stateRequirement(PlayersProperties[playerIndex].StateMachine.CurrentState)) { continue; }
-                    PlayersProperties[playerIndex].EnableCamera();
+                    if (stateRequirement != null && !stateRequirement(PlayerHandlers[playerIndex].StateMachine.CurrentState)) { continue; }
+                    PlayerHandlers[playerIndex].EnableCamera();
                     return;
                 }
             }
@@ -141,20 +141,20 @@ namespace KarmaPlayerMode
                 playerIndicesToExclude.ExceptWith(Board.PotentialWinnerIndices);
 
                 int firstValidIndex = PlayerJokerCounts.Keys.Min(); // Where(x => x > Board.CurrentPlayerIndex)
-                PlayersProperties[firstValidIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
-                await PlayersProperties[firstValidIndex].ProcessStateCommand(Command.VotingStarted);
+                PlayerHandlers[firstValidIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
+                await PlayerHandlers[firstValidIndex].ProcessStateCommand(Command.VotingStarted);
                 return;
             }
 
             public override async Task TriggerFinishMulligan(int playerIndex)
             {
-                await PlayersProperties[playerIndex].ProcessStateCommand(Command.TurnEnded);
+                await PlayerHandlers[playerIndex].ProcessStateCommand(Command.TurnEnded);
                 NumberOfPlayersFinishedMulligan++;
                 if (!IsMulliganFinished)
                 {
                     EnableNextPlayableCamera(playerIndex, IsWaitingTurn);
                     Board.StepPlayerIndex(1);
-                    await PlayersProperties[Board.CurrentPlayerIndex].ProcessStateCommand(Command.MulliganStarted);
+                    await PlayerHandlers[Board.CurrentPlayerIndex].ProcessStateCommand(Command.MulliganStarted);
                     Board.StartTurn();
                     return;
                 }
@@ -173,7 +173,7 @@ namespace KarmaPlayerMode
             {
                 if (IsPlayableCharacter(Board.PlayerIndexWhoStartedTurn))
                 {
-                    PlayersProperties[Board.PlayerIndexWhoStartedTurn].DisablePlayerMovement();
+                    PlayerHandlers[Board.PlayerIndexWhoStartedTurn].DisablePlayerMovement();
                 }
             }
 
@@ -181,7 +181,7 @@ namespace KarmaPlayerMode
             {
                 if (IsPlayableCharacter(Board.PlayerIndexWhoStartedTurn))
                 {
-                    PlayersProperties[Board.PlayerIndexWhoStartedTurn].EnablePlayerMovement();
+                    PlayerHandlers[Board.PlayerIndexWhoStartedTurn].EnablePlayerMovement();
                 }
             }
 

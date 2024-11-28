@@ -630,10 +630,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5985106667981563335}
-  - component: {fileID: 8343568616250651093}
   - component: {fileID: 3514090609769126189}
   - component: {fileID: 2287965690364057068}
   - component: {fileID: 7348956982852587095}
+  - component: {fileID: 1995420539720084844}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -661,31 +661,6 @@ Transform:
   - {fileID: 6297513073095692687}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8343568616250651093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2410296296573889902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 651b56135fe4ae24b9d4deb2f4f85103, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerMovementController: {fileID: 3514090609769126189}
-  _fanHandler: {fileID: 5429502247356510483}
-  _playerCanvas: {fileID: 4334094610365338560}
-  _cardHolder: {fileID: 7220275289808238900}
-  _rayCastCutoff: 30
-  _confirmSelectionButton: {fileID: 2111623973868251397}
-  _clearSelectionButton: {fileID: 8164165656496719736}
-  _pickupPlayPileButton: {fileID: 2758722993043286609}
-  _finishMulliganButton: {fileID: 2337694861556475930}
-  _nextPlayerLeftArrow: {fileID: 3381463859126228450}
-  _nextPlayerRightArrow: {fileID: 1238892279136908032}
-  _hoverTipHandler: {fileID: 7348956982852587095}
-  _currentStateTextBox: {fileID: 3258214636898215741}
 --- !u!114 &3514090609769126189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,6 +705,31 @@ MonoBehaviour:
   _maxTipWidth: 200
   tipText: {fileID: 3100642461529267125}
   tipWindow: {fileID: 2271710874958743967}
+--- !u!114 &1995420539720084844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2410296296573889902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 740977b77f747974abd2ac042f8a1c55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerMovementController: {fileID: 3514090609769126189}
+  _fanHandler: {fileID: 5429502247356510483}
+  _playerCanvas: {fileID: 4334094610365338560}
+  _cardHolder: {fileID: 7220275289808238900}
+  _rayCastCutoff: 30
+  _confirmSelectionButton: {fileID: 2111623973868251397}
+  _clearSelectionButton: {fileID: 8164165656496719736}
+  _pickupPlayPileButton: {fileID: 2758722993043286609}
+  _finishMulliganButton: {fileID: 2337694861556475930}
+  _nextPlayerLeftArrow: {fileID: 3381463859126228450}
+  _nextPlayerRightArrow: {fileID: 1238892279136908032}
+  _hoverTipHandler: {fileID: 7348956982852587095}
+  _currentStateTextBox: {fileID: 3258214636898215741}
 --- !u!1 &2556993927030099816
 GameObject:
   m_ObjectHideFlags: 0

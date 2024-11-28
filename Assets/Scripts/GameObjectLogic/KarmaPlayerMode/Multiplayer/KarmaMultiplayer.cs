@@ -36,7 +36,7 @@ namespace KarmaPlayerMode
             {
                 for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
                 {
-                    PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                    PlayerHandler playerProperties = PlayerHandlers[playerIndex];
                     if (!Board.Players[playerIndex].HasCards)
                     {
                         await playerProperties.ProcessStateCommand(Command.HasNoCards);
@@ -52,7 +52,7 @@ namespace KarmaPlayerMode
 
                 for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
                 {
-                    PlayerProperties playerProperties = PlayersProperties[playerIndex];
+                    PlayerHandler playerProperties = PlayerHandlers[playerIndex];
                     bool playerHasVotes = Board.Players[playerIndex].CountValue(CardValue.JOKER) > 0;
 
                     if (playerHasVotes) { await playerProperties.ProcessStateCommand(Command.VotingStarted); }
@@ -82,8 +82,8 @@ namespace KarmaPlayerMode
                 foreach (int playerIndex in PlayerJokerCounts.Keys)
                 {
                     Board.CurrentPlayerIndex = playerIndex;
-                    PlayersProperties[playerIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
-                    tasks.Add(PlayersProperties[playerIndex].ProcessStateCommand(Command.VotingStarted));
+                    PlayerHandlers[playerIndex].RegisterVoteForTargetEventListener(TriggerVoteForPlayer);
+                    tasks.Add(PlayerHandlers[playerIndex].ProcessStateCommand(Command.VotingStarted));
                 }
 
                 await Task.WhenAll(tasks);

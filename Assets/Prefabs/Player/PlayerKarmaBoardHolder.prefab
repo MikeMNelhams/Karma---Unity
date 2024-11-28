@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 5773153217580890473}
   - component: {fileID: 4175410586800522206}
   - component: {fileID: 6050645391983811146}
-  - component: {fileID: 2081284887566860086}
+  - component: {fileID: 2097837718098070666}
   m_Layer: 0
   m_Name: PlayerKarmaBoardHolder
   m_TagString: Untagged
@@ -173,7 +173,7 @@ MonoBehaviour:
   _debugCube: {fileID: 6710805715192679706}
   _leftOffset: 0.1
   _rightOffset: 0.1
---- !u!114 &2081284887566860086
+--- !u!114 &2097837718098070666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4926457181011015983}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a957b93a294e03478af7a3753923a43, type: 3}
+  m_Script: {fileID: 11500000, guid: c272eac24a5748a47933457dd5ca1c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _upPilesHandler: {fileID: 4175410586800522206}
