@@ -19,9 +19,12 @@ public class MenuUIManager : MonoBehaviour
     [SerializeField] Page _startPage;
     [SerializeField] GameObject _firstFocusItem;
 
-    [SerializeField] Page _escapePage;
+    [SerializeField] Page _settingsPage;
 
     readonly Stack<Page> _pageStack = new ();
+    public delegate void OnBlockGameInputListener();
+
+    OnBlockGameInputListener OnBlockGameInput;
 
     void Awake()
     {
@@ -62,9 +65,9 @@ public class MenuUIManager : MonoBehaviour
         }
         
         if (_pageStack.Count == 1 && _pageStack.Peek() == _startPage) { return; }
-        if (_pageStack.Count == 1 && _pageStack.Peek() == _escapePage) { PopPage(); return; }
+        if (_pageStack.Count == 1 && _pageStack.Peek() == _settingsPage) { PopPage(); return; }
 
-        PushPage(_escapePage);
+        PushPage(_settingsPage);
     }
 
     public bool IsPageInStack(Page page)
@@ -95,6 +98,7 @@ public class MenuUIManager : MonoBehaviour
         }
 
         _pageStack.Push(page);
+        if (page.BlocksGameInput) { OnBlockGameInput?.Invoke(); }
     }
 
     public void PopPage()
@@ -137,8 +141,23 @@ public class MenuUIManager : MonoBehaviour
         PushPage(_startPage);
     }
 
+    public bool IsGameInputBlocked()
+    {
+        return _pageStack.Count > 0 && _pageStack.Peek().BlocksGameInput;
+    }
+
     public void SetMenuCamera(Camera camera)
     {
         _menuCamera = camera;
+    }
+
+    public void RegisterOnBlockGameInputListener(OnBlockGameInputListener listener)
+    {
+        OnBlockGameInput += listener;
+    }
+
+    public void UnregisterOnBlockGameInputListener(OnBlockGameInputListener listener)
+    {
+        OnBlockGameInput -= listener;
     }
 }

@@ -102,6 +102,11 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         _onPointingAtPlayerAwaitableListeners = new ();
     }
 
+    void Start()
+    {
+        MenuUIManager.Instance.RegisterOnBlockGameInputListener(DisablePlayerRotationEvents);
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && Input.GetMouseButtonDown(1)) { return; }
@@ -126,9 +131,10 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         if (!_isLeftButtonMouseDown && !_isRightButtonMouseDown) { return; }
         if (_isLeftButtonMouseDown)
         {
+            bool isGameInputBlocked = MenuUIManager.Instance.IsGameInputBlocked();
             if (StateMachine.CurrentState is not State.WaitingForTurn 
                 && StateMachine.CurrentState is not State.Null 
-                && StateMachine.CurrentState is not State.GameOver)
+                && StateMachine.CurrentState is not State.GameOver && !isGameInputBlocked)
             {
                 TrySelectCardObject();
             }
@@ -136,7 +142,9 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         }
         if (_isRightButtonMouseDown)
         {
-            if (KarmaGameManager.Instance.Board.CurrentPlayerIndex == Index)
+            bool isCurrentPlayer = KarmaGameManager.Instance.Board.CurrentPlayerIndex == Index;
+            bool isGameInputBlocked = MenuUIManager.Instance.IsGameInputBlocked();
+            if (isCurrentPlayer && !isGameInputBlocked)
             {
                 TogglePlayerMovementListeners();
             }
@@ -161,6 +169,11 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         }
 
         Destroy(gameObject);
+    }
+
+    void OnDestroy()
+    {
+        MenuUIManager.Instance.UnregisterOnBlockGameInputListener(DisablePlayerRotationEvents);
     }
 
     void TrySelectCardObject()
@@ -223,6 +236,20 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
             {
                 _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
             }
+        }
+    }
+
+    void DisablePlayerRotationEvents()
+    {
+        if (StateMachine.CurrentState is State.SelectingPlayPileGiveAwayPlayerIndex && IsPointingEnabled && _playerMovementController.IsPointing)
+        {
+            _playerMovementController.SetPointing(false);
+            _playerMovementController.UnRegisterPlayerPointingEventListener(ChoosePointedPlayerToPickUpPlayPileIfValid);
+        }
+        else if (IsRotationEnabled && _playerMovementController.IsRotating)
+        {
+            _playerMovementController.SetRotating(false);
+            _playerMovementController.UnRegisterPlayerRotationEventListener(MovePickedUpCardIfValid);
         }
     }
 

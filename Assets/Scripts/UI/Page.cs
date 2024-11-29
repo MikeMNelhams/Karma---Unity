@@ -11,6 +11,7 @@ namespace UserInterface.Menu
 
         [Header("Animation settings")]
 
+        [SerializeField] bool _blocksGameInput = false;
         [SerializeField] float _animationSpeed = 1f;
         public bool ExitOnNewPagePush = false;
 
@@ -22,6 +23,8 @@ namespace UserInterface.Menu
 
 
         Coroutine _animationCoroutine;
+
+        public bool BlocksGameInput { get => _blocksGameInput; }
 
         public void Enter()
         {

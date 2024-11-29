@@ -82,7 +82,23 @@ public class KarmaGameManager : MonoBehaviour
         _currentPlayerArrowHandler = new ArrowHandler(_currentPlayerArrow);
         _playOrderArrowHandler = new ArrowHandler(_playOrderArrow);
     }
-    
+
+    void RegisterBoardEvents()
+    {
+        Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(StartTurn));
+
+        Board.EventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
+        Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(SelectedKarmaPlayerMode.FlipHands));
+        Board.EventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrder));
+        Board.EventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
+
+        Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
+
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(SelectedKarmaPlayerMode.IfWinnerVoteOrEndGame));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(SelectedKarmaPlayerMode.CheckIfGameTurnTimerExceeded));
+        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(SelectedKarmaPlayerMode.NextTurn));
+    }
+
     public void BeginGame()
     {
         SelectedKarmaPlayerMode = _playerModeSelector.Mode();
@@ -116,29 +132,18 @@ public class KarmaGameManager : MonoBehaviour
         _playTableProperties.PlayPile.DestroyCards();
         _playTableProperties.BurnPile.DestroyCards();
 
+        if (_camera == null)
+        {
+            _camera = PlayerHandlers[Board.CurrentPlayerIndex].Camera;
+        }
         _camera.transform.position = _startingCameraPosition;
-        _camera = PlayerHandlers[Board.CurrentPlayerIndex].Camera;
-        _cameraRaycaster = PlayerHandlers[Board.CurrentPlayerIndex].CameraRaycaster;
+        if (_cameraRaycaster == null)
+        {
+            _cameraRaycaster = PlayerHandlers[Board.CurrentPlayerIndex].CameraRaycaster;
+        }
         await PlayerHandlers[Board.CurrentPlayerIndex].DisconnectCamera();
 
         SelectedKarmaPlayerMode.EndGame();
-    }
-
-    void RegisterBoardEvents()
-    {
-        Board.EventSystem.RegisterOnTurnStartEventListener(new BoardEventSystem.BoardEventListener(StartTurn));
-
-        Board.EventSystem.RegisterPlayerDrawEventListener(new BoardEventSystem.PlayerDrawEventListener(DrawCards));
-        Board.EventSystem.RegisterHandsFlippedEventListener(new BoardEventSystem.BoardEventListener(FlipHands));
-        Board.EventSystem.RegisterHandsRotatedListener(new BoardEventSystem.BoardHandsRotationEventListener(RotateHandsInTurnOrder));
-        Board.EventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
-
-        Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
-
-        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(IfWinnerVoteOrEndGame));
-        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckPotentialWinner));
-        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(CheckIfGameTurnTimerExceeded));
-        Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(NextTurn));
     }
 
     public GameObject InstantiatePlayer(Vector3 position)
@@ -207,24 +212,6 @@ public class KarmaGameManager : MonoBehaviour
         _playerModeSelector.SetIsUsingBoardPresets(isUsingPresets);
     }
 
-    public void IfWinnerVoteOrEndGame(IBoard board)
-    {
-        SelectedKarmaPlayerMode.IfWinnerVoteOrEndGame();
-    }
-
-    public void CheckIfGameTurnTimerExceeded(IBoard board)
-    {
-        SelectedKarmaPlayerMode.CheckIfGameTurnTimerExceeded();
-    }
-
-    public void FlipHands(IBoard board)
-    {
-        for (int i = 0; i < board.Players.Count; i++)
-        {
-            PlayerHandlers[i].FlipHand();
-        }
-    }
-
     public void RotateHandsInTurnOrder(int numberOfRotations, IBoard board) 
     {
         if (numberOfRotations == 0) { return; }
@@ -268,14 +255,6 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    void DeselectAllCards()
-    {
-        foreach (PlayerHandler playerHandler in PlayerHandlers)
-        {
-            playerHandler.CardSelector.Clear();
-        }
-    }
-
     public void BurnCards(int jokerCount)
     {
         AudioManager audioManager = AudioManager.Instance;
@@ -286,8 +265,24 @@ public class KarmaGameManager : MonoBehaviour
             _playTableProperties.MoveEntirePlayPileToBurnPile();
             return;
         }
-        
+
         _playTableProperties.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
+    }
+
+    public Bounds CardBounds
+    {
+        get
+        {
+            return _cardPrefabRenderer.bounds;
+        }
+    }
+
+    void DeselectAllCards()
+    {
+        foreach (PlayerHandler playerHandler in PlayerHandlers)
+        {
+            playerHandler.CardSelector.Clear();
+        }
     }
 
     void RotatePlayOrderArrow()
@@ -372,7 +367,7 @@ public class KarmaGameManager : MonoBehaviour
         bool alreadyVoting = SelectedKarmaPlayerMode.ValidPlayerIndicesForVoting.Count > 0;
         bool gameIsWon = SelectedKarmaPlayerMode.IsGameWonWithoutVoting || SelectedKarmaPlayerMode.IsGameWonWithVoting;
 
-        if (!alreadyVoting && gameIsWon) { SelectedKarmaPlayerMode.IfWinnerVoteOrEndGame(); return; }
+        if (!alreadyVoting && gameIsWon) { SelectedKarmaPlayerMode.IfWinnerVoteOrEndGame(Board); return; }
 
         if (PlayerHandlers[board.CurrentPlayerIndex].StateMachine.CurrentState is State.PotentialWinner)
         {
@@ -405,74 +400,6 @@ public class KarmaGameManager : MonoBehaviour
         }
 
         Board.EndTurn();
-    }
-
-    async void NextTurn(IBoard board)
-    {
-        // WARNING: Using PlayerHandler.StateMachine.CurrentState is unstable, since this is async VOID!
-        PlayerHandler activePlayerHandler = PlayerHandlers[Board.PlayerIndexWhoStartedTurn];
-        State activePlayerState = activePlayerHandler.StateMachine.CurrentState;
-        print("While end of turn CURRENT PLAYER STATE: " + activePlayerHandler.StateMachine.CurrentState);
-
-        // They can != only by PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this reset. 
-        Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
-
-        if (activePlayerState is State.PotentialWinner || activePlayerState is State.GameOver)
-        {
-            StepToNextPlayer();
-            return;
-        }
-
-        if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && !Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
-        {
-            print("The good ending!");
-            await PlayerHandlers[board.CurrentPlayerIndex].ProcessStateCommand(Command.PlayPileGiveAwayComboPlayed);
-            return;
-        }
-
-        if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
-        {
-            PlayTurnAgain();
-            return;
-        }
-
-        if (board.HasBurnedThisTurn && board.Players[board.CurrentPlayerIndex].HasCards)
-        {
-            print("WE BURNED. LET'S GO AGAIN!");
-            PlayTurnAgain();
-            return;
-        }
-
-        if (Board.CurrentPlayer.CardGiveAwayHandler != null && !Board.CurrentPlayer.CardGiveAwayHandler.IsFinished)
-        {
-            return;
-        }
-
-        if (activePlayerState is not State.WaitingForTurn)
-        {
-            await activePlayerHandler.ProcessStateCommand(Command.TurnEnded);
-        }
-
-        StepToNextPlayer();
-        return;
-    }
-
-    void StepToNextPlayer()
-    {
-        if (SelectedKarmaPlayerMode.IsGameOver) { return; }
-
-        if (SelectedKarmaPlayerMode.IsPlayableCharacter(Board.CurrentPlayerIndex)) { SelectedKarmaPlayerMode.IfPlayableDisableStartingPlayerMovement(); }
-        Board.StepPlayerIndex(1);
-        print("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
-        Board.StartTurn();
-    }
-
-    void PlayTurnAgain()
-    {
-        if (SelectedKarmaPlayerMode.IsGameOver) { return; }
-
-        Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
-        Board.StartTurn();
     }
 
     void AssignButtonEvents()
@@ -591,13 +518,6 @@ public class KarmaGameManager : MonoBehaviour
         return Task.CompletedTask;
     }
 
-    async void CheckPotentialWinner(IBoard board)
-    {
-        if (board.CurrentPlayer.HasCards) { return; }
-
-        await PlayerHandlers[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards);
-    }
-
     async Task AttemptToSelectCardForGiveAway(int playerIndex)
     {
         if (PlayerHandlers[playerIndex].CardSelector.Count > 1) { return; }
@@ -697,13 +617,5 @@ public class KarmaGameManager : MonoBehaviour
         }
 
         return cardPositions;
-    }
-
-    public Bounds CardBounds
-    {
-        get 
-        {
-            return _cardPrefabRenderer.bounds;
-        }
     }
 }

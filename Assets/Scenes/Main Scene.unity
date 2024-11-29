@@ -1380,81 +1380,55 @@ MonoBehaviour:
     _basicBoardParams:
       _playersParams:
       - _handCards:
-        - _value: 12
+        - _value: 3
+          _suit:
+            _suit: 0
+        - _value: 7
           _suit:
             _suit: 0
         - _value: 2
           _suit:
             _suit: 0
-        - _value: 4
+        - _value: 9
+          _suit:
+            _suit: 0
+        - _value: 7
+          _suit:
+            _suit: 0
+        - _value: 13
+          _suit:
+            _suit: 0
+        - _value: 10
+          _suit:
+            _suit: 0
+        - _value: 11
+          _suit:
+            _suit: 0
+        - _value: 11
           _suit:
             _suit: 0
         - _value: 12
           _suit:
             _suit: 0
-        _karmaUpCards:
-        - _value: 6
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 15
-          _suit:
-            _suit: 0
-        - _value: 15
-          _suit:
-            _suit: 0
+        _karmaUpCards: []
+        _karmaDownCards: []
         _isPlayableCharacter: 1
-      - _handCards:
-        - _value: 3
-          _suit:
-            _suit: 0
-        - _value: 3
-          _suit:
-            _suit: 0
-        - _value: 3
-          _suit:
-            _suit: 0
-        _karmaUpCards:
-        - _value: 4
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        _isPlayableCharacter: 0
+        _areLegalHintsEnabled: 0
       - _handCards: []
         _karmaUpCards: []
-        _karmaDownCards:
-        - _value: 3
-          _suit:
-            _suit: 0
+        _karmaDownCards: []
         _isPlayableCharacter: 0
-      - _handCards:
-        - _value: 4
-          _suit:
-            _suit: 0
-        - _value: 4
-          _suit:
-            _suit: 0
-        - _value: 4
-          _suit:
-            _suit: 0
-        _karmaUpCards:
-        - _value: 4
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 13
-          _suit:
-            _suit: 0
-        - _value: 13
-          _suit:
-            _suit: 0
-        - _value: 13
-          _suit:
-            _suit: 0
+        _areLegalHintsEnabled: 0
+      - _handCards: []
+        _karmaUpCards: []
+        _karmaDownCards: []
         _isPlayableCharacter: 0
+        _areLegalHintsEnabled: 0
+      - _handCards: []
+        _karmaUpCards: []
+        _karmaDownCards: []
+        _isPlayableCharacter: 0
+        _areLegalHintsEnabled: 0
       _drawPileCards: []
       _burnPileCards: []
       _playPileCards: []
@@ -1656,6 +1630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 1038354745}
   _canvasGroup: {fileID: 1038354746}
+  _blocksGameInput: 0
   _animationSpeed: 1
   ExitOnNewPagePush: 0
   _entryMode: 1
@@ -2281,7 +2256,7 @@ MonoBehaviour:
   _eventSystem: {fileID: 1840522722}
   _startPage: {fileID: 1038354747}
   _firstFocusItem: {fileID: 1604268373}
-  _escapePage: {fileID: 1343948568}
+  _settingsPage: {fileID: 1343948568}
 --- !u!114 &1305878773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2391,7 +2366,7 @@ GameObject:
   - component: {fileID: 1343948569}
   - component: {fileID: 1343948568}
   m_Layer: 5
-  m_Name: EscMenuPage
+  m_Name: SettingsMenuPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2434,6 +2409,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 1343948567}
   _canvasGroup: {fileID: 1343948569}
+  _blocksGameInput: 1
   _animationSpeed: 3.5
   ExitOnNewPagePush: 0
   _entryMode: 1
@@ -2487,7 +2463,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 100

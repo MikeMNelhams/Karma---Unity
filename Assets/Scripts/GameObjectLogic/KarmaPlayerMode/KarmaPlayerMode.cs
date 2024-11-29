@@ -47,15 +47,7 @@ namespace KarmaPlayerMode
             CreatePlayerObjects();
             TurnLimit = basicBoardParams.TurnLimit;
 
-            NumberOfPlayersFinishedMulligan = 0;
-            BasicBoardPresets = new ();
-            DeclareGameRankingsInfo();
-
-            SetupPlayerActionStates();
-            SetupPlayerMovementControllers();
-
-            CheckIfGameTurnTimerExceeded();
-            InitializeGameRanks();
+            SetupGame();
         }
 
         public KarmaPlayerMode(int basicBoardPresetIndex)
@@ -66,7 +58,12 @@ namespace KarmaPlayerMode
             BoardParams = BasicBoardPreset(basicBoardPresetIndex);
             Board = new BasicBoard(BoardParams);
             CreatePlayerObjects();
-            
+
+            SetupGame();
+        }
+
+        void SetupGame()
+        {
             NumberOfPlayersFinishedMulligan = 0;
             BasicBoardPresets = new();
             DeclareGameRankingsInfo();
@@ -74,7 +71,7 @@ namespace KarmaPlayerMode
             SetupPlayerActionStates();
             SetupPlayerMovementControllers();
 
-            CheckIfGameTurnTimerExceeded();
+            CheckIfGameTurnTimerExceeded(Board);
             InitializeGameRanks();
         }
 
@@ -110,12 +107,12 @@ namespace KarmaPlayerMode
                 PlayerHandler playerHandler = player.GetComponent<PlayerHandler>();
                 player.name = "Player " + playerIndex;
                 playerHandler.Index = playerIndex;
-                playerHandler.SetCardLegalityHinter(AreLegalHintsEnabled(playerIndex));
                 PlayerHandlers.Add(playerHandler);
 
                 if (IsPlayableCharacter(playerIndex))
                 {
                     playerHandler.StateMachine = new PlayerStateMachine(playerHandler);
+                    playerHandler.SetCardLegalityHinter(AreLegalHintsEnabled(playerIndex));
                 }
                 else
                 {
@@ -123,6 +120,7 @@ namespace KarmaPlayerMode
                     IntegrationTestBot bot = new (botName, botDelay);
                     playerHandler.StateMachine = new BotStateMachine(bot, playerHandler, Board);
                     playerHandler.name = botName;
+                    playerHandler.SetCardLegalityHinter(false); // Bots should NOT have legal hints enabled
                     playerHandler.HoverTipHandler.enabled = false;
                     playerHandler.DisconnectCamera();
                     botNameIndex++;
@@ -147,9 +145,79 @@ namespace KarmaPlayerMode
 
         public abstract void SetupPlayerMovementControllers();
 
+        public async void NextTurn(IBoard board)
+        {
+            // WARNING: Using PlayerHandler.StateMachine.CurrentState is unstable, since this is async VOID!
+            PlayerHandler activePlayerHandler = PlayerHandlers[Board.PlayerIndexWhoStartedTurn];
+            State activePlayerState = activePlayerHandler.StateMachine.CurrentState;
+            UnityEngine.Debug.Log("While end of turn CURRENT PLAYER STATE: " + activePlayerHandler.StateMachine.CurrentState);
+
+            // They can != only by PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this reset. 
+            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+
+            if (activePlayerState is State.PotentialWinner || activePlayerState is State.GameOver)
+            {
+                StepToNextPlayer();
+                return;
+            }
+
+            if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && !Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
+            {
+                UnityEngine.Debug.Log("The good ending!");
+                await PlayerHandlers[board.CurrentPlayerIndex].ProcessStateCommand(Command.PlayPileGiveAwayComboPlayed);
+                return;
+            }
+
+            if (Board.CurrentPlayer.PlayPileGiveAwayHandler != null && Board.CurrentPlayer.PlayPileGiveAwayHandler.IsFinished)
+            {
+                PlayTurnAgain();
+                return;
+            }
+
+            if (board.HasBurnedThisTurn && board.Players[board.CurrentPlayerIndex].HasCards)
+            {
+                UnityEngine.Debug.Log("WE BURNED. LET'S GO AGAIN!");
+                PlayTurnAgain();
+                return;
+            }
+
+            if (Board.CurrentPlayer.CardGiveAwayHandler != null && !Board.CurrentPlayer.CardGiveAwayHandler.IsFinished)
+            {
+                return;
+            }
+
+            if (activePlayerState is not State.WaitingForTurn)
+            {
+                await activePlayerHandler.ProcessStateCommand(Command.TurnEnded);
+            }
+
+            StepToNextPlayer();
+            return;
+        }
+
+        void StepToNextPlayer()
+        {
+            if (IsGameOver) { return; }
+
+            if (IsPlayableCharacter(Board.CurrentPlayerIndex)) { IfPlayableDisableStartingPlayerMovement(); }
+            Board.StepPlayerIndex(1);
+            UnityEngine.Debug.Log("Starting Turn. Current active player: " + Board.CurrentPlayerIndex);
+            Board.StartTurn();
+        }
+
+        void PlayTurnAgain()
+        {
+            if (IsGameOver) { return; }
+
+            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
+            Board.StartTurn();
+        }
+
         public abstract void IfPlayableDisableStartingPlayerMovement();
 
         public abstract void IfPlayableEnableCurrentPlayerMovement();
+
+        
 
         public abstract Task VoteForWinners();
 
@@ -194,13 +262,13 @@ namespace KarmaPlayerMode
             }
         }
 
-        public void IfWinnerVoteOrEndGame()
+        public async void IfWinnerVoteOrEndGame(IBoard board)
         {
             UpdateGameRanks();
 
             if (IsGameWonWithVoting)
             {
-                VoteForWinners();
+                await VoteForWinners();
             }
 
             if (IsGameWonWithoutVoting)
@@ -209,13 +277,22 @@ namespace KarmaPlayerMode
                 IsGameWon = true;
                 UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
             }
+
+            await CheckPotentialWinner(board);
+        }
+
+        async Task CheckPotentialWinner(IBoard board)
+        {
+            if (board.CurrentPlayer.HasCards) { return; }
+
+            await PlayerHandlers[board.CurrentPlayerIndex].ProcessStateCommand(Command.HasNoCards);
         }
 
         public abstract void TriggerVoteForPlayer(int votingPlayerIndex, int voteTargetIndex);
 
-        public void CheckIfGameTurnTimerExceeded()
+        public void CheckIfGameTurnTimerExceeded(IBoard board)
         {
-            if (Board.TurnsPlayed >= TurnLimit)
+            if (board.TurnsPlayed >= TurnLimit)
             {
                 IsGameOver = true;
                 IsGameWon = false;
@@ -251,6 +328,14 @@ namespace KarmaPlayerMode
                 GameRanks[i] = Board.Players[i].Length;
             }
             VotesForWinners = new();
+        }
+
+        public void FlipHands(IBoard board)
+        {
+            for (int i = 0; i < board.Players.Count; i++)
+            {
+                PlayerHandlers[i].FlipHand();
+            }
         }
 
         protected void UpdatePlayerJokerCounts()
