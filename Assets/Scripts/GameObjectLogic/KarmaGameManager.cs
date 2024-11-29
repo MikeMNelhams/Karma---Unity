@@ -144,6 +144,8 @@ public class KarmaGameManager : MonoBehaviour
         await PlayerHandlers[Board.CurrentPlayerIndex].DisconnectCamera();
 
         SelectedKarmaPlayerMode.EndGame();
+
+        MenuUIManager.Instance.ReturnToStartPage();
     }
 
     public GameObject InstantiatePlayer(Vector3 position)

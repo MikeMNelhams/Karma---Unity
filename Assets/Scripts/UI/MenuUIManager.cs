@@ -146,6 +146,14 @@ public class MenuUIManager : MonoBehaviour
         return _pageStack.Count > 0 && _pageStack.Peek().BlocksGameInput;
     }
 
+    public int ActivePageCount
+    {
+        get
+        {
+            return _pageStack.Count;
+        }
+    }
+
     public void SetMenuCamera(Camera camera)
     {
         _menuCamera = camera;
