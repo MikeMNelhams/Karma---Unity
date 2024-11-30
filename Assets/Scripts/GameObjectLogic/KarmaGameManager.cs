@@ -148,11 +148,16 @@ public class KarmaGameManager : MonoBehaviour
         MenuUIManager.Instance.ReturnToStartPage();
     }
 
-    public GameObject InstantiatePlayer(Vector3 position)
+    public Quaternion RotationTowardsTableCentre(Vector3 position)
     {
         Vector3 tableDirection = _playTableProperties.TableGeometry.Centre - position;
         tableDirection.y = 0;
-        return Instantiate(_playerPrefab, position, Quaternion.LookRotation(tableDirection));
+        return Quaternion.LookRotation(tableDirection);
+    }
+
+    public GameObject InstantiatePlayer(Vector3 position)
+    {
+        return Instantiate(_playerPrefab, position, RotationTowardsTableCentre(position));
     }
 
     public PlayerKarmaBoardHolderHandler InstantiatePlayerKarmaBoardHolder(Vector3 position, Quaternion rotation)

@@ -12,71 +12,83 @@ using KarmaPlayerMode.Singleplayer;
 [CustomPropertyDrawer(typeof(KarmaPlayerModeSelector))]
 public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
 {
-    int _selected = 0;
-    bool _selectedChanged = false;
-    protected string[] _playerModeOptions = Enum.GetNames(typeof(PlayerMode));
+    int _selectedMode = 0;
+    protected string[] _modeOptions = Enum.GetNames(typeof(PlayerMode));
+
+    int _selectedSubMode = 0;
+    protected string[][] _subModeOptions = 
+    { 
+        new string[2] { "Solo", "Many" }, 
+        new string[1] { "Multiplayer" } 
+    };
 
     bool _useBoardPresets = true;
-    bool _useBoardPresetsChanged = false;
 
     int _presetSelected = 0;
-    protected bool _presetSelectedChanged = false;
-    protected string[] _presetOptionsSingleplayer = new string[20] 
-    { 
-        "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting", 
-        "TestStartVoting2", "TestScenarioFullHand", "TestLeftwardsHandRotate", 
-        "TestGameWonNoVote", "TestPotentialWinnerIsSkippedInUnwonGame", "TestMultipleSeparateCardGiveaways",
-        "TestQueenComboLastCardToWin", "TestQueenComboLastCardWithJokerInPlay", "TestValidJokerAsLastCardToWin", 
-        "TestGettingJokered", "TestJokerAsAceLastCardToWin", "TestAllPlayersNoActionsGameEnds", 
-        "TestAceNoHandDoesNotCrash", "TestAceAndFive", "TestRandomStart", 
-        "PlayRandomStart4Playable", "DefaultSingleplayer"
+
+    protected string[][][] _presetOptions = 
+    {
+        new string[2][] 
+        { 
+            new string[19] {
+                "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting",
+                "TestStartVoting2", "TestScenarioFullHand", "TestLeftwardsHandRotate",
+                "TestGameWonNoVote", "TestPotentialWinnerIsSkippedInUnwonGame", "TestMultipleSeparateCardGiveaways",
+                "TestQueenComboLastCardToWin", "TestQueenComboLastCardWithJokerInPlay", "TestValidJokerAsLastCardToWin",
+                "TestGettingJokered", "TestJokerAsAceLastCardToWin", "TestAllPlayersNoActionsGameEnds",
+                "TestAceNoHandDoesNotCrash", "TestAceAndFive", "TestRandomStart",
+                "DefaultSingleplayer"},
+            new string[1]
+            {
+                "PlayRandomStart4Playable"
+            }
+        },
+        new string[1][]
+        {
+            new string[1]
+            {
+                "Not implemented yet!"
+            }
+        }
     };
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
 
-        int selectedBefore = _selected;
+        int selectedModeBefore = _selectedMode;
+        int selectedSubModeBefore = _selectedSubMode;
         int presetSelectedBefore = _presetSelected;
         bool useBoardPresetBefore = _useBoardPresets;
 
         EditorGUI.BeginChangeCheck();
 
-        this._selected = EditorGUILayout.Popup("Player Mode", property.FindPropertyRelative("_mode").intValue, _playerModeOptions);
-        this._useBoardPresets = EditorGUILayout.Toggle("Use board presets?", property.FindPropertyRelative("_useBasicBoardPreset").boolValue);
+        _selectedMode = EditorGUILayout.Popup("Player Mode", property.FindPropertyRelative("_mode").intValue, _modeOptions);
+        _selectedSubMode = EditorGUILayout.Popup("Player Sub Mode", property.FindPropertyRelative("_subMode").intValue, _subModeOptions[_selectedMode]);
+
+        string[][] _subPresetOptions = _presetOptions[_selectedMode];
+        _selectedSubMode = Mathf.Min(_selectedSubMode, _subPresetOptions.Length - 1);
+
+        _useBoardPresets = EditorGUILayout.Toggle("Use board presets?", property.FindPropertyRelative("_useBasicBoardPreset").boolValue);
 
         if (_useBoardPresets)
         {
-            this._presetSelected = EditorGUILayout.Popup("Board Preset", property.FindPropertyRelative("_basicBoardPresetSelected").intValue, _presetOptionsSingleplayer);
-            property.FindPropertyRelative("_basicBoardPresetSelected").intValue = _presetSelected;
+            _presetSelected = EditorGUILayout.Popup("Board Preset", property.FindPropertyRelative("_basicBoardPresetSelected").intValue,
+                _subPresetOptions[_selectedSubMode]);
+            _presetSelected = Mathf.Min(_presetSelected, _subPresetOptions[_selectedSubMode].Length - 1);
         }
-        else
-        {
-            SetSingleplayerBoardCustom(property);
-        }
+        else { SetSingleplayerBoardCustom(property); }
 
         if (EditorGUI.EndChangeCheck())
         {
-            _selectedChanged = selectedBefore != _selected;
-            if (_selectedChanged) 
-            { 
-                property.FindPropertyRelative("_mode").intValue = _selected; 
-            }
-
-            _useBoardPresetsChanged = useBoardPresetBefore != _useBoardPresets;
-
-            if (_useBoardPresetsChanged)
-            {
-                property.FindPropertyRelative("_useBasicBoardPreset").boolValue = _useBoardPresets;
-            }
-
-            _presetSelectedChanged = presetSelectedBefore != _presetSelected;
+            if (selectedModeBefore != _selectedMode) { property.FindPropertyRelative("_mode").intValue = _selectedMode; }
+            if (selectedSubModeBefore != _selectedSubMode) { property.FindPropertyRelative("_subMode").intValue = _selectedSubMode; }
+            if (useBoardPresetBefore != _useBoardPresets) { property.FindPropertyRelative("_useBasicBoardPreset").boolValue = _useBoardPresets; }
+            if (presetSelectedBefore != _presetSelected) { property.FindPropertyRelative("_basicBoardPresetSelected").intValue = _presetSelected; }
         }
 
-        bool isSinglePlayer = (PlayerMode)_selected == PlayerMode.Singleplayer;
-
+        bool isSinglePlayer = (PlayerMode)_selectedMode == PlayerMode.Singleplayer;
         if (!isSinglePlayer) { EditorGUI.EndProperty();  return; }
-
         EditorGUI.EndProperty();
     }
 

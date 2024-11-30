@@ -89,6 +89,11 @@ namespace KarmaPlayerMode
                 await Task.WhenAll(tasks);
             }
 
+            protected override void CreatePlayerObjects()
+            {
+                throw new NotImplementedException();
+            }
+
             protected override List<KarmaPlayModeBoardPreset<BasicBoard>> GetBasicBoardPresets()
             {
                 throw new NotImplementedException();

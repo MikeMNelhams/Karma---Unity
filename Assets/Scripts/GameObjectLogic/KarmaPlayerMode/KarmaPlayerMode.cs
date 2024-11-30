@@ -86,58 +86,7 @@ namespace KarmaPlayerMode
             IsGameOverDueToNoLegalActions = false;
         }
 
-        void CreatePlayerObjects()
-        {
-            PlayerHandlers = new();
-            PlayersBoardHolderHandlers = new();
-            int botNameIndex = 0;
-
-            float botDelay = KarmaGameManager.Instance.GlobalBotDelayInSeconds;
-
-            CirclularTable tableGeometry = KarmaGameManager.Instance.PlayTableProperties.TableGeometry;
-            Vector3[] playerStartPositions = tableGeometry.PlayerPositions(Board.Players.Count);
-
-            Vector3[] holderStartPositions = tableGeometry.PlayerKarmaPositions(Board.Players.Count);
-            Quaternion[] holderStartRotations = tableGeometry.PlayerKarmaRotations(Board.Players.Count, holderStartPositions);
-
-            for (int playerIndex = 0; playerIndex < Board.Players.Count; playerIndex++)
-            {
-                GameObject player = KarmaGameManager.Instance.InstantiatePlayer(playerStartPositions[playerIndex]);
-
-                PlayerHandler playerHandler = player.GetComponent<PlayerHandler>();
-                player.name = "Player " + playerIndex;
-                playerHandler.Index = playerIndex;
-                PlayerHandlers.Add(playerHandler);
-
-                if (IsPlayableCharacter(playerIndex))
-                {
-                    playerHandler.StateMachine = new PlayerStateMachine(playerHandler);
-                    playerHandler.SetCardLegalityHinter(AreLegalHintsEnabled(playerIndex));
-                }
-                else
-                {
-                    string botName = "Bot " + botNameIndex;
-                    IntegrationTestBot bot = new (botName, botDelay);
-                    playerHandler.StateMachine = new BotStateMachine(bot, playerHandler, Board);
-                    playerHandler.name = botName;
-                    playerHandler.SetCardLegalityHinter(false); // Bots should NOT have legal hints enabled
-                    playerHandler.HoverTipHandler.enabled = false;
-                    playerHandler.DisconnectCamera();
-                    botNameIndex++;
-                }
-
-                PlayerKarmaBoardHolderHandler boardHolderHandler = KarmaGameManager.Instance.
-                    InstantiatePlayerKarmaBoardHolder(holderStartPositions[playerIndex],
-                    holderStartRotations[playerIndex]);
-
-                boardHolderHandler.name = playerHandler.name + " karmaBoard";
-                boardHolderHandler.gameObject.transform.position += new Vector3(0, boardHolderHandler.HolderCuboidRenderer.bounds.extents.y / 2, 0);
-                PlayersBoardHolderHandlers.Add(boardHolderHandler);
-            }
-
-            UpdateActivePlayersCount();
-            UpdateNumberOfPlayersToMulligan();
-        }
+        protected abstract void CreatePlayerObjects();
 
         public abstract void SetupPlayerActionStateForBasicStart();
 
@@ -216,8 +165,6 @@ namespace KarmaPlayerMode
         public abstract void IfPlayableDisableStartingPlayerMovement();
 
         public abstract void IfPlayableEnableCurrentPlayerMovement();
-
-        
 
         public abstract Task VoteForWinners();
 
@@ -305,7 +252,7 @@ namespace KarmaPlayerMode
             return BoardParams.PlayersParams[playerIndex].IsPlayableCharacter;
         }
 
-        bool AreLegalHintsEnabled(int playerIndex)
+        protected bool AreLegalHintsEnabled(int playerIndex)
         {
             return BoardParams.PlayersParams[playerIndex].AreLegalHintsEnabled;
         }
@@ -459,7 +406,7 @@ namespace KarmaPlayerMode
             }
         }
 
-        void UpdateActivePlayersCount()
+        protected void UpdateActivePlayersCount()
         {
             NumberOfActivePlayers = 0;
 
@@ -469,7 +416,7 @@ namespace KarmaPlayerMode
             }
         }
 
-        void UpdateNumberOfPlayersToMulligan()
+        protected void UpdateNumberOfPlayersToMulligan()
         {
             NumberOfPlayersToMulligan = Board.Players.Count;
 

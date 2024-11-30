@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlayTable
 {
-    public class CirclularTable : MonoBehaviour
+    public class CircularTable : MonoBehaviour
     {
         [SerializeField] Vector3 _centre;
         [SerializeField] float _radius;

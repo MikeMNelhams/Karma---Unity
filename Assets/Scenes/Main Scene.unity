@@ -1377,6 +1377,7 @@ MonoBehaviour:
   _globalBotDelayInSeconds: 0.001
   _playerModeSelector:
     _mode: 0
+    _subMode: 0
     _basicBoardParams:
       _playersParams:
       - _handCards:
@@ -1441,7 +1442,7 @@ MonoBehaviour:
       _turnsPlayed: 0
       _turnLimit: 100
     _useBasicBoardPreset: 1
-    _basicBoardPresetSelected: 19
+    _basicBoardPresetSelected: 18
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
@@ -2056,7 +2057,7 @@ PrefabInstance:
       addedObject: {fileID: 1598284356}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c8d53146e8ad2d7418745339993c84b5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1598284357}
+      addedObject: {fileID: 1598284359}
   m_SourcePrefab: {fileID: 100100000, guid: c8d53146e8ad2d7418745339993c84b5, type: 3}
 --- !u!1 &1257263536
 GameObject:
@@ -2629,8 +2630,8 @@ MonoBehaviour:
   _drawPileHandler: {fileID: 651445642}
   _burnPileHandler: {fileID: 375781343}
   _playPileHandler: {fileID: 1822421501}
-  _tableGeometry: {fileID: 1598284357}
---- !u!114 &1598284357
+  _tableGeometry: {fileID: 1598284359}
+--- !u!114 &1598284359
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2639,7 +2640,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1598284355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceadc81cd27de15439eeefd93dea8b35, type: 3}
+  m_Script: {fileID: 11500000, guid: 16c268f67a2d84143b2a25f96867a084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _centre: {x: 0.0624, y: 1.6583, z: 2.6942}

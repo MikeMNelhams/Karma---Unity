@@ -269,7 +269,7 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 
         _camera = KarmaGameManager.Instance.CameraMain;
         _camera.transform.position = _playerMovementController.PlayerHead.transform.position;
-
+        _camera.transform.rotation = KarmaGameManager.Instance.RotationTowardsTableCentre(_camera.transform.position);
         _cameraPhysicsRaycaster = KarmaGameManager.Instance.CameraRaycaster;
 
         _camera.gameObject.transform.SetParent(_playerMovementController.PlayerHead.transform);
@@ -287,6 +287,18 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         if (_camera == null) { return Task.CompletedTask; }
 
         _camera.gameObject.transform.SetParent(null);
+        _camera = null;
+        _cameraPhysicsRaycaster = null;
+        return Task.CompletedTask;
+    }
+
+    public Task DisconnectCameraWithoutDeparenting()
+    {
+        _playerCanvas.enabled = false;
+
+        print("Disconnecting camera for: " + name);
+        if (_camera == null) { return Task.CompletedTask; }
+
         _camera = null;
         _cameraPhysicsRaycaster = null;
         return Task.CompletedTask;
@@ -364,7 +376,7 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
     public void TryColorLegalCards()
     {
         if (CardLegalityHinter == null) { throw new NullReferenceException("Card legality hinter was used, but not set!"); }
-        if (!CardLegalityHinter.AreLegalHintsEnabled) { return; }
+        if (!CardLegalityHinter.AreLegalHintsEnabled) { CardLegalityHinter.ResetAllLegalHints(); return; }
 
         CardLegalityHinter.LegalHint();
     }

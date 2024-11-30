@@ -1,4 +1,5 @@
 using KarmaLogic.BasicBoard;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using KarmaPlayerMode.Singleplayer;
@@ -10,6 +11,7 @@ namespace KarmaPlayerMode
     public class KarmaPlayerModeSelector
     {
         [SerializeField] PlayerMode _mode;
+        [SerializeField] int _subMode;
         [SerializeField] BasicBoardParams _basicBoardParams;
         [SerializeField] bool _useBasicBoardPreset = true;
         [SerializeField] int _basicBoardPresetSelected = -1;
@@ -20,18 +22,20 @@ namespace KarmaPlayerMode
 
             if (_useBasicBoardPreset)
             {
-                return _mode switch
+                return (_mode, _subMode) switch
                 {
-                    PlayerMode.Singleplayer => new KarmaSingleplayer(_basicBoardPresetSelected),
-                    PlayerMode.Multiplayer => new KarmaMultiplayer(_basicBoardPresetSelected),
+                    (PlayerMode.Singleplayer, (int)SinglePlayerMode.Solo) => new KarmaSingleplayerSolo(_basicBoardPresetSelected),
+                    (PlayerMode.Singleplayer, (int)SinglePlayerMode.Many) => new KarmaSingleplayerMany(_basicBoardPresetSelected),
+                    (PlayerMode.Multiplayer, _) => new KarmaMultiplayer(_basicBoardPresetSelected),
                     _ => throw new KarmaPlayerModeException("Invalid starting conditions!"),
                 };
             }
 
-            return _mode switch
+            return (_mode, _subMode) switch
             {
-                PlayerMode.Singleplayer => new KarmaSingleplayer(_basicBoardParams),
-                PlayerMode.Multiplayer => new KarmaMultiplayer(_basicBoardParams),
+                (PlayerMode.Singleplayer, (int)SinglePlayerMode.Solo) => new KarmaSingleplayerSolo(_basicBoardParams),
+                (PlayerMode.Singleplayer, (int)SinglePlayerMode.Many) => new KarmaSingleplayerMany(_basicBoardParams),
+                (PlayerMode.Multiplayer, _) => new KarmaMultiplayer(_basicBoardParams),
                 _ => throw new KarmaPlayerModeException("Invalid starting conditions!"),
             };
         }
@@ -51,5 +55,11 @@ namespace KarmaPlayerMode
     {
         Singleplayer,
         Multiplayer
+    }
+
+    public enum SinglePlayerMode : int
+    {
+        Solo,
+        Many
     }
 }
