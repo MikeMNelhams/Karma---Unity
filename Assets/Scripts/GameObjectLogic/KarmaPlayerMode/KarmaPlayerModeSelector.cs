@@ -49,6 +49,16 @@ namespace KarmaPlayerMode
         {
             _useBasicBoardPreset = isUsingBoardPresets;
         }
+
+        public void SetPlayerMode(PlayerMode mode)
+        {
+            _mode = mode;
+        }
+
+        public void SetPlayerSubMode(int subMode)
+        {
+            _subMode = subMode;
+        }
     }
 
     public enum PlayerMode : int

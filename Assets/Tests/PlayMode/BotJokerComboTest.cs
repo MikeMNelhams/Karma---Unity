@@ -19,6 +19,8 @@ public class BotJokerComboTest : MonoBehaviour
     public IEnumerator TestMain()
     {
         MenuUIManager.Instance.MenuCamera.enabled = false;
+        KarmaGameManager.Instance.SetPlayerMode(KarmaPlayerMode.PlayerMode.Singleplayer);
+        KarmaGameManager.Instance.SetPlayerSubMode(0);
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
         KarmaGameManager.Instance.SetSelectedBoardPreset(1);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;

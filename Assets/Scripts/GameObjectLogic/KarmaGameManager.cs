@@ -213,6 +213,18 @@ public class KarmaGameManager : MonoBehaviour
         _playerModeSelector.SetBoardPresetIndex(presetIndex);
     }
 
+    public void SetPlayerMode(PlayerMode mode)
+    {
+        // For Play Test compatibility.
+        _playerModeSelector.SetPlayerMode(mode);
+    }
+
+    public void SetPlayerSubMode(int subMode)
+    {
+        // For Play Test compatibility.
+        _playerModeSelector.SetPlayerSubMode(subMode);
+    }
+
     public void SetIsUsingBoardPresets(bool isUsingPresets)
     {
         // Used for unit testing. Must be called BEFORE Start()
