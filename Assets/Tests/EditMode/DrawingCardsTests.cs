@@ -92,23 +92,23 @@ public class DrawingCardsTests
 
         List<List<List<int>>> playerCardValues = new()
         {
-            new() { testRanks, new() { }, new() { } },
+            new() { testRanks, new() { }, new() { 14 } },
             new() { testRanks, new() { }, new() { } },
             new() { testRanks, new() { }, new() { } }
         };
 
         List<int> drawCardValues = new() { 3, 4, 5 };
-        List<int> playCardValues = new() { 7 };
+        List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
-        CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 2 });
-        board.PlayCards(cards);
-
+        Card card = board.Players[0].Hand.Pop(2);
+        board.PlayCards(new CardsList(card));
+        UnityEngine.Debug.LogWarning("hand: " + board.CurrentPlayer.Hand);
         Hand correctHand = new(new List<int> { 2, 2, 5 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
     }
@@ -129,14 +129,14 @@ public class DrawingCardsTests
         List<int> playCardValues = new() { 7 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, handsAreFlipped: true);
+        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
 
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 2 });
         board.PlayCards(cards);
-
+        UnityEngine.Debug.Log("hand: " +  board.CurrentPlayer.Hand);
         Hand correctHand = new(new List<int> { 2, 2, 4 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
     }

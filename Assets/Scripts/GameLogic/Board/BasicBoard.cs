@@ -81,10 +81,7 @@ namespace KarmaLogic
             {
                 Players = players;
 
-                foreach (Player player in Players)
-                {
-                    player.Hand.Sort();
-                }
+                ShuffleOrSortStartingHands(handsAreFlipped);
 
                 DrawPile = drawPile;
                 BurnPile = burnPile;
@@ -117,6 +114,24 @@ namespace KarmaLogic
 
                 CalculateLegalCombos(CurrentPlayer.PlayableCards);
                 CalculateLegalActions();
+            }
+
+            void ShuffleOrSortStartingHands(bool handsAreFlipped)
+            {
+                if (handsAreFlipped)
+                {
+                    foreach (Player player in Players)
+                    {
+                        player.Hand.Shuffle();
+                    }
+                }
+                else
+                {
+                    foreach (Player player in Players)
+                    {
+                        player.Hand.Sort();
+                    }
+                }
             }
 
             DictionaryDefaultInt<CardValue> CountCardValuesInPlay()

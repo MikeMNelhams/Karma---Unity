@@ -31,6 +31,7 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 
     public Camera Camera { get => _camera; }
     public PhysicsRaycaster CameraRaycaster { get => _cameraPhysicsRaycaster; }
+    public Canvas Canvas { get => _playerCanvas; }
 
     public ButtonAwaitable PickupPlayPileButton { get => _pickupPlayPileButton; }
     public ButtonAwaitable ConfirmSelectionButton { get => _confirmSelectionButton; }
@@ -268,8 +269,8 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         print("Enabling camera for player: " + Index);
 
         _camera = KarmaGameManager.Instance.CameraMain;
-        _camera.transform.position = _playerMovementController.PlayerHead.transform.position;
-        _camera.transform.rotation = KarmaGameManager.Instance.RotationTowardsTableCentre(_camera.transform.position);
+        _camera.transform.SetPositionAndRotation(_playerMovementController.PlayerHead.transform.position, 
+            _playerMovementController.PlayerHead.transform.rotation);
         _cameraPhysicsRaycaster = KarmaGameManager.Instance.CameraRaycaster;
 
         _camera.gameObject.transform.SetParent(_playerMovementController.PlayerHead.transform);

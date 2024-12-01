@@ -57,6 +57,7 @@ namespace KarmaPlayerMode.Singleplayer
                     playerHandler.name = botName;
                     playerHandler.SetCardLegalityHinter(false); // Bots should NOT have legal hints enabled
                     playerHandler.HoverTipHandler.enabled = false;
+                    playerHandler.Canvas.enabled = false;
                     playerHandler.DisconnectCameraWithoutDeparenting();
                     botNameIndex++;
                 }

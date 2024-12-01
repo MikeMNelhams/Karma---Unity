@@ -1377,14 +1377,14 @@ MonoBehaviour:
   _globalBotDelayInSeconds: 0.001
   _playerModeSelector:
     _mode: 0
-    _subMode: 1
+    _subMode: 0
     _basicBoardParams:
       _playersParams:
       - _handCards:
         - _value: 3
           _suit:
             _suit: 0
-        - _value: 7
+        - _value: 5
           _suit:
             _suit: 0
         - _value: 2
@@ -1408,26 +1408,104 @@ MonoBehaviour:
         - _value: 11
           _suit:
             _suit: 0
-        - _value: 12
+        - _value: 15
           _suit:
             _suit: 0
-        _karmaUpCards: []
-        _karmaDownCards: []
+        _karmaUpCards:
+        - _value: 15
+          _suit:
+            _suit: 0
+        - _value: 2
+          _suit:
+            _suit: 0
+        _karmaDownCards:
+        - _value: 14
+          _suit:
+            _suit: 0
         _isPlayableCharacter: 1
         _areLegalHintsEnabled: 0
-      - _handCards: []
-        _karmaUpCards: []
-        _karmaDownCards: []
+      - _handCards:
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 3
+          _suit:
+            _suit: 0
+        - _value: 4
+          _suit:
+            _suit: 0
+        _karmaUpCards:
+        - _value: 2
+          _suit:
+            _suit: 0
+        _karmaDownCards:
+        - _value: 2
+          _suit:
+            _suit: 0
         _isPlayableCharacter: 0
         _areLegalHintsEnabled: 0
-      - _handCards: []
-        _karmaUpCards: []
-        _karmaDownCards: []
+      - _handCards:
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 3
+          _suit:
+            _suit: 0
+        - _value: 4
+          _suit:
+            _suit: 0
+        _karmaUpCards:
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 2
+          _suit:
+            _suit: 0
+        _karmaDownCards:
+        - _value: 7
+          _suit:
+            _suit: 0
+        - _value: 8
+          _suit:
+            _suit: 0
+        - _value: 9
+          _suit:
+            _suit: 0
         _isPlayableCharacter: 0
         _areLegalHintsEnabled: 0
-      - _handCards: []
-        _karmaUpCards: []
-        _karmaDownCards: []
+      - _handCards:
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 2
+          _suit:
+            _suit: 0
+        - _value: 2
+          _suit:
+            _suit: 0
+        _karmaUpCards:
+        - _value: 6
+          _suit:
+            _suit: 0
+        - _value: 6
+          _suit:
+            _suit: 0
+        - _value: 6
+          _suit:
+            _suit: 0
+        _karmaDownCards:
+        - _value: 10
+          _suit:
+            _suit: 0
+        - _value: 10
+          _suit:
+            _suit: 0
+        - _value: 10
+          _suit:
+            _suit: 0
         _isPlayableCharacter: 0
         _areLegalHintsEnabled: 0
       _drawPileCards: []
@@ -1435,14 +1513,14 @@ MonoBehaviour:
       _playPileCards: []
       _turnOrder: 1
       _playOrder: 0
-      _handsAreFlipped: 0
+      _handsAreFlipped: 1
       _effectMultiplier: 1
       _whoStarts: 0
       _hasBurnedThisTurn: 0
       _turnsPlayed: 0
       _turnLimit: 100
-    _useBasicBoardPreset: 1
-    _basicBoardPresetSelected: 0
+    _useBasicBoardPreset: 0
+    _basicBoardPresetSelected: 18
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
