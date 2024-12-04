@@ -8,20 +8,19 @@ namespace KarmaLogic.BasicBoard
     [CustomPropertyDrawer(typeof(BasicBoardCharacterSelector))]
     public class BasicBoardCharacterSelectorDrawer : PropertyDrawer
     {
-        CharacterType _selectedCharacterType = CharacterType.Bot;
         protected string[] _characterTypeOptions = Enum.GetNames(typeof(CharacterType));
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            CharacterType selectedCharacterTypeBefore = _selectedCharacterType;
+            CharacterType selectedCharacterTypeBefore = (CharacterType) property.FindPropertyRelative("_selectedType").intValue;
 
             EditorGUI.BeginProperty(position, label, property);
 
             EditorGUI.BeginChangeCheck();
-
+            
             Rect popupRect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
 
-            _selectedCharacterType = (CharacterType) EditorGUI.Popup(popupRect, "Character Type:", 
+            CharacterType _selectedCharacterType = (CharacterType) EditorGUI.Popup(popupRect, "Character Type:", 
                 property.FindPropertyRelative("_selectedType").intValue, _characterTypeOptions);
 
             position.y += EditorGUIUtility.singleLineHeight;
@@ -51,10 +50,10 @@ namespace KarmaLogic.BasicBoard
 
         void DrawSelectedCharacterTypeGUI(SerializedProperty selector, Rect position)
         {
-            SerializedProperty characterParams = _selectedCharacterType switch
+            SerializedProperty characterParams = selector.FindPropertyRelative("_selectedType").intValue switch
             {
-                CharacterType.Bot => selector.FindPropertyRelative("_botParams"),
-                CharacterType.Player => selector.FindPropertyRelative("_playerParams"),
+                (int) CharacterType.Bot => selector.FindPropertyRelative("_botParams"),
+                (int) CharacterType.Player => selector.FindPropertyRelative("_playerParams"),
                 _ => throw new NotImplementedException("Unsupported player-character type!"),
             };
 

@@ -1435,7 +1435,7 @@ MonoBehaviour:
           _karmaUpCards: []
           _karmaDownCards: []
           _areLegalHintsEnabled: 1
-        _selectedType: 0
+        _selectedType: 1
       - _botParams:
           _handCards:
           - _value: 2
@@ -1463,7 +1463,7 @@ MonoBehaviour:
           _karmaUpCards: []
           _karmaDownCards: []
           _areLegalHintsEnabled: 1
-        _selectedType: 0
+        _selectedType: 1
       _drawPileCards: []
       _playPileCards: []
       _burnPileCards: []

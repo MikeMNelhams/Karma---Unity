@@ -19,11 +19,11 @@ namespace KarmaLogic.BasicBoard
         [SerializeField] BasicBoardBotParams _botParams = new ();
         [SerializeField] BasicBoardPlayerParams _playerParams = new ();
 
-        [SerializeField] CharacterType _selectedType = CharacterType.Bot;
+        [SerializeField] int _selectedType = (int)CharacterType.Bot;
 
         public BasicBoardCharacterSelector()
         {
-            _selectedType = CharacterType.Bot;
+            _selectedType = (int) CharacterType.Bot;
             _botParams = new BasicBoardBotParams();
             _playerParams = new BasicBoardPlayerParams();
         }
@@ -53,8 +53,8 @@ namespace KarmaLogic.BasicBoard
         {
             return _selectedType switch
             {
-                CharacterType.Bot => _botParams,
-                CharacterType.Player => _playerParams,
+                (int) CharacterType.Bot => _botParams,
+                (int) CharacterType.Player => _playerParams,
                 _ => throw new NotImplementedException("Unsupported player-character type!"),
             };
         }
@@ -78,8 +78,8 @@ namespace KarmaLogic.BasicBoard
         {
             _selectedType = characterParams switch
             {
-                BasicBoardBotParams => CharacterType.Bot,
-                BasicBoardPlayerParams => CharacterType.Player,
+                BasicBoardBotParams => (int) CharacterType.Bot,
+                BasicBoardPlayerParams => (int) CharacterType.Player,
                 _ => throw new NotImplementedException("Unsupported player-character type!"),
             };
         }
