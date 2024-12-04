@@ -6,7 +6,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public PlayRandomStartFourPlayable() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardFactory.RandomStartAllPlayable(4);
+        public override BasicBoardParams BoardParams => BasicBoardFactory.RandomStartAllPlayable(4);
 
         public override int TurnLimit => 1000;
     }

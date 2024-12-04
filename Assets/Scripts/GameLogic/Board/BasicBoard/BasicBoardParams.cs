@@ -46,7 +46,6 @@ namespace KarmaLogic.BasicBoard
                 {
                     characterParams.Add(characterSelector.ToCharacterParams());
                 }
-                UnityEngine.Debug.Log("Number of character selectors upon get: " + _characterSelectors.Count);
                 return characterParams;
             }
         }

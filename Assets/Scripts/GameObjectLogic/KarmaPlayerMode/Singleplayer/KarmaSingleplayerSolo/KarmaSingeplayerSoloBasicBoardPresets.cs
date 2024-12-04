@@ -8,7 +8,7 @@ namespace KarmaPlayerMode.Singleplayer
         {
         }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotQueenCombo();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotQueenCombo();
 
         public override int TurnLimit => 100 ;
     }
@@ -19,7 +19,7 @@ namespace KarmaPlayerMode.Singleplayer
         {
         }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotJokerCombo();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotJokerCombo();
 
         public override int TurnLimit => 100;
     }
@@ -30,7 +30,7 @@ namespace KarmaPlayerMode.Singleplayer
         {
         }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotVotingTestBoard1();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotVotingTestBoard1();
 
         public override int TurnLimit => 100;
     }
@@ -41,7 +41,7 @@ namespace KarmaPlayerMode.Singleplayer
         {
         }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotVotingTestBoard2();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotVotingTestBoard2();
 
         public override int TurnLimit => 100;
     }
@@ -50,7 +50,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestScenarioFullHand() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestFullHand();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestFullHand();
         public override int TurnLimit => 100;
     }
 
@@ -58,7 +58,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestLeftHandRotate() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestLeftHandRotate();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestLeftHandRotate();
 
         public override int TurnLimit => 20;
     }
@@ -67,7 +67,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestGameWonNoVoting() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestGameWonNoVote();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestGameWonNoVote();
 
         public override int TurnLimit => 100;
     }
@@ -76,7 +76,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestPotentialWinnerIsSkippedInUnwonGame() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestPotentialWinnerIsSkippedInUnwonGame();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestPotentialWinnerIsSkippedInUnwonGame();
 
         public override int TurnLimit => 100;
     }
@@ -85,7 +85,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestMultipleSeparateCardGiveaways() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestMultipleSeparateCardGiveaways();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestMultipleSeparateCardGiveaways();
 
         public override int TurnLimit => 100;
     }
@@ -94,7 +94,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestQueenComboLastCardToWin() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestQueenComboLastCardToWin();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestQueenComboLastCardToWin();
 
         public override int TurnLimit => 100;
     }
@@ -103,7 +103,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestQueenComboLastCardWithJokerInPlay() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestQueenComboLastCardWithJokerInPlay();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestQueenComboLastCardWithJokerInPlay();
 
         public override int TurnLimit => 50;
     }
@@ -112,7 +112,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestValidJokerAsLastCardToWin() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestValidJokerAsLastCardToWin();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestValidJokerAsLastCardToWin();
 
         public override int TurnLimit => 100;
     }
@@ -121,7 +121,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestGettingJokered() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestGettingJokered();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestGettingJokered();
 
         public override int TurnLimit => 100;
     }
@@ -130,7 +130,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestJokerAsAceLastCardToWin() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestJokerAsAceLastCardToWin();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestJokerAsAceLastCardToWin();
 
         public override int TurnLimit => 100;
     }
@@ -139,7 +139,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestAllPlayersNoActionsGameEnds() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestAllPlayersNoActionsGameEnds();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestAllPlayersNoActionsGameEnds();
 
         public override int TurnLimit => 100;
     }
@@ -148,7 +148,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestAceNoHandDoesNotCrash() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestAceNoHandDoesNotCrash();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestAceNoHandDoesNotCrash();
 
         public override int TurnLimit => 100;
     }
@@ -157,7 +157,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public TestAceAndFive() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestAceAndFive();
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestAceAndFive();
 
         public override int TurnLimit => 100;
     }
@@ -167,7 +167,7 @@ namespace KarmaPlayerMode.Singleplayer
 
         public TestRandomStart() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardTestFactory.BotTestRandomStart(4);
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestRandomStart(4);
         public override int TurnLimit => 100;
     }
 
@@ -175,7 +175,7 @@ namespace KarmaPlayerMode.Singleplayer
     {
         public PlayRandomStartDefault() : base() { }
 
-        public override BasicBoardParams BoardParams => BoardFactory.RandomStartSingleplayerDefault();
+        public override BasicBoardParams BoardParams => BasicBoardFactory.RandomStartSingleplayerDefault();
 
         public override int TurnLimit => 1_000;
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace KarmaLogic.BasicBoard
 {
-    public class BoardFactory
+    public class BasicBoardFactory
     {
         public static BasicBoardParams RandomStartAllPlayable(int numberOfPlayers, int numberOfJokers = 1, int whoStarts = 0)
         {

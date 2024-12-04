@@ -6,7 +6,7 @@ using KarmaLogic.Players;
 
 namespace KarmaLogic.BasicBoard
 {
-    public class BoardTestFactory
+    public class BasicBoardTestFactory
     {
         public static BasicBoardParams BotQueenCombo()
         {

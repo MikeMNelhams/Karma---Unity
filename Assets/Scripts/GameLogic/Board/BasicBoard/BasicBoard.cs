@@ -59,8 +59,6 @@ namespace KarmaLogic
                     throw new NullReferenceException("No players are given, cannot play a game without players!"); 
                 }
 
-                UnityEngine.Debug.Log("number of players in BasicBoardParams: " + basicBoardParams.CharactersParams.Count);
-
                 foreach (BasicBoardCharacterParams playerParams in basicBoardParams.CharactersParams)
                 {
                     players.Add(playerParams.ToPlayer());

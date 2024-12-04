@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace KarmaLogic.BasicBoard
 {
+    [System.Serializable]
     public enum CharacterType: byte
     {
         Bot,
@@ -43,7 +44,7 @@ namespace KarmaLogic.BasicBoard
             {
                 CharacterType.Bot => new BasicBoardBotParams(playersParams, suit: defaultSuit),
                 CharacterType.Player => new BasicBoardPlayerParams(playersParams, suit: defaultSuit),
-                _ => throw new NotImplementedException("Unsupported player-character type!"),
+                _ => throw new UnsupportedCharacterTypeException(),
             };
 
             SetParams(characterParams);
@@ -55,7 +56,7 @@ namespace KarmaLogic.BasicBoard
             {
                 (int) CharacterType.Bot => _botParams,
                 (int) CharacterType.Player => _playerParams,
-                _ => throw new NotImplementedException("Unsupported player-character type!"),
+                _ => throw new UnsupportedCharacterTypeException(),
             };
         }
 
@@ -70,7 +71,7 @@ namespace KarmaLogic.BasicBoard
                     _playerParams = (BasicBoardPlayerParams)characterParams;
                     break;
                 default:
-                    throw new NotImplementedException("Unsupported player-character type!");
+                    throw new UnsupportedCharacterTypeException();
             }
         }
 
@@ -80,7 +81,7 @@ namespace KarmaLogic.BasicBoard
             {
                 BasicBoardBotParams => (int) CharacterType.Bot,
                 BasicBoardPlayerParams => (int) CharacterType.Player,
-                _ => throw new NotImplementedException("Unsupported player-character type!"),
+                _ => throw new UnsupportedCharacterTypeException(),
             };
         }
     }

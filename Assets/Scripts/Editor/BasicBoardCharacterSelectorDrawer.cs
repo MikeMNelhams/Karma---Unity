@@ -54,7 +54,7 @@ namespace KarmaLogic.BasicBoard
             {
                 (int) CharacterType.Bot => selector.FindPropertyRelative("_botParams"),
                 (int) CharacterType.Player => selector.FindPropertyRelative("_playerParams"),
-                _ => throw new NotImplementedException("Unsupported player-character type!"),
+                _ => throw new UnsupportedCharacterTypeException(),
             };
 
             float propertyHeight = EditorGUI.GetPropertyHeight(characterParams, includeChildren: true);
