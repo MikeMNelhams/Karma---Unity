@@ -20,8 +20,13 @@ namespace KarmaLogic.BasicBoard
             
             Rect popupRect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
 
+            GUIStyle typeSelectorStyle = new("popup")
+            {
+                fontStyle = FontStyle.Bold
+            };
+
             CharacterType _selectedCharacterType = (CharacterType) EditorGUI.Popup(popupRect, "Character Type:", 
-                property.FindPropertyRelative("_selectedType").intValue, _characterTypeOptions);
+                property.FindPropertyRelative("_selectedType").intValue, _characterTypeOptions, typeSelectorStyle);
 
             position.y += EditorGUIUtility.singleLineHeight;
 
@@ -42,18 +47,21 @@ namespace KarmaLogic.BasicBoard
         {
             float maxHeight = 3.0f * EditorGUIUtility.singleLineHeight;
 
-            maxHeight = Mathf.Max(maxHeight, EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_botParams"), includeChildren: true));
-            maxHeight = Mathf.Max(maxHeight, EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_playerParams"), includeChildren: true));
-
-            return maxHeight + 1.0f * EditorGUIUtility.singleLineHeight;
+            maxHeight = (CharacterType)property.FindPropertyRelative("_selectedType").intValue switch
+            {
+                CharacterType.Bot => Mathf.Max(maxHeight, EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_botParams"), includeChildren: true)),
+                CharacterType.Player => Mathf.Max(maxHeight, EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_playerParams"), includeChildren: true)),
+                _ => throw new UnsupportedCharacterTypeException(),
+            };
+            return maxHeight;
         }
 
         void DrawSelectedCharacterTypeGUI(SerializedProperty selector, Rect position)
         {
-            SerializedProperty characterParams = selector.FindPropertyRelative("_selectedType").intValue switch
+            SerializedProperty characterParams = (CharacterType) selector.FindPropertyRelative("_selectedType").intValue switch
             {
-                (int) CharacterType.Bot => selector.FindPropertyRelative("_botParams"),
-                (int) CharacterType.Player => selector.FindPropertyRelative("_playerParams"),
+                CharacterType.Bot => selector.FindPropertyRelative("_botParams"),
+                CharacterType.Player => selector.FindPropertyRelative("_playerParams"),
                 _ => throw new UnsupportedCharacterTypeException(),
             };
 

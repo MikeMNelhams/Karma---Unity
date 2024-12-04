@@ -141,7 +141,7 @@ namespace KarmaLogic.BasicBoard
 
             for (int i = 1; i < 4; i++)
             {
-                playerParams.Add(new BasicBoardBotParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i])));
+                playerParams.Add(new BasicBoardBotParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]), BotType.DecentlyFunBot));
             }
 
             return new BasicBoardParams(playerParams, deck.ToList(), new List<Card>(), new List<Card>());

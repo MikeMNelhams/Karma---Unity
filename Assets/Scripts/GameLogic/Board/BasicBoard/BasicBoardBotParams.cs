@@ -3,18 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
+using KarmaLogic.Bots;
 
 namespace KarmaLogic.BasicBoard
 {
+    [System.Serializable]
+    public enum BotType : byte
+    {
+        IntegrationTestBot,
+        DecentlyFunBot
+    }
+
     [System.Serializable]
     public class BasicBoardBotParams : BasicBoardCharacterParams
     {
         public override bool IsPlayableCharacter { get => false; }
         public override bool AreLegalHintsEnabled { get => false; }
 
-        public BasicBoardBotParams(List<int> handValues, List<int> karmaUpValues = null,
-            List<int> karmaDownValues = null, CardSuit suit = null)
+        [SerializeField] protected int _selectedBotType = (int) BotType.IntegrationTestBot;
+
+        public BasicBoardBotParams(List<int> handValues, List<int> karmaUpValues, List<int> karmaDownValues, CardSuit suit = null, 
+            BotType botType = BotType.IntegrationTestBot)
         {
+            _selectedBotType = (int)botType;
+
             _handCards = new List<Card>();
             _karmaUpCards = new List<Card>();
             _karmaDownCards = new List<Card>();
@@ -29,8 +41,10 @@ namespace KarmaLogic.BasicBoard
             if (karmaDownValues != null) { _karmaDownCards.AddRange(CardsFromValues(karmaDownValues, defaultSuit)); }
         }
 
-        public BasicBoardBotParams(List<List<int>> playerCardValues = null, CardSuit suit = null)
+        public BasicBoardBotParams(List<List<int>> playerCardValues = null, CardSuit suit = null, BotType botType = BotType.IntegrationTestBot)
         {
+            _selectedBotType = (int) botType;
+
             _handCards = new List<Card>();
             _karmaUpCards = new List<Card>();
             _karmaDownCards = new List<Card>();
@@ -47,18 +61,32 @@ namespace KarmaLogic.BasicBoard
             _karmaDownCards.AddRange(CardsFromValues(playerCardValues[2], defaultSuit));
         }
 
-        public BasicBoardBotParams(List<Card> handCards, List<Card> karmaUpCards, List<Card> karmaDownCards)
+        public BasicBoardBotParams(List<Card> handCards, List<Card> karmaUpCards, List<Card> karmaDownCards, BotType botType = BotType.IntegrationTestBot)
         {
+            _selectedBotType = (int)botType;
+
             _handCards = handCards;
             _karmaUpCards = karmaUpCards;
             _karmaDownCards = karmaDownCards;
         }
 
-        public BasicBoardBotParams(Player player)
+        public BasicBoardBotParams(Player player, BotType botType)
         {
+            _selectedBotType = (int) botType;
+
             _handCards = player.Hand.ToList();
             _karmaUpCards = player.KarmaUp.ToList();
             _karmaDownCards = player.KarmaDown.ToList();
+        }
+
+        public BotBase Bot(string name, float delay)
+        {
+            return (BotType)_selectedBotType switch
+            {
+                BotType.IntegrationTestBot => new IntegrationTestBot(name, delay),
+                BotType.DecentlyFunBot => new DecentlyFunBot(name, delay),
+                _ => throw new UnsupportedBotTypeException(),
+            };
         }
     }
 }

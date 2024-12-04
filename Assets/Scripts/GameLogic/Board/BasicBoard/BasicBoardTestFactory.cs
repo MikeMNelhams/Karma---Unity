@@ -480,7 +480,7 @@ namespace KarmaLogic.BasicBoard
             List<BasicBoardCharacterParams> playerParams = new();
             for (int i = 0; i < numberOfPlayers; i++)
             {
-                playerParams.Add(new BasicBoardBotParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i])));
+                playerParams.Add(new BasicBoardBotParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]), BotType.IntegrationTestBot));
             }
 
             return new BasicBoardParams(playerParams, deck.ToList(), new List<Card>(), new List<Card>(), whoStarts: whoStarts);

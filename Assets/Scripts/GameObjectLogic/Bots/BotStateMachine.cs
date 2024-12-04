@@ -13,13 +13,13 @@ namespace StateMachine.CharacterStateMachines
     {
         protected IBoard _board;
         protected BotBase _bot;
-        protected PlayerHandler _playerProperties;
+        protected PlayerHandler _playerHandler;
 
-        public BotStateMachine(BotBase bot, PlayerHandler playerProperties, IBoard board)
+        public BotStateMachine(BotBase bot, PlayerHandler playerHandler, IBoard board)
         {
             _board = board;
             _bot = bot;
-            _playerProperties = playerProperties;
+            _playerHandler = playerHandler;
 
             Transitions = new Dictionary<StateTransition<State, Command>, StateTransitionResult<State>>()
         {
@@ -49,11 +49,11 @@ namespace StateMachine.CharacterStateMachines
             },
             {
                 new StateTransition<State, Command>(State.Mulligan, Command.TurnEnded),
-                new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.HideUI })
+                new StateTransitionResult<State>(State.WaitingForTurn, new List<StateTransitionListener>{ playerHandler.ExitMulligan, playerHandler.HideUI })
             },
             {
                 new StateTransition<State, Command>(State.Mulligan, Command.MulliganEnded),
-                new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ playerProperties.ExitMulligan, playerProperties.EnterPickingActionUpdateUI })
+                new StateTransitionResult<State>(State.PickingAction, new List<StateTransitionListener>{ playerHandler.ExitMulligan, playerHandler.EnterPickingActionUpdateUI })
             },
             { 
                 new StateTransition<State, Command>(State.PickingAction, Command.TurnStarted),
@@ -133,21 +133,21 @@ namespace StateMachine.CharacterStateMachines
             {
                 if (!_bot.WantsToMulligan(_board))
                 {
-                    await _playerProperties.FinishMulliganButton.onClick?.Invoke();
+                    await _playerHandler.FinishMulliganButton.onClick?.Invoke();
                     return;
                 }
 
                 int handIndex = _bot.MulliganHandIndex(_board);
                 int karmaUpIndex = _bot.MulliganKarmaUpIndex(_board);
 
-                SelectableCardObject handCard = _playerProperties.CardsInHand[handIndex];
-                SelectableCardObject karmaUpCard = _playerProperties.CardsInKarmaUp[karmaUpIndex];
+                SelectableCardObject handCard = _playerHandler.CardsInHand[handIndex];
+                SelectableCardObject karmaUpCard = _playerHandler.CardsInKarmaUp[karmaUpIndex];
 
-                _playerProperties.TryToggleCardSelect(handCard);
-                _playerProperties.TryToggleCardSelect(karmaUpCard);
+                _playerHandler.TryToggleCardSelect(handCard);
+                _playerHandler.TryToggleCardSelect(karmaUpCard);
 
-                await _playerProperties.AttemptMulliganSwap(_board);
-                await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
+                await _playerHandler.AttemptMulliganSwap(_board);
+                await _playerHandler.ConfirmSelectionButton.onClick?.Invoke();
             }
         }
 
@@ -160,34 +160,34 @@ namespace StateMachine.CharacterStateMachines
             }
             UnityEngine.Debug.Log("Bot selected action: " + selectedAction);
 
-            if (selectedAction is PickupPlayPile) { await _playerProperties.PickupPlayPileButton.onClick?.Invoke(); return; }
+            if (selectedAction is PickupPlayPile) { await _playerHandler.PickupPlayPileButton.onClick?.Invoke(); return; }
             if (selectedAction is not PlayCardsCombo) { throw new InvalidBoardPlayerActionException(selectedAction); }
             FrozenMultiSet<CardValue> selectedCombo = _bot.ComboToPlay(_board);
             MultiSet<CardValue> combo = new();
-            foreach (SelectableCardObject cardObject in _playerProperties.SelectableCardObjects)
+            foreach (SelectableCardObject cardObject in _playerHandler.SelectableCardObjects)
             {
                 CardValue cardValue = cardObject.CurrentCard.Value;
                 if (!selectedCombo.Contains(cardValue)) { continue; }
                 if (combo.Contains(cardValue) && combo[cardValue] >= selectedCombo[cardValue]) { continue; }
 
                 combo.Add(cardValue, 1);
-                _playerProperties.TryToggleCardSelect(cardObject);
+                _playerHandler.TryToggleCardSelect(cardObject);
             }
 
-            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
+            await _playerHandler.ConfirmSelectionButton.onClick?.Invoke();
         }
 
         async Task EnterCardGiveAwaySelection()
         {
             int cardGiveAwayIndex = _bot.CardGiveAwayIndex(_board);
-            SelectableCardObject selectedGiveawayCard = _playerProperties.SelectableCardObjects[cardGiveAwayIndex];
-            _playerProperties.TryToggleCardSelect(selectedGiveawayCard);
-            await _playerProperties.ConfirmSelectionButton.onClick?.Invoke();
+            SelectableCardObject selectedGiveawayCard = _playerHandler.SelectableCardObjects[cardGiveAwayIndex];
+            _playerHandler.TryToggleCardSelect(selectedGiveawayCard);
+            await _playerHandler.ConfirmSelectionButton.onClick?.Invoke();
         }
 
         Task EnterCardGiveAwayPlayerIndexSelection()
         {
-            HashSet<int> invalidTargetIndices = new() { _playerProperties.Index };
+            HashSet<int> invalidTargetIndices = new() { _playerHandler.Index };
             for (int i = 0; i < _board.Players.Count; i++)
             {
                 Player player = _board.Players[i];
@@ -198,20 +198,20 @@ namespace StateMachine.CharacterStateMachines
             }
 
             int targetIndex = _bot.CardPlayerGiveAwayIndex(_board, invalidTargetIndices);
-            _playerProperties.TriggerTargetReceivePickedUpCard(targetIndex);
+            _playerHandler.TriggerTargetReceivePickedUpCard(targetIndex);
             return Task.CompletedTask;
         }
 
         async Task EnterPlayPileGiveAwayPlayerIndexSelection()
         {
-            int targetIndex = _bot.JokerTargetIndex(_board, new HashSet<int>() { _playerProperties.Index });
-            await _playerProperties.TriggerTargetPickUpPlayPile(targetIndex);
+            int targetIndex = _bot.JokerTargetIndex(_board, new HashSet<int>() { _playerHandler.Index });
+            await _playerHandler.TriggerTargetPickUpPlayPile(targetIndex);
         }
 
         Task EnterVotingForWinner()
         {
-            int targetIndex = _bot.VoteForWinnerIndex(_board, new HashSet<int> { _playerProperties.Index });
-            _playerProperties.TriggerVoteForPlayer(targetIndex);
+            int targetIndex = _bot.VoteForWinnerIndex(_board, new HashSet<int> { _playerHandler.Index });
+            _playerHandler.TriggerVoteForPlayer(targetIndex);
             return Task.CompletedTask;
         }
     }

@@ -52,7 +52,10 @@ namespace KarmaPlayerMode.Singleplayer
                 else
                 {
                     string botName = "Bot " + botNameIndex;
-                    IntegrationTestBot bot = new(botName, botDelay);
+
+                    BasicBoardBotParams botParams = BoardParams.CharactersParams[playerIndex] as BasicBoardBotParams;
+                    BotBase bot = botParams.Bot(botName, botDelay);
+
                     playerHandler.StateMachine = new BotStateMachine(bot, playerHandler, Board);
                     playerHandler.name = botName;
                     playerHandler.SetCardLegalityHinter(false); // Bots should NOT have legal hints enabled
