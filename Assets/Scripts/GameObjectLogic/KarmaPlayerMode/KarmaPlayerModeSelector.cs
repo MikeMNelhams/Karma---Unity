@@ -12,7 +12,7 @@ namespace KarmaPlayerMode
     {
         [SerializeField] PlayerMode _mode;
         [SerializeField] int _subMode;
-        [SerializeField] BasicBoardParams _basicBoardParams;
+        [SerializeField] BasicBoardParams _basicBoardParams = new ();
         [SerializeField] bool _useBasicBoardPreset = true;
         [SerializeField] int _basicBoardPresetSelected = -1;
 

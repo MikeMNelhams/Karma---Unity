@@ -249,12 +249,12 @@ namespace KarmaPlayerMode
 
         public bool IsPlayableCharacter(int playerIndex)
         {
-            return BoardParams.PlayersParams[playerIndex].IsPlayableCharacter;
+            return BoardParams.CharactersParams[playerIndex].IsPlayableCharacter;
         }
 
         protected bool AreLegalHintsEnabled(int playerIndex)
         {
-            return BoardParams.PlayersParams[playerIndex].AreLegalHintsEnabled;
+            return BoardParams.CharactersParams[playerIndex].AreLegalHintsEnabled;
         }
 
         protected bool IsMulliganFinished
@@ -410,7 +410,7 @@ namespace KarmaPlayerMode
         {
             NumberOfActivePlayers = 0;
 
-            foreach (BasicBoardPlayerParams playerParams in BoardParams.PlayersParams)
+            foreach (BasicBoardCharacterParams playerParams in BoardParams.CharactersParams)
             {
                 if (playerParams.IsPlayableCharacter) { NumberOfActivePlayers++; }
             }

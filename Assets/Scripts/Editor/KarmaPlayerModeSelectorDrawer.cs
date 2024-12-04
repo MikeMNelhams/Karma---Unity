@@ -63,7 +63,9 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
 
         EditorGUI.BeginChangeCheck();
 
-        _selectedMode = EditorGUILayout.Popup("Player Mode", property.FindPropertyRelative("_mode").intValue, _modeOptions);
+        _selectedMode = EditorGUI.Popup(position, "Player Mode", property.FindPropertyRelative("_mode").intValue, _modeOptions);
+        position.y += EditorGUIUtility.singleLineHeight;
+
         _selectedSubMode = EditorGUILayout.Popup("Player Sub Mode", property.FindPropertyRelative("_subMode").intValue, _subModeOptions[_selectedMode]);
 
         string[][] _subPresetOptions = _presetOptions[_selectedMode];
@@ -87,8 +89,6 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
             if (presetSelectedBefore != _presetSelected) { property.FindPropertyRelative("_basicBoardPresetSelected").intValue = _presetSelected; }
         }
 
-        bool isSinglePlayer = (PlayerMode)_selectedMode == PlayerMode.Singleplayer;
-        if (!isSinglePlayer) { EditorGUI.EndProperty();  return; }
         EditorGUI.EndProperty();
     }
 

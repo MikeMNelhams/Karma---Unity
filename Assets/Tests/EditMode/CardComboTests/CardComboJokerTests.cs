@@ -20,7 +20,7 @@ public class CardComboJokerTests
         List<int> playCardValues = new() { 2, 3, 4, 5 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
         BasicBoard board = new(boardParams);
 
@@ -59,7 +59,7 @@ public class CardComboJokerTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, handsAreFlipped: true);
         BasicBoard board = new(boardParams);
 
@@ -95,7 +95,7 @@ public class CardComboJokerTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT);
         BasicBoard board = new(boardParams);
 
@@ -134,7 +134,7 @@ public class CardComboJokerTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT);
         BasicBoard board = new(boardParams);
 
@@ -173,7 +173,7 @@ public class CardComboJokerTests
         List<int> playCardValues = new() { 14 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT);
         BasicBoard board = new(boardParams);
 

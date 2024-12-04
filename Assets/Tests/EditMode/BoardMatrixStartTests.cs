@@ -21,7 +21,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         Assert.AreEqual(0, board.PlayPile.Count);
@@ -53,7 +53,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         Assert.AreEqual(0, board.PlayPile.Count);
@@ -98,7 +98,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         Assert.AreEqual(0, board.PlayPile.Count);
@@ -145,7 +145,7 @@ public class BoardMatrixStartTests
         List<int> playCardValues = new() { 11, 12, 13, 14};
         List<int> burnCardValues = new() { 15, 15, 15};
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         // 6 cards should be drawn! (3 per player)

@@ -20,7 +20,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -43,7 +43,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 15, 2, 3, 4, 5 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -66,7 +66,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 15, 2, 3, 4, 14 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -92,7 +92,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 15, 2, 3, 4, 14 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -118,7 +118,7 @@ public class JokerCountTests
         List<int> playCardValues = new() { 2, 3, 4, 11 };
         List<int> burnCardValues = new() { 15 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();

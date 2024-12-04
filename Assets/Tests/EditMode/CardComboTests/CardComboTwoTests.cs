@@ -20,7 +20,7 @@ public class CardComboTwoTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
         BasicBoard board = new(boardParams);
 
@@ -49,7 +49,7 @@ public class CardComboTwoTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.UP);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.UP);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -77,7 +77,7 @@ public class CardComboTwoTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -105,7 +105,7 @@ public class CardComboTwoTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -133,7 +133,7 @@ public class CardComboTwoTests
         List<int> playCardValues = new() { 2 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, playOrder: BoardPlayOrder.DOWN);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();

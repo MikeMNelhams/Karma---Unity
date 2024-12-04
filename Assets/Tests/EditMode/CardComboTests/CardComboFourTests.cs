@@ -18,7 +18,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues, 
             playOrder: BoardPlayOrder.DOWN, turnOrder: BoardTurnOrder.LEFT, effectMultiplier: 2, handsAreFlipped: true);
         BasicBoard board = new(boardParams);
 
@@ -50,7 +50,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { 4 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -74,7 +74,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { 4, 3 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -98,7 +98,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { 4, 3, 4 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -124,7 +124,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -148,7 +148,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { 4, 4 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -172,7 +172,7 @@ public class CardComboFourTests
         List<int> playCardValues = new() { 3, 4, 3, 4, 4 };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();

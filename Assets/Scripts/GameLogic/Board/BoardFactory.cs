@@ -68,10 +68,10 @@ namespace KarmaLogic.BasicBoard
                 playerHands.Add(hand); ;
             }
 
-            List<BasicBoardPlayerParams> playerParams = new();
+            List<BasicBoardCharacterParams> playerParams = new();
             for (int i = 0; i < numberOfPlayers; i++)
             {
-                playerParams.Add(new BasicBoardPlayerParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]), true));
+                playerParams.Add(new BasicBoardPlayerParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i])));
             }
 
             return new BasicBoardParams(playerParams, deck.ToList(), new List<Card>(), new List<Card>(), whoStarts: whoStarts);
@@ -134,14 +134,14 @@ namespace KarmaLogic.BasicBoard
                 playerHands.Add(hand); ;
             }
 
-            List<BasicBoardPlayerParams> playerParams = new()
+            List<BasicBoardCharacterParams> playerParams = new()
             {
                 new BasicBoardPlayerParams(new Player(playerHands[0], playerKarmaUps[0], playerKarmaDowns[0]), true)
             };
 
             for (int i = 1; i < 4; i++)
             {
-                playerParams.Add(new BasicBoardPlayerParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i]), false));
+                playerParams.Add(new BasicBoardBotParams(new Player(playerHands[i], playerKarmaUps[i], playerKarmaDowns[i])));
             }
 
             return new BasicBoardParams(playerParams, deck.ToList(), new List<Card>(), new List<Card>());

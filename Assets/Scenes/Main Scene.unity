@@ -1379,141 +1379,97 @@ MonoBehaviour:
     _mode: 0
     _subMode: 0
     _basicBoardParams:
-      _playersParams:
-      - _handCards:
-        - _value: 3
-          _suit:
-            _suit: 0
-        - _value: 5
-          _suit:
-            _suit: 0
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 9
-          _suit:
-            _suit: 0
-        - _value: 7
-          _suit:
-            _suit: 0
-        - _value: 13
-          _suit:
-            _suit: 0
-        - _value: 10
-          _suit:
-            _suit: 0
-        - _value: 11
-          _suit:
-            _suit: 0
-        - _value: 11
-          _suit:
-            _suit: 0
-        - _value: 15
-          _suit:
-            _suit: 0
-        _karmaUpCards:
-        - _value: 15
-          _suit:
-            _suit: 0
-        - _value: 2
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 14
-          _suit:
-            _suit: 0
-        _isPlayableCharacter: 1
-        _areLegalHintsEnabled: 0
-      - _handCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 3
-          _suit:
-            _suit: 0
-        - _value: 4
-          _suit:
-            _suit: 0
-        _karmaUpCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        _isPlayableCharacter: 0
-        _areLegalHintsEnabled: 0
-      - _handCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 3
-          _suit:
-            _suit: 0
-        - _value: 4
-          _suit:
-            _suit: 0
-        _karmaUpCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 2
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 7
-          _suit:
-            _suit: 0
-        - _value: 8
-          _suit:
-            _suit: 0
-        - _value: 9
-          _suit:
-            _suit: 0
-        _isPlayableCharacter: 0
-        _areLegalHintsEnabled: 0
-      - _handCards:
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 2
-          _suit:
-            _suit: 0
-        - _value: 2
-          _suit:
-            _suit: 0
-        _karmaUpCards:
-        - _value: 6
-          _suit:
-            _suit: 0
-        - _value: 6
-          _suit:
-            _suit: 0
-        - _value: 6
-          _suit:
-            _suit: 0
-        _karmaDownCards:
-        - _value: 10
-          _suit:
-            _suit: 0
-        - _value: 10
-          _suit:
-            _suit: 0
-        - _value: 10
-          _suit:
-            _suit: 0
-        _isPlayableCharacter: 0
-        _areLegalHintsEnabled: 0
+      _characterSelectors:
+      - _botParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+        _playerParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+          _areLegalHintsEnabled: 1
+        _selectedType: 1
+      - _botParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+        _playerParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+          _areLegalHintsEnabled: 1
+        _selectedType: 0
+      - _botParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+        _playerParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+          _areLegalHintsEnabled: 1
+        _selectedType: 0
       _drawPileCards: []
-      _burnPileCards: []
       _playPileCards: []
+      _burnPileCards: []
       _turnOrder: 1
       _playOrder: 0
-      _handsAreFlipped: 1
+      _handsAreFlipped: 0
       _effectMultiplier: 1
       _whoStarts: 0
       _hasBurnedThisTurn: 0

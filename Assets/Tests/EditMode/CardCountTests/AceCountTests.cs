@@ -19,7 +19,7 @@ public class AceCountTests
         List<int> playCardValues = new() { };
         List<int> burnCardValues = new() { };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -42,7 +42,7 @@ public class AceCountTests
         List<int> playCardValues = new() { 14, 2, 3, 4, 5 };
         List<int> burnCardValues = new() { 14 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -65,7 +65,7 @@ public class AceCountTests
         List<int> playCardValues = new() { 14, 2, 3, 4 };
         List<int> burnCardValues = new() { 14 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();
@@ -93,7 +93,7 @@ public class AceCountTests
         List<int> playCardValues = new() { 14, 2, 3, 4, 14, 14, 14 };
         List<int> burnCardValues = new() { 14 };
 
-        BasicBoardParams boardParams = new(playerCardValues, drawCardValues, playCardValues, burnCardValues);
+        BasicBoardParams boardParams = BasicBoardParams.AllBots(playerCardValues, drawCardValues, playCardValues, burnCardValues);
         BasicBoard board = new(boardParams);
 
         board.StartTurn();

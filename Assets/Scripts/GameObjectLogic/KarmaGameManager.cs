@@ -42,6 +42,7 @@ public class KarmaGameManager : MonoBehaviour
 
     [Header("Gameplay Settings")]
     [SerializeField][Range(0.001f, 30.0f)] float _globalBotDelayInSeconds = 0.1f;
+
     [SerializeField] KarmaPlayerModeSelector _playerModeSelector;
 
     public KarmaPlayerMode.KarmaPlayerMode SelectedKarmaPlayerMode { get; private set; }

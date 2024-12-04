@@ -143,6 +143,7 @@ namespace KarmaLogic.CardCombos
 
                 CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
                 //board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(TriggerOnFinishApplyComboListeners);
+                UnityEngine.Debug.Log("Jack is replaying the card(s): " + cardsToReplay);
                 board.PlayCards(cardsToReplay, false);
                 TriggerOnFinishApplyComboListeners();
             }
