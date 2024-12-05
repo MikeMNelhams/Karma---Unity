@@ -1508,7 +1508,7 @@ MonoBehaviour:
       _turnsPlayed: 0
       _turnLimit: 100
     _useBasicBoardPreset: 1
-    _basicBoardPresetSelected: 19
+    _basicBoardPresetSelected: 20
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}

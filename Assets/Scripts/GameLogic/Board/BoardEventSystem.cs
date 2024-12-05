@@ -10,18 +10,20 @@ namespace KarmaLogic.Board.BoardEvents
         public delegate void BoardEventListener(IBoard board);
         public delegate void BoardBurnEventListener(int jokerCount);
         public delegate void PlayerDrawEventListener(int numberOfCards, int playerIndex);
+        public delegate void BurnedCardsReplayedEventListener(int numberOfCards);
         public delegate void BoardHandsRotationEventListener(int numberOfRotations, IBoard board);
         public delegate void BoardOnStartCardGiveAwayListener(int numberOfCards, int playerIndex);
         public delegate void BoardOnStartPlayPileGiveAwayListener(int playerIndex);
 
-        public event BoardEventListener HandsFlippedEvent;
-        public event BoardHandsRotationEventListener HandsRotatedEvent;
-        public event PlayerDrawEventListener PlayerDrawEvent;
-        public event BoardEventListener OnTurnStartEvent;
-        public event BoardEventListener OnTurnEndEvent;
-        public event BoardBurnEventListener OnBurnEvent;
-        public event BoardOnStartCardGiveAwayListener StartedCardGiveAway;
-        public event BoardOnStartPlayPileGiveAwayListener StartedPlayPileGiveAway;
+        event BoardEventListener HandsFlippedEvent;
+        event BoardHandsRotationEventListener HandsRotatedEvent;
+        event PlayerDrawEventListener PlayerDrawEvent;
+        event BurnedCardsReplayedEventListener BurnedCardReplayedEvent;
+        event BoardEventListener OnTurnStartEvent;
+        event BoardEventListener OnTurnEndEvent;
+        event BoardBurnEventListener OnBurnEvent;
+        event BoardOnStartCardGiveAwayListener StartedCardGiveAway;
+        event BoardOnStartPlayPileGiveAwayListener StartedPlayPileGiveAway;
                 
         // Events that cleanup after themselves after triggering
         public Queue<EventListenerAutoTearDown> _onFinishPlaySuccesfulComboListeners = new ();
@@ -87,6 +89,16 @@ namespace KarmaLogic.Board.BoardEvents
         public void TriggerPlayerDrawEvents(int numberOfCards, int playerIndex)
         {
             PlayerDrawEvent?.Invoke(numberOfCards, playerIndex);
+        }
+
+        public void RegisterBurnedCardsReplayedEvent(BurnedCardsReplayedEventListener listener)
+        {
+            BurnedCardReplayedEvent += listener;
+        }
+
+        public void TriggerBurnedCardsReplayedEvent(int numberOfCards)
+        {
+            BurnedCardReplayedEvent?.Invoke(numberOfCards);
         }
 
         public void RegisterStartCardGiveAwayListener(BoardOnStartCardGiveAwayListener listener)

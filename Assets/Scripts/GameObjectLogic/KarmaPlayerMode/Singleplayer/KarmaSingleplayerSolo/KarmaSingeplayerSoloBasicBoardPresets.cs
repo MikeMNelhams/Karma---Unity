@@ -188,6 +188,15 @@ namespace KarmaPlayerMode.Singleplayer
         public override int TurnLimit => 1;
     }
 
+    public class TestJackOnKingOnQueen : KarmaPlayModeBoardPreset<BasicBoard>
+    {
+        public TestJackOnKingOnQueen() : base() { }
+
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestJackOnKingOnQueen();
+
+        public override int TurnLimit => 1;
+    }
+
     public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>
     {
 

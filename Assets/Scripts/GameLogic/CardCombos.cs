@@ -198,7 +198,7 @@ namespace KarmaLogic.CardCombos
             foreach (Card card in cardsToPlay)
             {
                 board.CardValuesInPlayCounts[card.Value]++;
-                board.EventSystem.RegisterOnFinishCardGiveAwayListener(TriggerOnFinishApplyComboListeners);
+                board.EventSystem.TriggerBurnedCardsReplayedEvent(numberOfRepeats);
 
                 if (card.Value == CardValue.NINE && board.PlayPile.Count >= 3 
                     && board.PlayPile[^1].Value == CardValue.KING

@@ -36,7 +36,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public Camera CameraMain {  get { return _camera; } }
     public PhysicsRaycaster CameraRaycaster { get { return _cameraRaycaster; } }
-    public PlayTableProperties PlayTableProperties { get => _playTableProperties; }
+    public PlayTableProperties PlayTableHandler { get => _playTableProperties; }
 
     Vector3 _startingCameraPosition;
 
@@ -94,6 +94,7 @@ public class KarmaGameManager : MonoBehaviour
         Board.EventSystem.RegisterStartCardGiveAwayListener(new BoardEventSystem.BoardOnStartCardGiveAwayListener(StartGiveAwayCards));
 
         Board.EventSystem.RegisterOnBurnEventListener(new BoardEventSystem.BoardBurnEventListener(BurnCards));
+        Board.EventSystem.RegisterBurnedCardsReplayedEvent(new BoardEventSystem.BurnedCardsReplayedEventListener(MoveCardsFromBurnPileBottomToPlayPile));
 
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(SelectedKarmaPlayerMode.IfWinnerVoteOrEndGame));
         Board.EventSystem.RegisterOnTurnEndEventListener(new BoardEventSystem.BoardEventListener(SelectedKarmaPlayerMode.CheckIfGameTurnTimerExceeded));
@@ -343,6 +344,12 @@ public class KarmaGameManager : MonoBehaviour
     {
         List<SelectableCardObject> cardObjects = PlayerHandlers[playerIndex].PopSelectedCardsFromSelection();
         _playTableProperties.MoveCardsToTopOfPlayPile(cardObjects);
+    }
+
+    void MoveCardsFromBurnPileBottomToPlayPile(int numberOfCards)
+    {
+        List<SelectableCardObject> cardObjects = PlayTableHandler.BurnPile.PopCardsFromBottom(numberOfCards);
+        PlayTableHandler.PlayPile.MoveCardsToTopOfPile(cardObjects);
     }
 
     void DrawCards(int numberOfCards, int playerIndex)

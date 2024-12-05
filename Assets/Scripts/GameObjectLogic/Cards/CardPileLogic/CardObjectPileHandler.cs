@@ -72,6 +72,17 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         return removedCardObjects;
     }
 
+    public List<SelectableCardObject> PopCardsFromBottom(int numberOfCards)
+    {
+        List<SelectableCardObject> removedCardObjects = new();
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            removedCardObjects.Add(CardObjects[i]);
+        }
+        CardObjects.RemoveRange(0, numberOfCards);
+        return removedCardObjects;
+    }
+
     public List<SelectableCardObject> PopAllCards()
     {
         List<SelectableCardObject> removedCardObjects = new();

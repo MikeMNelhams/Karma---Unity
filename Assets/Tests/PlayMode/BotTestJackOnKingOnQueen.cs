@@ -7,7 +7,7 @@ using NUnit.Framework;
 using UnityEngine.SceneManagement;
 using KarmaLogic.Cards;
 
-public class BotTestJackOnQueen : MonoBehaviour
+public class BotTestJackOnKingOnQueen : MonoBehaviour
 {
     [UnitySetUp]
     public IEnumerator LoadKGM()
@@ -25,7 +25,7 @@ public class BotTestJackOnQueen : MonoBehaviour
         KarmaGameManager.Instance.SetPlayerMode(KarmaPlayerMode.PlayerMode.Singleplayer);
         KarmaGameManager.Instance.SetPlayerSubMode(0);
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
-        KarmaGameManager.Instance.SetSelectedBoardPreset(18);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(20);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
@@ -52,10 +52,13 @@ public class BotTestJackOnQueen : MonoBehaviour
 
         Assert.IsNull(KarmaGameManager.Instance.Board.Players[0].CardGiveAwayHandler);
 
-        List<CardValue> mostRecentCardValuesPlayed = KarmaGameManager.Instance.Board.ComboHistory[^1].Cards.CardValues;
+        List<CardValue> values = KarmaGameManager.Instance.Board.ComboHistory[^1].Cards.CardValues;
+        Assert.AreEqual(values.Count, 1);
+        Assert.AreEqual(values.First(), CardValue.QUEEN);
 
-        Assert.AreEqual(mostRecentCardValuesPlayed.Count, 1);
-        Assert.AreEqual(mostRecentCardValuesPlayed.First(), CardValue.QUEEN);
+        values = KarmaGameManager.Instance.Board.ComboHistory[^2].Cards.CardValues;
+        Assert.AreEqual(values.Count, 1);
+        Assert.AreEqual(values.First(), CardValue.KING);
 
         yield return null;
     }

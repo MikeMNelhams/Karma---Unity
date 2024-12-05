@@ -28,7 +28,7 @@ namespace KarmaPlayerMode.Singleplayer
 
             float botDelay = KarmaGameManager.Instance.GlobalBotDelayInSeconds;
 
-            CircularTable tableGeometry = KarmaGameManager.Instance.PlayTableProperties.TableGeometry;
+            CircularTable tableGeometry = KarmaGameManager.Instance.PlayTableHandler.TableGeometry;
             Vector3[] playerStartPositions = tableGeometry.PlayerPositions(Board.Players.Count);
 
             Vector3[] holderStartPositions = tableGeometry.PlayerKarmaPositions(Board.Players.Count);
@@ -143,9 +143,10 @@ namespace KarmaPlayerMode.Singleplayer
                 new TestAceAndFive(),                          // 16 
                 new TestJackOnNine(),                          // 17 
                 new TestJackOnQueen(),                         // 18
-                new TestJackOnAce(),                           // 19 No more deterministic test cases past this point!
-                new TestRandomStart(),                         // 20 
-                new PlayRandomStartDefault()                   // 21
+                new TestJackOnAce(),                           // 19 
+                new TestJackOnKingOnQueen(),                   // 20 No more deterministic test cases past this point!
+                new TestRandomStart(),                         // 21 
+                new PlayRandomStartDefault()                   // 22
             };
 
             return presets;

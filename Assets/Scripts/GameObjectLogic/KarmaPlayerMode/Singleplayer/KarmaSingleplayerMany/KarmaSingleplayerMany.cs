@@ -28,7 +28,7 @@ namespace KarmaPlayerMode.Singleplayer
 
             float botDelay = KarmaGameManager.Instance.GlobalBotDelayInSeconds;
 
-            CircularTable tableGeometry = KarmaGameManager.Instance.PlayTableProperties.TableGeometry;
+            CircularTable tableGeometry = KarmaGameManager.Instance.PlayTableHandler.TableGeometry;
             Vector3[] playerStartPositions = tableGeometry.PlayerPositions(Board.Players.Count);
 
             Vector3[] holderStartPositions = tableGeometry.PlayerKarmaPositions(Board.Players.Count);
