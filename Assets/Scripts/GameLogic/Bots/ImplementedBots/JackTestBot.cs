@@ -8,11 +8,11 @@ using DataStructures;
 
 namespace KarmaLogic.Bots
 {
-    public class IntegrationTestBot : BotBase
+    public class JackTestBot : BotBase
     {
         protected List<BoardPlayerAction> _knownActions = new();
 
-        public IntegrationTestBot(string name, float delay) : base(name, delay)
+        public JackTestBot(string name, float delay) : base(name, delay)
         {
             _knownActions.Add(new PickupPlayPile());
             _knownActions.Add(new PlayCardsCombo());
@@ -44,6 +44,14 @@ namespace KarmaLogic.Bots
         public override FrozenMultiSet<CardValue> ComboToPlay(IBoard board)
         {
             LegalCombos legalCombos = board.CurrentLegalCombos;
+
+            FrozenMultiSet<CardValue> jackCombo = new() { CardValue.JACK };
+
+            if (legalCombos.Contains(jackCombo))
+            {
+                return jackCombo;
+            }
+
             return legalCombos.First();
         }
 
@@ -77,8 +85,8 @@ namespace KarmaLogic.Bots
 
         public override BoardPlayerAction SelectAction(IBoard board)
         {
-            // If can play Joker, play it
-            if (board.CurrentLegalActions.Contains(_knownActions[1]) && board.CurrentLegalCombos.Contains(new FrozenMultiSet<CardValue>() { CardValue.JOKER }))
+            // If can play JACK, play it
+            if (board.CurrentLegalActions.Contains(_knownActions[1]) && board.CurrentLegalCombos.Contains(new FrozenMultiSet<CardValue>() { CardValue.JACK }))
             {
                 return _knownActions[1];
             }

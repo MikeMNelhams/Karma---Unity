@@ -90,6 +90,7 @@ namespace KarmaLogic
             public CardsList DrawUntilFull(int playerIndex);
             public void PlayCards(CardsList cards);
             public void PlayCards(CardsList cards, bool addToPlayPile);
+            public void PlayCardsWithoutTriggeringListeners(CardsList cards, bool addToPlayPile);
             public void Burn(int jokerCount);
             public void Print();
             public void PrintChooseableCards();

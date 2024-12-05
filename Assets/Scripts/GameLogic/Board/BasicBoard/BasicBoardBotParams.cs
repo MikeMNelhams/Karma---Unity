@@ -11,6 +11,7 @@ namespace KarmaLogic.BasicBoard
     public enum BotType : byte
     {
         IntegrationTestBot,
+        JackTestBot,
         DecentlyFunBot
     }
 
@@ -35,9 +36,7 @@ namespace KarmaLogic.BasicBoard
             defaultSuit ??= CardSuit.DebugDefault;
 
             if (handValues != null) { _handCards.AddRange(CardsFromValues(handValues, defaultSuit)); }
-
             if (karmaUpValues != null) { _karmaUpCards.AddRange(CardsFromValues(karmaUpValues, defaultSuit)); }
-
             if (karmaDownValues != null) { _karmaDownCards.AddRange(CardsFromValues(karmaDownValues, defaultSuit)); }
         }
 
@@ -85,6 +84,7 @@ namespace KarmaLogic.BasicBoard
             {
                 BotType.IntegrationTestBot => new IntegrationTestBot(name, delay),
                 BotType.DecentlyFunBot => new DecentlyFunBot(name, delay),
+                BotType.JackTestBot => new JackTestBot(name, delay),
                 _ => throw new UnsupportedBotTypeException(),
             };
         }

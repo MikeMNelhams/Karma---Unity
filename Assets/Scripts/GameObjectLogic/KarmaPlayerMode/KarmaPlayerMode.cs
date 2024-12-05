@@ -101,9 +101,6 @@ namespace KarmaPlayerMode
             State activePlayerState = activePlayerHandler.StateMachine.CurrentState;
             UnityEngine.Debug.Log("While end of turn CURRENT PLAYER STATE: " + activePlayerHandler.StateMachine.CurrentState);
 
-            // They can != only by PP: K, K, K BP: 9, You play K -> Q. It's incredibly RARE, but requires this reset. 
-            Board.CurrentPlayerIndex = Board.PlayerIndexWhoStartedTurn;
-
             if (activePlayerState is State.PotentialWinner || activePlayerState is State.GameOver)
             {
                 StepToNextPlayer();

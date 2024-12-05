@@ -108,7 +108,6 @@ public class DrawingCardsTests
 
         Card card = board.Players[0].Hand.Pop(2);
         board.PlayCards(new CardsList(card));
-        UnityEngine.Debug.LogWarning("hand: " + board.CurrentPlayer.Hand);
         Hand correctHand = new(new List<int> { 2, 2, 5 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
     }
@@ -136,7 +135,6 @@ public class DrawingCardsTests
 
         CardsList cards = board.Players[0].Hand.PopMultiple(new int[] { 2 });
         board.PlayCards(cards);
-        UnityEngine.Debug.Log("hand: " +  board.CurrentPlayer.Hand);
         Hand correctHand = new(new List<int> { 2, 2, 4 }, CardSuit.DebugDefault);
         Assert.AreEqual(correctHand, board.CurrentPlayer.Hand);
     }

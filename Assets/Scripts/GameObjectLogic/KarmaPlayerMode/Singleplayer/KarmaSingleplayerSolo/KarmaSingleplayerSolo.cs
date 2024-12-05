@@ -140,9 +140,10 @@ namespace KarmaPlayerMode.Singleplayer
                 new TestJokerAsAceLastCardToWin(),             // 13
                 new TestAllPlayersNoActionsGameEnds(),         // 14
                 new TestAceNoHandDoesNotCrash(),               // 15 
-                new TestAceAndFive(),                          // 16 No more deterministic test cases past this point!
-                new TestRandomStart(),                         // 17 
-                new PlayRandomStartDefault()                   // 18
+                new TestAceAndFive(),                          // 16 
+                new TestJackOnNine(),                          // 17 No more deterministic test cases past this point!
+                new TestRandomStart(),                         // 18 
+                new PlayRandomStartDefault()                   // 19
             };
 
             return presets;

@@ -290,6 +290,33 @@ namespace KarmaLogic
                 return;
             }
 
+            public void PlayCardsWithoutTriggeringListeners(CardsList cards, bool addToPile=true)
+            {
+                ComboFactory.SetCounts(cards);
+                CardCombo cardCombo = ComboFactory.CreateCombo();
+                List<bool> comboVisibility = ComboFactory.ComboVisibility(this);
+                if (addToPile) { PlayPile.Add(cards, comboVisibility); }
+                bool willBurnDueToMinimumRunFour = PlayPile.ContainsMinLengthRun(4);
+
+                DrawUntilFull(CurrentPlayerIndex);
+
+                if (NumberOfCombosPlayedThisTurn > 52) { return; }
+
+                cardCombo.Apply(this);
+
+                ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
+                NumberOfCombosPlayedThisTurn++;
+                ComboHistory.Add(cardCombo);
+
+                int jokerCount = PlayPile.CountValue(CardValue.JOKER);
+                if (willBurnDueToMinimumRunFour || jokerCount > 0)
+                {
+                    // Sometimes jokers can be played from the burn pile, then require re-burning.
+                    Burn(jokerCount);
+                }
+                return;
+            }
+
             public void Burn(int jokerCount)
             {
                 EffectMultiplier = 1;

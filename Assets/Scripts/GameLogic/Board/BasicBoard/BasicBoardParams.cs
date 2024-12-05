@@ -113,9 +113,6 @@ namespace KarmaLogic.BasicBoard
             _whoStarts = whoStarts;
             _hasBurnedThisTurn = hasBurnedThisTurn;
             _turnsPlayed = turnsPlayed;
-
-            UnityEngine.Debug.LogWarning("Number of bots in playerParams: " + playersParams.Count);
-            UnityEngine.Debug.LogWarning("Number of selectors in BasicBoardParams.CharacterSelectors: " + _characterSelectors.Count);
         }
 
         public BasicBoardParams(List<BasicBoardCharacterParams> playersParams, List<Card> drawPileCards, 

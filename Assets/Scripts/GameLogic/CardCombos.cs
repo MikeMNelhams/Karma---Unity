@@ -142,9 +142,7 @@ namespace KarmaLogic.CardCombos
                 if (cardBelowCombo.Value != CardValue.THREE && cardBelowCombo.Value != CardValue.JACK) { board.EffectMultiplier = 1; }
 
                 CardsList cardsToReplay = CardsList.Repeat(cardBelowCombo, numberOfRepeats);
-                //board.EventSystem.RegisterOnFinishPlaySuccesfulComboListener(TriggerOnFinishApplyComboListeners);
-                UnityEngine.Debug.Log("Jack is replaying the card(s): " + cardsToReplay);
-                board.PlayCards(cardsToReplay, false);
+                board.PlayCardsWithoutTriggeringListeners(cardsToReplay, false);
                 TriggerOnFinishApplyComboListeners();
             }
         }
@@ -194,11 +192,29 @@ namespace KarmaLogic.CardCombos
             numberOfRepeats = Math.Min(numberOfRepeats, board.BurnPile.Count);
             if (numberOfRepeats == 0) { return; }
             CardsList cardsToPlay = board.BurnPile.RemoveFromBottom(numberOfRepeats);
+
+            bool shouldResetOnFinish = false;
+
             foreach (Card card in cardsToPlay)
             {
                 board.CardValuesInPlayCounts[card.Value]++;
                 board.EventSystem.RegisterOnFinishCardGiveAwayListener(TriggerOnFinishApplyComboListeners);
+
+                if (card.Value == CardValue.NINE && board.PlayPile.Count >= 3 
+                    && board.PlayPile[^1].Value == CardValue.KING
+                    && board.PlayPile[^2].Value == CardValue.KING 
+                    && board.PlayPile[^3].Value == CardValue.KING)
+                {
+                    // They can != only by PP: K, K, K BP: 9, You play K. It's incredibly RARE, but requires this reset. 
+                    shouldResetOnFinish = true;
+                }
+
                 board.PlayCards(new CardsList(card));
+            }
+
+            if (shouldResetOnFinish)
+            {
+                board.CurrentPlayerIndex = board.PlayerIndexWhoStartedTurn;
             }
         }
     }
