@@ -142,8 +142,9 @@ namespace KarmaPlayerMode.Singleplayer
                 new TestAceNoHandDoesNotCrash(),               // 15 
                 new TestAceAndFive(),                          // 16 
                 new TestJackOnNine(),                          // 17 No more deterministic test cases past this point!
-                new TestRandomStart(),                         // 18 
-                new PlayRandomStartDefault()                   // 19
+                new TestJackOnQueen(),                         // 18
+                new TestRandomStart(),                         // 19 
+                new PlayRandomStartDefault()                   // 20
             };
 
             return presets;

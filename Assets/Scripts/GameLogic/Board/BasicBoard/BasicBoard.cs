@@ -273,11 +273,11 @@ namespace KarmaLogic
 
                 if (NumberOfCombosPlayedThisTurn > 52) { return; }
 
+                ComboHistory.Add(cardCombo);
                 cardCombo.Apply(this);
 
                 ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
                 NumberOfCombosPlayedThisTurn++;
-                ComboHistory.Add(cardCombo);
 
                 int jokerCount = PlayPile.CountValue(CardValue.JOKER);
                 if (willBurnDueToMinimumRunFour || jokerCount > 0) 
@@ -302,11 +302,11 @@ namespace KarmaLogic
 
                 if (NumberOfCombosPlayedThisTurn > 52) { return; }
 
+                ComboHistory.Add(cardCombo);
                 cardCombo.Apply(this);
 
                 ResetEffectMultiplierIfNecessary(ComboFactory.ComboCardValue());
                 NumberOfCombosPlayedThisTurn++;
-                ComboHistory.Add(cardCombo);
 
                 int jokerCount = PlayPile.CountValue(CardValue.JOKER);
                 if (willBurnDueToMinimumRunFour || jokerCount > 0)
