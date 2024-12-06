@@ -417,15 +417,14 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         KarmaGameManager gameManager = KarmaGameManager.Instance;
         HashSet<BoardPlayerAction> legalActions = gameManager.Board.CurrentLegalActions;
         if (legalActions.Count == 0) { return Task.CompletedTask; }
-        if (legalActions.Contains(gameManager.PickUpAction))
-        {
-            PickupPlayPileButton.gameObject.SetActive(true);
-        }
-        if (legalActions.Contains(gameManager.PlayCardsComboAction))
-        {
-            ConfirmSelectionButton.gameObject.SetActive(true);
-            ClearSelectionButton.gameObject.SetActive(true);
-        }
+
+        bool canPickUpPlayPile = legalActions.Contains(gameManager.PickUpAction);
+        bool canPlayCards = legalActions.Contains(gameManager.PlayCardsComboAction);
+
+        PickupPlayPileButton.gameObject.SetActive(canPickUpPlayPile);
+        ConfirmSelectionButton.gameObject.SetActive(canPlayCards);
+        ClearSelectionButton.gameObject.SetActive(true);
+
         if (gameManager.Board.TurnOrder == BoardTurnOrder.RIGHT)
         {
             // TODO swap this with registering a on flipTurnOrder event to Board.EventSystem() when the player is created!!
@@ -435,8 +434,8 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
         if (gameManager.Board.TurnOrder == BoardTurnOrder.LEFT)
         {
             // TODO swap this with registering a on flipTurnOrder event to Board.EventSystem() when the player is created!!
-            _nextPlayerLeftArrow.gameObject.SetActive(true);
             _nextPlayerRightArrow.gameObject.SetActive(false);
+            _nextPlayerLeftArrow.gameObject.SetActive(true);
         }
         TryColorLegalCards();
         return Task.CompletedTask;
