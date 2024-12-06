@@ -1382,7 +1382,7 @@ MonoBehaviour:
       _characterSelectors:
       - _botParams:
           _handCards:
-          - _value: 2
+          - _value: 14
             _suit:
               _suit: 0
           - _value: 2
@@ -1396,42 +1396,13 @@ MonoBehaviour:
           _selectedBotType: 0
         _playerParams:
           _handCards:
-          - _value: 2
+          - _value: 5
             _suit:
               _suit: 0
-          - _value: 2
+          - _value: 4
             _suit:
               _suit: 0
-          - _value: 2
-            _suit:
-              _suit: 0
-          _karmaUpCards: []
-          _karmaDownCards: []
-          _areLegalHintsEnabled: 1
-        _selectedType: 1
-      - _botParams:
-          _handCards:
-          - _value: 2
-            _suit:
-              _suit: 0
-          - _value: 2
-            _suit:
-              _suit: 0
-          - _value: 2
-            _suit:
-              _suit: 0
-          _karmaUpCards: []
-          _karmaDownCards: []
-          _selectedBotType: 0
-        _playerParams:
-          _handCards:
-          - _value: 2
-            _suit:
-              _suit: 0
-          - _value: 2
-            _suit:
-              _suit: 0
-          - _value: 2
+          - _value: 12
             _suit:
               _suit: 0
           _karmaUpCards: []
@@ -1480,7 +1451,36 @@ MonoBehaviour:
               _suit: 0
           _karmaUpCards: []
           _karmaDownCards: []
-          _selectedBotType: 0
+          _selectedBotType: 2
+        _playerParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+          _areLegalHintsEnabled: 1
+        _selectedType: 0
+      - _botParams:
+          _handCards:
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          - _value: 2
+            _suit:
+              _suit: 0
+          _karmaUpCards: []
+          _karmaDownCards: []
+          _selectedBotType: 2
         _playerParams:
           _handCards:
           - _value: 2
@@ -1508,7 +1508,7 @@ MonoBehaviour:
       _turnsPlayed: 0
       _turnLimit: 100
     _useBasicBoardPreset: 1
-    _basicBoardPresetSelected: 20
+    _basicBoardPresetSelected: 23
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}

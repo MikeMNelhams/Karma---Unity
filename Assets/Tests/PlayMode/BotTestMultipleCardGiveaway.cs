@@ -7,7 +7,7 @@ using NUnit.Framework;
 using UnityEngine.SceneManagement;
 using KarmaLogic.Cards;
 
-public class BotTestJackOnAce : MonoBehaviour
+public class BotTestMultipleCardGiveaway : MonoBehaviour
 {
     [UnitySetUp]
     public IEnumerator LoadKGM()
@@ -25,19 +25,19 @@ public class BotTestJackOnAce : MonoBehaviour
         KarmaGameManager.Instance.SetPlayerMode(KarmaPlayerMode.PlayerMode.Singleplayer);
         KarmaGameManager.Instance.SetPlayerSubMode(0);
         KarmaGameManager.Instance.SetIsUsingBoardPresets(true);
-        KarmaGameManager.Instance.SetSelectedBoardPreset(19);
+        KarmaGameManager.Instance.SetSelectedBoardPreset(21);
         KarmaGameManager.Instance.GlobalBotDelayInSeconds = 0.001f;
 
         KarmaGameManager.Instance.BeginGame();
         Dictionary<int, int> gameRanksExpected = new()
         {
             { 0, 0 },
-            { 1, 1 },
-            { 3, 1 },
-            { 2, 2 }
+            { 2, 1 },
+            { 3, 2 },
+            { 1, 3 }
         };
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
 
         Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
         UnityEngine.Debug.Log("Game ranks: " + gameRanks);
@@ -50,7 +50,7 @@ public class BotTestJackOnAce : MonoBehaviour
         Dictionary<int, int> difference = gameRanksExpected.Where(x => gameRanks[x.Key] != x.Value).ToDictionary(x => x.Key, x => x.Value);
         Assert.IsTrue(difference.Count == 0);
 
-        Assert.IsTrue(KarmaGameManager.Instance.Board.HandsAreFlipped);
+        Assert.IsNull(KarmaGameManager.Instance.Board.Players[0].CardGiveAwayHandler);
 
         yield return null;
     }

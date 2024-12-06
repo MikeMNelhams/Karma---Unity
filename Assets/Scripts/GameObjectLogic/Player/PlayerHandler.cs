@@ -256,6 +256,7 @@ public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler
 
     public void TryToggleCardSelect(SelectableCardObject cardObject)
     {
+        if (StateMachine.CurrentState is State.GameOver) { return; }
         if (!cardObject.IsOwnedBy(Index)) { return; }
         if (StateMachine.CurrentState is not State.Mulligan && !IsCardSelectable(cardObject)) { return; }
         

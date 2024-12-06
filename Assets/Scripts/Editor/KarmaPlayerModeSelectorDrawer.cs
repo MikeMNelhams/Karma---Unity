@@ -30,7 +30,7 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
     {
         new string[2][] 
         { 
-            new string[23] {
+            new string[24] {
                 "TestStartQueenCombo", "TestStartJokerCombo", "TestStartVoting",
                 "TestStartVoting2", "TestScenarioFullHand", "TestLeftwardsHandRotate",
                 "TestGameWonNoVote", "TestPotentialWinnerIsSkippedInUnwonGame", "TestMultipleSeparateCardGiveaways",
@@ -38,7 +38,7 @@ public class KarmaPlayerModeSelectorDrawer : PropertyDrawer
                 "TestGettingJokered", "TestJokerAsAceLastCardToWin", "TestAllPlayersNoActionsGameEnds",
                 "TestAceNoHandDoesNotCrash", "TestAceAndFive", "TestJackOnNine", 
                 "TestJackOnQueen", "TestJackOnAce", "TestJackOnKingOnQueen", 
-                "TestRandomStart", "DefaultSingleplayer"},
+                "TestMultipleCardGiveaway", "TestRandomStart", "DefaultSingleplayer"},
             new string[1]
             {
                 "PlayRandomStart4Playable"

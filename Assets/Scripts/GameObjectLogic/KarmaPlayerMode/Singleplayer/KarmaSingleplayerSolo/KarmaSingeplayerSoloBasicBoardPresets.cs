@@ -185,7 +185,7 @@ namespace KarmaPlayerMode.Singleplayer
         public TestJackOnAce() : base() { }
 
         public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestJackOnAce();
-        public override int TurnLimit => 1;
+        public override int TurnLimit => 4;
     }
 
     public class TestJackOnKingOnQueen : KarmaPlayModeBoardPreset<BasicBoard>
@@ -195,6 +195,15 @@ namespace KarmaPlayerMode.Singleplayer
         public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestJackOnKingOnQueen();
 
         public override int TurnLimit => 1;
+    }
+
+    public class TestMultipleCardGiveaway : KarmaPlayModeBoardPreset<BasicBoard>
+    {
+        public TestMultipleCardGiveaway() : base() { }
+
+        public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestMultipleCardGiveaway();
+
+        public override int TurnLimit => 3;
     }
 
     public class TestRandomStart : KarmaPlayModeBoardPreset<BasicBoard>

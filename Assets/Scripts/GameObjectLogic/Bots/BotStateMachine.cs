@@ -100,6 +100,10 @@ namespace StateMachine.CharacterStateMachines
                 new StateTransitionResult<State>(State.SelectingCardGiveAwayPlayerIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwayPlayerIndexSelection})
             },
             {
+                new StateTransition<State, Command>(State.SelectingCardGiveAwayPlayerIndex, Command.CardGiveAwayUnfinished),
+                new StateTransitionResult<State>(State.SelectingCardGiveAwayIndex, new List<StateTransitionListener> { Delay, EnterCardGiveAwaySelection })
+            },
+            {
                 new StateTransition<State, Command>(State.SelectingCardGiveAwayPlayerIndex, Command.TurnEnded),
                 new StateTransitionResult<State>(State.WaitingForTurn)
             },

@@ -474,18 +474,19 @@ namespace KarmaLogic.BasicBoard
         {
             List<List<List<int>>> playerCardValues = new()
             {
-                new() { new() { 2, 2, 11 }, new() { 2, 2, 2 }, new() { 14, 15 } },
-                new() { new() { 2, 2, 2 }, new() { 2, 12, 13 }, new() { 5, 4, 2 } },
+                new() { new() { 2, 3, 14, 14 }, new() { 2, 2, 2 }, new() { 14, 15 } },
+                new() { new() { 2, 2, 11 }, new() { 2, 12, 13 }, new() { 5, 4, 2 } },
                 new() { new() { }, new() { 9, 3, 14 }, new() { 6, 6, 6 } },
                 new() { new() { 2, 2, 2 }, new() { 2, 4, 4 }, new() { 13, 13, 13 } }
             };
 
             List<BasicBoardCharacterParams> players = new()
             {
-                new BasicBoardBotParams(playerCardValues[0], botType: BotType.JackTestBot)
+                new BasicBoardBotParams(playerCardValues[0], botType: BotType.DecentlyFunBot),
+                new BasicBoardBotParams(playerCardValues[1], botType: BotType.JackTestBot)
             };
 
-            for (int i = 1; i < playerCardValues.Count; i++)
+            for (int i = 2; i < playerCardValues.Count; i++)
             {
                 players.Add(new BasicBoardBotParams(playerCardValues[i]));
             }
@@ -522,6 +523,33 @@ namespace KarmaLogic.BasicBoard
             List<int> burnCardValues = new() { 12 };
 
             return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues, playOrder: Board.BoardPlayOrder.DOWN);
+        }
+
+        public static BasicBoardParams BotTestMultipleCardGiveaway()
+        {
+            List<List<List<int>>> playerCardValues = new()
+            {
+                new() { new() { 2, 2, 12, 12 }, new() { 2, 2, 2 }, new() { 14, 15 } },
+                new() { new() { 2, 2, 2 }, new() { 2, 12, 13 }, new() { 5, 4, 2 } },
+                new() { new() { }, new() { 9, 3, 14 }, new() { 6, 6, 6 } },
+                new() { new() { 2, 2, 2 }, new() { 2, 4, 4 }, new() { 13, 13, 13 } }
+            };
+
+            List<BasicBoardCharacterParams> players = new()
+            {
+                new BasicBoardBotParams(playerCardValues[0], botType: BotType.DecentlyFunBot)
+            };
+
+            for (int i = 1; i < playerCardValues.Count; i++)
+            {
+                players.Add(new BasicBoardBotParams(playerCardValues[i]));
+            }
+
+            List<int> drawCardValues = new() { };
+            List<int> playCardValues = new() { 2 };
+            List<int> burnCardValues = new() { 12 };
+
+            return new BasicBoardParams(players, drawCardValues, playCardValues, burnCardValues);
         }
 
         public static BasicBoardParams BotTestRandomStart(int numberOfPlayers, int numberOfJokers=1, int whoStarts=0)
