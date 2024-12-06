@@ -1508,7 +1508,7 @@ MonoBehaviour:
       _turnsPlayed: 0
       _turnLimit: 100
     _useBasicBoardPreset: 1
-    _basicBoardPresetSelected: 23
+    _basicBoardPresetSelected: 22
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
@@ -2694,8 +2694,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _drawPileHandler: {fileID: 651445642}
-  _burnPileHandler: {fileID: 375781343}
   _playPileHandler: {fileID: 1822421501}
+  _burnPileHandler: {fileID: 375781343}
   _tableGeometry: {fileID: 1598284359}
 --- !u!114 &1598284359
 MonoBehaviour:

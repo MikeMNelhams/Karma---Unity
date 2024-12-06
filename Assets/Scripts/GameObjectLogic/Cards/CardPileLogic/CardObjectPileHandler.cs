@@ -44,7 +44,7 @@ public class CardObjectPileHandler : MonoBehaviour, ICardVisibilityHandler
         }
     }
 
-    public void MoveCardsToTopOfPile(List<SelectableCardObject> cardObjects)
+    public void MoveCardsToTop(List<SelectableCardObject> cardObjects)
     {
         int cardIndex = CardObjects.Count;
         for (int i = 0; i < cardObjects.Count; i++) 

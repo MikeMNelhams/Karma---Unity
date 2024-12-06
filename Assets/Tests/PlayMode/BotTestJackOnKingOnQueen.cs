@@ -31,10 +31,10 @@ public class BotTestJackOnKingOnQueen : MonoBehaviour
         KarmaGameManager.Instance.BeginGame();
         Dictionary<int, int> gameRanksExpected = new()
         {
-            { 0, 0 },
             { 2, 0 },
-            { 3, 1 },
-            { 1, 2 }
+            { 0, 1 },
+            { 3, 2 },
+            { 1, 3 }
         };
 
         yield return new WaitForSeconds(1.5f);

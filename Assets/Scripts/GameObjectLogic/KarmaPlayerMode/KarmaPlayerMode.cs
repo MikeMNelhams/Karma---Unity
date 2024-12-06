@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using KarmaLogic.Board;
+using KarmaLogic.BasicBoard;
 using KarmaLogic.Cards;
 using KarmaLogic.Players;
+using KarmaPlayerMode.GameTeardown;
 using StateMachine.CharacterStateMachines;
-using UnityEngine;
-using KarmaLogic.BasicBoard;
-using KarmaLogic.Bots;
-using PlayTable;
 
 namespace KarmaPlayerMode
 {
@@ -26,7 +24,6 @@ namespace KarmaPlayerMode
         public BasicBoardParams BoardParams { get; protected set; }
         public int NumberOfActivePlayers { get; protected set; }
         public int NumberOfPlayersToMulligan { get; protected set; }
-
         public int NumberOfPlayersFinishedMulligan { get; protected set; }
 
         public Dictionary<int, int> VotesForWinners { get; protected set; }
@@ -34,9 +31,9 @@ namespace KarmaPlayerMode
         public Dictionary<int, int> GameRanks { get; protected set; }
         public HashSet<int> ValidPlayerIndicesForVoting { get; protected set; }
 
-        public bool IsGameOver { get; protected set; }
-        public bool IsGameWon { get; protected set; }
-        public bool IsGameOverDueToNoLegalActions { get; protected set; }
+        public bool IsGameOver { get; set; }
+        public bool IsGameWon { get; set; }
+        public bool IsGameOverDueToNoLegalActions { get; set; }
 
         public KarmaPlayerMode(BasicBoardParams basicBoardParams = null)
         {
@@ -217,9 +214,8 @@ namespace KarmaPlayerMode
 
             if (IsGameWonWithoutVoting)
             {
-                IsGameOver = true;
-                IsGameWon = true;
-                UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
+
+                FinishGame(new GameWonTeardown());
             }
 
             await CheckPotentialWinner(board);
@@ -238,9 +234,7 @@ namespace KarmaPlayerMode
         {
             if (board.TurnsPlayed >= TurnLimit)
             {
-                IsGameOver = true;
-                IsGameWon = false;
-                UnityEngine.Debug.LogWarning("Game has finished by turn limit exceeded. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
+                FinishGame(new GameTurnLimitExceededTeardown());
             }
         }
 
@@ -368,23 +362,27 @@ namespace KarmaPlayerMode
         public void EndGameEarlyDueToNoLegalActions()
         {
             UpdateGameRanks();
-            IsGameOver = true;
-            IsGameWon = false;
-            IsGameOverDueToNoLegalActions = true;
-            UnityEngine.Debug.LogWarning("Game has been ended early, as no legal actions can be made on the board.\nGame Ranks:\n" + 
-                string.Join(Environment.NewLine, GameRanks));
+            FinishGame(new GameEndedDueToNoLegalActionsTeardown());
         }
         
-        public void EndGame()
+        protected void FinishGame(IKarmaPlayerModeTeardown gameTeardown, bool destroyGame = false)
         {
-            UpdateGameRanks();
-            IsGameOver = true;
-            IsGameWon = false;
-            UnityEngine.Debug.LogWarning("Game has been exited. Game Ranks:\n" +
-                string.Join(Environment.NewLine, GameRanks));
+            gameTeardown.Apply(this);
+
+            if (!destroyGame)
+            {
+                return;
+            }
 
             DestroyBoardHolders();
             DestroyPlayers();
+        }
+
+        public void DestroyGame()
+        {
+            UpdateGameRanks();
+
+            FinishGame(new GameExitedEarlyTeardown(), true);
         }
 
         void DestroyBoardHolders()

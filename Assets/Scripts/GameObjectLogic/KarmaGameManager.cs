@@ -145,7 +145,7 @@ public class KarmaGameManager : MonoBehaviour
         }
         await PlayerHandlers[Board.CurrentPlayerIndex].DisconnectCamera();
 
-        SelectedKarmaPlayerMode.EndGame();
+        SelectedKarmaPlayerMode.DestroyGame();
 
         MenuUIManager.Instance.ReturnToStartPage();
     }
@@ -340,16 +340,16 @@ public class KarmaGameManager : MonoBehaviour
         }
     }
 
-    void MoveCardsFromSelectionToPlayPile(int playerIndex)
+    void MoveCardObjectsFromSelectionToPlayPile(int playerIndex)
     {
         List<SelectableCardObject> cardObjects = PlayerHandlers[playerIndex].PopSelectedCardsFromSelection();
-        _playTableProperties.MoveCardsToTopOfPlayPile(cardObjects);
+        PlayTableHandler.PlayPile.MoveCardsToTop(cardObjects);
     }
 
     void MoveCardsFromBurnPileBottomToPlayPile(int numberOfCards)
     {
         List<SelectableCardObject> cardObjects = PlayTableHandler.BurnPile.PopCardsFromBottom(numberOfCards);
-        PlayTableHandler.PlayPile.MoveCardsToTopOfPile(cardObjects);
+        PlayTableHandler.PlayPile.MoveCardsToTop(cardObjects);
     }
 
     void DrawCards(int numberOfCards, int playerIndex)
@@ -535,7 +535,7 @@ public class KarmaGameManager : MonoBehaviour
             AudioManager.Instance.PlayCardAddedToPileSFX();
 
             CardsList cardSelection = playerHandler.CardSelector.Selection;
-            MoveCardsFromSelectionToPlayPile(playerIndex);
+            MoveCardObjectsFromSelectionToPlayPile(playerIndex);
             
             PlayCardsComboAction.RegisterOnFinishListener(playerHandler.TryColorLegalCards);
             PlayCardsComboAction.RegisterOnFinishListener(Board.EndTurn);

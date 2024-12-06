@@ -7,6 +7,7 @@ using KarmaLogic.Bots;
 using StateMachine.CharacterStateMachines;
 using UnityEngine;
 using PlayTable;
+using KarmaPlayerMode.GameTeardown;
 
 namespace KarmaPlayerMode.Singleplayer
 {
@@ -89,9 +90,7 @@ namespace KarmaPlayerMode.Singleplayer
             {
                 DecideWinners();
 
-                IsGameOver = true;
-                IsGameWon = true;
-                UnityEngine.Debug.LogWarning("Game has finished. Game ranks: " + string.Join(Environment.NewLine, GameRanks));
+                FinishGame(new GameWonTeardown());
                 return;
             }
             await PlayerHandlers[votingPlayerIndex].ProcessStateCommand(Command.GameEnded);
