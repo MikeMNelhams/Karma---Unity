@@ -371,6 +371,7 @@ namespace KarmaPlayerMode
 
             if (!destroyGame)
             {
+                DisablePlayerActions();
                 return;
             }
 
@@ -383,6 +384,15 @@ namespace KarmaPlayerMode
             UpdateGameRanks();
 
             FinishGame(new GameExitedEarlyTeardown(), true);
+        }
+
+        public void DisablePlayerActions()
+        {
+            foreach (PlayerHandler handler in PlayerHandlers)
+            {
+                handler.HoverTipHandler.enabled = false;
+                handler.Canvas.enabled = false;
+            }
         }
 
         void DestroyBoardHolders()

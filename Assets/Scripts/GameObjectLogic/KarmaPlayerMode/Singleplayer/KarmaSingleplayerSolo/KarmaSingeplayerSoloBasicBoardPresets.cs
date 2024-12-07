@@ -194,7 +194,7 @@ namespace KarmaPlayerMode.Singleplayer
 
         public override BasicBoardParams BoardParams => BasicBoardTestFactory.BotTestJackOnKingOnQueen();
 
-        public override int TurnLimit => 4;
+        public override int TurnLimit => 3;
     }
 
     public class TestMultipleCardGiveaway : KarmaPlayModeBoardPreset<BasicBoard>

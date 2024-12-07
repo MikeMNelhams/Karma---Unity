@@ -1508,7 +1508,7 @@ MonoBehaviour:
       _turnsPlayed: 0
       _turnLimit: 100
     _useBasicBoardPreset: 1
-    _basicBoardPresetSelected: 22
+    _basicBoardPresetSelected: 23
 --- !u!1 &863761617 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 398531420255315226, guid: add7cfc6e668e6e4686f289a96af84d7, type: 3}
@@ -1571,7 +1571,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7e52d86ab0c79bf4eb0229dc6570abcd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 762f05fddfe56524780829cb944255a8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
