@@ -18,7 +18,7 @@ public class HoverToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerExit(PointerEventData eventData)
     {
         StopAllCoroutines();
-        if (HoverTipHandler != null)
+        if (HoverTipHandler != null && HoverTipHandler.enabled)
         {
             HoverTipHandler.OnMouseLoseFocus();
         }   
@@ -26,7 +26,7 @@ public class HoverToolTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     void ShowMessage()
     {
-        if (HoverTipHandler != null)
+        if (HoverTipHandler != null && HoverTipHandler.enabled)
         {
             HoverTipHandler.OnMouseHover(ToolTipText, Input.mousePosition);
         }
