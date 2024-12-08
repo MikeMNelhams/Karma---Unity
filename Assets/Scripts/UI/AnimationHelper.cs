@@ -94,7 +94,7 @@ namespace UserInterface.Animations
 
         public static IEnumerator SlideOut(RectTransform Transform, AnimationDirection direction, float Speed, UnityEvent OnEnd)
         {
-            Vector2 endPosition =  2 * direction switch
+            Vector2 endPosition = 2 * direction switch
             {
                 AnimationDirection.Up => new Vector2(0, Screen.height),
                 AnimationDirection.Right => new Vector2(Screen.width, 0),
@@ -102,7 +102,7 @@ namespace UserInterface.Animations
                 AnimationDirection.Left => new Vector2(-Screen.width, 0),
                 _ => new Vector2(0, Screen.height)
             };
-
+            UnityEngine.Debug.Log("exit direction: " + direction);
             float time = 0;
             while (time < 1)
             {

@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.TestTools;
 using NUnit.Framework;
-using UnityEngine.SceneManagement;
 
 public class BotTestReturningToMenuMidGameMultipleTimes : MonoBehaviour
 {
@@ -12,7 +11,6 @@ public class BotTestReturningToMenuMidGameMultipleTimes : MonoBehaviour
     public IEnumerator LoadKGM()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
-        SceneManager.LoadScene("Main Scene");
 
         yield return null;
     }
@@ -29,7 +27,7 @@ public class BotTestReturningToMenuMidGameMultipleTimes : MonoBehaviour
 
         KarmaGameManager.Instance.BeginGame();
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
 
         KarmaGameManager.Instance.EndCurrentGame();
 
@@ -49,7 +47,7 @@ public class BotTestReturningToMenuMidGameMultipleTimes : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/EmptyScene.unity");
         yield return null;
     }
 }

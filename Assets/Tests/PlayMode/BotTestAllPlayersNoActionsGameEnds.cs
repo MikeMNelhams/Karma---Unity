@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.TestTools;
 using NUnit.Framework;
-using UnityEngine.SceneManagement;
 
 public class BotTestAllPlayersNoActionsGameEnds : MonoBehaviour
 {
@@ -12,7 +11,6 @@ public class BotTestAllPlayersNoActionsGameEnds : MonoBehaviour
     public IEnumerator LoadKGM()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
-        SceneManager.LoadScene("Main Scene");
 
         yield return null;
     }
@@ -56,7 +54,7 @@ public class BotTestAllPlayersNoActionsGameEnds : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/EmptyScene.unity");
         yield return null;
     }
 }

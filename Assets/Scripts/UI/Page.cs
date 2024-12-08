@@ -1,11 +1,14 @@
 using UserInterface.Animations;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace UserInterface.Menu
 {
     [RequireComponent(typeof(CanvasGroup), typeof(RectTransform))]
     public class Page : MonoBehaviour
     {
+        [SerializeField] GraphicRaycaster _graphicRaycaster;
         [SerializeField] RectTransform _rectTransform;
         [SerializeField] CanvasGroup _canvasGroup;
 
@@ -13,7 +16,8 @@ namespace UserInterface.Menu
 
         [SerializeField] bool _blocksGameInput = false;
         [SerializeField] float _animationSpeed = 1f;
-        public bool ExitOnNewPagePush = false;
+        [SerializeField] bool _disableRaycastsOnPush = false;
+        [SerializeField] bool _visuallyExitsOnPush = false;
 
         [SerializeField] AnimationMode _entryMode = AnimationMode.Slide;
         [SerializeField] AnimationDirection _entryDirection = AnimationDirection.Left;
@@ -21,10 +25,11 @@ namespace UserInterface.Menu
         [SerializeField] AnimationMode _exitMode = AnimationMode.Slide;
         [SerializeField] AnimationDirection _exitDirection = AnimationDirection.Left;
 
-
         Coroutine _animationCoroutine;
 
         public bool BlocksGameInput { get => _blocksGameInput; }
+        public bool DisablesRaycastsOnPush { get => _disableRaycastsOnPush; }
+        public bool VisuallyExitsOnPush { get => _visuallyExitsOnPush; }
 
         public void Enter()
         {
@@ -40,10 +45,13 @@ namespace UserInterface.Menu
                     FadeIn();
                     break;
             }
+            _graphicRaycaster.enabled = true;
         }
 
         public void Exit()
         {
+            DisableGraphicsRaycaster();
+
             switch (_exitMode)
             {
                 case AnimationMode.Slide:
@@ -56,6 +64,11 @@ namespace UserInterface.Menu
                     FadeOut();
                     break;
             }
+        }
+
+        public void DisableGraphicsRaycaster()
+        {
+            _graphicRaycaster.enabled = false;
         }
 
         void SlideIn()
@@ -75,7 +88,10 @@ namespace UserInterface.Menu
                 StopCoroutine(_animationCoroutine);
             }
 
-            _animationCoroutine = StartCoroutine(AnimationHelper.SlideOut(_rectTransform, _exitDirection, _animationSpeed, null));
+            UnityEvent onEnd = new();
+            onEnd.AddListener(DisableSelf);
+
+            _animationCoroutine = StartCoroutine(AnimationHelper.SlideOut(_rectTransform, _exitDirection, _animationSpeed, onEnd));
         }
 
         void ZoomIn()
@@ -95,7 +111,10 @@ namespace UserInterface.Menu
                 StopCoroutine(_animationCoroutine);
             }
 
-            _animationCoroutine = StartCoroutine(AnimationHelper.ZoomIn(_rectTransform, _animationSpeed, null));
+            UnityEvent onEnd = new();
+            onEnd.AddListener(DisableSelf);
+
+            _animationCoroutine = StartCoroutine(AnimationHelper.ZoomOut(_rectTransform, _animationSpeed, onEnd));
         }
 
         void FadeIn()
@@ -115,7 +134,15 @@ namespace UserInterface.Menu
                 StopCoroutine(_animationCoroutine);
             }
 
-            _animationCoroutine = StartCoroutine(AnimationHelper.FadeIn(_canvasGroup, _animationSpeed, null));
+            UnityEvent onEnd = new ();
+            onEnd.AddListener(DisableSelf);
+
+            _animationCoroutine = StartCoroutine(AnimationHelper.FadeOut(_canvasGroup, _animationSpeed, onEnd));
+        }
+
+        void DisableSelf()
+        {
+            if (gameObject.activeSelf) { gameObject.SetActive(false); }
         }
     }
 }

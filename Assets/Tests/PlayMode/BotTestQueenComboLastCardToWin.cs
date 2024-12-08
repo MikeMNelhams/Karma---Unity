@@ -12,7 +12,6 @@ public class BotTestQueenComboLastCardToWin : MonoBehaviour
     public IEnumerator LoadKGM()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
-        SceneManager.LoadScene("Main Scene");
 
         yield return null;
     }
@@ -36,7 +35,7 @@ public class BotTestQueenComboLastCardToWin : MonoBehaviour
             { 0, 2 }
         };
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
 
         Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
         UnityEngine.Debug.Log("Game ranks: " + gameRanks);
@@ -55,7 +54,7 @@ public class BotTestQueenComboLastCardToWin : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/EmptyScene.unity");
         yield return null;
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.TestTools;
 using NUnit.Framework;
-using UnityEngine.SceneManagement;
 
 public class BotTestJokerAsAceLastCardToWin : MonoBehaviour
 {
@@ -12,7 +11,6 @@ public class BotTestJokerAsAceLastCardToWin : MonoBehaviour
     public IEnumerator LoadKGM()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
-        SceneManager.LoadScene("Main Scene");
 
         yield return null;
     }
@@ -36,7 +34,7 @@ public class BotTestJokerAsAceLastCardToWin : MonoBehaviour
             { 2, 2 }
         };
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1.5f);
 
         Dictionary<int, int> gameRanks = KarmaGameManager.Instance.SelectedKarmaPlayerMode.GameRanks;
         UnityEngine.Debug.Log("Game ranks: " + gameRanks);
@@ -55,7 +53,7 @@ public class BotTestJokerAsAceLastCardToWin : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/EmptyScene.unity");
         yield return null;
     }
 }

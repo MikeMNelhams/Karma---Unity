@@ -60,12 +60,13 @@ public class MenuUIManager : MonoBehaviour
 
         if (_pageStack.Count > 1)
         {
+            print("here");
             PopPage();
             return;
         }
         
         if (_pageStack.Count == 1 && _pageStack.Peek() == _startPage) { return; }
-        if (_pageStack.Count == 1 && _pageStack.Peek() == _settingsPage) { PopPage(); return; }
+        if (_pageStack.Count == 1 && _pageStack.Peek() == _settingsPage) { print("popping settings"); PopPage(); return; }
 
         PushPage(_settingsPage);
     }
@@ -91,9 +92,13 @@ public class MenuUIManager : MonoBehaviour
         {
             Page currentPage = _pageStack.Peek();
 
-            if (currentPage.ExitOnNewPagePush)
+            if (currentPage.VisuallyExitsOnPush)
             {
                 currentPage.Exit();
+            }
+            else if (currentPage.DisablesRaycastsOnPush)
+            {
+                currentPage.DisableGraphicsRaycaster();
             }
         }
 
@@ -119,9 +124,8 @@ public class MenuUIManager : MonoBehaviour
 
         Page newPage = _pageStack.Peek();
 
-        if (newPage.ExitOnNewPagePush)
+        if (newPage.VisuallyExitsOnPush)
         {
-
             if (!newPage.gameObject.activeSelf) { newPage.gameObject.SetActive(true); }
             newPage.Enter();
         }

@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.TestTools;
 using NUnit.Framework;
-using UnityEngine.SceneManagement;
 
 public class BotTestQueenComboLastCardWithJokerInPlay : MonoBehaviour
 {
@@ -12,7 +11,6 @@ public class BotTestQueenComboLastCardWithJokerInPlay : MonoBehaviour
     public IEnumerator LoadKGM()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
-        SceneManager.LoadScene("Main Scene");
 
         yield return null;
     }
