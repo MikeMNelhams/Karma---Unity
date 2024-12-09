@@ -9,7 +9,7 @@ public class BotJokerComboTest : MonoBehaviour
     [UnitySetUp]
     public IEnumerator LoadKGM()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/!/Scenes/Main Scene.unity");
         SceneManager.LoadScene("Main Scene");
 
         yield return null;
@@ -38,7 +38,7 @@ public class BotJokerComboTest : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/EmptyScene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/!/Scenes/EmptyScene.unity");
         yield return null;
     }
 }

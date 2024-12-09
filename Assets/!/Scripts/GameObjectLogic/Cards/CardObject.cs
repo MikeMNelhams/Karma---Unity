@@ -21,10 +21,10 @@ public class CardObject : SelectableCardObject, IEquatable<CardObject>
         CurrentCard = card;
         // "/Assets/Resources/Cards/Clubs/Jack.png"
         // Only on Windows: https://docs.unity3d.com/ScriptReference/Application-dataPath.html
-        string assetsPath = Application.dataPath;
+        string assetsPath = Application.streamingAssetsPath;
         string cardName = Enum.GetName(typeof(CardValue), card.Value);
         cardName = cardName[0].ToString().ToUpper() + cardName[1..].ToLower();
-        string resourcePath = assetsPath + "/Resources/Cards/" + card.Suit.Name + "/" + cardName + ".png";
+        string resourcePath = assetsPath + "/Cards/" + card.Suit.Name + "/" + cardName + ".png";
         if (File.Exists(resourcePath))
         {
             // Image file exists - load bytes into texture

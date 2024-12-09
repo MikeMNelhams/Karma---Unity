@@ -1,0 +1,308 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_GUID: f8c91a0cb07351c40aa38f3fd39299a5
+  m_SerializeEntries:
+  - m_GUID: 03e2048e70c101545ace284bfec62b16
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Jack.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 07a5b4ad37d78d344afe525315892e37
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Joker.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 09e63fbb397f66440a554b42625c24b8
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Nine.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0a62387bdf854c84fbeba680691de233
+    m_Address: Assets/StreamingAssets/Cards/Spades/Queen.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0f7952f0b7c5bb5429fddb2d79694160
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Seven.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 116ebd71f2c6a56429a00ec8e2b0781a
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Seven.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 12a219338e830cb42acd276c47a85686
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Nine.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1a2da9ed9e259c14b92f7c7c2e3d842b
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Six.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1a3b00a3b97d74b468d7743c727e81c2
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Ten.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ff3ddaec910db742bc1d91b832f3132
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Two.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 224e7479bd4a63d4f96f7da003612cf1
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Jack.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 249e9e90d1e468444ad1980c4432110e
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Two.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3367ce94943733d47ab1e49c016390a5
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Eight.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3fab99a4f94811249a95e20d915cfd1d
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Seven.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 41fc1ae6a51458a40a01579babf071cc
+    m_Address: Assets/StreamingAssets/Cards/Spades/King.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 54f1b107f60fbcb429872b86a79713a4
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Nine.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 561ff3c253bfcac4cab72fb0033c5255
+    m_Address: Assets/StreamingAssets/Cards/Spades/Nine.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 56687ddb98252964aaa8af14e0d2b8bd
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/King.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 59d8d524d6bab3646ace318d05ed7b34
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Ace.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a5ebf6fed1fc20429848e1f0e6b2543
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Jack.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f4fe5e8ee3ff7d46a20a534e7321e7f
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Three.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63e6e2cd447ea4b4d80de4c65fcc1065
+    m_Address: Assets/StreamingAssets/Cards/Spades/Three.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ed38297bc4fcb240b8322f969870466
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Five.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6efa4a6fa44e4224588a987e14fc0b21
+    m_Address: Assets/StreamingAssets/Cards/Clubs/King.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7243fb2e83e1d5644869aacfa1caed0a
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Eight.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b8b7617b6c1f794480aeb8e23e30cc6
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Three.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7db60ce9a3db1b74095a5ecadd9623aa
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Joker.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7f5bc1ef0dbaf75419b87a134301f2a2
+    m_Address: Assets/StreamingAssets/Text/CardToolTips.csv
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 823d0a296d9ce0d42901957f5f075c63
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Queen.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8242c856df579d349920cf1ba688ea7b
+    m_Address: Assets/StreamingAssets/Cards/Spades/Eight.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 83eafc75e34c8b2468603172d545a6f9
+    m_Address: Assets/StreamingAssets/Cards/Spades/Seven.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8431328455d84384dbeb01dc184e37fa
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Ace.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87e0e4229d5977d4dafaf502ab5da064
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Eight.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8de6d659bc6654d4bb8706a80ea8be4d
+    m_Address: Assets/StreamingAssets/Cards/Spades/Two.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9072a60c7fafda34c93fe04fa4d9d1ad
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Ten.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9534d9b2d9d9edb4eb4676a3c7c8f95d
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Five.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c50c2096666a8e4cab4f8dbfcf3fef2
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Six.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e6e70fc6ff5e064ca0ff2108d27794b
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Five.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9fd8a9e768baf854abf714aafc93a310
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Six.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3c4ef5b9d0fc624cbaa4ae46f026cfe
+    m_Address: Assets/StreamingAssets/Cards/Spades/Ten.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a41d00977ca2182408402ad8c5d35561
+    m_Address: Assets/StreamingAssets/Cards/Hearts/King.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a946d6cfc2515224c80c48527bd8d99a
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Four.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac380650ec11ae140a127da32ead2a8d
+    m_Address: Assets/StreamingAssets/Cards/Spades/Four.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b547e952eb3e8b34687e348be0ad2bf7
+    m_Address: Assets/StreamingAssets/Cards/Spades/Six.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c0ee82734ad20ae41babb0e22cf33381
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Ten.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c89d989a9a873494f9feaecb3c8ebe32
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Four.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cbddeaed79fa3e741af738000eca0252
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Three.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dbc9f7fa4ba121645a70fbf0b6f21c83
+    m_Address: Assets/StreamingAssets/Cards/Spades/Jack.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc4b4c83c770f0547aaa8f0766be1704
+    m_Address: Assets/StreamingAssets/Cards/Diamonds/Two.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: defd1ae0c9c585649ac88dea486ba52e
+    m_Address: Assets/StreamingAssets/Cards/Spades/Joker.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e32e16558319dc14d82be3d1ec551b33
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Queen.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ebae953419f5df34f8148f9223b0c9ff
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Ace.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec6d186a2eb2d0e46afb49ab479f908c
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Joker.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed338b2a300f3724e8dd23b979455075
+    m_Address: Assets/StreamingAssets/Cards/Spades/Ace.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efba124d553888a40bb4131031bb000e
+    m_Address: Assets/StreamingAssets/Cards/Hearts/Four.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb153b1e0e4787a4a91c0ec03424a6aa
+    m_Address: Assets/StreamingAssets/Cards/Clubs/Queen.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc8194b1085fb8246a8dd7e8b06e142f
+    m_Address: Assets/StreamingAssets/Cards/Spades/Five.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 4979e84d66f08ed4a865e20a28132826, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: cc2064962d81a65409a58b25713be453, type: 2}
+    - {fileID: 11400000, guid: b60278cf4d57df441bc2ebbdf2f98ad6, type: 2}

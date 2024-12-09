@@ -2,6 +2,7 @@ using UnityEngine;
 using CardToolTips;
 using KarmaLogic.Cards;
 using System.Collections.Generic;
+using System.IO;
 
 public class CardTipTextManager : MonoBehaviour
 {
@@ -24,9 +25,9 @@ public class CardTipTextManager : MonoBehaviour
 
     void Start()
     {
-        TextAsset cardToolTips = Resources.Load<TextAsset>("Text/CardToolTips");
+        string cardToolTipsAll = File.ReadAllText(Application.streamingAssetsPath + "/Text/CardToolTips.csv");
 
-        string[] lines = cardToolTips.text.Split('\n');
+        string[] lines = cardToolTipsAll.Split('\n');
 
         List<CardToolTipText> tipTexts = new ();
 

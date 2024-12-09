@@ -163,7 +163,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Standalone: com.DefaultCompany.Karma
+    Standalone: com.AyyyThatGuys.Karma
   buildNumber:
     Bratwurst: 0
     Standalone: 0

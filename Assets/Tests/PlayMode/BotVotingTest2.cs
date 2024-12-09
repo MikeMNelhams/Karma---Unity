@@ -11,7 +11,7 @@ public class BotVotingTest2 : MonoBehaviour
     [UnitySetUp]
     public IEnumerator LoadKGM()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/!/Scenes/Main Scene.unity");
 
         yield return null;
     }
@@ -53,7 +53,7 @@ public class BotVotingTest2 : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/EmptyScene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/!/Scenes/EmptyScene.unity");
         yield return null;
     }
 }

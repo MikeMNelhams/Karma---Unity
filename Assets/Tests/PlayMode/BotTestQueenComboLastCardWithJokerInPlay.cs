@@ -10,7 +10,7 @@ public class BotTestQueenComboLastCardWithJokerInPlay : MonoBehaviour
     [UnitySetUp]
     public IEnumerator LoadKGM()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/!/Scenes/Main Scene.unity");
 
         yield return null;
     }
@@ -53,7 +53,7 @@ public class BotTestQueenComboLastCardWithJokerInPlay : MonoBehaviour
     [UnityTearDown]
     public IEnumerator FinishTearDown()
     {
-        UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("Assets/Scenes/Main Scene.unity");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Assets/!/Scenes/EmptyScene.unity");
         yield return null;
     }
 }
