@@ -11,7 +11,7 @@ The software will be released on Steam for you to play FREE. Release Date TBD. C
 
 Here is my complete single-player-only CLI version implemented in Python: [Link](https://github.com/MikeMNelhams/Karma)
 
-If you find any bugs with whichever version you are playing, feel free to document the bug, and I will fix it: [https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAASNh03RUNTI4MjdMNVNDMUI0WEU0TktHMkpCWTROVS4u](https://forms.office.com/r/W3eE05EGAr).
+If you find any bugs with whichever version you are playing, feel free to document the bug, and I will fix it: [Bug Report Form](https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAASNh03RUNTI4MjdMNVNDMUI0WEU0TktHMkpCWTROVS4u).
 
 -----------
 
