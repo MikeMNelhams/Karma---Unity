@@ -47,6 +47,7 @@ public class MenuUIManager : MonoBehaviour
 
         if (_startPage != null)
         {
+            _startPage.enabled = true;
             PushPage(_startPage);
         }
     }

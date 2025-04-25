@@ -22,7 +22,6 @@ namespace KarmaPlayerMode
 
             if (_useBasicBoardPreset)
             {
-                UnityEngine.Debug.Log("Board Preset index: " + _basicBoardPresetSelected);
                 return (_mode, _subMode) switch
                 {
                     (PlayerMode.Singleplayer, (int)SinglePlayerMode.Solo) => new KarmaSingleplayerSolo(_basicBoardPresetSelected),

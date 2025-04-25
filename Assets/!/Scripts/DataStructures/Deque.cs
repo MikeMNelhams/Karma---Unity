@@ -17,6 +17,11 @@ namespace DataStructures
             _items = new LinkedList<T>(items);
         }
 
+        public Deque()
+        {
+            _items = new LinkedList<T>();
+        }
+
         public void AddLeft(T item)
         {
             _items.AddFirst(item);
