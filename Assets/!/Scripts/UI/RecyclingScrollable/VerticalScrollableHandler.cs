@@ -26,6 +26,8 @@ namespace CustomUI.RecyclingScrollable
         
         public int DisplayCount { get { return HighIndex - LowIndex; } }
 
+        public float Height { get => _rectTransform.rect.height; }
+
         public void InstantiateDirtyViewHolders(GameObject scrollElementPrefab, RecyclingScrollableAdapter scrollableAdapter, int scrapCountPerSide = 2)
         {
             RectTransform elementPrefabRectTransform = scrollElementPrefab.GetComponent<RectTransform>();
@@ -47,8 +49,7 @@ namespace CustomUI.RecyclingScrollable
 
         public int ActiveDisplayCount(float elementHeight, int numberOfElements)
         {
-            int count = Mathf.Min(Mathf.CeilToInt(_rectTransform.rect.height / elementHeight), numberOfElements);
-            return count;
+            return Mathf.Min(Mathf.CeilToInt(_rectTransform.rect.height / elementHeight) + 1, numberOfElements);
         }
 
         public ViewHolder GetDirtyViewHolder()

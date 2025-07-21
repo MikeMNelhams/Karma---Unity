@@ -11,6 +11,7 @@ namespace CustomUI.Scrollbar
         [SerializeField] RectTransform _rectTransform;
         [SerializeField] RectTransform _scrollbarBackground;
 
+        float _scrollbarBackgroundHeight;
         float _scrollbarHeight;
 
         float _minimumHeight;
@@ -21,24 +22,18 @@ namespace CustomUI.Scrollbar
 
         public void SetScrollbarHeight(int numberOfViewHolders, float elementHeight, int activeDisplayCount)
         {
-            _scrollbarHeight = _scrollbarBackground.rect.height;
-
-            int displayMaxCount = Mathf.Min(numberOfViewHolders, activeDisplayCount);
-
-            float fraction = Mathf.Min(((_scrollbarHeight) / (displayMaxCount * elementHeight)), 1);
-
-            _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, fraction * _scrollbarHeight);
-
-            float halfScrollbarHeight = _scrollbarHeight / 2.0f;
-            float halfScrollSelectHeight = _rectTransform.rect.height / 2.0f;
-
-            _maximumHeight = halfScrollbarHeight - halfScrollSelectHeight;
-            _minimumHeight = -halfScrollbarHeight + halfScrollSelectHeight;
-
-            if (fraction == 1)
+            if (numberOfViewHolders == 0)
             {
-                _rectTransform.localPosition = new Vector3(_rectTransform.localPosition.x, _maximumHeight);
+                throw new DivideByZeroException("The number of elements in the vertical scrollable must not be zero!");
             }
+
+            _scrollbarBackgroundHeight = _scrollbarBackground.rect.height;
+
+            ScaleScrollbarHeight(numberOfViewHolders, elementHeight, activeDisplayCount);
+
+            _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _scrollbarHeight);
+            SetScrollbarHeighLimits();
+            _rectTransform.localPosition = new Vector3(_rectTransform.localPosition.x, _maximumHeight);
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -46,7 +41,7 @@ namespace CustomUI.Scrollbar
             if (!eventData.dragging) { return; }
 
             float yFactor = 1.0f / _parentCanvas.scaleFactor;
-            float halfScrollbarHeight = _scrollbarHeight / 2.0f;
+            float halfScrollbarHeight = _scrollbarBackgroundHeight / 2.0f;
 
             float yNew = Mathf.Clamp(_rectTransform.anchoredPosition.y + eventData.delta.y * yFactor, _minimumHeight, _maximumHeight);
             _rectTransform.anchoredPosition = new Vector2(0, yNew);
@@ -70,14 +65,34 @@ namespace CustomUI.Scrollbar
         public float HeightFraction
         {
             get
-            {
-                if (_maximumHeight == _minimumHeight) { return 1.0f; }
+            {   
+                if (_scrollbarHeight == _scrollbarBackgroundHeight) { return 1.0f; }
 
                 float numerator = (_maximumHeight - _rectTransform.localPosition.y);
                 float denominator = (_maximumHeight - _minimumHeight);
-
                 return numerator / denominator;
             } 
+        }
+
+        void SetScrollbarHeighLimits()
+        {
+            float halfScrollbarBackgroundHeight = _scrollbarBackgroundHeight / 2.0f;
+            float halfScrollSelectHeight = _scrollbarHeight / 2.0f;
+
+            _maximumHeight = halfScrollbarBackgroundHeight - halfScrollSelectHeight;
+            _minimumHeight = -halfScrollbarBackgroundHeight + halfScrollSelectHeight;
+        }
+
+        void ScaleScrollbarHeight(int numberOfViewHolders, float elementHeight, int activeDisplayCount)
+        {
+            if (activeDisplayCount >= numberOfViewHolders)
+            {
+                _scrollbarHeight = _scrollbarBackgroundHeight;
+            }
+            else
+            {
+                _scrollbarHeight = (_scrollbarBackgroundHeight * _scrollbarBackgroundHeight) / (numberOfViewHolders * elementHeight + _scrollbarBackgroundHeight);
+            }
         }
     }
 }

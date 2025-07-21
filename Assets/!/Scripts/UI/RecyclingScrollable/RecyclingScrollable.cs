@@ -48,13 +48,12 @@ namespace CustomUI.RecyclingScrollable
 
             int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
 
-            int lowIndexPossiblyOverflow = Mathf.FloorToInt(heightFraction * (float)_adapter.ItemCount);
-            int maximumLowIndex = _adapter.ItemCount - activeDisplayCount;
+            if (activeDisplayCount == _adapter.ItemCount) { throw new System.Exception("Not implemented yet for trivial case"); }
 
-            _lowIndex = Mathf.Max(Mathf.Min(lowIndexPossiblyOverflow, maximumLowIndex) - 1, 0);
-            _highIndex = _lowIndex + activeDisplayCount;
+            _lowIndex = Mathf.Max(Mathf.FloorToInt(heightFraction * (_adapter.ItemCount - activeDisplayCount + 1)), 0);
+            _highIndex = _lowIndex + activeDisplayCount - 1;
 
-            for (int i = _lowIndex; i < _highIndex; i++)
+            for (int i = _lowIndex; i <= _highIndex; i++)
             {
                 ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
                 _adapter.OnBindViewHolder(viewHolder, i);
@@ -69,53 +68,34 @@ namespace CustomUI.RecyclingScrollable
 
         void UpdateViewHolders()
         {
-            // Instead this should be:
-            //      If low = previous_low then update all the Ypositions of the activeViewHolders NO REBINDS
-            //      If low = previous_low + 1 then scrap the lowest index (top) viewHolder. GetDirtyViewHolder() and bind it to highIndex. then update all the Ypositions of the activeViewHolders
-            //      If low = previous_low - 1 then scrap the highest index (bottom) viewHolder. GetDirtyViewHolder() and bind it to lowIndex. then update all the Ypositions of the activeViewHolders
+            //   If low = previous_low then update all the Ypositions of the activeViewHolders NO REBINDS
+            //   If low = previous_low + 1 then scrap the lowest index (top) viewHolder. GetDirtyViewHolder() and bind it to highIndex. then update the Ypositions of activeViewHolders
+            //   If low = previous_low - 1 then scrap the highest index (bottom) viewHolder. GetDirtyViewHolder() and bind it to lowIndex. then update the Ypositions of activeViewHolders
+
+            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
+            if (_adapter.ItemCount <= activeDisplayCount) { return; }
 
             float heightFraction = _scrollbarSelect.HeightFraction;
 
-            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
-            int lowIndexPossiblyOverflow = Mathf.FloorToInt(heightFraction * (float)_adapter.ItemCount);
-
-            int maximumLowIndex = _adapter.ItemCount - activeDisplayCount;
-            _lowIndex = Mathf.Max(Mathf.Min(lowIndexPossiblyOverflow, maximumLowIndex) - 1, 0);
-            _highIndex = _lowIndex + activeDisplayCount;
+            _lowIndex = Mathf.Max(Mathf.FloorToInt(heightFraction * (_adapter.ItemCount - activeDisplayCount + 1)), 0);
+            _highIndex = HighIndex(activeDisplayCount);
 
             if (_lowIndex == _previousLowIndex)
             {
                 UpdateViewHolderActivePositions();
                 return;
             }
+
             if (_lowIndex > _previousLowIndex)
             {
-                for (int i = 0; i < _lowIndex - _previousLowIndex; i++)
-                {
-                    _previousLowIndex++;
-                    _scrollableHandler.ScrapTopActiveViewHolder();
-
-                    ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
-                    _adapter.OnBindViewHolder(viewHolder, _highIndex - i);
-                    _scrollableHandler.ActiveViewHolders.AddRight(viewHolder);
-                }
-
+                ScrollDownScrapTop();
                 UpdateViewHolderActivePositions();
                 return;
             }
 
             if (_lowIndex < _previousLowIndex)
             {
-                for (int i = 0; i < _previousLowIndex - _lowIndex; i++)
-                {
-                    _previousLowIndex--;
-                    _scrollableHandler.ScrapBottomActiveViewHolder();
-
-                    ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
-                    _adapter.OnBindViewHolder(viewHolder, _lowIndex + i);
-                    _scrollableHandler.ActiveViewHolders.AddLeft(viewHolder);
-                }
-
+                ScrollUpScrapBottom();
                 UpdateViewHolderActivePositions();
                 return;
             }
@@ -123,20 +103,48 @@ namespace CustomUI.RecyclingScrollable
             throw new System.Exception("UpdateViewHolder positions error.");
         }
 
-        void UpdateViewHolderActivePositions(float topPadding = 5.0f)
+        int HighIndex(int activeDisplayCount)
         {
-            float heightFraction = _scrollbarSelect.HeightFraction;
+            return Mathf.Min(_lowIndex + activeDisplayCount - 1, _adapter.ItemCount - 1);
+        }
 
-            int activeViewHoldersCount = _scrollableHandler.ActiveViewHolders.Count;
-            int unshownViewHoldersCount = _adapter.ItemCount - activeViewHoldersCount;
+        void UpdateViewHolderActivePositions(float topPadding = 5.0f)
+        { 
+            float fraction = _scrollbarSelect.HeightFraction;
 
-            float windowStartFraction = heightFraction * (unshownViewHoldersCount);
-
-            for (int i = 0; i < activeViewHoldersCount; i++)
+            int activeIndex = 0;
+            for (int i = _lowIndex; i <= _highIndex; i++) 
             {
-                ViewHolder viewHolder = _scrollableHandler.ActiveViewHolders[i];
-                float y = -1 * ((_lowIndex + i - 1.5f) - windowStartFraction) * _elementHeight - topPadding;
-                viewHolder.SetYPosition(y);
+                ViewHolder viewHolder = _scrollableHandler.ActiveViewHolders[activeIndex];
+                float windowOffset = fraction * (_adapter.ItemCount * _elementHeight - _scrollableHandler.Height);
+                viewHolder.SetYPosition(windowOffset + 0.5f * _scrollableHandler.Height - _elementHeight * (i + 0.5f));
+                activeIndex++;
+            }
+        }
+
+        void ScrollDownScrapTop()
+        {
+            for (int i = 0; i < _lowIndex - _previousLowIndex; i++)
+            {
+                _previousLowIndex++;
+                _scrollableHandler.ScrapTopActiveViewHolder();
+
+                ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
+                _adapter.OnBindViewHolder(viewHolder, _highIndex - i);
+                _scrollableHandler.ActiveViewHolders.AddRight(viewHolder);
+            }
+        }
+
+        void ScrollUpScrapBottom()
+        {
+            for (int i = 0; i < _previousLowIndex - _lowIndex; i++)
+            {
+                _previousLowIndex--;
+                _scrollableHandler.ScrapBottomActiveViewHolder();
+
+                ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
+                _adapter.OnBindViewHolder(viewHolder, _lowIndex + i);
+                _scrollableHandler.ActiveViewHolders.AddLeft(viewHolder);
             }
         }
     }
