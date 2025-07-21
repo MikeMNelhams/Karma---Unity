@@ -4,13 +4,7 @@ namespace CustomUI.RecyclingScrollable
 {
     public class MultiplayerLobbyPlayersScrollableAdapter : RecyclingScrollableAdapter
     {
-        int _playersInLobbyCount = 20;
-
-        private void Awake()
-        {
-            
-        }
-
+        int _playersInLobbyCount = 100;
 
         public override int ItemCount => _playersInLobbyCount;
 

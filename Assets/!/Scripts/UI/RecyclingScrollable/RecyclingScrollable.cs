@@ -35,23 +35,26 @@ namespace CustomUI.RecyclingScrollable
 
         void Start()
         {
-            _scrollbarSelect.SetScrollbarHeight(_adapter.ItemCount, _elementHeight, _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount));
-
+            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
+            _scrollbarSelect.SetScrollbarHeight(_adapter.ItemCount, _elementHeight, activeDisplayCount);
             InitializeViewHolders();
-
             _scrollbarSelect.RegisterOnDragListener(UpdateViewHolders);
         }
 
         void InitializeViewHolders()
         {
-            float heightFraction = _scrollbarSelect.HeightFraction;
-
             int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
 
-            if (activeDisplayCount == _adapter.ItemCount) { throw new System.Exception("Not implemented yet for trivial case"); }
-
-            _lowIndex = Mathf.Max(Mathf.FloorToInt(heightFraction * (_adapter.ItemCount - activeDisplayCount + 1)), 0);
-            _highIndex = _lowIndex + activeDisplayCount - 1;
+            if (activeDisplayCount == _adapter.ItemCount) 
+            {
+                _lowIndex = 0;
+                _highIndex = _adapter.ItemCount - 1; 
+            }
+            else
+            {
+                _lowIndex = LowIndex(activeDisplayCount, _scrollbarSelect.HeightFraction);
+                _highIndex = _lowIndex + activeDisplayCount - 1;
+            }
 
             for (int i = _lowIndex; i <= _highIndex; i++)
             {
@@ -76,8 +79,7 @@ namespace CustomUI.RecyclingScrollable
             if (_adapter.ItemCount <= activeDisplayCount) { return; }
 
             float heightFraction = _scrollbarSelect.HeightFraction;
-
-            _lowIndex = Mathf.Max(Mathf.FloorToInt(heightFraction * (_adapter.ItemCount - activeDisplayCount + 1)), 0);
+            _lowIndex = LowIndex(activeDisplayCount, heightFraction);
             _highIndex = HighIndex(activeDisplayCount);
 
             if (_lowIndex == _previousLowIndex)
@@ -88,14 +90,14 @@ namespace CustomUI.RecyclingScrollable
 
             if (_lowIndex > _previousLowIndex)
             {
-                ScrollDownScrapTop();
+                ScrollDownScrapFirstmost();
                 UpdateViewHolderActivePositions();
                 return;
             }
 
             if (_lowIndex < _previousLowIndex)
             {
-                ScrollUpScrapBottom();
+                ScrollUpScrapLastmost();
                 UpdateViewHolderActivePositions();
                 return;
             }
@@ -103,26 +105,29 @@ namespace CustomUI.RecyclingScrollable
             throw new System.Exception("UpdateViewHolder positions error.");
         }
 
+        int LowIndex(int activeDisplayCount, float heightFraction)
+        {
+            return Mathf.Max(Mathf.FloorToInt(heightFraction * (_adapter.ItemCount - activeDisplayCount + 1)), 0);
+        }
+
         int HighIndex(int activeDisplayCount)
         {
             return Mathf.Min(_lowIndex + activeDisplayCount - 1, _adapter.ItemCount - 1);
         }
 
-        void UpdateViewHolderActivePositions(float topPadding = 5.0f)
+        void UpdateViewHolderActivePositions()
         { 
-            float fraction = _scrollbarSelect.HeightFraction;
-
             int activeIndex = 0;
             for (int i = _lowIndex; i <= _highIndex; i++) 
             {
                 ViewHolder viewHolder = _scrollableHandler.ActiveViewHolders[activeIndex];
-                float windowOffset = fraction * (_adapter.ItemCount * _elementHeight - _scrollableHandler.Height);
+                float windowOffset = _scrollbarSelect.HeightFraction * (_adapter.ItemCount * _elementHeight - _scrollableHandler.Height);
                 viewHolder.SetYPosition(windowOffset + 0.5f * _scrollableHandler.Height - _elementHeight * (i + 0.5f));
                 activeIndex++;
             }
         }
 
-        void ScrollDownScrapTop()
+        void ScrollDownScrapFirstmost()
         {
             for (int i = 0; i < _lowIndex - _previousLowIndex; i++)
             {
@@ -135,7 +140,7 @@ namespace CustomUI.RecyclingScrollable
             }
         }
 
-        void ScrollUpScrapBottom()
+        void ScrollUpScrapLastmost()
         {
             for (int i = 0; i < _previousLowIndex - _lowIndex; i++)
             {
