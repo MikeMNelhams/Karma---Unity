@@ -19,11 +19,11 @@ Previews for Alpha ![version](https://img.shields.io/badge/Version-1.0.4-blue.sv
 
 <sup><sub>_Game Logic is fully functional, but the art is temporary_<sub><sup>
 
-![Preview1](https://imgur.com/MXgG6qJ)
+![Preview1](https://imgur.com/MXgG6qJ.jpg)
 
-![Preview2](https://imgur.com/zrxlew8)
+![Preview2](https://imgur.com/zrxlew8.jpg)
 
-![Preview3](https://imgur.com/WVa3g4I)
+![Preview3](https://imgur.com/WVa3g4I.jpg)
 
 ## Game Rules + Card Effects
 
