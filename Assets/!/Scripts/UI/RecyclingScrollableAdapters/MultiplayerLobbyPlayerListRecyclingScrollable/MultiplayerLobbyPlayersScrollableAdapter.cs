@@ -4,7 +4,7 @@ namespace CustomUI.RecyclingScrollable
 {
     public class MultiplayerLobbyPlayersScrollableAdapter : RecyclingScrollableAdapter
     {
-        int _playersInLobbyCount = 100;
+        int _playersInLobbyCount = 4;
 
         public override int ItemCount => _playersInLobbyCount;
 
@@ -13,7 +13,7 @@ namespace CustomUI.RecyclingScrollable
         public override void OnBindViewHolder(ViewHolder holder, int position)
         {
             holder.SetActive(true);
-            holder.SetText("Player " + position);
+            holder.SetText("Waiting for player...");
         }
 
         public override ViewHolder OnCreateViewHolder(RectTransform parentRectTransform, GameObject viewHolderPrefab)

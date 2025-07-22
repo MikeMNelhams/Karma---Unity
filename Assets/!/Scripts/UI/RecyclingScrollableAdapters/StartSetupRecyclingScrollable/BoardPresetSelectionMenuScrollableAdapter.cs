@@ -66,7 +66,6 @@ namespace CustomUI.RecyclingScrollable
         public override void OnBindViewHolder(ViewHolder holder, int position)
         {
             holder.SetActive(true);
-            UnityEngine.Debug.Log("Binding data to holder for position " + position + ". Text setting to: " + _presetData[position]);
             holder.RegisterOnClickListener(() => OnViewHolderClick(position));
             holder.SetText(_presetData[position].TitleText);
         }

@@ -32,7 +32,7 @@ namespace CustomUI.Scrollbar
             ScaleScrollbarHeight(numberOfViewHolders, elementHeight, activeDisplayCount);
 
             _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _scrollbarHeight);
-            SetScrollbarHeighLimits();
+            SetScrollbarHeightLimits();
             _rectTransform.localPosition = new Vector3(_rectTransform.localPosition.x, _maximumHeight);
         }
 
@@ -74,7 +74,7 @@ namespace CustomUI.Scrollbar
             } 
         }
 
-        void SetScrollbarHeighLimits()
+        void SetScrollbarHeightLimits()
         {
             float halfScrollbarBackgroundHeight = _scrollbarBackgroundHeight / 2.0f;
             float halfScrollSelectHeight = _scrollbarHeight / 2.0f;
