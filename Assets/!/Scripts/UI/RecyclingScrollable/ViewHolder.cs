@@ -2,19 +2,15 @@ using UnityEngine;
 
 namespace CustomUI.RecyclingScrollable
 {
-    [System.Serializable]
-    public class ViewHolder
+    public abstract class ViewHolder
     {
         [SerializeField] ScrollElement _scrollElement;
+
+        protected ScrollElement ScrollElement { get; }
 
         public ViewHolder(ScrollElement element)
         {
             _scrollElement = element;
-        }
-
-        public void SetText(string text)
-        {
-            _scrollElement.SetText(text);
         }
 
         public void SetActive(bool isActive)
@@ -30,11 +26,6 @@ namespace CustomUI.RecyclingScrollable
         public void SetYPosition(float yPosition)
         {
             _scrollElement.SetLocalYPosition(yPosition);
-        }
-
-        public void RegisterOnClickListener(ScrollElement.OnClickListener listener)
-        {
-            _scrollElement.RegisterOnClickListener(listener);
         }
     }
 }

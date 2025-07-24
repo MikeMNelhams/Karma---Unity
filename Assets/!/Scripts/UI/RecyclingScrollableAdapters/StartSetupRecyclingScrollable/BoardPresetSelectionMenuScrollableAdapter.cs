@@ -3,7 +3,7 @@ using System;
 using KarmaPlayerMode;
 using System.Collections.Generic;
 
-namespace CustomUI.RecyclingScrollable
+namespace CustomUI.RecyclingScrollable.SingleplayerSetup
 {
     public class BoardPresetSelectionMenuScrollableAdapter : RecyclingScrollableAdapter
     {
@@ -18,8 +18,7 @@ namespace CustomUI.RecyclingScrollable
             _playerModeSettingMap = new()
         {
             {0, SelectSingleplayerSolo},
-            {1, SelectSingleplayerCo_op},
-            {2, SelectMultiplayer},
+            {1, SelectSingleplayerCo_op}
         };
         }
 
@@ -34,12 +33,6 @@ namespace CustomUI.RecyclingScrollable
         {
             KarmaGameManager.Instance.SetPlayerMode(PlayerMode.Singleplayer);
             KarmaGameManager.Instance.SetPlayerSubMode((int)SinglePlayerMode.Many);
-            KarmaGameManager.Instance.SetSelectedBoardPreset(0);
-        }
-
-        void SelectMultiplayer()
-        {
-            KarmaGameManager.Instance.SetPlayerMode(PlayerMode.Multiplayer);
             KarmaGameManager.Instance.SetSelectedBoardPreset(0);
         }
 
@@ -65,9 +58,10 @@ namespace CustomUI.RecyclingScrollable
 
         public override void OnBindViewHolder(ViewHolder holder, int position)
         {
-            holder.SetActive(true);
-            holder.RegisterOnClickListener(() => OnViewHolderClick(position));
-            holder.SetText(_presetData[position].TitleText);
+            ViewHolderSingleplayerSetup viewHolderSingleplayerSetup = (ViewHolderSingleplayerSetup)holder;
+            viewHolderSingleplayerSetup.SetActive(true);
+            viewHolderSingleplayerSetup.RegisterOnClickListener(() => OnViewHolderClick(position));
+            viewHolderSingleplayerSetup.SetText(_presetData[position].TitleText);
         }
 
         public override ViewHolder OnCreateViewHolder(RectTransform parentRectTransform, GameObject viewHolderPrefab)
@@ -76,13 +70,13 @@ namespace CustomUI.RecyclingScrollable
 
             GameObject viewHolderGameObject = GameObject.Instantiate(viewHolderPrefab, parentRectTransform.gameObject.transform);
 
-            if (!viewHolderGameObject.TryGetComponent<ScrollElement>(out var scrollElement)) { throw new MissingComponentException(); }
+            if (!viewHolderGameObject.TryGetComponent<SingleplayerSetupScrollElement>(out var scrollElement)) { throw new MissingComponentException(); }
             viewHolderGameObject.SetActive(false);
 
             scrollElement.SetWidth(parentRectTransform.rect.width);
             scrollElement.SetLocalXPosition(0);
 
-            return new ViewHolder(scrollElement);
+            return new ViewHolderSingleplayerSetup(scrollElement);
         }
     }
 }

@@ -1,62 +1,38 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CustomUI.RecyclingScrollable
 {
-    [System.Serializable]
-    [RequireComponent(typeof(RectTransform), typeof(Image))]
-    public class ScrollElement : MonoBehaviour
+    public abstract class ScrollElement : MonoBehaviour
     {
-        [SerializeField] RectTransform _rectTransform;
-        [SerializeField] Image _image;
-        [SerializeField] Button _button;
-        [SerializeField] TextMeshProUGUI _textMeshProUGUI;
-
         public delegate void OnClickListener();
+        public float Height { get => RectTransform.rect.height; }
+        public float Width { get => RectTransform.rect.width; }
+        protected abstract RectTransform RectTransform { get; }
 
-        public float Height { get => _rectTransform.rect.height; }
-        public float Width { get => _rectTransform.rect.width; }
-
-        public void SetImageSprite(Sprite sprite)
-        {
-            _image.sprite = sprite;
-        }
-
-        public void SetSize(float width, float height)
+        public virtual void SetSize(float width, float height)
         {
             SetWidth(width);
-            _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         }
 
-        public void SetWidth(float width)
+        public virtual void SetWidth(float width)
         {
-            _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
         }
 
-        public void SetLocalXPosition(float x)
+        public virtual void SetLocalXPosition(float x)
         {
-            _rectTransform.localPosition = new Vector3(x, _rectTransform.localPosition.y);
+            RectTransform.localPosition = new Vector3(x, RectTransform.localPosition.y);
         }
 
-        public void SetLocalYPosition(float y)
+        public virtual void SetLocalYPosition(float y)
         {
-            _rectTransform.localPosition = new Vector3(_rectTransform.localPosition.x, y);
-        }
-
-        public void SetText(string text)
-        {
-            _textMeshProUGUI.text = text;
+            RectTransform.localPosition = new Vector3(RectTransform.localPosition.x, y);
         }
 
         public void SetActive(bool isActive)
         {
             gameObject.SetActive(isActive);
-        }
-
-        public void RegisterOnClickListener(OnClickListener listener)
-        {
-            _button.onClick.AddListener(() => listener());
         }
     }
 }

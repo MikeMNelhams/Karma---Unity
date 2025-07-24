@@ -39,6 +39,7 @@ namespace CustomUI.Scrollbar
         public void OnDrag(PointerEventData eventData)
         {
             if (!eventData.dragging) { return; }
+            if (_minimumHeight == _maximumHeight) { return; }
 
             float yFactor = 1.0f / _parentCanvas.scaleFactor;
             float halfScrollbarHeight = _scrollbarBackgroundHeight / 2.0f;
