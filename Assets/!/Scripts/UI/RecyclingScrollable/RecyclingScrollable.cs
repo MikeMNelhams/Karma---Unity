@@ -1,6 +1,5 @@
 using CustomUI.Scrollbar;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CustomUI.RecyclingScrollable
 {
@@ -8,32 +7,31 @@ namespace CustomUI.RecyclingScrollable
     {
         [SerializeField] GameObject _scrollElementPrefab;
 
+        [SerializeField] RecyclingScrollableAdapter _adapter;
         [SerializeField] VerticalScrollbarSelect _scrollbarSelect;
+        [SerializeField] VerticalScrollHandler _scrollHandler;
 
         int _previousLowIndex = -1;
         int _lowIndex = -1;
         int _highIndex = -1;
         float _elementHeight;
 
-        [SerializeField] RecyclingScrollableAdapter _adapter;
-        [SerializeField] VerticalScrollableHandler _scrollableHandler;
-
         void Awake()
         {
             RectTransform elementPrefabRectTransform = _scrollElementPrefab.GetComponent<RectTransform>();
             _elementHeight = elementPrefabRectTransform.rect.height;
 
-            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
+            int activeDisplayCount = _scrollHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
 
             _lowIndex = 0;
             _highIndex = _lowIndex + activeDisplayCount;
 
-            _scrollableHandler.InstantiateDirtyViewHolders(_scrollElementPrefab, _adapter);
+            _scrollHandler.InstantiateDirtyViewHolders(_scrollElementPrefab, _adapter);
         }
 
         void Start()
         {
-            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
+            int activeDisplayCount = _scrollHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
             _scrollbarSelect.SetScrollbarHeight(_adapter.ItemCount, _elementHeight, activeDisplayCount);
             InitializeViewHolders();
             _scrollbarSelect.RegisterOnDragListener(UpdateViewHolders);
@@ -41,7 +39,7 @@ namespace CustomUI.RecyclingScrollable
 
         void InitializeViewHolders()
         {
-            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
+            int activeDisplayCount = _scrollHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
 
             if (activeDisplayCount >= _adapter.ItemCount)
             {
@@ -66,15 +64,10 @@ namespace CustomUI.RecyclingScrollable
 
         void UpdateViewHolders()
         {
-            // If low = previous_low, update all Ypositions of activeViewHolders NO REBINDS
-            // If low = previous_low + 1, scrap lowest index (top) viewHolder. GetDirtyViewHolder(). bind to highIndex. update Ypositions of activeViewHolders
-            // If low = previous_low - 1, scrap highest index (bottom) viewHolder. GetDirtyViewHolder(). bind to lowIndex. update Ypositions of activeViewHolders
-
-            int activeDisplayCount = _scrollableHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
+            int activeDisplayCount = _scrollHandler.ActiveDisplayCount(_elementHeight, _adapter.ItemCount);
             if (_adapter.ItemCount < activeDisplayCount) { return; }
 
-            float heightFraction = _scrollbarSelect.HeightFraction;
-            _lowIndex = LowIndex(activeDisplayCount, heightFraction);
+            _lowIndex = LowIndex(activeDisplayCount, _scrollbarSelect.HeightFraction);
             _highIndex = HighIndex(activeDisplayCount);
 
             if (_lowIndex == _previousLowIndex)
@@ -112,12 +105,12 @@ namespace CustomUI.RecyclingScrollable
 
         void UpdateViewHolderActivePositions()
         {
-            float windowOffset = _scrollbarSelect.HeightFraction * (_adapter.ItemCount * _elementHeight - _scrollableHandler.Height);
+            float windowOffset = _scrollbarSelect.HeightFraction * (_adapter.ItemCount * _elementHeight - _scrollHandler.Height);
             int activeIndex = 0;
             for (int i = _lowIndex; i <= _highIndex; i++) 
             {
-                ViewHolder viewHolder = _scrollableHandler.ActiveViewHolders[activeIndex];
-                viewHolder.SetYPosition(windowOffset + 0.5f * _scrollableHandler.Height - _elementHeight * (i + 0.5f));
+                ViewHolder viewHolder = _scrollHandler.ActiveViewHolders[activeIndex];
+                viewHolder.SetYPosition(windowOffset + 0.5f * _scrollHandler.Height - _elementHeight * (i + 0.5f));
                 activeIndex++;
             }
         }
@@ -127,11 +120,11 @@ namespace CustomUI.RecyclingScrollable
             for (int i = 0; i < _lowIndex - _previousLowIndex; i++)
             {
                 _previousLowIndex++;
-                _scrollableHandler.ScrapTopActiveViewHolder();
+                _scrollHandler.ScrapTopActiveViewHolder();
 
-                ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
+                ViewHolder viewHolder = _scrollHandler.GetDirtyViewHolder();
                 _adapter.OnBindViewHolder(viewHolder, _highIndex - i);
-                _scrollableHandler.ActiveViewHolders.AddRight(viewHolder);
+                _scrollHandler.ActiveViewHolders.AddRight(viewHolder);
             }
         }
 
@@ -140,11 +133,11 @@ namespace CustomUI.RecyclingScrollable
             for (int i = 0; i < _previousLowIndex - _lowIndex; i++)
             {
                 _previousLowIndex--;
-                _scrollableHandler.ScrapBottomActiveViewHolder();
+                _scrollHandler.ScrapBottomActiveViewHolder();
 
-                ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
+                ViewHolder viewHolder = _scrollHandler.GetDirtyViewHolder();
                 _adapter.OnBindViewHolder(viewHolder, _lowIndex + i);
-                _scrollableHandler.ActiveViewHolders.AddLeft(viewHolder);
+                _scrollHandler.ActiveViewHolders.AddLeft(viewHolder);
             }
         }
 
@@ -152,9 +145,9 @@ namespace CustomUI.RecyclingScrollable
         {
             for (int i = _lowIndex; i <= _highIndex; i++)
             {
-                ViewHolder viewHolder = _scrollableHandler.GetDirtyViewHolder();
+                ViewHolder viewHolder = _scrollHandler.GetDirtyViewHolder();
                 _adapter.OnBindViewHolder(viewHolder, i);
-                _scrollableHandler.ActiveViewHolders.AddRight(viewHolder);
+                _scrollHandler.ActiveViewHolders.AddRight(viewHolder);
             }
         }
 
@@ -165,14 +158,14 @@ namespace CustomUI.RecyclingScrollable
                 return;
             }
 
-            float emptySpace = _scrollableHandler.Height - _adapter.ItemCount * _elementHeight;
+            float emptySpace = _scrollHandler.Height - _adapter.ItemCount * _elementHeight;
             float windowOffset = (0.5f - _scrollbarSelect.HeightFraction) * emptySpace;
 
             int activeIndex = 0;
             for (int i = _lowIndex; i <= _highIndex; i++)
             {
-                ViewHolder viewHolder = _scrollableHandler.ActiveViewHolders[activeIndex];
-                viewHolder.SetYPosition(0.5f * _scrollableHandler.Height + windowOffset - _elementHeight * (i + 0.5f));
+                ViewHolder viewHolder = _scrollHandler.ActiveViewHolders[activeIndex];
+                viewHolder.SetYPosition(0.5f * _scrollHandler.Height + windowOffset - _elementHeight * (i + 0.5f));
                 activeIndex++;
             }
         }

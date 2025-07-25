@@ -9,7 +9,7 @@ using CustomUI.Scrollbar;
 namespace CustomUI.RecyclingScrollable
 {
     [RequireComponent(typeof(RectTransform))]
-    public class VerticalScrollableHandler : MonoBehaviour
+    public class VerticalScrollHandler : MonoBehaviour
     {
         [SerializeField] RectTransform _rectTransform;
 
