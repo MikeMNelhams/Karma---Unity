@@ -209,6 +209,12 @@ public class KarmaGameManager : MonoBehaviour
         }   
     }
     
+    public void SetMultiplayer()
+    {
+        SetPlayerMode(PlayerMode.Multiplayer);
+        SetSelectedBoardPreset(0);
+    }
+
     public void SetSelectedBoardPreset(int presetIndex)
     {
         // Used for unit testing. Must be called BEFORE Start()

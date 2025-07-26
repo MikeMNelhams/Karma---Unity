@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using StateMachine;
 using StateMachine.CharacterStateMachines;
 using TMPro;
-using System.Collections;
+using CustomUI;
 
 [RequireComponent(typeof(PlayerMovementController))]
 public class PlayerHandler : MonoBehaviour, ICardVisibilityHandler

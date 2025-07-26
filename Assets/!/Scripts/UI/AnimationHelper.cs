@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace UserInterface.Animations
+namespace CustomUI.Animations
 {
     public class AnimationHelper
     {

@@ -1,5 +1,4 @@
 using UnityEngine;
-using KarmaPlayerMode;
 using CustomUI.RecyclingScrollable.MultiplayerLobby;
 
 namespace CustomUI.RecyclingScrollable
@@ -8,12 +7,6 @@ namespace CustomUI.RecyclingScrollable
     {
         int _playersInLobbyCount = 4;
         bool _selfPlayerSet = false;
-
-        void SelectMultiplayer()
-        {
-            KarmaGameManager.Instance.SetPlayerMode(PlayerMode.Multiplayer);
-            KarmaGameManager.Instance.SetSelectedBoardPreset(0);
-        }
 
         public override int ItemCount => _playersInLobbyCount;
 

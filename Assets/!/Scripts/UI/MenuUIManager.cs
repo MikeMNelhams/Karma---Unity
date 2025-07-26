@@ -1,5 +1,5 @@
 using UnityEngine;
-using UserInterface.Menu;
+using CustomUI.Menu;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
@@ -15,10 +15,8 @@ public class MenuUIManager : MonoBehaviour
     public Camera MenuCamera { get { return _menuCamera; } }
 
     [Header("UIPages")]
-
     [SerializeField] Page _startPage;
     [SerializeField] GameObject _firstFocusItem;
-
     [SerializeField] Page _settingsPage;
 
     readonly Stack<Page> _pageStack = new ();

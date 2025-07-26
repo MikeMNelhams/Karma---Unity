@@ -1,10 +1,10 @@
 {
-    "name": "UIScripts",
+    "name": "Pages",
     "rootNamespace": "",
     "references": [
-        "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:62ba7916639d3754982e59b6c352cf9e",
-        "GUID:1491147abca9d7d4bb7105af628b223e"
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f",
+        "GUID:f584b6c509171c44aa043cf8202bfbd2"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

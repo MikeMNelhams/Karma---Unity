@@ -1,4 +1,4 @@
-namespace UserInterface.Animations
+namespace CustomUI.Animations
 {
     public enum AnimationDirection : byte
     {

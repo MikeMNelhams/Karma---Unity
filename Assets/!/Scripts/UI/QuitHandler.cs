@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-namespace UserInterface.Menu
+namespace CustomUI.Menu
 {
     public class QuitScript : MonoBehaviour
     {

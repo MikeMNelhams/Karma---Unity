@@ -1,9 +1,9 @@
-using UserInterface.Animations;
+using CustomUI.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-namespace UserInterface.Menu
+namespace CustomUI.Menu
 {
     [RequireComponent(typeof(CanvasGroup), typeof(RectTransform))]
     public class Page : MonoBehaviour
