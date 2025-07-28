@@ -4,24 +4,9 @@ using KarmaLogic.Cards;
 using System.Collections.Generic;
 using System.IO;
 
-public class CardTipTextManager : MonoBehaviour
+public class CardTipTextManager : Singleton<CardTipTextManager>
 {
-    private static CardTipTextManager _instance;
-    public static CardTipTextManager Instance { get { return _instance; } }
-
     CardToolTipText[] _cardToolTipTexts;
-
-    void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
-    }
 
     void Start()
     {

@@ -3,11 +3,8 @@ using CustomUI.Menu;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class MenuUIManager : MonoBehaviour
+public sealed class MenuUIManager : Singleton<MenuUIManager>
 {
-    static MenuUIManager _instance;
-    public static MenuUIManager Instance { get { return _instance; } }
-
     [SerializeField] GameObject _rootObject;
     [SerializeField] Camera _menuCamera;
     [SerializeField] EventSystem _eventSystem;
@@ -23,18 +20,6 @@ public class MenuUIManager : MonoBehaviour
     public delegate void OnBlockGameInputListener();
 
     OnBlockGameInputListener OnBlockGameInput;
-
-    void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }   
-    }
 
     void Start()
     {

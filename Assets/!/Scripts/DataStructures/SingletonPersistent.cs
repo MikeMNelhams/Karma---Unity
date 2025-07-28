@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+public class SingletonPersistent<T> : MonoBehaviour where T : SingletonPersistent<T>
 {
     private static T _instance;
 
@@ -8,11 +8,13 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         if (_instance != null && _instance != this)
         {
+            UnityEngine.Debug.LogWarning("There should only exist one singleton by definition.", this);
             Destroy(gameObject);
         }
         else
         {
             _instance = this as T;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
