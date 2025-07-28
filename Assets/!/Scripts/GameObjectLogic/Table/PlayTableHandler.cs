@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayTableProperties : MonoBehaviour
+public class PlayTableHandler : MonoBehaviour
 {
     [SerializeField] CardObjectPileHandler _drawPileHandler;
     [SerializeField] CardObjectPileHandler _playPileHandler;

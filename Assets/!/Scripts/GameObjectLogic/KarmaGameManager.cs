@@ -13,11 +13,8 @@ using DataStructures;
 using KarmaPlayerMode;
 using UnityEngine.EventSystems;
 
-public class KarmaGameManager : MonoBehaviour
+public sealed class KarmaGameManager : Singleton<KarmaGameManager>
 {
-    private static KarmaGameManager _instance;
-    public static KarmaGameManager Instance { get { return _instance; } }
-
     public static System.Random RNG = new(); // Uniform, system default. Not thread-safe. Great pseudo-random. Volatile in-memory.
 
     MeshRenderer _cardPrefabRenderer;
@@ -32,25 +29,24 @@ public class KarmaGameManager : MonoBehaviour
     [SerializeField] PhysicsRaycaster _cameraRaycaster;
     [SerializeField] GameObject _currentPlayerArrow;
     [SerializeField] GameObject _playOrderArrow;
-    [SerializeField] PlayTableProperties _playTableProperties;
+    [SerializeField] PlayTableHandler _playTable;
 
     public Camera CameraMain {  get { return _camera; } }
     public PhysicsRaycaster CameraRaycaster { get { return _cameraRaycaster; } }
-    public PlayTableProperties PlayTableHandler { get => _playTableProperties; }
+    public PlayTableHandler PlayTableHandler { get => _playTable; }
 
     Vector3 _startingCameraPosition;
 
     [Header("Gameplay Settings")]
     [SerializeField][Range(0.001f, 30.0f)] float _globalBotDelayInSeconds = 0.1f;
-
     [SerializeField] KarmaPlayerModeSelector _playerModeSelector;
 
     public KarmaPlayerMode.KarmaPlayerMode SelectedKarmaPlayerMode { get; private set; }
 
     public float GlobalBotDelayInSeconds { get => _globalBotDelayInSeconds; set => _globalBotDelayInSeconds = value; }
 
-    public List<PlayerHandler> PlayerHandlers { get; protected set; }
-    public IBoard Board { get; protected set; }
+    public List<PlayerHandler> PlayerHandlers { get; private set; }
+    public IBoard Board { get; private set; }
 
     public PickupPlayPile PickUpAction { get; set; } = new ();
     public PlayCardsCombo PlayCardsComboAction { get; set; } = new ();
@@ -62,16 +58,9 @@ public class KarmaGameManager : MonoBehaviour
 
     int _turnsSkipped = 0;
 
-    void Awake()
+    protected override void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            _instance = this;
-        }
+        base.Awake();
 
         InitialiseHandlers();
         _cardPrefabRenderer = _cardPrefab.GetComponent<MeshRenderer>();
@@ -113,7 +102,7 @@ public class KarmaGameManager : MonoBehaviour
 
         CreatePlayerCardObjectsFromBoard();
 
-        _playTableProperties.CreateCardObjectPilesFromBoard(Board);
+        _playTable.CreateCardObjectPilesFromBoard(Board);
 
         AssignButtonEvents();
         _currentPlayerArrowHandler.SetArrowVisibility(true);
@@ -130,9 +119,9 @@ public class KarmaGameManager : MonoBehaviour
     {
         _currentPlayerArrowHandler.SetArrowVisibility(false);
         _playOrderArrowHandler.SetArrowVisibility(false);
-        _playTableProperties.DrawPile.DestroyCards();
-        _playTableProperties.PlayPile.DestroyCards();
-        _playTableProperties.BurnPile.DestroyCards();
+        _playTable.DrawPile.DestroyCards();
+        _playTable.PlayPile.DestroyCards();
+        _playTable.BurnPile.DestroyCards();
 
         if (_camera == null)
         {
@@ -152,7 +141,7 @@ public class KarmaGameManager : MonoBehaviour
 
     public Quaternion RotationTowardsTableCentre(Vector3 position)
     {
-        Vector3 tableDirection = _playTableProperties.TableGeometry.Centre - position;
+        Vector3 tableDirection = _playTable.TableGeometry.Centre - position;
         tableDirection.y = 0;
         return Quaternion.LookRotation(tableDirection);
     }
@@ -289,11 +278,11 @@ public class KarmaGameManager : MonoBehaviour
 
         if (jokerCount == 0)
         {
-            _playTableProperties.MoveEntirePlayPileToBurnPile();
+            _playTable.MoveEntirePlayPileToBurnPile();
             return;
         }
 
-        _playTableProperties.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
+        _playTable.MoveTopCardsFromPlayPileToBurnPile(jokerCount);
     }
 
     public Bounds CardBounds
@@ -330,7 +319,7 @@ public class KarmaGameManager : MonoBehaviour
 
         Vector3 playerPosition = playerHandler.transform.position;
 
-        _currentPlayerArrowHandler.MoveArrow(playerPosition, _playTableProperties.TableGeometry.Centre);
+        _currentPlayerArrowHandler.MoveArrow(playerPosition, _playTable.TableGeometry.Centre);
     }
 
     void FlipAnyNecessaryKarmaDownToUp()
@@ -360,7 +349,7 @@ public class KarmaGameManager : MonoBehaviour
 
     void DrawCards(int numberOfCards, int playerIndex)
     {
-        List<SelectableCardObject> cardsDrawn = _playTableProperties.DrawCards(numberOfCards);
+        List<SelectableCardObject> cardsDrawn = _playTable.DrawCards(numberOfCards);
         AudioManager.Instance.PlayCardPickup();
         PlayerHandlers[playerIndex].AddCardObjectsToHand(cardsDrawn);
     }
@@ -491,7 +480,7 @@ public class KarmaGameManager : MonoBehaviour
     {
         PlayerHandler playerHandler = PlayerHandlers[playerIndex];
         PickUpAction.Apply(Board, playerHandler.CardSelector.Selection);
-        List<SelectableCardObject> playPileCards = _playTableProperties.PopAllFromPlayPile();
+        List<SelectableCardObject> playPileCards = _playTable.PopAllFromPlayPile();
         PlayerHandlers[playerIndex].AddCardObjectsToHand(playPileCards);
         Board.EndTurn();
         return Task.CompletedTask;
@@ -615,7 +604,7 @@ public class KarmaGameManager : MonoBehaviour
         print(giverIndex + " is forcing pickup of PLAY PILE (board) to player: " + targetIndex);
         TargetPickupPlayPile(giverIndex, targetIndex);
 
-        List<SelectableCardObject> playPileCardObjects = _playTableProperties.PopAllFromPlayPile();
+        List<SelectableCardObject> playPileCardObjects = _playTable.PopAllFromPlayPile();
 
         foreach (SelectableCardObject cardObject in playPileCardObjects)
         {

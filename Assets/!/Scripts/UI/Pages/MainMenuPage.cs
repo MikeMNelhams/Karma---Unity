@@ -1,17 +1,16 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using CustomUI.Menu;
-using Unity.Netcode;
 
-
-namespace Pages
+namespace CustomUI.Menu.Pages
 {
     [RequireComponent(typeof(CanvasGroup), typeof(RectTransform))]
     public class MainMenuPage : Page
     {
         [SerializeField] Button _singleplayerDebugButton;
-        [SerializeField] Button _multiplayerButton;
-
+        [SerializeField] Button _joinMultiplayerButton;
+        [SerializeField] Button _hostMultiplayerButton;
+        
         void Awake()
         {
 #if UNITY_EDITOR
@@ -19,14 +18,19 @@ namespace Pages
 #else
         _singleplayerDebugButton.enabled = false;
 #endif
-            _multiplayerButton.onClick.AddListener
-            (
-                () =>
-                {
-                    if (NetworkManager.Singleton.IsHost) { return; }
-                    NetworkManager.Singleton.StartHost();
-                }
-            );
+            _hostMultiplayerButton.onClick.AddListener(HostMultiplayer);
+            _joinMultiplayerButton.onClick.AddListener(JoinMultiplayer);
+
+        }
+
+        void HostMultiplayer()
+        {
+            NetworkManager.Singleton.StartHost();
+        }
+
+        void JoinMultiplayer()
+        {
+            NetworkManager.Singleton.StartClient();
         }
     }
 }

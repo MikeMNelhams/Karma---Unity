@@ -56,7 +56,7 @@ namespace CustomUI.RecyclingScrollable.SingleplayerSetup
             _playerModeSettingMap[position]();
         }
 
-        public override void OnBindViewHolder(ViewHolder holder, int position)
+        public override void BindViewHolder(ViewHolder holder, int position)
         {
             ViewHolderSingleplayerSetup viewHolderSingleplayerSetup = (ViewHolderSingleplayerSetup)holder;
             viewHolderSingleplayerSetup.SetActive(true);
@@ -64,7 +64,7 @@ namespace CustomUI.RecyclingScrollable.SingleplayerSetup
             viewHolderSingleplayerSetup.SetText(_presetData[position].TitleText);
         }
 
-        public override ViewHolder OnCreateViewHolder(RectTransform parentRectTransform, GameObject viewHolderPrefab)
+        public override ViewHolder CreateViewHolder(RectTransform parentRectTransform, GameObject viewHolderPrefab)
         {
             if (viewHolderPrefab == null) { throw new MissingReferenceException(); }
 

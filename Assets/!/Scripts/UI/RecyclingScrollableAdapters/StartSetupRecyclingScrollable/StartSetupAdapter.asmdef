@@ -1,0 +1,19 @@
+{
+    "name": "StartSetupRecyclingScrollable",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e4d86572e98d7f04bb9cbea8ec673101",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:f035880140c078542b291e506494801c",
+        "GUID:62ba7916639d3754982e59b6c352cf9e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

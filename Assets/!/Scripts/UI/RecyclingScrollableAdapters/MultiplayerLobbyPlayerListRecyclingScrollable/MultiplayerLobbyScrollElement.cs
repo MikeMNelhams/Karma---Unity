@@ -8,15 +8,21 @@ namespace CustomUI.RecyclingScrollable.MultiplayerLobby
     {
         [SerializeField] RectTransform _rectTransform;
         [SerializeField] TextMeshProUGUI _playerNameText;
-        [SerializeField] Button _kickButton;
+        [SerializeField] TextMeshProUGUI _playerNumberText;
+        [SerializeField] Button _confirmButton;
 
         protected override RectTransform RectTransform { get => _rectTransform; }
+        public Button ConfirmButton { get => _confirmButton; }
 
         public void SetPlayerNameText(string text)
         {
             _playerNameText.text = text;
         }
 
+        public void SetPlayerNumberText(string text)
+        {
+            _playerNumberText.text = text;
+        }
     }
 }
 

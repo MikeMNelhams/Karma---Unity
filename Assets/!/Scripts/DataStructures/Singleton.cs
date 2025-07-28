@@ -1,22 +1,27 @@
-namespace DataStructures {
-    public sealed class Singleton
+using UnityEngine;
+
+public class Singleton<T> : MonoBehaviour where T : Singleton<T>
+{
+    private static T _instance;
+
+    protected virtual void Awake()
     {
-        private static readonly Singleton instance = new();
-
-        static Singleton()
+        UnityEngine.Debug.Log("AWOKEN", this);
+        if (_instance != null && _instance != this)
         {
+            Destroy(gameObject);
         }
-
-        private Singleton()
+        else
         {
+            _instance = this as T;
         }
+    }
 
-        public static Singleton Instance
+    public static T Instance
+    {
+        get
         {
-            get
-            {
-                return instance;
-            }
+            return _instance;
         }
     }
 }

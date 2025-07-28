@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 namespace CustomUI.Scrollbar
 {
     [RequireComponent(typeof(RectTransform))]
-    public class VerticalScrollbarSelect : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+    public class VerticalScrollbar : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         [SerializeField] Canvas _parentCanvas;
         [SerializeField] RectTransform _rectTransform;
@@ -63,7 +63,7 @@ namespace CustomUI.Scrollbar
             OnDragEvent += onDragEndListener;
         }
 
-        public float HeightFraction
+        public float ScrollFraction
         {
             get
             {   
